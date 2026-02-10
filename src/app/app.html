@@ -1,0 +1,21 @@
+<div class="app-shell">
+  <div class="dice-layer">
+    <app-dice-roller *ngIf="diceService.request()"></app-dice-roller>
+  </div>
+
+  <header class="app-header">
+    <div class="logo">
+      <span class="icon">🚀</span>
+      <h1>TRAVELLER <span class="highlight">ARCHITECT</span></h1>
+    </div>
+    <nav>
+      <!-- Future Nav Items -->
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+  
+  <app-debug-floater></app-debug-floater>
+</div>

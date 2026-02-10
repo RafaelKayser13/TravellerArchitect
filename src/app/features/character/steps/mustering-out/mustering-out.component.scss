@@ -1,0 +1,196 @@
+@import '../../../../../styles.scss';
+
+.mustering-container {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    color: var(--text-color);
+    text-align: center;
+
+    h2 {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--primary);
+        margin-bottom: 2rem;
+    }
+
+    .stats-overview {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            min-width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+
+            &.highlight {
+                background: rgba(var(--primary-rgb), 0.1);
+                border-color: var(--primary);
+            }
+
+            .label {
+                font-size: 0.9rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                margin-bottom: 0.5rem;
+            }
+
+            .value {
+                font-size: 1.8rem;
+                font-weight: bold;
+                font-family: 'Orbitron', sans-serif;
+            }
+
+            .sub-val {
+                font-size: 0.8rem;
+                margin-top: 0.5rem;
+            }
+
+            .rolls-visual {
+                display: flex;
+                gap: 4px;
+                margin-bottom: 0.2rem;
+                
+                .roll-token {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    border: 1px solid var(--primary);
+                    
+                    &.filled { background: var(--primary); box-shadow: 0 0 8px var(--primary); }
+                    &.empty { background: transparent; opacity: 0.3; }
+                }
+            }
+        }
+    }
+
+    .action-area {
+        margin-bottom: 3rem;
+
+        .instruction {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+
+            .btn-card {
+                background: rgba(20, 30, 40, 0.8);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 2rem;
+                min-width: 200px;
+                cursor: pointer;
+                transition: all 0.3s;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                &:hover:not(:disabled) {
+                    transform: translateY(-5px);
+                    background: rgba(30, 40, 50, 0.9);
+                    border-color: var(--secondary);
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+                }
+
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                    background: #111;
+                }
+
+                .icon {
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    color: var(--secondary);
+                    font-family: 'Orbitron', sans-serif;
+                }
+
+                .btn-title {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                }
+
+                .limit {
+                    font-size: 0.9rem;
+                    color: var(--text-muted);
+                }
+                
+                &.cash .icon { color: var(--success); }
+                &.material .icon { color: var(--info); }
+            }
+        }
+    }
+
+    .benefits-summary {
+        background: rgba(0,0,0,0.3);
+        border-radius: 12px;
+        padding: 2rem;
+        border: 1px solid rgba(255,255,255,0.05);
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .benefits-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+
+            .benefit-badge {
+                background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+                border: 1px solid rgba(255,255,255,0.1);
+                padding: 0.8rem 1.5rem;
+                border-radius: 50px;
+                font-weight: 500;
+                color: var(--secondary);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            }
+            
+            .empty-state {
+                color: var(--text-muted);
+                font-style: italic;
+            }
+        }
+    }
+
+    .finish-section {
+        margin-top: 4rem;
+        animation: fadeIn 1s;
+
+        .btn-finish {
+            background: var(--success);
+            color: black;
+            font-weight: 900;
+            font-size: 1.5rem;
+            padding: 1.5rem 4rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(var(--success-rgb), 0.3);
+            letter-spacing: 2px;
+            font-family: 'Orbitron', sans-serif;
+
+            &:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(var(--success-rgb), 0.5);
+                filter: brightness(1.1);
+            }
+        }
+    }
+}

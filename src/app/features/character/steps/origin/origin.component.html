@@ -1,0 +1,88 @@
+<div class="origin-container">
+    <section>
+        <h2 class="step-title">Select Nationality</h2>
+        <div class="card-grid">
+            <div class="selection-card" 
+                 *ngFor="let nat of nationalities"
+                 [class.selected]="selectedNationality?.name === nat.name"
+                 (click)="selectNationality(nat)">
+                <h3>{{ nat.name }}</h3>
+                <p class="tier">{{ nat.tier === 1 ? 'Superpower' : 'Tier ' + nat.tier }}</p>
+                <div class="description">{{ nat.description }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section *ngIf="selectedNationality" class="origin-type-section" #originTypeSection>
+        <h2 class="step-title">Origin Type</h2>
+        <div class="origin-types">
+            <div class="type-card" 
+                 [class.selected]="selectedOriginType === 'Core'"
+                 (click)="setOriginType('Core')">
+                <h3>Core</h3>
+                <p>Earth & Tirane</p>
+            </div>
+            <div class="type-card" 
+                 [class.selected]="selectedOriginType === 'Frontier'"
+                 (click)="setOriginType('Frontier')">
+                <h3>Frontier</h3>
+                <p>Colonial Worlds</p>
+            </div>
+            <div class="type-card" 
+                 [class.selected]="selectedOriginType === 'Spacer'"
+                 (click)="setOriginType('Spacer')">
+                <h3>Spacer</h3>
+                <p>Stations & Belts</p>
+            </div>
+        </div>
+    </section>
+
+    <section *ngIf="selectedNationality && availableWorlds.length > 0">
+        <h2 class="step-title">Select Homeworld</h2>
+        <div class="card-grid">
+            <div class="selection-card" 
+                 *ngFor="let world of availableWorlds"
+                 [class.selected]="selectedWorld?.name === world.name"
+                 (click)="selectWorld(world)">
+                <h3>{{ world.name }}</h3>
+                <div class="world-meta">
+                    <span class="badge" [class.warning]="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
+                        {{ world.gravity }}G ({{ world.gravityCode }})
+                    </span>
+                    <span class="badge">{{ world.system }}</span>
+                    <span class="badge">{{ world.path || 'Soft' }} Path</span>
+                    <span class="badge highlight" *ngIf="world.techLevel">TL {{ world.techLevel }}</span>
+                </div>
+                <div class="uwp">DM: {{ world.survivalDm >= 0 ? '+' : ''}}{{ world.survivalDm }} Survival</div>
+                
+                <div class="gravity-mods" *ngIf="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
+                    <p class="warning">High Gravity World!</p>
+                </div>
+                <div class="gravity-mods" *ngIf="world.gravityCode === 'Low'">
+                    <p class="info">Low Gravity World</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section *ngIf="selectedWorld && showSkillsSelection" class="skills-section">
+        <h2 class="step-title">Background Skills</h2>
+        <p class="instruction">Select {{ backgroundSkillsCount }} skills based on your Education and Origin.</p>
+        
+        <div class="skills-grid">
+            <div class="skill-chip" 
+                 *ngFor="let skill of availableSkills"
+                 [class.selected]="selectedBackgroundSkills.includes(skill)"
+                 [class.disabled]="!selectedBackgroundSkills.includes(skill) && selectedBackgroundSkills.length >= backgroundSkillsCount"
+                 (click)="toggleSkill(skill)">
+                {{ skill }}
+            </div>
+        </div>
+        
+        <div class="mod-summary" *ngIf="selectedWorld">
+             <h3>Biological Adjustments</h3>
+             <p *ngIf="selectedOriginType === 'Spacer'">Spacer: Zero-G Adaptation applied (Skills: Vacc Suit available).</p>
+             <p *ngIf="['King', 'Huntsland', 'New Columbia'].includes(selectedWorld.name)">Heavy Worlder: +STR, +END (Genetic Mod).</p>
+        </div>
+    </section>
+</div>

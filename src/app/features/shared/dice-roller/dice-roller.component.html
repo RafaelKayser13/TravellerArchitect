@@ -1,0 +1,89 @@
+<div class="dice-overlay" *ngIf="request">
+    <div class="dice-container" [class.success]="showResult && isSuccess" [class.fail]="showResult && !isSuccess && request.target > 0">
+        
+        <!-- Header Info -->
+        <div class="roll-info">
+            <h2>{{ request?.reason }}</h2>
+            
+            <div class="roll-details" *ngIf="request">
+                 <div class="detail-box" *ngIf="request.statName">
+                     <span class="label">Stat</span>
+                     <div class="value">{{ request.statName }}</div>
+                 </div>
+                 <div class="detail-box" *ngIf="request.target > 0">
+                     <span class="label">Target</span>
+                     <div class="value">{{ request.target }}+</div>
+                 </div>
+                 
+                 <!-- Detailed Modifiers -->
+                 <div class="modifiers-list" *ngIf="request.modifiers && request.modifiers.length > 0">
+                     <div class="mod-pill" *ngFor="let mod of request.modifiers" [class.pos]="mod.value >= 0" [class.neg]="mod.value < 0">
+                         {{ mod.label }}: {{ mod.value >= 0 ? '+' : ''}}{{ mod.value }}
+                     </div>
+                 </div>
+
+                 <div class="detail-box" *ngIf="(!request.modifiers || request.modifiers.length === 0)">
+                    <span class="label">Total DM</span>
+                    <div class="value" [class.pos]="request.dm > 0" [class.neg]="request.dm < 0">
+                        {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dice-area">
+            <ng-container *ngIf="rolling">
+                <div class="cube-spinner" *ngFor="let d of [].constructor(request?.diceCount || 2)">
+                    <div class="cube scanning">
+                        <div class="face front">?</div>
+                        <div class="face back">?</div>
+                        <div class="face right">?</div>
+                        <div class="face left">?</div>
+                        <div class="face top">?</div>
+                        <div class="face bottom">?</div>
+                    </div>
+                </div>
+            </ng-container>
+            
+            <ng-container *ngIf="showResult">
+                <div class="cube-result" *ngFor="let val of resultValues">
+                    <div class="cube show-{{val}}">
+                        <div class="face front">1</div>
+                        <div class="face back">6</div>
+                        <div class="face right">3</div>
+                        <div class="face left">4</div>
+                        <div class="face top">5</div>
+                        <div class="face bottom">2</div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        
+        <div class="total-display" *ngIf="showResult">
+            <div class="calc-row">
+                <div class="part">
+                    {{ total }}
+                    <span class="tiny">ROLL</span>
+                </div>
+                <div class="operator">+</div>
+                <div class="part">
+                    {{ request?.dm }}
+                    <span class="tiny">DM</span>
+                </div>
+            </div>
+
+            <div class="final-row">
+                <div class="final-val">= {{ effectiveTotal }}</div>
+                
+                <div class="status" *ngIf="request && request.target > 0">
+                    <span class="success" *ngIf="isSuccess">SUCCESS</span>
+                    <span class="fail" *ngIf="!isSuccess">FAILURE</span>
+                </div>
+            </div>
+        </div>
+        
+        <div *ngIf="showResult" style="margin-top: 2rem;">
+            <button class="btn-continue" (click)="continue()">CONTINUE</button>
+        </div>
+    </div>
+</div>

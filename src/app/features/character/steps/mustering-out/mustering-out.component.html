@@ -1,0 +1,58 @@
+<div class="mustering-container">
+    <h2>Mustering Out (Term {{ character().careerHistory.length }})</h2>
+    
+    <div class="stats-overview">
+        <div class="stat-card">
+            <span class="label">Total Terms</span>
+            <span class="value">{{ character().careerHistory.length }}</span>
+        </div>
+        <div class="stat-card">
+            <span class="label">Pension</span>
+            <span class="value">{{ pension() > 0 ? 'Lv ' + pension() : 'None' }}</span>
+        </div>
+        <div class="stat-card highlight">
+            <span class="label">Rolls Available</span>
+            <div class="rolls-visual">
+                <div class="roll-token filled" *ngFor="let i of [].constructor(totalRolls() - rollsUsed())"></div>
+                <div class="roll-token empty" *ngFor="let i of [].constructor(rollsUsed())"></div>
+            </div>
+            <span class="sub-val">{{ totalRolls() - rollsUsed() }} remaining</span>
+        </div>
+    </div>
+
+    <div class="action-area" *ngIf="rollsUsed() < totalRolls()">
+        <p class="instruction">Choose your benefit table.</p>
+        
+        <div class="buttons">
+            <button class="btn-card cash" 
+                    (click)="rollBenefit('Cash')" 
+                    [disabled]="cashRolls() >= maxCashRolls">
+                <div class="icon">Credits</div>
+                <span class="btn-title">Cash Roll</span>
+                <span class="limit">Limit: {{ cashRolls() }}/3</span>
+            </button>
+            
+            <button class="btn-card material" (click)="rollBenefit('Material')">
+                <div class="icon">Asset</div>
+                <span class="btn-title">Material Benefit</span>
+                <span class="limit">Equipment, Ship Shares, Stats</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="benefits-summary">
+        <h3>Benefits Acquired</h3>
+        <div class="benefits-grid">
+            <div class="benefit-badge" *ngFor="let item of benefitsLog()">
+                {{ item }}
+            </div>
+            <div class="empty-state" *ngIf="benefitsLog().length === 0">
+                No benefits rolled yet.
+            </div>
+        </div>
+    </div>
+    
+    <div class="finish-section" *ngIf="rollsUsed() >= totalRolls()">
+        <button class="btn-finish" (click)="finish()">FINALIZE CHARACTER</button>
+    </div>
+</div>

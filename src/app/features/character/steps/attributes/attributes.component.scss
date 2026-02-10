@@ -1,0 +1,186 @@
+.attributes-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    position: relative;
+    width: 100%;
+    max-width: 1400px; /* Allow wider for 6 cols */
+    margin: 0 auto;
+}
+
+.central-control {
+    text-align: center;
+    width: 100%;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-roll-center {
+    width: auto;
+    height: auto;
+    padding: 12px 40px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(20,20,20,0.9) 100%);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-family: var(--font-header);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 0 15px var(--primary-glow);
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        background: var(--primary);
+        color: var(--bg-dark);
+        box-shadow: 0 0 30px var(--primary-glow);
+    }
+
+    &:disabled {
+        border-color: var(--text-dim);
+        color: var(--text-dim);
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    .dice-icon {
+        font-size: 1.5rem;
+    }
+
+    span {
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+}
+
+.instruction {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.3);
+    padding: 6px 12px;
+    border-radius: 12px;
+}
+
+.cards-circle {
+    display: flex; /* Flexbox for better centering of narrow cards */
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap; 
+}
+
+.stat-card {
+    background: rgba(30, 33, 48, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem 0.5rem;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 280px;
+    width: 130px; /* Fixed narrow width */
+    flex-shrink: 0;
+
+    &:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-dim);
+        background: rgba(30, 33, 48, 0.6);
+    }
+
+    &.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 15px rgba(255, 174, 0, 0.2);
+        transform: scale(1.02);
+    }
+    
+    /* ... header styles ... */
+    .card-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        width: 100%;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding-bottom: 0.8rem;
+        
+        h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+    }
+}
+
+.dice-pair {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Explicitly center dice */
+    gap: 1rem;
+    transform: scale(0.8);
+    margin: 0.5rem 0;
+    width: 100%; /* Ensure container takes full width to center items */
+}
+
+.value-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    width: 100%;
+
+    .value {
+        font-size: 2.5rem;
+        font-family: var(--font-header);
+        color: var(--text-main);
+        line-height: 1;
+    }
+}
+
+.edit-input {
+    width: 80%;
+    background: var(--bg-dark);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: 1.8rem;
+    text-align: center;
+    border-radius: 4px;
+    font-family: var(--font-header);
+    
+    &:focus { outline: none; box-shadow: 0 0 10px var(--primary-glow); }
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-dim);
+    opacity: 0.3;
+    transition: all 0.2s;
+    padding: 8px;
+    
+    &:hover { 
+        color: var(--primary); 
+        opacity: 1;
+        background: rgba(0, 212, 255, 0.05);
+        border-radius: 50%;
+    }
+    
+    svg { display: block; }
+}

@@ -1,0 +1,207 @@
+<div class="education-container">
+  <h2>Step 3: Education (Updated)</h2>
+  <p>Apply for further education or proceed to the Draft.</p>
+
+  <div class="options" *ngIf="$any(admissionStatus) === 'NotApplied'">
+    <!-- University -->
+    <div
+      class="education-card"
+      [class.selected]="educationType === 'University'"
+      (click)="educationType = 'University'"
+    >
+      <h3>University</h3>
+      <p>Entry: <span class="highlight">EDU 7+</span></p>
+      <p>Gain: <span class="highlight">+1 EDU, +1 SOC</span></p>
+
+      <div
+        class="academy-selector"
+        *ngIf="educationType === 'University'"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Premature selection removed. Selection happens after admission. -->
+
+        <div class="admission-method">
+          <h4>Admission Method</h4>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="admMethod" value="Local" [(ngModel)]="admissionMethod" />
+              Local Education (DM {{ admissionDMs.local >= 0 ? '+' : '' }}{{ admissionDMs.local }})
+            </label>
+            <label>
+              <input type="radio" name="admMethod" value="OffWorld" [(ngModel)]="admissionMethod" />
+              Off-World Education (DM {{ admissionDMs.offWorld >= 0 ? '+' : ''
+              }}{{ admissionDMs.offWorld }})
+              <span class="bad-note" *ngIf="admissionMethod === 'OffWorld'"
+                >Applies financial debt.</span
+              >
+            </label>
+          </div>
+        </div>
+
+        <button
+          class="btn-roll"
+          (click)="apply()"
+          [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'"
+        >
+          Apply for Admission
+        </button>
+      </div>
+    </div>
+
+    <!-- Academy -->
+    <div
+      class="education-card"
+      [class.selected]="educationType === 'Academy'"
+      (click)="educationType = 'Academy'"
+    >
+      <h3>Military Academy</h3>
+      <p>Entry: <span class="highlight">Attribute 8+</span></p>
+      <p>Gain: <span class="highlight">Commission</span></p>
+
+      <div
+        class="academy-selector"
+        *ngIf="educationType === 'Academy'"
+        (click)="$event.stopPropagation()"
+      >
+        <select [(ngModel)]="academyType">
+          <option value="Army">Army (END)</option>
+          <option value="Marines">Marines (END)</option>
+          <option value="Navy">Navy (INT)</option>
+          <option value="Scouts">Scouts (INT)</option>
+          <option value="Spaceborne">Spaceborne (INT)</option>
+        </select>
+
+        <div class="admission-method">
+          <h4>Admission Method</h4>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="admMethodAc" value="Local" [(ngModel)]="admissionMethod" />
+              Local (DM {{ admissionDMs.local >= 0 ? '+' : '' }}{{ admissionDMs.local }})
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="admMethodAc"
+                value="OffWorld"
+                [(ngModel)]="admissionMethod"
+              />
+              Off-World (DM {{ admissionDMs.offWorld >= 0 ? '+' : '' }}{{ admissionDMs.offWorld }})
+            </label>
+          </div>
+        </div>
+
+        <button
+          class="btn-roll"
+          (click)="apply()"
+          [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'"
+        >
+          Apply for Admission
+        </button>
+      </div>
+    </div>
+
+    <!-- Draft -->
+    <div
+      class="education-card"
+      [class.selected]="educationType === 'None'"
+      (click)="educationType = 'None'"
+    >
+      <h3>The Draft</h3>
+      <p>Skip Higher Education</p>
+      <p>Proceed directly to your first term.</p>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="actions" *ngIf="$any(admissionStatus) === 'NotApplied' && educationType === 'None'">
+    <button class="btn-premium" (click)="finishStep()">Proceed to Draft</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results" *ngIf="$any(admissionStatus) !== 'NotApplied'">
+    <div class="status-box" [ngClass]="admissionStatus.toLowerCase()" *ngIf="$any(admissionStatus) === 'Rejected'">
+      <h3>REJECTED</h3>
+    </div>
+
+    <!-- University Skill Selection (Step 2) -->
+    <div class="skill-selection" *ngIf="educationStep === 'UniversitySkillSelect'">
+      <h3>University Admission Successful</h3>
+      <p>You must choose two skills to focus on during your studies.</p>
+
+      <div class="selectors">
+        <div class="sel-group">
+          <label>Major (Level 1):</label>
+          <select [(ngModel)]="selectedMajorSkill">
+            <option value="" disabled>Select Skill</option>
+            <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+        <div class="sel-group">
+          <label>Minor (Level 0):</label>
+          <select [(ngModel)]="selectedMinorSkill">
+            <option value="" disabled>Select Skill</option>
+            <option
+              *ngFor="let s of universitySkillList"
+              [value]="s"
+              [disabled]="s === selectedMajorSkill"
+            >
+              {{ s }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <button
+        class="btn-premium"
+        [disabled]="!selectedMajorSkill || !selectedMinorSkill"
+        (click)="confirmUniversitySkills()"
+      >
+        Confirm
+      </button>
+    </div>
+
+    <!-- Studying State -->
+    <div *ngIf="educationStep === 'Studying'">
+      <p>You spend 4 years studying...</p>
+      <button class="btn-premium" (click)="graduate()">Roll for Graduation</button>
+    </div>
+
+    <!-- Academy Graduation Skill Selection -->
+    <div class="skill-selection" *ngIf="educationStep === 'AcademySkillSelect'">
+      <h3>Academy Graduation</h3>
+      <p>Select 3 skills to increase to Level 1.</p>
+
+      <div class="skill-grid">
+        <div
+          class="skill-opt"
+          *ngFor="let skill of availableAcademySkills"
+          [class.selected]="
+            selectedAcademySkills[0] === skill ||
+            selectedAcademySkills[1] === skill ||
+            selectedAcademySkills[2] === skill
+          "
+          (click)="toggleAcademySkill(skill)"
+        >
+          {{ skill }}
+        </div>
+      </div>
+
+      <button
+        class="btn-premium"
+        [disabled]="(selectedAcademySkills | keyvalue).length !== 3"
+        (click)="confirmAcademyGraduation()"
+      >
+        Confirm Training
+      </button>
+    </div>
+
+    <div
+      *ngIf="educationStep === 'Finished' && graduationStatus !== 'Pending'"
+      class="graduation-result"
+    >
+      <h3>{{ graduationStatus === 'Failed' ? 'FAILED TO GRADUATE' : 'GRADUATED' }}</h3>
+      <p *ngIf="graduationStatus === 'Honors'">WITH HONORS!</p>
+      <button class="btn-premium" (click)="finishStep()" style="margin-top: 2rem;">Continue to Career</button>
+    </div>
+  </div>
+</div>

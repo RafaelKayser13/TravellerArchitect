@@ -1,0 +1,90 @@
+<div class="sheet-container">
+    <header class="sheet-header">
+        <h1>TRAVELLER 2300AD</h1>
+        <div class="meta">
+            <div class="field">
+                <label>Name</label>
+                <div class="value">{{ character().name || 'Unnamed' }}</div>
+            </div>
+            <div class="field">
+                <label>Nationality</label>
+                <div class="value">{{ character().nationality }}</div>
+            </div>
+            <div class="field">
+                <label>Age</label>
+                <div class="value">{{ character().age }}</div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="sheet-body">
+        <section class="stats">
+            <h3>Characteristics</h3>
+            <div class="stat-grid">
+                <div class="stat-box">
+                    <div class="stat-name">STR</div>
+                    <div class="stat-value">{{ character().characteristics.str.value }}</div>
+                    <div class="stat-mod">{{ character().characteristics.str.modifier >= 0 ? '+' : '' }}{{ character().characteristics.str.modifier }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">DEX</div>
+                    <div class="stat-value">{{ character().characteristics.dex.value }}</div>
+                    <div class="stat-mod">{{ character().characteristics.dex.modifier >= 0 ? '+' : '' }}{{ character().characteristics.dex.modifier }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">END</div>
+                    <div class="stat-value">{{ character().characteristics.end.value }}</div>
+                    <div class="stat-mod">{{ character().characteristics.end.modifier >= 0 ? '+' : '' }}{{ character().characteristics.end.modifier }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">INT</div>
+                    <div class="stat-value">{{ character().characteristics.int.value }}</div>
+                    <div class="stat-mod">{{ character().characteristics.int.modifier >= 0 ? '+' : '' }}{{ character().characteristics.int.modifier }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">EDU</div>
+                    <div class="stat-value">{{ character().characteristics.edu.value }}</div>
+                    <div class="stat-mod">{{ character().characteristics.edu.modifier >= 0 ? '+' : '' }}{{ character().characteristics.edu.modifier }}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-name">SOC</div>
+                    <div class="stat-value">{{ character().characteristics.soc.value }}</div>
+                    <div class="stat-mod">{{ character().characteristics.soc.modifier >= 0 ? '+' : '' }}{{ character().characteristics.soc.modifier }}</div>
+                </div>
+            </div>
+        </section>
+        
+        <div class="columns">
+            <section class="skills">
+                <h3>Skills</h3>
+                <ul>
+                    <li *ngFor="let skill of character().skills">
+                        <span class="skill-name">{{ skill.name }}</span>
+                        <span class="skill-level">{{ skill.level }}</span>
+                    </li>
+                </ul>
+            </section>
+            
+            <section class="equipment">
+                <h3>Equipment & Finances</h3>
+                <p><strong>Cash:</strong> Lv {{ character().finances.cash }}</p>
+                <ul>
+                    <li *ngFor="let item of character().equipment">{{ item }}</li>
+                </ul>
+            </section>
+        </div>
+        
+        <section class="history">
+            <h3>Service History</h3>
+            <div class="term" *ngFor="let term of character().careerHistory">
+                <h4>Term {{ term.termNumber }}: {{ term.careerName }} (Rank {{ term.rank }})</h4>
+                <p *ngFor="let ev of term.events">{{ ev }}</p>
+            </div>
+        </section>
+    </div>
+    
+    <footer class="sheet-actions">
+        <button class="btn-export" (click)="exportJson()">Export JSON</button>
+        <button class="btn-export" (click)="exportPdf()">Print / PDF</button>
+    </footer>
+</div>

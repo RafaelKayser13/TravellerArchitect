@@ -1,0 +1,320 @@
+.dice-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.92);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dice-container {
+    text-align: center;
+}
+
+.neon-text {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(0, 212, 255, 0.8);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+    font-weight: 700;
+    /* animation: pulse 1s infinite alternate; REMOVED excessive animation */
+}
+
+@keyframes pulse {
+    from { opacity: 0.8; text-shadow: 0 0 10px #00d4ff; }
+    to { opacity: 1; text-shadow: 0 0 20px #00d4ff, 0 0 30px #00d4ff; }
+}
+
+.dice-area {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+/* 3D CUBE LOGIC */
+.cube {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+}
+
+.cube.scanning {
+    animation: spin 0.5s infinite linear;
+}
+
+.cube-spinner, .cube-result {
+    width: 80px;
+    height: 80px;
+}
+
+.face {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: rgba(10, 15, 30, 0.95); /* Nearly opaque dark background */
+    border: 1px solid rgba(0, 212, 255, 0.5);
+    color: #fff; /* White text for max contrast */
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8); /* Depth instead of glow */
+    border-radius: 8px; /* Slight rounded corners */
+    
+    /* Clean, no blur */
+    text-shadow: none;
+}
+
+/* Face positioning */
+.front  { transform: rotateY(  0deg) translateZ(40px); }
+.back   { transform: rotateY(180deg) translateZ(40px); }
+.right  { transform: rotateY( 90deg) translateZ(40px); }
+.left   { transform: rotateY(-90deg) translateZ(40px); }
+.top    { transform: rotateX( 90deg) translateZ(40px); }
+.bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+/* Animation Keyframes */
+@keyframes spin {
+    0% { transform: rotateX(0deg) rotateY(0deg); }
+    100% { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+/* Result Orientations (Based on standard dice layout above) */
+.show-1 { transform: rotateY(0deg); }   /* Front is 1 */
+.show-6 { transform: rotateY(180deg); } /* Back is 6 */
+.show-3 { transform: rotateY(-90deg); } /* Right is 3 */
+.show-4 { transform: rotateY(90deg); }  /* Left is 4 */
+.show-5 { transform: rotateX(-90deg); } /* Top is 5 */
+.show-2 { transform: rotateX(90deg); }  /* Bottom is 2 */
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.roll-info {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .roll-details {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        
+        &.stat { background: rgba(0, 212, 255, 0.2); color: var(--primary); border: 1px solid var(--primary); }
+        &.dm { background: rgba(255, 165, 0, 0.2); color: orange; border: 1px solid orange; }
+        &.target { background: rgba(255, 68, 68, 0.2); color: #ff4444; border: 1px solid #ff4444; }
+    }
+}
+
+.result-area {
+    margin-top: 2rem;
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+
+    .status-message {
+        font-size: 2rem;
+        font-family: 'Orbitron', sans-serif;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        
+        .success-text { color: var(--success); text-shadow: 0 0 10px var(--success); }
+        .fail-text { color: var(--danger); text-shadow: 0 0 10px var(--danger); }
+    }
+}
+
+.btn-continue {
+    background: rgba(0, 212, 255, 0.2);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 0.8rem 3rem;
+    font-size: 1.2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+    margin-top: 1rem;
+
+    &:hover {
+        background-color: var(--primary);
+        color: #000;
+        box-shadow: 0 0 20px var(--primary);
+        transform: scale(1.02);
+    }
+}
+
+// DIALOG STYLE (Matches Reset Popup)
+.dice-container {
+    padding: 1.5rem 2rem; /* Reduced padding */
+    background: rgba(13, 16, 24, 0.95);
+    border: 1px solid var(--primary); 
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+    position: relative;
+    max-width: 450px; /* Reduced width */
+    width: 90%;
+    text-align: center;
+    
+    // Match Reset Popup Shape
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        100% 90%, /* Steeper cut */
+        95% 100%, 
+        5% 100%, 
+        0 90%
+    );
+    
+    transition: all 0.3s ease;
+    
+    &.success {
+        border-color: var(--success);
+        box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+    }
+    
+    &.fail {
+        border-color: var(--danger);
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
+    }
+}
+
+.roll-info {
+    margin-bottom: 1rem; /* Reduced margin */
+    
+    h2 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.5rem; /* Reduced font */
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+}
+
+.roll-details {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem; /* Reduced margin */
+    
+    .detail-box {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid var(--border-color);
+        padding: 0.25rem 0.75rem; /* Compact padding */
+        border-radius: 4px;
+        
+        .label {
+            display: block;
+            font-size: 0.65rem;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 0.1rem;
+        }
+        
+        .value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: #fff;
+            
+            &.pos { color: var(--success); }
+            &.neg { color: var(--danger); }
+        }
+    }
+
+    .modifiers-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.2rem;
+        
+        .mod-pill {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #ccc;
+            white-space: nowrap;
+            
+            &.pos { color: var(--success); border-color: rgba(0,255,0,0.2); }
+            &.neg { color: var(--danger); border-color: rgba(255,0,0,0.2); }
+        }
+    }
+}
+
+.total-display {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+
+    .calc-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.8rem;
+        font-family: 'Consolas', monospace;
+        color: #aaa;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        
+        .operator { color: #555; }
+        .part {
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             
+             span.tiny { font-size: 0.6rem; opacity: 0.5; margin-top: 2px; }
+        }
+    }
+
+    .final-row {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding-top: 0.5rem;
+        
+        .final-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem; /* Reduced from 3rem */
+            color: #fff;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            
+            &.success { color: var(--success); text-shadow: 0 0 10px rgba(0,255,0,0.3); }
+            &.fail { color: var(--danger); text-shadow: 0 0 10px rgba(255,0,0,0.3); }
+        }
+    }
+}

@@ -1,0 +1,132 @@
+.sheet-container {
+    background: #fdfdfd;
+    color: #111;
+    font-family: 'Courier New', Courier, monospace; /* Classic Traveller feel */
+    padding: 2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    border: 1px solid #ccc;
+    
+    @media print {
+        box-shadow: none;
+        margin: 0;
+        max-width: 100%;
+        color: black;
+        background: white;
+    }
+}
+
+.sheet-header {
+    border-bottom: 2px solid #333;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    
+    h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        width: 100%;
+    }
+    
+    .meta {
+        display: flex;
+        gap: 2rem;
+        justify-content: space-between;
+        
+        .field {
+            flex: 1;
+            border-bottom: 1px solid #999;
+            padding: 0.5rem;
+            
+            label {
+                font-size: 0.8rem;
+                display: block;
+                color: #666;
+                text-transform: uppercase;
+            }
+            .value {
+                font-size: 1.2rem;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.stats {
+    margin-bottom: 2rem;
+    
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 1rem;
+        
+        .stat-box {
+            border: 2px solid #333;
+            text-align: center;
+            padding: 0.5rem;
+            
+            .stat-name { font-weight: bold; font-size: 1.2rem; }
+            .stat-value { font-size: 2rem; font-weight: bold; }
+            .stat-mod { font-size: 1rem; color: #666; }
+        }
+    }
+}
+
+.columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    
+    h3 {
+        border-bottom: 1px solid #333;
+        margin-bottom: 1rem;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0;
+        
+        li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dotted #ccc;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+.history {
+    .term {
+        margin-bottom: 1rem;
+        border-left: 3px solid #ccc;
+        padding-left: 1rem;
+        
+        h4 { margin: 0; }
+        p { margin: 0.2rem 0; color: #444; }
+    }
+}
+
+.sheet-actions {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    
+    @media print {
+        display: none;
+    }
+    
+    button {
+        padding: 1rem 2rem;
+        background: #00d4ff;
+        color: #000;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        
+        &:hover { background-color: #00aadd; }
+    }
+}

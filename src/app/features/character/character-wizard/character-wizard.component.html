@@ -1,0 +1,85 @@
+<div class="wizard-frame">
+  <!-- Step Progress -->
+  <div class="step-progress">
+    <div class="step" [class.active]="currentStep >= 1" [class.current]="currentStep === 1">
+      <div class="circle">1</div>
+      <span class="label">Attributes</span>
+    </div>
+    <div class="line" [class.active]="currentStep > 1"></div>
+    
+    <div class="step" [class.active]="currentStep >= 2" [class.current]="currentStep === 2">
+      <div class="circle">2</div>
+      <span class="label">Origin</span>
+    </div>
+    <div class="line" [class.active]="currentStep > 2"></div>
+    
+    <div class="step" [class.active]="currentStep >= 3" [class.current]="currentStep === 3">
+      <div class="circle">3</div>
+      <span class="label">Education</span>
+    </div>
+    <div class="line" [class.active]="currentStep > 3"></div>
+    
+    <div class="step" [class.active]="currentStep >= 4" [class.current]="currentStep === 4">
+      <div class="circle">4</div>
+      <span class="label">Career</span>
+    </div>
+    <div class="line" [class.active]="currentStep > 4"></div>
+    
+    <div class="step" [class.active]="currentStep >= 5" [class.current]="currentStep === 5">
+      <div class="circle">5</div>
+      <span class="label">Muster</span>
+    </div>
+    <div class="line" [class.active]="currentStep > 5"></div>
+
+    <div class="step" [class.active]="currentStep >= 6" [class.current]="currentStep === 6">
+      <div class="circle">6</div>
+      <span class="label">Finish</span>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="wizard-content" *ngIf="!isResetting">
+    <app-attributes *ngIf="currentStep === 1"></app-attributes>
+    <app-origin *ngIf="currentStep === 2"></app-origin>
+    <app-education *ngIf="currentStep === 3" (complete)="nextStep()"></app-education>
+    <app-career *ngIf="currentStep === 4" (complete)="onCareerComplete()"></app-career>
+    <app-mustering-out *ngIf="currentStep === 5" (complete)="onMusteringOutComplete()"></app-mustering-out>
+    <app-character-sheet *ngIf="currentStep === 6"></app-character-sheet>
+  </div>
+
+  <!-- Navigation Actions -->
+  <div class="wizard-actions">
+    <button class="btn-premium btn-reset" 
+            (click)="initiateReset()">
+      Reset
+    </button>
+
+    <div class="spacer"></div>
+
+    <button class="btn-premium btn-back" 
+            *ngIf="currentStep > 1" 
+            (click)="prevStep()">
+      Back
+    </button>
+    
+    <div class="spacer"></div>
+
+    <button class="btn-premium btn-next" 
+            *ngIf="currentStep < 4" 
+            (click)="nextStep()">
+      Next Step
+    </button>
+    
+    <!-- Step 4, 5 have their own complete buttons -->
+  </div>
+  
+</div>
+
+<!-- Reset Dialog -->
+<app-confirmation-dialog 
+    [isOpen]="showResetDialog"
+    title="RESET DATA"
+    message="Are you sure you want to delete this character and start over? This action cannot be undone."
+    (confirm)="confirmReset()"
+    (cancel)="cancelReset()">
+</app-confirmation-dialog>
