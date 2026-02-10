@@ -1,96 +1,144 @@
 <div class="career-container">
-    <h2>Term {{ currentTerm() }} (Age {{ currentAge() }})</h2>
-    
+    <div class="career-header">
+        <span class="hud-label-tiny">[ CHRONOS_STATUS ]</span>
+        <h2>Term {{ currentTerm() }} (Age {{ currentAge() }})</h2>
+    </div>
+
     <!-- 1. CHOOSE CAREER -->
-    <div *ngIf="currentState() === 'CHOOSE_CAREER'" class="career-selection">
-        <h3>Choose Career</h3>
+    <div *ngIf="currentState() === 'CHOOSE_CAREER'" class="career-stack fade-in">
+        <div class="hud-box-header">
+            <span class="index">SEC_04</span>
+            <h3>CAREER_SELECTION_PROTOCOL</h3>
+        </div>
+
         <div class="career-list">
-            <div *ngFor="let career of careers" 
-                 class="career-card" 
-                 [class.selected]="selectedCareer === career"
-                 (click)="selectCareer(career)">
-                <h4>{{ career.name }}</h4>
-                <p>{{ career.description }}</p>
-                <small>Qual: {{ career.qualificationStat }} {{ career.qualificationTarget }}+</small>
+            <div *ngFor="let career of careers; let i = index" class="career-card"
+                [class.selected]="selectedCareer === career" (click)="selectCareer(career)">
+
+                <div class="card-layout">
+                    <!-- Info Column -->
+                    <div class="info-column">
+                        <div class="card-header">
+                            <span class="index">0{{i+1}}</span>
+                            <h3>{{ career.name }}</h3>
+                        </div>
+                        <div class="details">
+                            <p><span class="label">QUALIFICATION:</span> <span class="highlight">{{
+                                    career.qualificationStat
+                                    }} {{ career.qualificationTarget }}+</span></p>
+                            <div class="description-text">{{ career.description }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Config Column (Active only when selected) -->
+                    <div class="config-column" *ngIf="selectedCareer === career" (click)="$event.stopPropagation()">
+                        <div class="assignment-selector">
+                            <span class="hud-label">[ SELECT_ASSIGNMENT_SPECIALIZATION ]</span>
+                            <div class="radio-tab-group">
+                                <label class="radio-tab" *ngFor="let assign of career.assignments">
+                                    <input type="radio" name="assignment" [value]="assign"
+                                        [checked]="selectedAssignment === assign" (change)="selectAssignment(assign)" />
+                                    <div class="tab-content">
+                                        <span class="primary">{{ assign.name }}</span>
+                                        <span class="secondary">SRV: {{ assign.survivalStat }} {{ assign.survivalTarget
+                                            }}+</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="card-footer-actions">
+                            <button class="btn-action" [disabled]="!selectedAssignment" (click)="qualify()">
+                                ATTEMPT_QUALIFICATION
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div *ngIf="selectedCareer" class="assignment-list" id="assignment-list">
-            <h4>Select Assignment</h4>
-            <div *ngFor="let assign of selectedCareer.assignments"
-                 class="assignment-card"
-                 [class.selected]="selectedAssignment === assign"
-                 (click)="selectAssignment(assign)">
-                 <h5>{{ assign.name }}</h5>
-                 <p>Survival: {{ assign.survivalStat }} {{ assign.survivalTarget }}+</p>
-            </div>
-        </div>
-        
-        <div class="selection-actions">
-            <button *ngIf="selectedAssignment" id="qualify-btn" class="btn-premium" (click)="qualify()">Attempt Qualification</button>
-            <button *ngIf="characterService.character().careerHistory.length > 0" class="btn-success large finalize-btn" (click)="startMusteringOut()">
-                Finalize Character & Muster Out
+
+        <!-- Career Finalization / Global Actions -->
+        <div class="global-actions" *ngIf="characterService.character().careerHistory.length > 0">
+            <div class="divider"></div>
+            <button class="btn-action finalize" (click)="startMusteringOut()">
+                FINALIZE_SERVICE_RECORD & MUSTER_OUT
             </button>
         </div>
     </div>
-    
+
     <!-- STATE: BASIC_TRAINING -->
-    <div *ngIf="currentState() === 'BASIC_TRAINING'" class="action-card success fade-in">
-        <div class="card-header">
-            <h3>Basic Training / Commission</h3>
+    <div *ngIf="currentState() === 'BASIC_TRAINING'" class="hud-module success fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04B</span>
+            <h3>BASIC_TRAINING_PROTOCOL</h3>
         </div>
-        <div class="card-content">
-            <p>You have joined the <strong>{{ selectedCareer?.name }}</strong>.</p>
-            <p *ngIf="currentTerm() === 1">First Term: You receive all Service Skills at Level 0.</p>
+        <div class="hud-content">
+            <p>Personnel has successfully matriculated into the <span class="highlight">{{ selectedCareer?.name
+                    }}</span>.
+            </p>
+            <p *ngIf="currentTerm() === 1" class="status-msg">[ INITIAL_QUALIFICATION_RECOGNIZED ]: All Service Skills
+                acquired at Level 0.</p>
         </div>
-        <div class="card-actions">
-            <!-- Go to SKILL_TRAINING next -->
-            <button class="btn-premium" (click)="performBasicTraining()">Proceed to Training</button>
-            <button class="btn-secondary" (click)="attemptCommission()" *ngIf="canAttemptCommission()">Attempt Commission</button>
+        <div class="hud-footer">
+            <button class="btn-action" (click)="performBasicTraining()">PROCEED_TO_TRAINING</button>
+            <button class="btn-secondary" (click)="attemptCommission()"
+                *ngIf="canAttemptCommission()">ATTEMPT_COMMISSION</button>
         </div>
     </div>
 
     <!-- STATE: SKILL_TRAINING -->
-    <div *ngIf="currentState() === 'SKILL_TRAINING'" class="action-card info fade-in">
-        <div class="card-header">
-            <h3>{{ bonusSkillRolls() > 0 ? 'Bonus Skill Roll' : 'Skill Training' }}</h3>
+    <div *ngIf="currentState() === 'SKILL_TRAINING'" class="hud-module info fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04C</span>
+            <h3>{{ bonusSkillRolls() > 0 ? 'BONUS_SKILL_ACQUISITION' : 'SKILL_DEVELOPMENT_PROTOCOL' }}</h3>
         </div>
-        <div class="card-content">
-            <p class="instruction">Select a table to roll for a skill or attribute improvement.</p>
-            
-            <div class="skill-tables">
-                <button class="table-btn" (click)="rollSkill('Personal')">
-                    Personal Development
-                    <small>Str, Dex, End, Int...</small>
+        <div class="hud-content">
+            <p class="instruction">Select development vector for skill enhancement:</p>
+
+            <div class="skill-vector-grid">
+                <button class="vector-btn" (click)="rollSkill('Personal')">
+                    <span class="v-label">PERSONAL_DEVELOPMENT</span>
+                    <span class="v-desc">Str, Dex, End, Int...</span>
                 </button>
-                <button class="table-btn" (click)="rollSkill('Service')">
-                    Service Skills
-                    <small>Career Core Skills</small>
+                <button class="vector-btn" (click)="rollSkill('Service')">
+                    <span class="v-label">SERVICE_SKILLS</span>
+                    <span class="v-desc">Core Technical Training</span>
                 </button>
-                 <button class="table-btn" (click)="rollSkill('Specialist')" *ngIf="selectedAssignment">
-                    Specialist: {{ selectedAssignment.name }}
-                    <small>Assignment Focus</small>
+                <button class="vector-btn" (click)="rollSkill('Specialist')" *ngIf="selectedAssignment">
+                    <span class="v-label">SPECIALIST: {{ selectedAssignment.name }}</span>
+                    <span class="v-desc">Assignment Vector</span>
                 </button>
-                <button class="table-btn" (click)="rollSkill('Advanced')" [disabled]="characterService.character().characteristics.edu.value < 8">
-                    Advanced Education
-                    <small>Req: EDU 8+</small>
+                <button class="vector-btn" (click)="rollSkill('Advanced')"
+                    [disabled]="characterService.character().characteristics.edu.value < 8">
+                    <span class="v-label">ADVANCED_EDUCATION</span>
+                    <span class="v-desc">Req: EDU 8+</span>
                 </button>
-                <button class="table-btn" (click)="rollSkill('Officer')" *ngIf="selectedCareer?.officerSkills" [disabled]="!isCommissioned()">
-                    Officer Skills
-                    <small>Req: Commission</small>
+                <button class="vector-btn" (click)="rollSkill('Officer')" *ngIf="selectedCareer?.officerSkills"
+                    [disabled]="!isCommissioned()">
+                    <span class="v-label">OFFICER_TRAINING</span>
+                    <span class="v-desc">Req: Commission</span>
                 </button>
             </div>
         </div>
     </div>
-    
+
     <!-- SPECIALIZATION MODAL -->
     <div *ngIf="showSkillSelection" class="modal-overlay">
         <div class="modal">
-            <h3>Specialization Required: {{ pendingSkillName }}</h3>
+            <div class="hud-box-header">
+                <h3>SPECIALIZATION_REQUIRED: {{ pendingSkillName }}</h3>
+            </div>
             <div class="grid-options">
-                <button *ngFor="let opt of skillSelectionOptions" 
-                        class="btn-secondary" 
-                        (click)="confirmSpecialization(opt)">
+                <button *ngFor="let opt of skillSelectionOptions" class="btn-secondary"
+                    (click)="confirmSpecialization(opt)">
                     {{ opt }}
                 </button>
             </div>
@@ -98,153 +146,203 @@
     </div>
 
     <!-- STATE: SURVIVAL -->
-    <div *ngIf="currentState() === 'SURVIVAL'" class="action-card warning fade-in">
-        <div class="card-header">
-            <h3>Survival Check</h3>
-            <span class="difficulty-badge">Target: {{ selectedAssignment?.survivalTarget }}+</span>
+    <div *ngIf="currentState() === 'SURVIVAL'" class="hud-module warning fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04D</span>
+            <h3>SURVIVAL_STRESS_TEST</h3>
+            <span class="difficulty-badge">TRG: {{ selectedAssignment?.survivalTarget }}+</span>
         </div>
-        
-        <div class="card-content">
-            <div class="stat-row">
-                <div class="stat-item">
-                    <span class="label">Stat</span>
-                    <span class="value">{{ selectedAssignment?.survivalStat }}</span>
+
+        <div class="hud-content">
+            <div class="tactical-row">
+                <div class="t-item">
+                    <span class="t-label">PRIMARY_VECTOR</span>
+                    <span class="t-val">{{ selectedAssignment?.survivalStat }}</span>
                 </div>
-                <div class="stat-item">
-                    <span class="label">Assignment</span>
-                    <span class="value">{{ selectedAssignment?.name }}</span>
+                <div class="t-item">
+                    <span class="t-label">ASSIGNMENT</span>
+                    <span class="t-val">{{ selectedAssignment?.name }}</span>
                 </div>
             </div>
-            
-            <p class="instruction">Risk checks are mandatory for every term of service.</p>
-            
-            <div *ngIf="showCyberneticOption" class="alert-box error">
-                <strong>Survival Failed!</strong>
-                <p>You face a mishap. You may accept a Cybernetic Implant (and lose 1 Benefit Roll) to remain in this career.</p>
-                <div class="alert-actions">
-                    <button class="btn-secondary" (click)="resolveSurvivalFailure(true)">Accept Implant (Stay)</button>
-                    <button class="btn-danger" (click)="resolveSurvivalFailure(false)">Accept Mishap (Eject)</button>
+
+            <p class="status-msg">[ MONITORING_VITAL_SIGNS ]: Risk assessment mandatory for term duration.</p>
+
+            <div *ngIf="showCyberneticOption" class="hud-alert error">
+                <span class="hud-label-vivid">SURVIVAL_CRITICAL_FAILURE</span>
+                <p>Mishap detected. Personnel may accept Cybernetic Integration to maintain career status.</p>
+                <div class="hud-footer">
+                    <button class="btn-secondary" (click)="resolveSurvivalFailure(true)">ACCEPT_INTEGRATION</button>
+                    <button class="btn-danger" (click)="resolveSurvivalFailure(false)">INITIATE_TERMINATION</button>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="!showCyberneticOption" class="card-actions">
-             <button class="btn-premium large" (click)="rollSurvival()">
-                 ROLL SURVIVAL
-                 <span class="sub-text">2D6 + {{ selectedAssignment?.survivalStat }} DM</span>
-             </button>
+        <div *ngIf="!showCyberneticOption" class="hud-footer">
+            <button class="btn-action large" (click)="rollSurvival()">
+                EXECUTE_SURVIVAL_ROLL
+                <span class="sub-text">2D6 + {{ selectedAssignment?.survivalStat }} DM</span>
+            </button>
         </div>
     </div>
-    
+
     <!-- STATE: EVENT / MISHAP -->
-    <div *ngIf="currentState() === 'EVENT' || currentState() === 'MISHAP'" class="action-card fade-in" [class.mishap-card]="currentState() === 'MISHAP'">
-        <div class="card-header">
-            <h3>{{ currentState() === 'MISHAP' ? 'MISHAP' : 'CAREER EVENT' }}</h3>
+    <div *ngIf="currentState() === 'EVENT' || currentState() === 'MISHAP'" class="hud-module fade-in"
+        [class.mishap]="currentState() === 'MISHAP'">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04E</span>
+            <h3>{{ currentState() === 'MISHAP' ? 'CRITICAL_MISHAP_REPORT' : 'SERVICE_LIFE_EVENT' }}</h3>
         </div>
-        <div class="card-content">
-            <p class="event-text">{{ currentEventText }}</p>
+        <div class="hud-content">
+            <div class="event-log-box">
+                <p class="event-text">{{ currentEventText }}</p>
+            </div>
         </div>
-        
-        <div class="card-actions">
-            <!-- UPDATED: Use proceedToAdvancement() -->
-            <button *ngIf="currentState() === 'EVENT'" class="btn-premium" (click)="proceedToAdvancement()">Proceed</button>
-            <button *ngIf="currentState() === 'MISHAP'" class="btn-danger" (click)="finishTerm('MUSTER')">Mustering Out (Forced)</button>
+
+        <div class="hud-footer">
+            <button *ngIf="currentState() === 'EVENT'" class="btn-action"
+                (click)="proceedToAdvancement()">ACKNOWLEDGE_PROCEED</button>
+            <button *ngIf="currentState() === 'MISHAP'" class="btn-danger"
+                (click)="finishTerm('MUSTER')">TERMINATE_SERVICE_RECORD</button>
         </div>
     </div>
-    
+
     <!-- STATE: ADVANCEMENT -->
-    <div *ngIf="currentState() === 'ADVANCEMENT'" class="action-card info fade-in">
-        <div class="card-header">
-            <h3>Advancement Check</h3>
-            <span class="difficulty-badge">Target: {{ selectedAssignment?.advancementTarget }}+</span>
+    <div *ngIf="currentState() === 'ADVANCEMENT'" class="hud-module info fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04F</span>
+            <h3>ADVANCEMENT_EVALUATION</h3>
+            <span class="difficulty-badge">TRG: {{ selectedAssignment?.advancementTarget }}+</span>
         </div>
-        <div class="card-content">
-            <div class="stat-row">
-                <div class="stat-item">
-                     <span class="label">Stat</span>
-                     <span class="value">{{ selectedAssignment?.advancementStat }}</span>
+        <div class="hud-content">
+            <div class="tactical-row">
+                <div class="t-item">
+                    <span class="t-label">EVALUATION_STAT</span>
+                    <span class="t-val">{{ selectedAssignment?.advancementStat }}</span>
                 </div>
             </div>
-            <p class="instruction">Roll for promotion and increased benefits.</p>
+            <p class="status-msg">[ PERFORMANCE_METRICS_READY ]: Evaluating promotion eligibility.</p>
         </div>
-        
-        <div class="card-actions">
-            <button class="btn-premium large" (click)="rollAdvancement()">
-                ROLL ADVANCEMENT
+
+        <div class="hud-footer">
+            <button class="btn-action large" (click)="rollAdvancement()">
+                EXECUTE_ADVANCEMENT_ROLL
                 <span class="sub-text">2D6 + {{ selectedAssignment?.advancementStat }} DM</span>
             </button>
         </div>
     </div>
-    
+
     <!-- STATE: CHANGE ASSIGNMENT -->
-    <div *ngIf="currentState() === 'CHANGE_ASSIGNMENT'" class="career-selection fade-in">
-        <h3>Change Assignment ({{ selectedCareer?.name }})</h3>
-        <p class="instruction" style="text-align: center; color: #aaa;">Select a new assignment. Qualification roll required.</p>
-        
-        <div class="assignment-list">
-            <div *ngFor="let assign of selectedCareer?.assignments"
-                 class="assignment-card"
-                 (click)="verifyAssignmentChange(assign)">
-                 <h5>{{ assign.name }}</h5>
-                 <p>Qual: {{ selectedCareer?.qualificationStat }} {{ selectedCareer?.qualificationTarget }}+</p>
+    <div *ngIf="currentState() === 'CHANGE_ASSIGNMENT'" class="career-stack fade-in">
+        <div class="hud-box-header">
+            <span class="index">SEC_04G</span>
+            <h3>ASSIGNMENT_RECONFIGURATION</h3>
+        </div>
+        <p class="status-msg" style="text-align: center;">Select new operational specialization. Qualification required.
+        </p>
+
+        <div class="career-list">
+            <div *ngFor="let assign of selectedCareer?.assignments" class="career-card"
+                (click)="verifyAssignmentChange(assign)">
+                <div class="card-layout">
+                    <div class="info-column">
+                        <div class="card-header">
+                            <h3>{{ assign.name }}</h3>
+                        </div>
+                        <div class="details">
+                            <p><span class="label">QUALIFICATION:</span> <span class="highlight">{{
+                                    selectedCareer?.qualificationStat }} {{ selectedCareer?.qualificationTarget
+                                    }}+</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="config-column action-centered">
+                        <button class="btn-action">SELECT_ASSIGNMENT</button>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="card-actions">
-            <button class="btn-secondary" (click)="finishTerm('CONTINUE')">Cancel (Stay in Current)</button>
+
+        <div class="hud-footer">
+            <button class="btn-secondary" (click)="finishTerm('CONTINUE')">ABORT_CHANGE & STAY_CURRENT</button>
         </div>
     </div>
-    
+
     <!-- Leaving Home Check -->
-    <div class="action-card fade-in" *ngIf="currentState() === 'LEAVING_HOME'">
-        <div class="card-header">
-            <h3>Leaving Home</h3>
+    <div *ngIf="currentState() === 'LEAVING_HOME'" class="hud-module fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04H</span>
+            <h3>HOMESTEAD_TETHR_DECOUPLING</h3>
         </div>
-        <div class="card-content">
-             <p>You are still tied to your homeworld. Passing this check represents establishing independence.</p>
-             <div class="stat-row">
-                 <div class="stat-item">
-                     <span class="label">Target</span>
-                     <span class="value">8+</span>
-                 </div>
-                 <div class="stat-item">
-                     <span class="label">Bonus</span>
-                     <span class="value">+{{ currentTerm() }} (Terms)</span>
-                 </div>
-             </div>
+        <div class="hud-content">
+            <p>Independence verification required. Breaking gravitational ties to hometerm.</p>
+            <div class="tactical-row">
+                <div class="t-item">
+                    <span class="t-label">TARGET_THRESHOLD</span>
+                    <span class="t-val">8+</span>
+                </div>
+                <div class="t-item">
+                    <span class="t-label">COHESION_MODIFIER</span>
+                    <span class="t-val">+{{ currentTerm() }} (Terms)</span>
+                </div>
+            </div>
         </div>
-        <div class="card-actions">
-            <button class="btn-premium" (click)="rollLeavingHome()">Attempt to Leave</button>
+        <div class="hud-footer">
+            <button class="btn-action" (click)="rollLeavingHome()">EXECUTE_DECOUPLING</button>
         </div>
     </div>
 
     <!-- Term End -->
-    <div class="action-card fade-in" *ngIf="currentState() === 'TERM_END'">
-        <div class="card-header">
-            <h3>End of Term {{ currentTerm() - 1 }}</h3>
+    <div *ngIf="currentState() === 'TERM_END'" class="hud-module status fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04X</span>
+            <h3>SERVICE_TERM_SUMMARY [ T-{{ currentTerm() - 1 }} ]</h3>
         </div>
-        <div class="card-content">
-            <div class="term-summary">
-                <div class="summary-item" [class.success]="success">
-                    <span class="label">Advancement:</span>
-                    <span class="val">{{ success ? 'Promoted' : 'None' }}</span>
+        <div class="hud-content">
+            <div class="term-summary-mfd">
+                <div class="s-card" [class.promoted]="success">
+                    <span class="s-label">PROMOTION_STATUS</span>
+                    <span class="s-val">{{ success ? 'PROMOTED' : 'STAGNANT' }}</span>
                 </div>
-                <div class="summary-item" *ngIf="leavingHomeSuccess">
-                    <span class="label">Status:</span>
-                    <span class="val">Left Home</span>
+                <div class="s-card" *ngIf="leavingHomeSuccess">
+                    <span class="s-label">RELOCATION</span>
+                    <span class="s-val">DECOUPLED</span>
                 </div>
             </div>
-            
-            <div *ngIf="mandatoryContinue" class="alert-box info"><strong>Mandatory Continuation!</strong> You rolled a 12 and must continue.</div>
-            <div *ngIf="forcedOut" class="alert-box error"><strong>Forced Out!</strong> You must muster out this term.</div>
+
+            <div *ngIf="mandatoryContinue" class="hud-alert info">
+                <span class="hud-label-vivid">MANDATORY_EXTENSION_ORDER</span>
+                <p>Exceptional performance (NAT_12) triggered a non-negotiable term extension.</p>
+            </div>
+            <div *ngIf="forcedOut" class="hud-alert error">
+                <span class="hud-label-vivid">FORCED_SEPARATION_NOTICE</span>
+                <p>Operational necessity or failure results in immediate service termination.</p>
+            </div>
         </div>
-        <div class="card-actions">
-             <button class="btn-premium" (click)="continueCareer()" [disabled]="forcedOut">Start Next Term</button>
-             <button class="btn-secondary" (click)="startChangeAssignment()" [disabled]="mandatoryContinue || forcedOut">Change Assignment</button>
-             <button class="btn-secondary" (click)="finishTerm('MUSTER')" [disabled]="mandatoryContinue">Muster Out</button>
+        <div class="hud-footer">
+            <button class="btn-action" (click)="continueCareer()" [disabled]="forcedOut">START_NEXT_TERM</button>
+            <button class="btn-secondary" (click)="startChangeAssignment()"
+                [disabled]="mandatoryContinue || forcedOut">RECONFIG_ASSIGNMENT</button>
+            <button class="btn-danger" (click)="finishTerm('MUSTER')" [disabled]="mandatoryContinue">MUSTER_OUT</button>
         </div>
     </div>
-    
-
-
 </div>

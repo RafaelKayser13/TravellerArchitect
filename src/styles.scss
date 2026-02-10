@@ -1,146 +1,128 @@
 /* Global Design System - Traveller 2300AD Premium */
 
 :root {
-  /* Colors */
-  --bg-dark: #0b0c15;
-  --bg-panel: #151725;
-  --bg-card: #1e2130;
-  
-  --primary: #00d4ff; /* Sci-Fi Cyan */
-  --primary-dim: #007ead;
-  --primary-glow: rgba(0, 212, 255, 0.4);
-  
-  --accent: #ffae00; /* Gold/Amber for specific highlights */
-  --danger: #ff4444;
-  --success: #00ff9d;
-  
+  /* Cyberpunk 2077 HUD Palette */
+  --bg-pitch: #050505;
+  --bg-carbon: #101010;
+  --bg-panel: rgba(16, 16, 16, 0.85);
+
+  --neon-cyan: #00f3ff;
+  --neon-cyan-glow: rgba(0, 243, 255, 0.4);
+
+  --vivid-orange: #ff8c00;
+  --vivid-orange-glow: rgba(255, 140, 0, 0.4);
+
+  --neon-purple: #bc13fe;
+  --neon-purple-glow: rgba(188, 19, 254, 0.4);
+
+  --neon-green: #39ff14;
+  --neon-green-glow: rgba(57, 255, 20, 0.4);
+
+  --power-red: #ff003c;
+  --power-red-glow: rgba(255, 0, 60, 0.4);
+
+  --cyber-yellow: #ffee00;
+  --neon-yellow: #ffee00;
+  --neon-yellow-glow: rgba(255, 240, 31, 0.4);
+
   --text-main: #e0e0e0;
-  --text-dim: #8a8d9b;
-  
-  /* Borders */
-  --border-color: #2a2e45;
-  --border-highlight: #00d4ff;
-  
+  --text-dim: #888888;
+
   /* Fonts */
-  --font-header: 'Orbitron', sans-serif;
-  --font-body: 'Exo 2', sans-serif;
-  
-  /* Effects */
-  --glass: rgba(30, 33, 48, 0.7);
-  --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --backdrop-blur: 10px;
+  --font-header: 'Rajdhani', sans-serif;
+  --font-accent: 'Orbitron', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* HUD Borders & Effects */
+  --border-cyan: 1px solid var(--neon-cyan);
+  --border-orange: 1px solid var(--vivid-orange);
+  --backdrop-blur: 8px;
+  --scanlines: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 2px);
 }
 
-body, html {
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Orbitron:wght@400;700&family=Rajdhani:wght@400;500;700&family=JetBrains+Mono&display=swap');
+
+body,
+html {
   margin: 0;
   padding: 0;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-pitch);
+  background-image: var(--scanlines);
   color: var(--text-main);
   font-family: var(--font-body);
-  height: 100%;
-  overflow-x: hidden;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-header);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin: 0;
-  color: var(--text-main);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-dark); 
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-color); 
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dim); 
-}
-
-/* Utilities */
-.btn-premium {
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: var(--primary);
-  padding: 12px 24px;
-  font-family: var(--font-header);
-  font-weight: bold;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
 }
 
-.btn-premium:hover {
-  background-color: var(--primary);
-  color: var(--bg-dark);
-  box-shadow: 0 0 15px var(--primary-glow);
-}
-
-.btn-premium:disabled {
-  border-color: var(--text-dim);
-  color: var(--text-dim);
-  cursor: not-allowed;
-  background: transparent;
-  box-shadow: none;
-}
-
-.panel {
+/* Mixins and Utilities for Cyberpunk Shapes */
+.hud-container {
   background: var(--bg-panel);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow-card);
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.selection-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  border: var(--border-cyan);
+  position: relative;
+  backdrop-filter: blur(var(--backdrop-blur));
+  clip-path: polygon(0 0,
+      calc(100% - 20px) 0,
+      100% 20px,
+      100% 100%,
+      20px 100%,
+      0 calc(100% - 20px));
   padding: 20px;
-  border-radius: 8px;
+}
+
+.hud-container::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid var(--neon-cyan);
+  border-left: 2px solid var(--neon-cyan);
+}
+
+.btn-cyber {
+  background: transparent;
+  border: 1px solid var(--vivid-orange);
+  color: var(--vivid-orange);
+  padding: 10px 20px;
+  font-family: var(--font-header);
+  font-weight: 700;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all 0.2s ease;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
   position: relative;
 }
 
-.selection-card:hover {
-  border-color: var(--primary-dim);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+.btn-cyber:hover {
+  background: var(--vivid-orange);
+  color: var(--bg-pitch);
+  box-shadow: 0 0 15px var(--vivid-orange-glow);
 }
 
-.selection-card.selected {
-  border-color: var(--primary);
-  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(0, 212, 255, 0.1) 100%);
-  box-shadow: 0 0 15px var(--primary-glow);
+.hud-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  opacity: 0.8;
 }
 
-.selection-card.selected h3 { 
-    color: var(--primary); 
-}
-  
-.selection-card h3 { 
-  font-size: 1.2rem;
-  margin-bottom: 0.5rem;
+/* Scrollbar Cyber Style */
+::-webkit-scrollbar {
+  width: 4px;
 }
 
-.selection-card p {
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  margin: 0;
+::-webkit-scrollbar-track {
+  background: var(--bg-pitch);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-cyan);
 }

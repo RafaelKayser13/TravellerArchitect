@@ -21,8 +21,9 @@ import { CommonModule } from '@angular/common';
     .scene {
       width: 60px;
       height: 60px;
-      perspective: 600px;
+      perspective: 1000px;
       display: inline-block;
+      margin: 5px;
     }
 
     .cube {
@@ -30,28 +31,61 @@ import { CommonModule } from '@angular/common';
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 1s ease-out;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      will-change: transform; /* Hardware Acceleration */
     }
 
     .cube.rolling {
-      animation: spin 0.5s infinite linear;
+      animation: spin 0.4s infinite linear;
     }
 
     .face {
       position: absolute;
       width: 60px;
       height: 60px;
-      border: 2px solid var(--primary);
-      background: #0b0c15; /* Dark background */
-      color: #ffffff; /* White text */
-      font-size: 2rem;
-      font-family: var(--font-header);
-      font-weight: bold;
+      border: 2px solid var(--neon-cyan);
+      background: var(--cyber-yellow); /* Pure solid Cyber Yellow */
+      color: #000000;
+      font-size: 2.1rem;
+      font-family: var(--font-accent);
+      font-weight: 800;
       display: flex;
       justify-content: center;
       align-items: center;
-      text-shadow: 0 0 5px var(--primary);
-      box-shadow: inset 0 0 10px rgba(0, 212, 255, 0.2);
+      text-shadow: none;
+      box-shadow: none;
+      
+      background-image: none; /* Removed grid to keep color pure */
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -1px; left: -1px;
+        border-top: 4px solid var(--neon-cyan);
+        border-left: 4px solid var(--neon-cyan);
+        width: 12px;
+        height: 12px;
+        pointer-events: none;
+      }
+
+      &::after {
+        content: "DICE_UNIT";
+        position: absolute;
+        bottom: 2px;
+        right: 4px;
+        font-family: var(--font-mono);
+        font-size: 0.45rem;
+        color: #000000;
+        font-weight: 900;
+        letter-spacing: 1px;
+      }
+    }
+
+    @keyframes scanline {
+      0% { top: 0%; opacity: 0; }
+      10% { opacity: 0.4; }
+      90% { opacity: 0.4; }
+      100% { top: 100%; opacity: 0; }
     }
 
     /* Face positioning */
@@ -63,8 +97,8 @@ import { CommonModule } from '@angular/common';
     .bottom { transform: rotateX(-90deg) translateZ(30px); }
 
     @keyframes spin {
-        0% { transform: rotateX(0deg) rotateY(0deg); }
-        100% { transform: rotateX(360deg) rotateY(360deg); }
+        0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+        100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
     }
 
     /* Orientations */

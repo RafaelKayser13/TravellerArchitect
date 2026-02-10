@@ -1,90 +1,271 @@
-<div class="sheet-container">
-    <header class="sheet-header">
-        <h1>TRAVELLER 2300AD</h1>
-        <div class="meta">
-            <div class="field">
-                <label>Name</label>
-                <div class="value">{{ character().name || 'Unnamed' }}</div>
+<div class="sheet-container fade-in">
+    <!-- Header Section: Identity & Biometrics -->
+    <header class="dossier-header">
+        <div class="hud-box-header">
+            <span class="index">DOSSIER_ID: {{ character().id || 'PENDING_REGISTRATION' }}</span>
+            <h3>TACTICAL_CHARACTER_SUMMARY</h3>
+        </div>
+
+        <div class="identity-grid">
+            <div class="id-main">
+                <div class="field large">
+                    <span class="label">SUBJECT_NAME</span>
+                    <div class="value">{{ character().name || 'UNNAMED_OPERATIVE' }}</div>
+                </div>
+                <div class="metadata-row">
+                    <div class="meta-item">
+                        <span class="m-label">SPECIES</span>
+                        <span class="m-val">{{ character().species }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="m-label">ORIGIN</span>
+                        <span class="m-val">{{ character().originType }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="m-label">EST_AGE</span>
+                        <span class="m-val">{{ character().age }} STANDARD_YEARS</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="m-label">AUTH_LEVEL</span>
+                        <span class="m-val highlight">SEC_CLEARANCE_0{{ character().careerHistory.length }}</span>
+                    </div>
+                </div>
             </div>
-            <div class="field">
-                <label>Nationality</label>
-                <div class="value">{{ character().nationality }}</div>
-            </div>
-            <div class="field">
-                <label>Age</label>
-                <div class="value">{{ character().age }}</div>
+            <div class="biometrics-panel">
+                <div class="dna-strand">
+                    <span class="hud-label-tiny">GENETIC_COMPOSITION</span>
+                    <div class="gene-mods" *ngIf="character().genes.length > 0">
+                        <span class="gene-tag" *ngFor="let gene of character().genes">{{ gene.name }}</span>
+                    </div>
+                    <div class="gene-mods empty" *ngIf="character().genes.length === 0">
+                        [ NO_DNAM_MODIFICATIONS_DETECTED ]
+                    </div>
+                </div>
             </div>
         </div>
     </header>
-    
-    <div class="sheet-body">
-        <section class="stats">
-            <h3>Characteristics</h3>
-            <div class="stat-grid">
-                <div class="stat-box">
-                    <div class="stat-name">STR</div>
-                    <div class="stat-value">{{ character().characteristics.str.value }}</div>
-                    <div class="stat-mod">{{ character().characteristics.str.modifier >= 0 ? '+' : '' }}{{ character().characteristics.str.modifier }}</div>
+
+    <div class="dossier-grid">
+        <!-- Characteristics Column -->
+        <aside class="characteristics-column">
+            <div class="hud-module stats">
+                <div class="corner-detail tl"></div>
+                <div class="corner-detail tr"></div>
+                <div class="corner-detail bl"></div>
+                <div class="corner-detail br"></div>
+                <div class="hud-box-header">
+                    <span class="index">CH_01</span>
+                    <h3>CORE_CHARACTERISTICS</h3>
                 </div>
-                <div class="stat-box">
-                    <div class="stat-name">DEX</div>
-                    <div class="stat-value">{{ character().characteristics.dex.value }}</div>
-                    <div class="stat-mod">{{ character().characteristics.dex.modifier >= 0 ? '+' : '' }}{{ character().characteristics.dex.modifier }}</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-name">END</div>
-                    <div class="stat-value">{{ character().characteristics.end.value }}</div>
-                    <div class="stat-mod">{{ character().characteristics.end.modifier >= 0 ? '+' : '' }}{{ character().characteristics.end.modifier }}</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-name">INT</div>
-                    <div class="stat-value">{{ character().characteristics.int.value }}</div>
-                    <div class="stat-mod">{{ character().characteristics.int.modifier >= 0 ? '+' : '' }}{{ character().characteristics.int.modifier }}</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-name">EDU</div>
-                    <div class="stat-value">{{ character().characteristics.edu.value }}</div>
-                    <div class="stat-mod">{{ character().characteristics.edu.modifier >= 0 ? '+' : '' }}{{ character().characteristics.edu.modifier }}</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-name">SOC</div>
-                    <div class="stat-value">{{ character().characteristics.soc.value }}</div>
-                    <div class="stat-mod">{{ character().characteristics.soc.modifier >= 0 ? '+' : '' }}{{ character().characteristics.soc.modifier }}</div>
+                <div class="hud-content">
+                    <div class="stat-grid-sheet">
+                        <div class="stat-box-sheet">
+                            <span class="s-name">STR</span>
+                            <span class="s-val">{{ character().characteristics.str.value }}</span>
+                            <span class="s-mod" [class.pos]="character().characteristics.str.modifier >= 0">
+                                {{ character().characteristics.str.modifier >= 0 ? '+' : '' }}{{
+                                character().characteristics.str.modifier }}
+                            </span>
+                        </div>
+                        <div class="stat-box-sheet">
+                            <span class="s-name">DEX</span>
+                            <span class="s-val">{{ character().characteristics.dex.value }}</span>
+                            <span class="s-mod" [class.pos]="character().characteristics.dex.modifier >= 0">
+                                {{ character().characteristics.dex.modifier >= 0 ? '+' : '' }}{{
+                                character().characteristics.dex.modifier }}
+                            </span>
+                        </div>
+                        <div class="stat-box-sheet">
+                            <span class="s-name">END</span>
+                            <span class="s-val">{{ character().characteristics.end.value }}</span>
+                            <span class="s-mod" [class.pos]="character().characteristics.end.modifier >= 0">
+                                {{ character().characteristics.end.modifier >= 0 ? '+' : '' }}{{
+                                character().characteristics.end.modifier }}
+                            </span>
+                        </div>
+                        <div class="stat-box-sheet">
+                            <span class="s-name">INT</span>
+                            <span class="s-val">{{ character().characteristics.int.value }}</span>
+                            <span class="s-mod" [class.pos]="character().characteristics.int.modifier >= 0">
+                                {{ character().characteristics.int.modifier >= 0 ? '+' : '' }}{{
+                                character().characteristics.int.modifier }}
+                            </span>
+                        </div>
+                        <div class="stat-box-sheet">
+                            <span class="s-name">EDU</span>
+                            <span class="s-val">{{ character().characteristics.edu.value }}</span>
+                            <span class="s-mod" [class.pos]="character().characteristics.edu.modifier >= 0">
+                                {{ character().characteristics.edu.modifier >= 0 ? '+' : '' }}{{
+                                character().characteristics.edu.modifier }}
+                            </span>
+                        </div>
+                        <div class="stat-box-sheet">
+                            <span class="s-name">SOC</span>
+                            <span class="s-val">{{ character().characteristics.soc.value }}</span>
+                            <span class="s-mod" [class.pos]="character().characteristics.soc.modifier >= 0">
+                                {{ character().characteristics.soc.modifier >= 0 ? '+' : '' }}{{
+                                character().characteristics.soc.modifier }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-        
-        <div class="columns">
-            <section class="skills">
-                <h3>Skills</h3>
-                <ul>
-                    <li *ngFor="let skill of character().skills">
-                        <span class="skill-name">{{ skill.name }}</span>
-                        <span class="skill-level">{{ skill.level }}</span>
-                    </li>
-                </ul>
-            </section>
-            
-            <section class="equipment">
-                <h3>Equipment & Finances</h3>
-                <p><strong>Cash:</strong> Lv {{ character().finances.cash }}</p>
-                <ul>
-                    <li *ngFor="let item of character().equipment">{{ item }}</li>
-                </ul>
-            </section>
-        </div>
-        
-        <section class="history">
-            <h3>Service History</h3>
-            <div class="term" *ngFor="let term of character().careerHistory">
-                <h4>Term {{ term.termNumber }}: {{ term.careerName }} (Rank {{ term.rank }})</h4>
-                <p *ngFor="let ev of term.events">{{ ev }}</p>
+
+            <!-- Origin & Homeworld -->
+            <div class="hud-module world" *ngIf="character().homeworld">
+                <div class="corner-detail tl"></div>
+                <div class="corner-detail tr"></div>
+                <div class="hud-box-header">
+                    <span class="index">OR_01</span>
+                    <h3>HOMEWORLD_ORIGIN</h3>
+                </div>
+                <div class="hud-content">
+                    <div class="world-data">
+                        <div class="w-primary">
+                            <span class="w-name">{{ character().homeworld?.name }}</span>
+                            <span class="w-uwp">{{ character().homeworld?.uwp }}</span>
+                        </div>
+                        <div class="tactical-row mini">
+                            <div class="t-item">
+                                <span class="t-label">GRAVITY</span>
+                                <span class="t-val">{{ character().homeworld?.gravity }}G ({{
+                                    character().homeworld?.gravityCode }})</span>
+                            </div>
+                            <div class="t-item">
+                                <span class="t-label">NATION</span>
+                                <span class="t-val">{{ character().nationality }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+
+            <!-- Finances & Assets -->
+            <div class="hud-module finances">
+                <div class="corner-detail bl"></div>
+                <div class="corner-detail br"></div>
+                <div class="hud-box-header">
+                    <span class="index">FN_01</span>
+                    <h3>ECONOMIC_STATUS_DATA</h3>
+                </div>
+                <div class="hud-content">
+                    <div class="finance-grid">
+                        <div class="f-item">
+                            <span class="f-label">LIQUID_CASH</span>
+                            <span class="f-val highlight">Lv {{ character().finances.cash | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="f-item" *ngIf="character().finances.shipShares > 0">
+                            <span class="f-label">SHIP_SHARES</span>
+                            <span class="f-val">{{ character().finances.shipShares }} UNIT(S)</span>
+                        </div>
+                        <div class="f-item" *ngIf="character().finances.debt > 0">
+                            <span class="f-label debt">FINANCIAL_DEBT</span>
+                            <span class="f-val danger">Lv {{ character().finances.debt | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="f-item" *ngIf="characterService.pension() > 0">
+                            <span class="f-label">ANNUAL_PENSION</span>
+                            <span class="f-val">Lv {{ characterService.pension() * 10000 | number:'1.0-0' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Skills & Training Main Column -->
+        <main class="data-column">
+            <div class="hud-module skills">
+                <div class="corner-detail tl"></div>
+                <div class="corner-detail tr"></div>
+                <div class="hud-box-header">
+                    <span class="index">SK_01</span>
+                    <h3>ACQUIRED_SKILL_ARRAY</h3>
+                </div>
+                <div class="hud-content">
+                    <div class="skill-matrix">
+                        <div class="skill-entry" *ngFor="let skill of character().skills">
+                            <div class="s-header">
+                                <span class="s-lvl">LV.{{ skill.level }}</span>
+                                <span class="s-name">{{ skill.name }}</span>
+                            </div>
+                            <span class="s-spec" *ngIf="skill.specialization">[{{ skill.specialization }}]</span>
+                        </div>
+                        <div class="empty-state" *ngIf="character().skills.length === 0">
+                            [ NO_ACTIVE_SKILL_SIGNALS ]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Timeline -->
+            <div class="hud-module chronology">
+                <div class="corner-detail bl"></div>
+                <div class="corner-detail br"></div>
+                <div class="hud-box-header">
+                    <span class="index">CH_02</span>
+                    <h3>SERVICE_RECORD_CHRONOLOGY</h3>
+                </div>
+                <div class="hud-content history-terminal">
+                    <div class="history-entry" *ngFor="let term of character().careerHistory">
+                        <div class="h-timeline">
+                            <span class="h-term">TERM_0{{ term.termNumber }}</span>
+                            <div class="h-line"></div>
+                        </div>
+                        <div class="h-details">
+                            <div class="h-main">
+                                <span class="h-career">{{ term.careerName }}</span>
+                                <span class="h-rank" *ngIf="term.rankTitle">{{ term.rankTitle }} (R{{ term.rank
+                                    }})</span>
+                                <span class="h-rank" *ngIf="!term.rankTitle">RANK_0{{ term.rank }}</span>
+                            </div>
+                            <div class="h-assignment" *ngIf="term.assignment">ASSIGNMENT: {{ term.assignment }}</div>
+                            <div class="h-events">
+                                <div class="ev-item" *ngFor="let ev of term.events">
+                                    <span class="dot"></span>
+                                    <span class="text">{{ ev }}</span>
+                                </div>
+                            </div>
+                            <div class="h-benefits" *ngIf="term.benefits.length > 0">
+                                <span class="hud-label-tiny">TOTAL_BENEFITS:</span>
+                                <span class="benefit-tag" *ngFor="let b of term.benefits">{{ b }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-state" *ngIf="character().careerHistory.length === 0">
+                        [ NO_SERVICE_HISTORY_FOUND ]
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipment Section -->
+            <div class="hud-module equipment" *ngIf="character().equipment.length > 0">
+                <div class="hud-box-header">
+                    <span class="index">EQ_01</span>
+                    <h3>INVENTORY_LOG</h3>
+                </div>
+                <div class="hud-content">
+                    <div class="inventory-grid">
+                        <div class="inv-item" *ngFor="let item of character().equipment">
+                            <span class="marker">>></span>
+                            <span class="item-name">{{ item }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-    
-    <footer class="sheet-actions">
-        <button class="btn-export" (click)="exportJson()">Export JSON</button>
-        <button class="btn-export" (click)="exportPdf()">Print / PDF</button>
+
+    <!-- Actions Footer -->
+    <footer class="sheet-actions-footer">
+        <div class="divider"></div>
+        <div class="action-buttons">
+            <button class="btn-action-sheet" (click)="exportJson()">
+                <span class="index">CMD_01</span>
+                EXPORT_DATA_JSON
+            </button>
+            <button class="btn-action-sheet finalize" (click)="exportPdf()">
+                <span class="index">CMD_02</span>
+                PRINT_OFFICIAL_DOSSIER
+            </button>
+        </div>
     </footer>
 </div>

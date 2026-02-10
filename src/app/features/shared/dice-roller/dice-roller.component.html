@@ -1,89 +1,143 @@
 <div class="dice-overlay" *ngIf="request">
-    <div class="dice-container" [class.success]="showResult && isSuccess" [class.fail]="showResult && !isSuccess && request.target > 0">
-        
-        <!-- Header Info -->
-        <div class="roll-info">
-            <h2>{{ request?.reason }}</h2>
-            
-            <div class="roll-details" *ngIf="request">
-                 <div class="detail-box" *ngIf="request.statName">
-                     <span class="label">Stat</span>
-                     <div class="value">{{ request.statName }}</div>
-                 </div>
-                 <div class="detail-box" *ngIf="request.target > 0">
-                     <span class="label">Target</span>
-                     <div class="value">{{ request.target }}+</div>
-                 </div>
-                 
-                 <!-- Detailed Modifiers -->
-                 <div class="modifiers-list" *ngIf="request.modifiers && request.modifiers.length > 0">
-                     <div class="mod-pill" *ngFor="let mod of request.modifiers" [class.pos]="mod.value >= 0" [class.neg]="mod.value < 0">
-                         {{ mod.label }}: {{ mod.value >= 0 ? '+' : ''}}{{ mod.value }}
-                     </div>
-                 </div>
+    <div class="dice-container" [class.success]="showResult && isSuccess"
+        [class.fail]="showResult && !isSuccess && request.target > 0">
+        <!-- HUD Decorators -->
+        <div class="hud-bracket tl"></div>
+        <div class="hud-bracket tr"></div>
+        <div class="hud-bracket bl"></div>
+        <div class="hud-bracket br"></div>
+        <div class="scan-line" *ngIf="rolling"></div>
 
-                 <div class="detail-box" *ngIf="(!request.modifiers || request.modifiers.length === 0)">
-                    <span class="label">Total DM</span>
-                    <div class="value" [class.pos]="request.dm > 0" [class.neg]="request.dm < 0">
-                        {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
-                    </div>
-                </div>
-            </div>
+        <div class="digital-readouts">
+            <div class="readout top-left">SIG_LOCK: STABLE</div>
+            <div class="readout top-right">PROC_ID: {{ (Math.random() * 99999).toFixed(0) }}</div>
+            <div class="readout bottom-left">VOLTAGE_REF: 4.2V</div>
+            <div class="readout bottom-right">PARITY_CHECK: PASS</div>
         </div>
-        
-        <div class="dice-area">
-            <ng-container *ngIf="rolling">
-                <div class="cube-spinner" *ngFor="let d of [].constructor(request?.diceCount || 2)">
-                    <div class="cube scanning">
-                        <div class="face front">?</div>
-                        <div class="face back">?</div>
-                        <div class="face right">?</div>
-                        <div class="face left">?</div>
-                        <div class="face top">?</div>
-                        <div class="face bottom">?</div>
-                    </div>
-                </div>
-            </ng-container>
-            
-            <ng-container *ngIf="showResult">
-                <div class="cube-result" *ngFor="let val of resultValues">
-                    <div class="cube show-{{val}}">
-                        <div class="face front">1</div>
-                        <div class="face back">6</div>
-                        <div class="face right">3</div>
-                        <div class="face left">4</div>
-                        <div class="face top">5</div>
-                        <div class="face bottom">2</div>
-                    </div>
-                </div>
-            </ng-container>
+
+        <!-- NEW HEADER -->
+        <div class="hud-main-header">
+            <div class="header-line"></div>
+            <h1>{{ request.reason }}</h1>
+            <div class="header-line"></div>
         </div>
-        
-        <div class="total-display" *ngIf="showResult">
-            <div class="calc-row">
-                <div class="part">
-                    {{ total }}
-                    <span class="tiny">ROLL</span>
+
+        <div class="hud-dual-wrapper">
+            <!-- Left: Input/Stats -->
+            <div class="hud-column input-sec">
+                <div class="column-header">
+                    <span class="prefix">>></span> INPUT_VECTORS
                 </div>
-                <div class="operator">+</div>
-                <div class="part">
-                    {{ request?.dm }}
-                    <span class="tiny">DM</span>
+
+                <div class="side-by-side">
+                    <div class="detail-box" *ngIf="request.statName">
+                        <span class="label">VECTOR_IN</span>
+                        <div class="value">{{ request.statName }}</div>
+                    </div>
+                    <div class="detail-box" *ngIf="request.target > 0">
+                        <span class="label">THRESHOLD</span>
+                        <div class="value">{{ request.target }}+</div>
+                    </div>
+                </div>
+
+                <div class="modifiers-container"
+                    *ngIf="(request.modifiers && request.modifiers.length > 0) || request.dm !== 0">
+                    <span class="label-tiny">ACTIVE_MODIFIERS</span>
+                    <div class="modifiers-list">
+                        <div class="mod-pill" *ngFor="let mod of request.modifiers" [class.pos]="mod.value > 0"
+                            [class.neg]="mod.value < 0">
+                            <span class="mod-desc">{{mod.label}}:</span>
+                            <span class="mod-val">{{mod.value > 0 ? '+' : ''}}{{mod.value}}</span>
+                        </div>
+                        <div class="mod-pill"
+                            *ngIf="(!request.modifiers || request.modifiers.length === 0) && request.dm !== 0"
+                            [class.pos]="request.dm > 0" [class.neg]="request.dm < 0">
+                            NET_OFFSET: {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-leds">
+                    <div class="led" [class.active]="true"></div>
+                    <div class="led" [class.active]="rolling"></div>
+                    <div class="led" [class.active]="showResult"></div>
                 </div>
             </div>
 
-            <div class="final-row">
-                <div class="final-val">= {{ effectiveTotal }}</div>
-                
-                <div class="status" *ngIf="request && request.target > 0">
-                    <span class="success" *ngIf="isSuccess">SUCCESS</span>
-                    <span class="fail" *ngIf="!isSuccess">FAILURE</span>
+            <!-- Right: Processing & Results (Dual Stack) -->
+            <div class="hud-column processing-sec">
+                <div class="column-header center">
+                    <span class="prefix">::</span> TACTICAL_DICE_SCAN <span class="prefix">::</span>
+                </div>
+                <div class="dice-stack">
+                    <div class="dice-area">
+                        <ng-container *ngIf="rolling">
+                            <div class="cube-spinner" *ngFor="let d of [].constructor(request.diceCount || 2)">
+                                <div class="cube scanning">
+                                    <div class="face front">?</div>
+                                    <div class="face back">?</div>
+                                    <div class="face right">?</div>
+                                    <div class="face left">?</div>
+                                    <div class="face top">?</div>
+                                    <div class="face bottom">?</div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="showResult">
+                            <div class="cube-result" *ngFor="let val of resultValues">
+                                <div class="cube show-{{val}}">
+                                    <div class="face front">1</div>
+                                    <div class="face back">6</div>
+                                    <div class="face right">3</div>
+                                    <div class="face left">4</div>
+                                    <div class="face top">5</div>
+                                    <div class="face bottom">2</div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div class="data-stream" *ngIf="rolling">
+                        0101010101011101010101010101110101
+                    </div>
+
+                    <!-- Moved Results here, below dice area -->
+                    <div class="total-display" *ngIf="showResult">
+                        <div class="calc-row">
+                            <div class="part">
+                                {{ total }}
+                                <span class="tiny">RAW</span>
+                            </div>
+                            <div class="operator">+</div>
+                            <div class="part">
+                                {{ request.dm }}
+                                <span class="tiny">MODS</span>
+                            </div>
+                        </div>
+
+                        <div class="final-row">
+                            <div class="final-val">{{ effectiveTotal }}</div>
+                            <div class="status" *ngIf="request && request.target > 0">
+                                <span class="success" *ngIf="isSuccess">OP_SUCCESS</span>
+                                <span class="fail" *ngIf="!isSuccess">OP_FAILURE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Event / Result Description -->
+                    <div class="result-description" *ngIf="showResult && resultDescription">
+                        {{ resultDescription }}
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div *ngIf="showResult" style="margin-top: 2rem;">
-            <button class="btn-continue" (click)="continue()">CONTINUE</button>
+
+        <!-- NEW FOOTER -->
+        <div class="hud-main-footer" *ngIf="showResult">
+            <div class="footer-decor"></div>
+            <button class="btn-continue" (click)="continue()">NEXT_PROTOCOL</button>
+            <div class="footer-decor"></div>
         </div>
     </div>
 </div>
