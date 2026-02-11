@@ -749,6 +749,17 @@
         opacity: 0.9;
     }
 
+    .highlight-vivid {
+        color: #fff;
+        background: var(--power-red);
+        padding: 4px 8px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin-top: 0.8rem;
+        display: inline-block;
+        box-shadow: 0 0 10px var(--power-red-glow);
+    }
+
     &.info {
         border-color: rgba(0, 243, 255, 0.2);
         color: var(--neon-cyan);

@@ -31,7 +31,7 @@ export class OriginComponent {
   availableWorlds: World[] = [];
 
   selectedNationality: Nationality | null = null;
-  selectedOriginType: 'Core' | 'Frontier' | 'Spacer' = 'Core';
+  selectedOriginType: 'Core' | 'Frontier' | 'Spacer' | null = null;
   selectedWorld: World | null = null;
 
   // Background Skills
@@ -59,7 +59,7 @@ export class OriginComponent {
   }
 
   constructor() {
-    // Load existing state if any
+    // Load existing state if any — skip hydration on reset (empty values)
     const char = this.characterService.character();
 
     if (char.nationality) {
@@ -67,13 +67,14 @@ export class OriginComponent {
     }
 
     if (char.originType) {
-      // Map 'Earth' (default in model) to 'Core' for UI consistency
+      // Map 'Earth' to 'Core' for UI consistency
       if (char.originType === 'Earth' || char.originType === 'Core') {
         this.selectedOriginType = 'Core';
       } else {
-        // Cast to expected type (Frontier | Spacer)
         this.selectedOriginType = char.originType as 'Frontier' | 'Spacer';
       }
+    } else {
+      this.selectedOriginType = null;
     }
 
     // Update worlds list based on restored selection
@@ -84,24 +85,16 @@ export class OriginComponent {
       this.selectedWorld = found || char.homeworld;
     }
 
-    // Restore Background Skills selection
-    if (char.skills) {
-      // Filter character skills to find ones that match the available background skills for this origin
+    // Restore Background Skills selection only if we have valid origin data
+    if (char.skills && char.nationality && char.originType) {
       const relevantSkills = this.availableSkills;
       this.selectedBackgroundSkills = char.skills
         .filter(s => relevantSkills.includes(s.name))
         .map(s => s.name);
 
-      // Recalculate if the section should be shown
       if (this.selectedNationality && this.selectedWorld) {
-        // Re-run the count logic
-        // We can't easily access the dice modifier here without the stat value, 
-        // but 'showSkillsSelection' usually flips on save().
-        // Let's force it true if we have specific data
         this.showSkillsSelection = true;
-
-        // Recalculate count
-        const edu = (char.characteristics as any).edu.value; // Approximate, might miss modifier from this step re-calc
+        const edu = (char.characteristics as any).edu.value;
         const eduDm = this.diceService.getModifier(edu);
         this.backgroundSkillsCount = (this.selectedOriginType === 'Spacer' ? 4 : 3) + eduDm;
         if (this.backgroundSkillsCount < 1) this.backgroundSkillsCount = 1;

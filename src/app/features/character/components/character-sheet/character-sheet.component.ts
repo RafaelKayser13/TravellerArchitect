@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../../../core/services/character.service';
 
@@ -15,6 +15,68 @@ export class CharacterSheetComponent {
   protected characterService = inject(CharacterService);
   character = this.characterService.character;
 
+  // Hierarchical Skill Tree
+  skillsTree = computed(() => {
+    const char = this.character();
+    const tree: { [parent: string]: { name: string, level: number, specialization?: string }[] } = {};
+    const standalone: { name: string, level: number, specialization?: string }[] = [];
+
+    char.skills.forEach(s => {
+      const match = s.name.match(/^(.+)\s\((.+)\)$/);
+      if (match) {
+        const parent = match[1];
+        const spec = match[2];
+        if (!tree[parent]) tree[parent] = [];
+        tree[parent].push({ name: s.name, level: s.level, specialization: spec });
+      } else {
+        standalone.push(s);
+      }
+    });
+
+    return { groups: Object.keys(tree).map(key => ({ name: key, children: tree[key] })), standalone };
+  });
+
+  // Categorized NPCs
+  categorizedNpcs = computed(() => {
+    const char = this.character();
+    const groups: { [type: string]: any[] } = {
+      'ally': [],
+      'contact': [],
+      'rival': [],
+      'enemy': []
+    };
+
+    char.npcs.forEach(npc => {
+      const type = npc.type.toLowerCase();
+      if (groups[type]) {
+        groups[type].push(npc);
+      } else {
+        // Fallback for custom types if any
+        if (!groups['other']) groups['other'] = [];
+        groups['other'].push(npc);
+      }
+    });
+
+    return Object.keys(groups)
+      .filter(key => groups[key].length > 0)
+      .map(key => ({ type: key.toUpperCase(), list: groups[key] }));
+  });
+
+  // Implants & Cybernetics
+  implants = computed(() => {
+    const char = this.character();
+    return char.equipment.filter(item =>
+      /Implant|Neural|Augment|Cyber|Jack/i.test(item)
+    );
+  });
+
+  // General Equipment (exclude implants)
+  generalEquipment = computed(() => {
+    const char = this.character();
+    const implantList = this.implants();
+    return char.equipment.filter(item => !implantList.includes(item));
+  });
+
   exportJson() {
     const data = JSON.stringify(this.character(), null, 2);
     const blob = new Blob([data], { type: 'application/json' });
@@ -28,7 +90,7 @@ export class CharacterSheetComponent {
 
   exportPdf() {
     const char = this.character();
-    
+
     const docDefinition: any = {
       content: [
         { text: 'Traveller 2300AD Character Sheet', style: 'header' },
@@ -40,7 +102,7 @@ export class CharacterSheetComponent {
         { text: `Age: ${char.age}`, style: 'subheader' },
         { text: `Description: ${char.description || 'N/A'}`, margin: [0, 5, 0, 5] },
         { text: '\n' },
-        
+
         { text: 'Characteristics', style: 'sectionHeader' },
         {
           table: {
@@ -57,23 +119,23 @@ export class CharacterSheetComponent {
             ]
           }
         },
-        
+
         { text: 'Skills', style: 'sectionHeader', margin: [0, 10, 0, 5] },
         {
           ul: char.skills.map((s: any) => `${s.name} ${s.level}`)
         },
-        
+
         { text: 'Equipment', style: 'sectionHeader', margin: [0, 10, 0, 5] },
         {
-            ul: char.equipment
+          ul: char.equipment
         },
-        
+
         { text: 'Career History', style: 'sectionHeader', margin: [0, 10, 0, 5] },
         ...char.careerHistory.map((term: any) => ({
-            text: `Term ${term.termNumber}: ${term.careerName} (Rank ${term.rank}) - ${term.events.join(', ')}`,
-            margin: [0, 2, 0, 2]
+          text: `Term ${term.termNumber}: ${term.careerName} (Rank ${term.rank}) - ${term.events.join(', ')}`,
+          margin: [0, 2, 0, 2]
         })),
-        
+
         { text: 'Finances', style: 'sectionHeader', margin: [0, 10, 0, 5] },
         { text: `Cash: Lv ${char.finances.cash}` }
       ],
@@ -83,11 +145,11 @@ export class CharacterSheetComponent {
         sectionHeader: { fontSize: 12, bold: true, decoration: 'underline' }
       }
     };
-    
+
     pdfMake.createPdf(docDefinition).open();
   }
-  
+
   private statStr(stat: any) {
-      return `${stat.value} / ${stat.modifier >= 0 ? '+' : ''}${stat.modifier}`;
+    return `${stat.value} / ${stat.modifier >= 0 ? '+' : ''}${stat.modifier}`;
   }
 }

@@ -1,10 +1,12 @@
 
+import { NPC } from './career.model';
+
 export interface Characteristic {
   name: string;
   value: number;
   modifier: number;
   // 2300AD Tracking
-  originalValue?: number; 
+  originalValue?: number;
   gravityMod?: number;
   geneticMod?: number;
   augmentsMod?: number;
@@ -40,9 +42,9 @@ export const INITIAL_CHARACTER: Character = {
   playerName: '',
   description: '',
   portraitUrl: '',
-  species: 'Human',
+  species: '',
   nationality: '',
-  originType: 'Earth',
+  originType: '',
   genes: [],
   backgroundSkillsSelected: false,
   characteristics: {
@@ -55,15 +57,19 @@ export const INITIAL_CHARACTER: Character = {
   },
   skills: [],
   careerHistory: [],
+  npcs: [],
+  connectionsUsed: 0,
   age: 18,
-  finances: { cash: 0, pension: 0, debt: 0, shipShares: 0 },
+  finances: { cash: 0, pension: 0, debt: 0, medicalDebt: 0, shipShares: 0 },
   education: { university: null, academy: null },
   equipment: [],
   notes: '',
   creationDate: new Date(),
   isFinished: false,
   gender: 'Male',
-  history: []
+  psionicPotential: false,
+  history: [],
+  injuries: []
 };
 
 export interface CareerTerm {
@@ -78,24 +84,32 @@ export interface CareerTerm {
   ageEnd: number;
   survived: boolean;
   commissioned: boolean;
-  advanced: boolean;
+  advanced?: boolean;
   // 2300AD
   leavingHome?: boolean;
   leavingHomeRoll?: number;
+  loseCashBenefits?: boolean; // Merchant Bankruptcy
+  benefitRollsGained: number; // New: benefit rolls earned this term
 }
 
 export interface Finances {
   cash: number; // Livres (Lv)
   pension: number;
-  debt: number; // Medical or other
+  debt: number; // General debt
+  medicalDebt?: number; // 2300AD specific
   shipShares: number; // Worth Lv 500,000 each
+  benefitRollMod?: number; // Good Fortune (Life Event) bonus
+  benefitRollDebt?: number; // Used for Augment sacrifices
+  benefitRollsSpent?: number; // 2300AD: Spent during career (e.g. Neural Jack)
+  isGambler?: boolean; // Merchant gambling event active
+  benefitRollsAllocated?: { [careerName: string]: number }; // New: track rolls by career source
 }
 
 export interface GeneMod {
-    name: string;
-    description: string;
-    techLevel?: number;
-    cost?: number;
+  name: string;
+  description: string;
+  techLevel?: number;
+  cost?: number;
 }
 
 export interface Character {
@@ -105,15 +119,15 @@ export interface Character {
   playerName?: string;
   description?: string;
   portraitUrl?: string;
-  species: string; // Typically 'Human' for 2300AD standard
+  species: string;
   nationality: string;
-  
+
   // 2300AD Specifics
-  originType: 'Frontier' | 'Spacer' | 'Core' | 'Earth'; // Origin Logic
+  originType: 'Frontier' | 'Spacer' | 'Core' | 'Earth' | '';
   homeworld?: World;
-  genes: GeneMod[]; // DNAMs
+  genes: GeneMod[];
   backgroundSkillsSelected: boolean;
-  
+
   characteristics: {
     str: Characteristic;
     dex: Characteristic;
@@ -125,31 +139,51 @@ export interface Character {
 
   skills: Skill[];
   careerHistory: CareerTerm[];
-  
+
+  // NPC Relationships
+  npcs: NPC[];
+  connectionsUsed: number; // Max 2 per character creation (Connections Rule)
+
   age: number;
   finances: Finances;
-  
+
   // Education
   education: {
-    university?: boolean | null; // null = not attempted, false = failed, true = graduated
+    university?: boolean | null;
     academy?: boolean | null;
     honors?: boolean;
-    fail?: boolean; // kicked out
-    offworld?: boolean; // 2300AD
-    major?: string; // University Major (Level 1 logic)
-    minor?: string; // University Minor (Level 0 logic)
+    graduated?: boolean; // New: Tracks successful completion vs expelled/war
+    fail?: boolean;
+    offworld?: boolean;
+    major?: string;
+    minor?: string;
   };
 
-  equipment: string[]; // List of item names for now
-  
+  equipment: string[];
+
   // Meta
   notes: string;
   creationDate: Date;
   isFinished: boolean;
 
-  // New: 2300AD Logic
-  benefitRollDebt?: number; // Tracks lost rolls due to Cybernetic Save
-  
+  // 2300AD Logic
+  // (moved to finances)
+
+  // DM Tracking for cross-term effects
+  nextQualificationDm?: number;
+  nextAdvancementDm?: number;
+  nextBenefitDm?: number;
+
+  psionicPotential: boolean; // New: Tracks eligibility for Psion career
+
   gender: string;
-  history: string[]; // Log of all events
+  history: string[];
+  injuries: {
+    id: string;
+    name: string;
+    stat: string;
+    reduction: number;
+    cost: number;
+    treated: boolean;
+  }[];
 }

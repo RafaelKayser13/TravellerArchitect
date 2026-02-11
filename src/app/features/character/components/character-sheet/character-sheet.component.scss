@@ -62,8 +62,14 @@
             align-items: center;
             font-size: 0.7rem;
 
-            .m-label { color: var(--text-dim); }
-            .m-val { color: var(--cyber-yellow); font-family: var(--font-accent); }
+            .m-label {
+                color: var(--text-dim);
+            }
+
+            .m-val {
+                color: var(--cyber-yellow);
+                font-family: var(--font-accent);
+            }
         }
     }
 
@@ -283,49 +289,96 @@
             color: var(--text-dim);
             margin-top: 0.4rem;
 
-            &.pos { color: var(--cyber-yellow); font-weight: bold; }
+            &.pos {
+                color: var(--cyber-yellow);
+                font-weight: bold;
+            }
         }
     }
 }
 
-/* Data Column (Skills, History) */
-.data-column {
+/* Skill Hierarchy Tree */
+.skill-tree {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
-}
+    gap: 1.5rem;
 
-/* Skill Matrix Refined */
-.skill-matrix {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 1rem;
+    .skill-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .g-name {
+                font-family: var(--font-header);
+                font-size: 0.8rem;
+                color: var(--neon-cyan);
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                white-space: nowrap;
+            }
+
+            .g-line {
+                flex-grow: 1;
+                height: 1px;
+                background: linear-gradient(90deg, var(--neon-cyan), transparent);
+                opacity: 0.3;
+            }
+        }
+
+        .group-children {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+            padding-left: 1rem;
+            border-left: 1px dashed rgba(0, 243, 255, 0.2);
+        }
+    }
 
     .skill-entry {
         background: rgba(10, 15, 20, 0.4);
         border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 1rem;
-        border-left: 4px solid var(--neon-cyan);
+        padding: 0.8rem 1.2rem;
+        border-right: 2px solid var(--neon-cyan);
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.2rem;
         transition: all 0.2s;
 
         &:hover {
             background: rgba(0, 243, 255, 0.05);
-            border-color: rgba(0, 243, 255, 0.2);
+            border-color: var(--neon-cyan);
+        }
+
+        &.mini {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: none;
+            border-left: 2px solid var(--neon-cyan);
+
+            .s-name {
+                font-size: 0.8rem;
+                color: var(--text-dim);
+            }
+
+            .s-lvl {
+                font-size: 0.75rem;
+            }
         }
 
         .s-header {
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            align-items: center;
 
             .s-name {
                 font-family: var(--font-accent);
-                font-size: 1rem;
+                font-size: 0.95rem;
                 color: #fff;
-                text-transform: uppercase;
                 letter-spacing: 1px;
             }
 
@@ -333,330 +386,172 @@
                 font-family: var(--font-mono);
                 color: var(--neon-cyan);
                 font-weight: bold;
-                font-size: 0.8rem;
+                font-size: 0.85rem;
             }
         }
 
         .s-spec {
-            font-family: var(--font-mono);
             font-size: 0.65rem;
-            color: var(--text-dim);
-            font-style: italic;
-            opacity: 0.7;
+            color: var(--cyber-yellow);
+            opacity: 0.8;
         }
     }
 }
 
-/* History Timeline Overhaul */
-.history-terminal {
-    display: flex;
-    flex-direction: column;
+/* Status & Medical Grid */
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
 
-    .history-entry {
-        display: grid;
-        grid-template-columns: 100px 1fr;
-        gap: 2rem;
-        position: relative;
-
-        &::before {
-            content: '';
-            position: absolute;
-            left: 50px;
-            top: 2rem;
-            bottom: -2rem;
-            width: 1px;
-            background: rgba(0, 243, 255, 0.15);
-        }
-
-        &:last-child::before { display: none; }
-
-        .h-timeline {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            .h-term {
-                background: rgba(0, 243, 255, 0.1);
-                border: 1px solid var(--neon-cyan);
-                color: var(--neon-cyan);
-                font-family: var(--font-mono);
-                font-size: 0.7rem;
-                padding: 0.3rem 0.6rem;
-                border-radius: 4px;
-                z-index: 1;
-            }
-        }
-
-        .h-details {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+    .hud-module.status {
+        .hud-content {
             padding: 1.5rem;
-            border-radius: 2px;
+        }
 
-            .h-main {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 1rem;
-                border-bottom: 1px solid rgba(0, 243, 255, 0.1);
-                padding-bottom: 0.8rem;
+        &.medical {
+            border-left: 3px solid var(--power-red);
+        }
 
-                .h-career {
-                    font-family: var(--font-header);
-                    font-size: 1.3rem;
-                    color: #fff;
-                    letter-spacing: 2px;
-                }
-
-                .h-rank {
-                    font-family: var(--font-mono);
-                    color: var(--cyber-yellow);
-                    font-size: 0.8rem;
-                    text-transform: uppercase;
-                }
-            }
-
-            .h-assignment {
-                font-family: var(--font-mono);
-                font-size: 0.75rem;
-                color: var(--neon-cyan);
-                margin-bottom: 1.2rem;
-                opacity: 0.9;
-            }
-
-            .h-events {
-                display: flex;
-                flex-direction: column;
-                gap: 0.6rem;
-                margin-bottom: 1.5rem;
-
-                .ev-item {
-                    display: flex;
-                    gap: 1rem;
-                    font-family: var(--font-mono);
-                    font-size: 0.8rem;
-                    line-height: 1.5;
-                    color: var(--text-dim);
-
-                    .dot {
-                        width: 5px;
-                        height: 5px;
-                        background: var(--neon-cyan);
-                        margin-top: 8px;
-                        border-radius: 50%;
-                        box-shadow: 0 0 5px var(--neon-cyan-glow);
-                    }
-                }
-            }
-
-            .h-benefits {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 0.6rem;
-                align-items: center;
-
-                .hud-label-tiny { color: var(--text-dim); opacity: 0.5; font-size: 0.5rem; }
-
-                .benefit-tag {
-                    font-family: var(--font-mono);
-                    font-size: 0.7rem;
-                    background: rgba(255, 238, 0, 0.1);
-                    border: 1px solid var(--cyber-yellow);
-                    color: var(--cyber-yellow);
-                    padding: 0.2rem 0.6rem;
-                    border-radius: 2px;
-                }
-            }
+        &.cyber {
+            border-left: 3px solid var(--cyber-yellow);
         }
     }
 }
 
-/* Equipment Styling */
-.inventory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+.injury-list,
+.implant-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 
-    .inv-item {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 0.8rem 1.2rem;
+    .injury-item,
+    .implant-item {
         display: flex;
         gap: 1rem;
         align-items: center;
         font-family: var(--font-mono);
         font-size: 0.85rem;
         color: #fff;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 0.6rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
 
-        .marker { color: var(--neon-cyan); font-weight: bold; }
-    }
-}
+        .marker {
+            font-weight: bold;
 
-/* HUD Module Overrides for Sheet */
-.hud-module {
-    background: rgba(10, 15, 20, 0.8);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    position: relative;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
+            &.danger {
+                color: var(--power-red);
+            }
 
-    .hud-box-header {
-        padding: 0.8rem 1.5rem;
-        background: rgba(255, 255, 255, 0.03);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .index { font-family: var(--font-mono); font-size: 0.6rem; color: var(--neon-cyan); opacity: 0.6; }
-        h3 { 
-            font-family: var(--font-header); 
-            font-size: 0.95rem; 
-            letter-spacing: 3px; 
-            margin: 0;
-            color: #fff;
+            &.yellow {
+                color: var(--cyber-yellow);
+            }
         }
     }
-
-    .hud-content { padding: 2rem; }
 }
 
-/* World & Finances Data Row */
-.world-data, .finance-grid {
+/* Relationship Matrix */
+.relationship-grid {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 2rem;
 
-    .w-primary {
-        .w-name { font-family: var(--font-accent); font-size: 1.6rem; color: #fff; text-transform: uppercase; }
-        .w-uwp { font-family: var(--font-mono); color: var(--neon-cyan); letter-spacing: 4px; font-size: 0.9rem; }
-    }
-
-    .tactical-row.mini {
+    .npc-type-group {
         display: flex;
         flex-direction: column;
-        gap: 0.8rem;
-        padding: 1.2rem;
-        background: rgba(255, 255, 255, 0.02);
-        border: 1px dashed rgba(255, 255, 255, 0.1);
+        gap: 1rem;
 
-        .t-item {
+        .type-label {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            padding: 0.3rem 1rem;
+            width: fit-content;
+            border-radius: 2px;
+
+            &.ally {
+                background: rgba(0, 255, 136, 0.1);
+                color: #00ff88;
+                border: 1px solid #00ff88;
+            }
+
+            &.contact {
+                background: rgba(0, 243, 255, 0.1);
+                color: var(--neon-cyan);
+                border: 1px solid var(--neon-cyan);
+            }
+
+            &.rival {
+                background: rgba(255, 132, 0, 0.1);
+                color: #ff8400;
+                border: 1px solid #ff8400;
+            }
+
+            &.enemy {
+                background: rgba(255, 0, 0, 0.1);
+                color: var(--power-red);
+                border: 1px solid var(--power-red);
+            }
+        }
+
+        .npc-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .npc-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 1.5rem;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            .t-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-dim); }
-            .t-val { font-family: var(--font-accent); color: #fff; font-size: 0.9rem; }
-        }
-    }
+            flex-direction: column;
+            gap: 0.3rem;
+            position: relative;
+            overflow: hidden;
 
-    .f-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        padding-bottom: 0.8rem;
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 2px;
+                background: currentColor;
+                opacity: 0.5;
+            }
 
-        .f-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-dim); }
-        .f-val { 
-            font-family: var(--font-header); font-size: 1.2rem; color: #fff; 
-            &.highlight { color: var(--cyber-yellow); }
-            &.danger { color: var(--power-red); }
-        }
-    }
-}
+            .n-name {
+                font-family: var(--font-header);
+                font-size: 1rem;
+                color: #fff;
+                letter-spacing: 1px;
+            }
 
-/* Actions Footer Styled as Prime Cmd Console */
-.sheet-actions-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 3rem;
-    z-index: 200;
-    background: linear-gradient(to top, var(--bg-pitch) 60%, transparent);
-    pointer-events: none;
-
-    .divider {
-        width: 100%;
-        max-width: 1250px;
-        margin: 0 auto 2rem;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-        opacity: 0.3;
-    }
-
-    .action-buttons {
-        max-width: 1250px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-        gap: 3rem;
-        pointer-events: auto;
-    }
-}
-
-.btn-action-sheet {
-    background: rgba(10, 15, 20, 0.8);
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-    padding: 1rem 3rem;
-    font-family: var(--font-header);
-    letter-spacing: 4px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-
-    .index { font-family: var(--font-mono); font-size: 0.55rem; opacity: 0.6; }
-
-    &:hover {
-        background: var(--neon-cyan);
-        color: var(--bg-pitch);
-        box-shadow: 0 0 30px var(--neon-cyan-glow);
-    }
-
-    &.finalize {
-        border-color: var(--cyber-yellow);
-        color: var(--cyber-yellow);
-        &:hover {
-            background: var(--cyber-yellow);
-            color: #000;
-            box-shadow: 0 0 30px rgba(255, 238, 0, 0.4);
+            .n-origin {
+                font-family: var(--font-mono);
+                font-size: 0.7rem;
+                color: var(--text-dim);
+                font-style: italic;
+            }
         }
     }
 }
 
-/* Animations */
-@keyframes pulse {
-    0% { opacity: 0.4; }
-    50% { opacity: 0.8; }
-    100% { opacity: 0.4; }
-}
-
-/* Print Specifics - Refined */
+/* Print Overrides Refined */
 @media print {
     .sheet-container {
         padding: 0;
         background: #fff;
         color: #000;
-        min-height: auto;
     }
-    .sheet-actions-footer, .corner-detail { display: none; }
-    .hud-module { 
-        background: #fff; 
-        border: 2px solid #000; 
-        box-shadow: none; 
-        color: #000;
+
+    .status-grid {
+        grid-template-columns: 1fr;
     }
-    .hud-box-header { background: #eee; border-bottom: 2px solid #000; color: #000; h3, .index { color: #000; } }
-    .stat-box-sheet { background: #fff; border: 1px solid #000; color: #000; .s-val, .s-name, .s-mod { color: #000; } }
-    .h-details { background: #fff; border: 1px solid #000; }
-    .h-main, .h-career, .h-rank { color: #000 !important; }
+
+    .npc-list {
+        grid-template-columns: 1fr 1fr;
+    }
 }

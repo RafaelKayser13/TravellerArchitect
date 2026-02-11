@@ -177,6 +177,91 @@
     }
 }
 
+/* Career Selector HUD */
+.career-selector-hud {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+
+    .hud-label-tiny {
+        font-family: var(--font-mono);
+        font-size: 0.6rem;
+        color: var(--neon-cyan);
+        opacity: 0.6;
+        letter-spacing: 2px;
+    }
+
+    .career-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .career-tab {
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.8rem 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        transition: all 0.3s;
+        position: relative;
+        clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+
+        .c-name {
+            font-family: var(--font-header);
+            font-size: 0.85rem;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .c-count {
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-cyan);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 2px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        &:hover {
+            border-color: rgba(0, 243, 255, 0.4);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        &.active {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.1);
+            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 10%;
+                width: 80%;
+                height: 2px;
+                background: var(--neon-cyan);
+                box-shadow: 0 0 10px var(--neon-cyan-glow);
+            }
+
+            .c-name {
+                color: var(--neon-cyan);
+            }
+
+            .c-count {
+                background: var(--neon-cyan);
+                color: #000;
+                border-color: var(--neon-cyan);
+            }
+        }
+    }
+}
+
 /* Benefit Selector Grid */
 .benefit-selector-grid {
     display: grid;
@@ -367,6 +452,167 @@
             color: var(--neon-cyan);
         }
     }
+
+    &.warning {
+        border-color: rgba(255, 100, 50, 0.3);
+        color: #ff6432;
+        background: rgba(255, 100, 50, 0.03);
+
+        .hud-label-vivid {
+            color: #ff6432;
+        }
+
+        .cash-display {
+            margin-top: 1rem;
+            font-family: var(--font-header);
+            font-size: 1rem;
+            color: var(--cyber-yellow);
+            letter-spacing: 1px;
+
+            strong {
+                color: #fff;
+            }
+        }
+    }
+}
+
+/* Medical Debt Repayment */
+.debt-phase {
+    border-color: rgba(255, 100, 50, 0.3) !important;
+
+    .hud-box-header {
+        background: rgba(255, 100, 50, 0.05) !important;
+        border-left: 3px solid #ff6432 !important;
+
+        .index {
+            color: #ff6432 !important;
+        }
+
+        h3 {
+            color: #ff6432 !important;
+        }
+    }
+}
+
+.debt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.debt-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 100, 50, 0.15);
+    transition: all 0.3s;
+
+    &:hover {
+        border-color: rgba(255, 100, 50, 0.3);
+        background: rgba(255, 100, 50, 0.03);
+    }
+
+    .debt-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
+        .d-name {
+            font-family: var(--font-header);
+            font-size: 0.9rem;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .d-stat {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: #ff6432;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+
+        .d-cost {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+
+            strong {
+                color: var(--cyber-yellow);
+            }
+        }
+    }
+}
+
+.btn-pay {
+    padding: 0.7rem 1.5rem;
+    background: transparent;
+    border: 1px solid #ff6432;
+    color: #ff6432;
+    font-family: var(--font-header);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+        background: #ff6432;
+        color: #000;
+        box-shadow: 0 0 15px rgba(255, 100, 50, 0.4);
+    }
+
+    &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        filter: grayscale(0.8);
+    }
+}
+
+/* Pension Summary */
+.pension-summary {
+    border-color: rgba(0, 243, 255, 0.3) !important;
+
+    .hud-box-header {
+        background: rgba(0, 243, 255, 0.05) !important;
+    }
+}
+
+.pension-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+
+    .pension-amount {
+        font-family: var(--font-header);
+        font-size: 2.5rem;
+        color: var(--neon-cyan);
+        text-shadow: 0 0 20px var(--neon-cyan-glow);
+        letter-spacing: 3px;
+    }
+
+    .pension-label {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        letter-spacing: 3px;
+        opacity: 0.5;
+    }
+}
+
+/* Danger text color */
+.t-val.danger {
+    color: #ff6432 !important;
+    text-shadow: 0 0 15px rgba(255, 100, 50, 0.3) !important;
 }
 
 /* Global Actions */

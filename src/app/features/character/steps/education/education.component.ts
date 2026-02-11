@@ -46,17 +46,16 @@ export class EducationComponent {
     universitySkillList = [
         'Admin',
         'Advocate',
-        'Animals (Training)',
-        'Animals (Veterinary)',
-        'Art (Holography)', 'Art (Instrument)', 'Art (Performance)', 'Art (Visual Media)', 'Art (Writing)',
+        'Animals (Handling)', 'Animals (Training)', 'Animals (Veterinary)',
+        'Art (Holography)', 'Art (Instrument)', 'Art (Performer)', 'Art (Visual Media)', 'Art (Write)',
         'Astrogation',
         'Electronics (Comms)', 'Electronics (Computers)', 'Electronics (Remote Ops)', 'Electronics (Sensors)',
         'Engineer (Life Support)', 'Engineer (Power)', 'Engineer (Stutterwarp)',
-        'Language (Anglic)', 'Language (French)', 'Language (German)', 'Language (Spanish)', 'Language (Mandarin)', 'Language (Japanese)', 'Language (Russian)',
+        'Language (French)', 'Language (German)', 'Language (Spanish)', 'Language (Pentapod)', 'Language (Zhargon)',
         'Medic',
         'Navigation',
         'Profession (Belter)', 'Profession (Biologicals)', 'Profession (Civil Engineering)', 'Profession (Construction)', 'Profession (Hydroponics)', 'Profession (Polymers)',
-        'Science (Astronomy)', 'Science (Biology)', 'Science (Chemistry)', 'Science (Cosmography)', 'Science (Cybernetics)', 'Science (Economics)', 'Science (Genetics)', 'Science (History)', 'Science (Linguistics)', 'Science (Philosophy)', 'Science (Physics)', 'Science (Planetology)', 'Science (Psionicology)', 'Science (Psychology)', 'Science (Robotics)', 'Science (Sophontology)', 'Science (Xenology)'
+        'Science (Archaeology)', 'Science (Astronomy)', 'Science (Biology)', 'Science (Chemistry)', 'Science (Cosmology)', 'Science (Cybernetics)', 'Science (Economics)', 'Science (Genetics)', 'Science (History)', 'Science (Linguistics)', 'Science (Philosophy)', 'Science (Physics)', 'Science (Planetology)', 'Science (Psionicology)', 'Science (Psychology)', 'Science (Robotics)', 'Science (Sophontology)', 'Science (Xenology)'
     ];
 
     // Legacy/Default major just for selection initialization if needed.
@@ -78,16 +77,16 @@ export class EducationComponent {
 
 
     eventsTable: EduEvent[] = [
-        { roll: 2, desc: 'Psionic Contact. Flag: PsionQualification = True.', effect: 'Psion' },
-        { roll: 3, desc: 'Tragedy. Automatic Failure to graduate. Proceed to Draft/Drifter.', effect: 'Fail' },
-        { roll: 4, desc: 'Prank Gone Wrong. Roll SOC 8+. Success: Rival. Fail: Enemy + Expulsion (Prisoner).', effect: 'Prank' },
-        { roll: 5, desc: 'Parties. Gain Carouse 1.', effect: 'Carouse' },
+        { roll: 2, desc: 'Psionic Contact. Potential for Psion career unlocked.', effect: 'Psion' },
+        { roll: 3, desc: 'Tragedy. Graduation failed. Education terminated.', effect: 'Tragedy' },
+        { roll: 4, desc: 'Prank Gone Wrong. Success: Rival. Fail: Enemy. Fail Crítica (2): Expelled.', effect: 'Prank' },
+        { roll: 5, desc: 'Partying. Gain Carouse (Level 1).', effect: 'Carouse' },
         { roll: 6, desc: 'Friends. Gain 1D3 Allies.', effect: 'Allies' },
         { roll: 7, desc: 'Life Event.', lifeEvent: true },
-        { roll: 8, desc: 'Political Movement. Roll SOC 8+. Success: 1 Ally, 1 Enemy.', effect: 'Politics' },
-        { roll: 9, desc: 'Hobby. Choose any skill at Level 0 (except JoT).', effect: 'Hobby' },
-        { roll: 10, desc: 'Conflict with Tutor. Roll 9+ (Any Skill). Success: Skill +1, Tutor passes as Rival.', effect: 'Tutor' },
-        { roll: 11, desc: 'War/Draft. Flee (Drifter) or Draft (1D6). No Graduation unless SOC 9+.', effect: 'War' },
+        { roll: 8, desc: 'Political Movement. Success: 1 Ally, 1 Enemy. Fail: No effect.', effect: 'Politics' },
+        { roll: 9, desc: 'Hobby. Gain any skill at Level 0 (except Jack-of-all-Trades).', effect: 'Hobby' },
+        { roll: 10, desc: 'Interests from Tutor. Roll Skill 9+ for +1 Level and Rival.', effect: 'Tutor' },
+        { roll: 11, desc: 'War/Draft. Participation required unless SOC 9+.', effect: 'War' },
         { roll: 12, desc: 'Recognition. SOC +1.', effect: 'Recognition' }
     ];
 
@@ -110,6 +109,22 @@ export class EducationComponent {
 
     // Inject DiceDisplayService
     protected diceDisplay = inject(DiceDisplayService);
+
+    // Interactive Event State
+    showHobbySelection = false;
+    hobbySkillOptions: string[] = [];
+
+    showTutorSelection = false;
+    tutorSkillOptions: string[] = [];
+
+    showWarOptions = false;
+    canAvoidWar = false;
+
+    expelledToPrison = false;
+    warNextCareer: 'Drifter' | 'Army' | 'Marine' | 'Navy' | '' = '';
+
+    psionicPotential = false;
+    graduated = true; // Default, can be flipped by Tragedy/War/Prank
 
     constructor() {
         this.calculateAdmissionDMs();
@@ -273,10 +288,12 @@ export class EducationComponent {
 
         if (total >= target) {
             this.admissionStatus = 'Admitted';
+            this.characterService.log(`**Admitted** to ${this.educationType === 'University' ? 'University' : `${this.academyType} Academy`} (${this.admissionMethod}) — Roll ${total} vs ${target}`);
             if (this.educationType === 'University') this.enterUniversity();
             else this.enterAcademy();
         } else {
             this.admissionStatus = 'Rejected';
+            this.characterService.log(`**Admission Rejected** (${this.educationType === 'University' ? 'University' : `${this.academyType} Academy`}) — Roll ${total} vs ${target}`);
         }
     }
 
@@ -288,6 +305,7 @@ export class EducationComponent {
 
         this.characterService.updateCharacteristics(this.modifyStat('EDU', 1));
 
+        this.characterService.log(`**Entered University**: EDU +1. Select Major (Level 1) and Minor (Level 0).`);
         this.log(`Entered University. EDU +1. Please select your Major (Level 1) and Minor (Level 0) skills.`);
         this.educationStep = 'UniversitySkillSelect';
         this.scrollTo('skillsSection');
@@ -305,6 +323,7 @@ export class EducationComponent {
             const name = parts.slice(0, parts.length - 1).join(' ');
             this.characterService.addSkill(name, 0);
         });
+        this.characterService.log(`**Entered ${this.academyType} Academy**: Basic Training granted (Service Skills at Level 0)`);
         this.log(`Entered ${this.academyType} Academy. Gained Basic Training (Service Skills 0).`);
         this.educationStep = 'Studying';
         this.scrollTo('resultsSection');
@@ -369,16 +388,19 @@ export class EducationComponent {
             const honorsTarget = this.educationType === 'University' ? 10 : 11;
             if (total >= honorsTarget) {
                 this.graduationStatus = 'Honors';
+                this.characterService.log(`**Graduated with Honors!** (${this.educationType}) — Roll ${total} vs ${honorsTarget}`);
                 this.log('Graduated with Honors!');
                 this.applyGraduationBenefits(true);
             } else {
                 this.graduationStatus = 'Graduated';
+                this.characterService.log(`**Graduated** (${this.educationType}) — Roll ${total} vs ${target}`);
                 this.log('Graduated successfully.');
                 this.applyGraduationBenefits(false);
             }
             this.saveResult(true, this.graduationStatus === 'Honors');
         } else {
             this.graduationStatus = 'Failed';
+            this.characterService.log(`**Failed to Graduate** (${this.educationType})`);
             this.log('Failed to graduate.');
             this.saveResult(false, false);
             if (this.graduationStatus !== 'Failed') {
@@ -397,7 +419,6 @@ export class EducationComponent {
     }
 
     async runEvent() {
-        // Pass the lookup function so the popup shows the text!
         const roll = await this.diceDisplay.roll('Term Event', 2, 0, 0, '', (result) => {
             const evt = this.eventsTable.find(e => e.roll === result);
             return evt ? evt.desc : 'Nothing significant.';
@@ -405,28 +426,203 @@ export class EducationComponent {
 
         const evt = this.eventsTable.find(e => e.roll === roll);
         this.eventResult = evt ? evt.desc : 'Nothing significant.';
+
+        if (!evt) return;
+
+        this.characterService.log(`**Education Event** (Roll ${roll}): ${this.eventResult}`);
         this.log(`Event [${roll}]: ${this.eventResult}`);
 
-        // Effects
-        if (evt?.effect === 'Psion') {
-            // Flag Psion
-            this.log('Psionic Qualification enabled.');
+        switch (evt.effect) {
+            case 'Psion':
+                this.characterService.setPsionicPotential(true);
+                break;
+            case 'Tragedy':
+                this.graduated = false;
+                this.graduationStatus = 'Failed';
+                this.characterService.setEducationStatus(false, false);
+                this.characterService.log('**Tragedy**: Education terminated abruptly.');
+                break;
+            case 'Prank':
+                await this.handlePrank();
+                break;
+            case 'Carouse':
+                this.characterService.addSkill('Carouse', 1);
+                break;
+            case 'Allies':
+                const alliesCount = Math.ceil(Math.random() * 3); // 1D3
+                for (let i = 0; i < alliesCount; i++) {
+                    this.characterService.addNpc({
+                        id: crypto.randomUUID(),
+                        name: 'University Friend',
+                        type: 'ally',
+                        origin: 'Education (Roll 6)',
+                        notes: 'A close friend from academic years. Met during university/academy terms.'
+                    });
+                }
+                break;
+            case 'Politics':
+                const polRoll = await this.diceDisplay.roll('Politics Check (SOC)', 2, 0, 8, 'SOC');
+                if (polRoll >= 8) {
+                    this.characterService.addNpc({
+                        id: crypto.randomUUID(),
+                        name: 'Political Ally',
+                        type: 'ally',
+                        origin: 'Political Movement (Roll 8)',
+                        notes: 'A powerful political supporter. Met during political activism.'
+                    });
+                    this.characterService.addNpc({
+                        id: crypto.randomUUID(),
+                        name: 'Political Enemy',
+                        type: 'enemy',
+                        origin: 'Political Movement (Roll 8)',
+                        notes: 'An ideological rival. Opponent during the campus political movement.'
+                    });
+                }
+                break;
+            case 'Hobby':
+                this.openHobbySelection();
+                break;
+            case 'Tutor':
+                this.openTutorSelection();
+                break;
+            case 'War':
+                await this.handleWar();
+                break;
+            case 'Recognition':
+                this.characterService.updateCharacteristics(this.modifyStat('SOC', 1));
+                break;
         }
-        if (evt?.effect === 'Fail') {
-            this.graduationStatus = 'Failed';
-            this.log('Tragedy: Automatic failure.');
-        }
-        if (evt?.effect === 'Carouse') this.characterService.addSkill('Carouse', 1);
-        if (evt?.effect === 'Allies') this.log('Gained 1D3 Allies.');
-        if (evt?.effect === 'Hobby') this.log('Gained Hobby Skill (Level 0).');
-        if (evt?.effect === 'Recognition') this.characterService.updateCharacteristics(this.modifyStat('SOC', 1));
 
-        if (evt?.effect === 'War') {
-            // Logic for war... for now just log
-            this.log('War: Draft or Flee. (Handle manually).');
+        if (evt.lifeEvent) {
+            this.log('Triggering Life Event...');
+            // In a real scenario, we'd emit signal to parent or trigger life event step
+            this.characterService.log('**Event**: Triggering Life Event table.');
         }
-        if (evt?.effect === 'Prank') {
-            // Logic
+    }
+
+    async handlePrank() {
+        const roll = await this.diceDisplay.roll('Prank Check (SOC)', 2, 0, 8, 'SOC');
+        if (roll === 2) { // Critical failure on natural 2
+            this.graduated = false;
+            this.graduationStatus = 'Failed';
+            this.expelledToPrison = true;
+            this.characterService.setEducationStatus(false, false);
+            this.characterService.log('**EXPELLED**: Prank went catastrophically wrong. Mandatory transition to Prisoner.');
+            return;
+        }
+
+        if (roll >= 8) {
+            this.characterService.addNpc({
+                id: crypto.randomUUID(),
+                name: 'Prank Victim',
+                type: 'rival',
+                origin: 'Prank Gone Wrong (Roll 4)',
+                notes: 'A fellow student targeted by your prank. They didn\'t find it funny.'
+            });
+        } else {
+            this.characterService.addNpc({
+                id: crypto.randomUUID(),
+                name: 'Vengeful Student',
+                type: 'enemy',
+                origin: 'Prank Gone Wrong (Roll 4)',
+                notes: 'They took your prank personally. Swore revenge after the incident.'
+            });
+        }
+    }
+
+    async handleWar() {
+        const char = this.characterService.character();
+        if (char.characteristics.soc.value >= 9) {
+            this.canAvoidWar = true;
+        } else {
+            this.canAvoidWar = false;
+        }
+        this.showWarOptions = true;
+    }
+
+    avoidWar() {
+        this.showWarOptions = false;
+        this.characterService.log('Used social standing to avoid the draft.');
+    }
+
+    async joinWar(method: 'Flee' | 'Draft') {
+        this.showWarOptions = false;
+        this.graduated = false;
+        this.graduationStatus = 'Failed';
+        this.characterService.setEducationStatus(false, false);
+
+        if (method === 'Flee') {
+            this.warNextCareer = 'Drifter';
+            this.characterService.log('**Fleeing**: Resigned from education to avoid draft. Next Career: Drifter.');
+        } else {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            if (roll <= 3) this.warNextCareer = 'Army';
+            else if (roll <= 5) this.warNextCareer = 'Marine';
+            else this.warNextCareer = 'Navy';
+            this.characterService.log(`**Drafted**: Education terminated by national service. Drafted into ${this.warNextCareer}.`);
+        }
+    }
+
+    openHobbySelection() {
+        // Full skill list excluding Jack-of-all-Trades
+        this.hobbySkillOptions = [
+            'Admin', 'Advocate', 'Animals (Handling)', 'Animals (Training)', 'Animals (Veterinary)',
+            'Art (Holography)', 'Art (Instrument)', 'Art (Performer)', 'Art (Visual Media)', 'Art (Write)',
+            'Astrogation', 'Athletics (Dexterity)', 'Athletics (Endurance)', 'Athletics (Strength)',
+            'Broker', 'Carouse', 'Deception', 'Diplomat', 'Drive (Hover)', 'Drive (Mole)', 'Drive (Track)', 'Drive (Walker)', 'Drive (Wheel)',
+            'Electronics (Comms)', 'Electronics (Computers)', 'Electronics (Remote Ops)', 'Electronics (Sensors)',
+            'Engineer (Life Support)', 'Engineer (Power)', 'Engineer (Stutterwarp)',
+            'Explosives', 'Flyer (Airship)', 'Flyer (Ornithopter)', 'Flyer (Rotor)', 'Flyer (Vectored Thrust)', 'Flyer (Wing)',
+            'Gambler', 'Gun Combat (Archaic)', 'Gun Combat (Energy)', 'Gun Combat (Slug)',
+            'Gunner (Capital)', 'Gunner (Ortillery)', 'Gunner (Screen)', 'Gunner (Turret)',
+            'Heavy Weapons (Artillery)', 'Heavy Weapons (Man Portable)', 'Heavy Weapons (Vehicle)',
+            'Investigate', 'Language (Any)', 'Leadership', 'Mechanic', 'Medic',
+            'Melee (Blade)', 'Melee (Bludgeon)', 'Melee (Unarmed)', 'Navigation',
+            'Persuade', 'Pilot (Capital Ships)', 'Pilot (Small Craft)', 'Pilot (Spacecraft)',
+            'Profession (Belter)', 'Profession (Biologicals)', 'Profession (Civil Engineering)', 'Profession (Construction)', 'Profession (Hydroponics)', 'Profession (Polymers)',
+            'Recon', 'Science (Biology)', 'Science (Chemistry)', 'Science (History)', 'Science (Physics)', 'Science (Psychology)', 'Science (Sophontology)', 'Science (Xenology)',
+            'Seafarer (Ocean Ship)', 'Seafarer (Personal)', 'Seafarer (Sail)', 'Seafarer (Submarine)',
+            'Stealth', 'Steward', 'Streetwise', 'Survival', 'Tactics (Military)', 'Tactics (Naval)', 'Vacc Suit'
+        ];
+        this.showHobbySelection = true;
+    }
+
+    selectHobbySkill(skill: string) {
+        this.characterService.addSkill(skill, 0); // Gain at 0 or increase +1
+        this.showHobbySelection = false;
+        this.characterService.log(`**Hobby**: Acquired interest in ${skill}.`);
+    }
+
+    openTutorSelection() {
+        // Skills studied this term
+        const available = [];
+        if (this.selectedMajorSkill) available.push(this.selectedMajorSkill);
+        if (this.selectedMinorSkill) available.push(this.selectedMinorSkill);
+
+        // If Academy, use those?
+        if (this.educationType === 'Academy') {
+            Object.values(this.selectedAcademySkills).forEach(s => available.push(s));
+        }
+
+        this.tutorSkillOptions = available.length > 0 ? available : ['Admin', 'Medic', 'Science (Any)'];
+        this.showTutorSelection = true;
+    }
+
+    async selectTutorSkill(skill: string) {
+        this.showTutorSelection = false;
+        const roll = await this.diceDisplay.roll(`Tutor Check (${skill})`, 2, 0, 9, skill);
+        if (roll >= 9) {
+            this.characterService.addSkill(skill, 1);
+            this.characterService.addNpc({
+                id: crypto.randomUUID(),
+                name: 'Exacting Tutor',
+                type: 'rival',
+                origin: 'Tutor Interest (Roll 10)',
+                notes: 'A brilliant but demanding academic mentor. Demanded perfection from their students.'
+            });
+            this.characterService.log(`**Tutor Mastery**: Improved ${skill} through rigorous study.`);
+        } else {
+            this.characterService.log(`**Tutor Failure**: Study sessions with the tutor yielded no measurable gains.`);
         }
     }
 
@@ -436,6 +632,7 @@ export class EducationComponent {
         this.characterService.addSkill(this.selectedMajorSkill, 1);
         this.characterService.addSkill(this.selectedMinorSkill, 0);
 
+        this.characterService.log(`**University Curriculum**: Major: ${this.selectedMajorSkill} (1), Minor: ${this.selectedMinorSkill} (0)`);
         this.log(`Selected Curriculum: ${this.selectedMajorSkill} (1), ${this.selectedMinorSkill} (0).`);
         this.educationStep = 'Studying';
     }
@@ -478,10 +675,12 @@ export class EducationComponent {
             this.characterService.addSkill(s, 1);
         });
 
+        this.characterService.log(`**Academy Graduation** (${this.academyType}): Improved ${skills.join(', ')} to Level 1`);
         this.log(`Academy Training Complete. Improved: ${skills.join(', ')}.`);
 
         // Check HonorsCommission
         if (this.graduationStatus === 'Honors') {
+            this.characterService.log(`**Honors Commission**: Commissioned as Rank 1 Officer in ${this.academyType}`);
             this.log('Honors: Commissioned as Rank 1 Officer.');
             // Logic to set rank would go here
         }

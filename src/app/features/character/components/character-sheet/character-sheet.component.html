@@ -180,22 +180,36 @@
             </div>
         </aside>
 
-        <!-- Skills & Training Main Column -->
+        <!-- Skills & Status Column -->
         <main class="data-column">
-            <!-- Skills Section -->
+            <!-- 1. Skills Hierarchical Matrix -->
             <div class="hud-module skills">
                 <div class="hud-box-header">
                     <span class="index">SK_01</span>
-                    <h3>ACQUIRED_SKILL_ARRAY</h3>
+                    <h3>SKILL_HIERARCHY_ARRAY</h3>
                 </div>
                 <div class="hud-content">
-                    <div class="skill-matrix">
-                        <div class="skill-entry" *ngFor="let skill of character().skills">
+                    <div class="skill-tree">
+                        <!-- Grouped Skills -->
+                        <div class="skill-group" *ngFor="let group of skillsTree().groups">
+                            <div class="group-header">
+                                <span class="g-name">{{ group.name }}</span>
+                                <span class="g-line"></span>
+                            </div>
+                            <div class="group-children">
+                                <div class="skill-entry mini" *ngFor="let child of group.children">
+                                    <span class="s-name">>> {{ child.specialization }}</span>
+                                    <span class="s-lvl">LV.{{ child.level }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Standalone Skills -->
+                        <div class="skill-entry" *ngFor="let skill of skillsTree().standalone">
                             <div class="s-header">
                                 <span class="s-name">{{ skill.name }}</span>
                                 <span class="s-lvl">LV.{{ skill.level }}</span>
+                                <span class="s-spec" *ngIf="skill.specialization">[{{ skill.specialization }}]</span>
                             </div>
-                            <span class="s-spec" *ngIf="skill.specialization">[{{ skill.specialization }}]</span>
                         </div>
                         <div class="empty-state" *ngIf="character().skills.length === 0">
                             [ NO_ACTIVE_SKILL_SIGNALS ]
@@ -204,7 +218,80 @@
                 </div>
             </div>
 
-            <!-- Career Timeline -->
+            <!-- 2. Status & Medical Section (Injuries / Implants) -->
+            <div class="status-grid">
+                <!-- Injuries -->
+                <div class="hud-module status medical">
+                    <div class="hud-box-header">
+                        <span class="index">MD_01</span>
+                        <h3>TRAUMA_LOG</h3>
+                    </div>
+                    <div class="hud-content">
+                        <div class="injury-list">
+                            <div class="injury-item" *ngFor="let injury of character().injuries"
+                                [class.treated]="injury.treated">
+                                <span class="marker" [class.danger]="!injury.treated" [class.success]="injury.treated">
+                                    {{ injury.treated ? '✓' : '!!' }}
+                                </span>
+                                <div class="injury-info">
+                                    <span class="item-name">{{ injury.name }}</span>
+                                    <span class="item-stat" *ngIf="!injury.treated">[{{ injury.stat }} -{{
+                                        injury.reduction }}]</span>
+                                    <span class="item-treated" *ngIf="injury.treated">RESTORED</span>
+                                </div>
+                            </div>
+                            <div class="empty-state" *ngIf="character().injuries.length === 0">
+                                [ NO_TRAUMA_DETECTED ]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Implants -->
+                <div class="hud-module status cyber">
+                    <div class="hud-box-header">
+                        <span class="index">CB_01</span>
+                        <h3>CYBER_INTEGRATION</h3>
+                    </div>
+                    <div class="hud-content">
+                        <div class="implant-list">
+                            <div class="implant-item" *ngFor="let item of implants()">
+                                <span class="marker yellow">++</span>
+                                <span class="item-name">{{ item }}</span>
+                            </div>
+                            <div class="empty-state" *ngIf="implants().length === 0">
+                                [ NO_AUGMENTATIONS_FOUND ]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Relationship Matrix -->
+            <div class="hud-module relationships">
+                <div class="hud-box-header">
+                    <span class="index">RS_01</span>
+                    <h3>SOCIAL_RELATIONSHIP_MATRIX</h3>
+                </div>
+                <div class="hud-content">
+                    <div class="relationship-grid">
+                        <div class="npc-type-group" *ngFor="let group of categorizedNpcs()">
+                            <span class="type-label" [class]="group.type.toLowerCase()">{{ group.type }}</span>
+                            <div class="npc-list">
+                                <div class="npc-card" *ngFor="let npc of group.list">
+                                    <span class="n-name">{{ npc.name }}</span>
+                                    <span class="n-origin">{{ npc.origin }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="empty-state" *ngIf="character().npcs.length === 0">
+                            [ NO_RELATIONSHIP_NETWORKS ]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Career Timeline -->
             <div class="hud-module chronology">
                 <div class="hud-box-header">
                     <span class="index">CH_02</span>
@@ -218,7 +305,8 @@
                         <div class="h-details">
                             <div class="h-main">
                                 <span class="h-career">{{ term.careerName }}</span>
-                                <span class="h-rank" *ngIf="term.rankTitle">{{ term.rankTitle }} (R{{ term.rank }})</span>
+                                <span class="h-rank" *ngIf="term.rankTitle">{{ term.rankTitle }} (R{{ term.rank
+                                    }})</span>
                                 <span class="h-rank" *ngIf="!term.rankTitle">RANK_0{{ term.rank }}</span>
                             </div>
                             <div class="h-assignment" *ngIf="term.assignment">ASSIGNMENT: {{ term.assignment }}</div>
@@ -240,15 +328,15 @@
                 </div>
             </div>
 
-            <!-- Equipment Section -->
-            <div class="hud-module equipment" *ngIf="character().equipment.length > 0">
+            <!-- 5. General Inventory -->
+            <div class="hud-module equipment" *ngIf="generalEquipment().length > 0">
                 <div class="hud-box-header">
                     <span class="index">EQ_01</span>
-                    <h3>INVENTORY_LOG</h3>
+                    <h3>GENERAL_INVENTORY</h3>
                 </div>
                 <div class="hud-content">
                     <div class="inventory-grid">
-                        <div class="inv-item" *ngFor="let item of character().equipment">
+                        <div class="inv-item" *ngFor="let item of generalEquipment()">
                             <span class="marker">>></span>
                             <span class="item-name">{{ item }}</span>
                         </div>

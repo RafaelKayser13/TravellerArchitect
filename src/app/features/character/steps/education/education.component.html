@@ -1,12 +1,7 @@
 <div class="education-container">
-    <app-step-header 
-        stepSymbol="SEC" 
-        stepNumber="05" 
-        superLabel="ACADEMIC_RECORDS_SYSTEM"
-        topLabel="ACADEMIC_HISTORY"
-        title="ACADEMIC_ENROLLMENT" 
-        subtitle="SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED TO NATIONAL DRAFT">
-    </app-step-header>
+  <app-step-header stepSymbol="SEC" stepNumber="05" superLabel="ACADEMIC_RECORDS_SYSTEM" topLabel="ACADEMIC_HISTORY"
+    title="ACADEMIC_ENROLLMENT" subtitle="SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED TO NATIONAL DRAFT">
+  </app-step-header>
 
   <div class="education-stack" *ngIf="$any(admissionStatus) === 'NotApplied'">
     <!-- University -->
@@ -213,6 +208,82 @@
     <div *ngIf="educationStep === 'Finished' && graduationStatus !== 'Pending'" class="graduation-result">
       <h3>{{ graduationStatus === 'Failed' ? 'GRADUATION_FAILED' : 'GRADUATION_CONFIRMED' }}</h3>
       <p *ngIf="graduationStatus === 'Honors'">[ HONORS_DISTINCTION_DETECTED ]</p>
+
+      <!-- Special Redirections -->
+      <div class="redirection-notice" *ngIf="expelledToPrison">
+        <span class="warning-tag">EXPULSION_ERROR</span>
+        <p>MANDATORY PROTOCOL: Proceed to [ PRISONER ] Career for next term.</p>
+      </div>
+      <div class="redirection-notice" *ngIf="warNextCareer">
+        <span class="war-tag">WAR_PROTOCOL_ACTIVE</span>
+        <p>SERVICE ASSIGNMENT: Proceed to [ {{ warNextCareer }} ] Career for next term.</p>
+      </div>
     </div>
   </div>
+
+  <!-- Interactive Overlays (Modals) -->
+
+  <!-- War Protocol Modal -->
+  <div class="overlay" *ngIf="showWarOptions">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="index">!!</span>
+        <h3>WAR_PROTOCOL</h3>
+      </div>
+      <div class="modal-body">
+        <p>A national conflict has errupted. Mandatory conscription is in effect for all academic personnel.</p>
+        <div class="action-grid">
+          <button class="btn-action" *ngIf="canAvoidWar" (click)="avoidWar()">
+            <span class="primary">AVOID_DRAFT</span>
+            <span class="secondary">USE SOCIAL STANDING (SOC 9+)</span>
+          </button>
+          <button class="btn-action warn" (click)="joinWar('Draft')">
+            <span class="primary">ACCEPT_DRAFT</span>
+            <span class="secondary">ASSIGNED BY COMMAND (1D6)</span>
+          </button>
+          <button class="btn-action risk" (click)="joinWar('Flee')">
+            <span class="primary">FLEE_PROTOCOL</span>
+            <span class="secondary">ABANDON STUDIES (DRIFTER)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hobby Selection Modal -->
+  <div class="overlay" *ngIf="showHobbySelection">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <span class="index">09</span>
+        <h3>HOBBY_ACQUISITION</h3>
+      </div>
+      <div class="modal-body">
+        <p>SELECT ONE SCHEMATIC TO ADOPT AS A RECREATIONAL SPECIALIZATION (LEVEL 0):</p>
+        <div class="skill-scroll-grid">
+          <div class="skill-opt mini" *ngFor="let s of hobbySkillOptions" (click)="selectHobbySkill(s)">
+            {{ s }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tutor Selection Modal -->
+  <div class="overlay" *ngIf="showTutorSelection">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="index">10</span>
+        <h3>TUTOR_SPECIALIZATION</h3>
+      </div>
+      <div class="modal-body">
+        <p>AN ACADEMIC MENTOR HAS OFFERED INTENSIVE STUDY SESSIONS. SELECT A FOCUS AREA (9+ TO GAIN +1 LEVEL):</p>
+        <div class="action-grid">
+          <button class="btn-cyber" *ngFor="let s of tutorSkillOptions" (click)="selectTutorSkill(s)">
+            {{ s }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

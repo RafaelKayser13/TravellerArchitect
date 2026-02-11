@@ -71,9 +71,11 @@ export class SpeciesComponent {
 
   constructor() {
     const char = this.characterService.character();
-    // Default to human-standard if not set
-    this.selectedId = char.species === 'Human' ? 'human-standard' : 
-                      this.speciesOptions.find(o => o.name === char.species)?.id || 'human-standard';
+    // Only restore selection if species was previously chosen
+    if (char.species) {
+      this.selectedId = char.species === 'Human' ? 'human-standard' :
+        this.speciesOptions.find(o => o.name === char.species)?.id || null;
+    }
   }
 
   select(option: SpeciesOption) {

@@ -1,11 +1,6 @@
 <div class="career-container">
-    <app-step-header 
-        stepSymbol="SEC" 
-        stepNumber="06" 
-        superLabel="SERVICE_HISTORY_PROTOCOL"
-        topLabel="CHRONOS_STATUS"
-        title="CAREER_SERVICE_RECORDS" 
-        subtitle="Term {{ currentTerm() }} (Age {{ currentAge() }})">
+    <app-step-header stepSymbol="SEC" stepNumber="06" superLabel="SERVICE_HISTORY_PROTOCOL" topLabel="CHRONOS_STATUS"
+        title="CAREER_SERVICE_RECORDS" subtitle="Term {{ currentTerm() }} (Age {{ currentAge() }})">
     </app-step-header>
 
     <!-- 1. CHOOSE CAREER -->
@@ -150,7 +145,7 @@
                 </button>
 
                 <button class="vector-btn" *ngIf="selectedCareer?.officerSkills" (click)="rollSkill('Officer')"
-                    [disabled]="getRank() <= 0">
+                    [disabled]="!isCommissioned()">
                     <span class="v-label">OFFICER_TRAINING</span>
                     <span class="v-desc">Command & Management skills</span>
                     <div class="skill-preview">
@@ -369,6 +364,8 @@
             <div *ngIf="forcedOut" class="hud-alert error">
                 <span class="hud-label-vivid">FORCED_SEPARATION_NOTICE</span>
                 <p>Operational necessity or failure results in immediate service termination.</p>
+                <p *ngIf="characterService.character().history.join('').includes('Forced: Prisoner')"
+                    class="highlight-vivid">SENTENCED: Transitioning to Prisoner Protocol.</p>
             </div>
         </div>
         <div class="hud-footer">
@@ -376,6 +373,214 @@
             <button class="btn-secondary" (click)="startChangeAssignment()"
                 [disabled]="mandatoryContinue || forcedOut">RECONFIG_ASSIGNMENT</button>
             <button class="btn-danger" (click)="finishTerm('MUSTER')" [disabled]="mandatoryContinue">MUSTER_OUT</button>
+        </div>
+    </div>
+
+    <!-- EVENT EFFECTS MODALS -->
+
+    <!-- 1. NPC Naming Prompt -->
+    <div *ngIf="isNpcPrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>NPC_IDENTIFICATION_REQUIRED</h3>
+            </div>
+            <div class="hud-content">
+                <p>New relationship established: <span class="highlight">{{ pendingNpcType.toUpperCase() }}</span></p>
+                <div class="p-input-group">
+                    <span class="hud-label">[ ASSIGN_IDENTIFIER ]</span>
+                    <input type="text" [(ngModel)]="npcNameInput" placeholder="Enter NPC name or designation..."
+                        class="hud-input" />
+                </div>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-action" (click)="confirmNpcGeneration()">CONFIRM_RECORD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Skill Choice Prompt -->
+    <div *ngIf="isSkillChoicePrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>TACTICAL_SKILL_REQUISITION</h3>
+            </div>
+            <div class="hud-content">
+                <p class="instruction">Select one specialization from available vectors:</p>
+                <div class="grid-options">
+                    <button *ngFor="let skill of skillChoices" class="btn-secondary"
+                        (click)="confirmSkillChoice(skill)">
+                        {{ skill }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Skill Check Outcome -->
+    <div *ngIf="isSkillCheckOutcome" class="modal-overlay fade-in">
+        <div class="modal hud-module status">
+            <div class="hud-box-header">
+                <h3>SKILL_CHECK_RESOLUTION</h3>
+            </div>
+            <div class="hud-content">
+                <div class="event-log-box" [class.success]="skillCheckMessage.includes('Success')"
+                    [class.error]="skillCheckMessage.includes('Failure')">
+                    <p class="event-text" style="text-align: center; font-weight: bold;">{{ skillCheckMessage }}</p>
+                </div>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-action" (click)="isSkillCheckOutcome = false">ACKNOWLEDGE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Connections Rule Prompt -->
+    <div *ngIf="isConnectionsRuleEligible" class="modal-overlay fade-in">
+        <div class="modal hud-module warning">
+            <div class="hud-box-header">
+                <h3>CONNECTIONS_RULE_OPPORTUNITY</h3>
+            </div>
+            <div class="hud-content">
+                <p>Establishing a relationship allows you to improve a shared skill. (Used {{
+                    characterService.character().connectionsUsed }}/2)</p>
+                <p class="instruction" *ngIf="connectionsSkillChoices.length > 0">Select skill to increase by +1:</p>
+                <div class="grid-options" *ngIf="connectionsSkillChoices.length > 0">
+                    <button *ngFor="let skill of connectionsSkillChoices" class="btn-secondary"
+                        (click)="applyConnectionsRule(skill)">
+                        {{ skill }}
+                    </button>
+                </div>
+                <p *ngIf="connectionsSkillChoices.length === 0" class="hud-alert error">No compatible skills at level 1+
+                    to improve.</p>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-secondary" (click)="skipConnectionsRule()">SKIP_OPPORTUNITY</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Life Event Choice Modal -->
+    <div *ngIf="isLifeEventChoice" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>LIFE_ALTERING_DECISION</h3>
+            </div>
+            <div class="hud-content">
+                <p class="instruction">{{ lifeEventChoiceNote }}</p>
+                <div class="grid-options">
+                    <button *ngFor="let opt of lifeEventChoiceOptions" class="btn-action"
+                        (click)="$event.stopPropagation(); handleLifeEventChoice(opt)">
+                        {{ opt.toUpperCase().replace(' ', '_') }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Injury Selection Modal -->
+    <div *ngIf="isInjuryPrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module warning">
+            <div class="hud-box-header">
+                <h3>INJURY_SEVERITY_REPORT</h3>
+            </div>
+            <div class="hud-content">
+                <p class="hud-alert error">SEVERITY: {{ injurySeverity }}</p>
+                <p class="instruction">Select attribute for primary degradation ({{ injuryMajorLoss }} pts):</p>
+                <div class="grid-options">
+                    <button *ngFor="let stat of pendingInjuryStats" class="btn-secondary"
+                        (click)="selectInjuryStat(stat)">
+                        {{ stat }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Medical Treatment Decision Modal -->
+    <div *ngIf="isInjuryDecisionActive" class="modal-overlay fade-in">
+        <div class="modal hud-module status">
+            <div class="hud-box-header">
+                <h3>TREATMENT_PROTOCOL_SELECTION</h3>
+            </div>
+            <div class="hud-content">
+                <div class="tactical-row">
+                    <div class="t-item">
+                        <span class="t-label">COVERAGE</span>
+                        <span class="t-val">{{ medicalCoverage * 100 }}%</span>
+                    </div>
+                    <div class="t-item">
+                        <span class="t-label">TOTAL_COST</span>
+                        <span class="t-val">{{ medicalRestorationCost }} Lv</span>
+                    </div>
+                </div>
+                <div class="hud-alert info">
+                    <p>Option A: Cyber-Augment. Cost: 1 Benefit Roll Debt. No stat loss.</p>
+                    <p>Option B: Standard Care. Cost: {{ medicalDebtCalculated }} Lv Debt. Permanent Stat Loss.</p>
+                </div>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-action" (click)="resolveInjury(true)">ACCEPT_AUGMENTATION (Option A)</button>
+                <button class="btn-secondary" (click)="resolveInjury(false)">CONFIRM_STANDARD_CARE (Option B)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Stat Reduction Modal (Prisoner) -->
+    <div *ngIf="isStatReductionChoice" class="modal-overlay fade-in">
+        <div class="modal hud-module warning">
+            <div class="hud-box-header">
+                <h3>CHARACTERISTIC_DEGRADATION_CHOICE</h3>
+            </div>
+            <div class="hud-content">
+                <p class="instruction">Select one characteristic to reduce by {{ 1 }}:</p>
+                <div class="grid-options">
+                    <button *ngFor="let stat of ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC']" class="btn-secondary"
+                        (click)="selectStatReduction(stat)">
+                        {{ stat }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Gambling Choice Modal (Merchant) -->
+    <div *ngIf="isGamblingPrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>GAMBLING_PROTOCOL_AVAILABLE</h3>
+            </div>
+            <div class="hud-content">
+                <p>You may bet up to {{ benefitRollsToBet }} benefit rolls to increase rewards (risk of losing all
+                    benefits this term).</p>
+                <div class="grid-options">
+                    <button class="btn-secondary" (click)="resolveGambling(0)">DECLINE_GAMBLING</button>
+                    <button *ngFor="let num of [1, 2, 3]" class="btn-action" [hidden]="num > benefitRollsToBet"
+                        (click)="resolveGambling(num)">
+                        BET_{{ num }}_ROLLS
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Existing NPC Selection (for npc-note) -->
+    <div *ngIf="isNpcPrompt && characterService.character().npcs.length > 0 && pendingNpcType === 'rival'"
+        class="modal-overlay fade-in">
+        <div class="modal hud-module warning">
+            <div class="hud-box-header">
+                <h3>SELECT_TARGET_NPC</h3>
+            </div>
+            <div class="hud-content">
+                <p>An existing NPC has crossed paths with you: <span class="highlight">{{ pendingNpcOrigin }}</span></p>
+                <div class="grid-options">
+                    <button *ngFor="let npc of characterService.character().npcs" class="btn-secondary"
+                        (click)="confirmNpcGeneration(npc.name)">
+                        {{ npc.name }} ({{ npc.type }})
+                    </button>
+                    <button class="btn-danger" (click)="applyEventEffect({type: 'injury'})">NONE_AVAILABLE (Suffer
+                        Injury)</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
