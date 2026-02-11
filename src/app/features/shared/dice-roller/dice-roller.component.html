@@ -23,36 +23,50 @@
         </div>
 
         <div class="hud-dual-wrapper">
-            <!-- Left: Input/Stats -->
+            <!-- Left: Input/Stats & Table Overlay -->
             <div class="hud-column input-sec">
                 <div class="column-header">
-                    <span class="prefix">>></span> INPUT_VECTORS
+                    <span class="prefix">>></span> DATA_CONTEXT
                 </div>
 
-                <div class="side-by-side">
-                    <div class="detail-box" *ngIf="request.statName">
-                        <span class="label">VECTOR_IN</span>
-                        <div class="value">{{ request.statName }}</div>
-                    </div>
-                    <div class="detail-box" *ngIf="request.target > 0">
-                        <span class="label">THRESHOLD</span>
-                        <div class="value">{{ request.target }}+</div>
-                    </div>
-                </div>
-
-                <div class="modifiers-container"
-                    *ngIf="(request.modifiers && request.modifiers.length > 0) || request.dm !== 0">
-                    <span class="label-tiny">ACTIVE_MODIFIERS</span>
-                    <div class="modifiers-list">
-                        <div class="mod-pill" *ngFor="let mod of request.modifiers" [class.pos]="mod.value > 0"
-                            [class.neg]="mod.value < 0">
-                            <span class="mod-desc">{{mod.label}}:</span>
-                            <span class="mod-val">{{mod.value > 0 ? '+' : ''}}{{mod.value}}</span>
+                <!-- TABLE OVERLAY (NEW) -->
+                <div class="table-overlay-container" *ngIf="tableRows.length > 0">
+                    <span class="label-tiny">PROBABILITY_MATRIX / OUTCOMES</span>
+                    <div class="outcomes-table">
+                        <div class="outcome-row" *ngFor="let row of tableRows" [class.active]="row.active">
+                            <span class="roll-val">{{ row.roll }}</span>
+                            <span class="outcome-desc">{{ row.value }}</span>
+                            <div class="active-indicator" *ngIf="row.active"></div>
                         </div>
-                        <div class="mod-pill"
-                            *ngIf="(!request.modifiers || request.modifiers.length === 0) && request.dm !== 0"
-                            [class.pos]="request.dm > 0" [class.neg]="request.dm < 0">
-                            NET_OFFSET: {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
+                    </div>
+                </div>
+
+                <div class="context-details" *ngIf="tableRows.length === 0">
+                    <div class="side-by-side">
+                        <div class="detail-box" *ngIf="request.statName">
+                            <span class="label">VECTOR_IN</span>
+                            <div class="value">{{ request.statName }}</div>
+                        </div>
+                        <div class="detail-box" *ngIf="request.target > 0">
+                            <span class="label">THRESHOLD</span>
+                            <div class="value">{{ request.target }}+</div>
+                        </div>
+                    </div>
+
+                    <div class="modifiers-container"
+                        *ngIf="(request.modifiers && request.modifiers.length > 0) || request.dm !== 0">
+                        <span class="label-tiny">ACTIVE_MODIFIERS</span>
+                        <div class="modifiers-list">
+                            <div class="mod-pill" *ngFor="let mod of request.modifiers" [class.pos]="mod.value > 0"
+                                [class.neg]="mod.value < 0">
+                                <span class="mod-desc">{{mod.label}}:</span>
+                                <span class="mod-val">{{mod.value > 0 ? '+' : ''}}{{mod.value}}</span>
+                            </div>
+                            <div class="mod-pill"
+                                *ngIf="(!request.modifiers || request.modifiers.length === 0) && request.dm !== 0"
+                                [class.pos]="request.dm > 0" [class.neg]="request.dm < 0">
+                                NET_OFFSET: {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
+                            </div>
                         </div>
                     </div>
                 </div>

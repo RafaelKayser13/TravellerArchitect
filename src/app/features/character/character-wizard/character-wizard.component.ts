@@ -1,5 +1,7 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IdentityComponent } from '../steps/identity/identity.component';
+import { SpeciesComponent } from '../steps/species/species.component';
 import { AttributesComponent } from '../steps/attributes/attributes.component';
 import { OriginComponent } from '../steps/origin/origin.component';
 import { EducationComponent } from '../steps/education/education.component';
@@ -14,38 +16,87 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
   standalone: true,
   imports: [
       CommonModule, 
-      AttributesComponent, 
-      OriginComponent, 
-      EducationComponent, 
-      CareerComponent, 
-      MusteringOutComponent, 
+      IdentityComponent,
+      SpeciesComponent,
+      AttributesComponent,
+      OriginComponent,
+      EducationComponent,
+      CareerComponent,
+      MusteringOutComponent,
       CharacterSheetComponent,
-      ConfirmationDialogComponent // New
+      ConfirmationDialogComponent
   ],
   templateUrl: './character-wizard.component.html',
   styleUrls: ['./character-wizard.component.scss']
 })
 export class CharacterWizardComponent {
     currentStep = 1;
-    isResetting = false; // Flag for reset visual state
-    showResetDialog = false; // Dialog state
+    isResetting = false;
+    showResetDialog = false;
     
-    // Inject service
     private characterService = inject(CharacterService);
     private cdr = inject(ChangeDetectorRef);
+
+    @ViewChild(IdentityComponent) identityStep?: IdentityComponent;
+    @ViewChild(SpeciesComponent) speciesStep?: SpeciesComponent;
+    @ViewChild(AttributesComponent) attributesStep?: AttributesComponent;
+    @ViewChild(OriginComponent) originStep?: OriginComponent;
+    @ViewChild(EducationComponent) educationStep?: EducationComponent;
+    @ViewChild(CareerComponent) careerStep?: CareerComponent;
+    @ViewChild(MusteringOutComponent) musteringStep?: MusteringOutComponent;
 
     nextStep() {
         this.currentStep++;
     }
 
-    prevStep() {
-        if (this.currentStep > 1) {
-            this.currentStep--;
+    goToStep(step: number) {
+        this.currentStep = step;
+    }
+
+    /** Label for the sticky footer action button */
+    get actionLabel(): string {
+        switch (this.currentStep) {
+            case 1: return 'PROCEED > SPECIES';
+            case 2: return 'PROCEED > BIOMETRICS';
+            case 3: return 'PROCEED > ORIGIN';
+            case 4: return 'PROCEED > EDUCATION';
+            case 5: return 'PROCEED > CAREER';
+            case 6: return 'PROCEED > MUSTER_OUT';
+            case 7: return 'FINALIZE_CHARACTER';
+            default: return 'PROCEED';
         }
     }
 
-    goToStep(step: number) {
-        this.currentStep = step;
+    /** Whether the sticky footer action button is enabled */
+    get actionEnabled(): boolean {
+        switch (this.currentStep) {
+            case 1: return this.identityStep ? this.identityStep.isValid() : false;
+            case 2: return !!this.speciesStep?.selectedId;
+            case 3: return !!this.attributesStep?.isComplete;
+            case 4: return this.originStep ? this.originStep.canProceed() : false;
+            case 5: return this.educationStep ? (this.educationStep.canProceedToNext() || this.educationStep.admissionStatus === 'Rejected') : false;
+            case 6: return this.careerStep ? this.careerStep.canProceedToNext() : false;
+            case 7: return this.musteringStep ? this.musteringStep.canProceedToNext() : false;
+            default: return false;
+        }
+    }
+
+    /** Show the footer on steps 1-7, hide on step 8 (character sheet) */
+    get showActionBar(): boolean {
+        return this.currentStep >= 1 && this.currentStep <= 7;
+    }
+
+    /** Handle action button click — triggers finish() on active step */
+    onActionClick() {
+        switch (this.currentStep) {
+            case 1: this.identityStep?.finish(); break;
+            case 2: this.speciesStep?.finish(); break;
+            case 3: this.attributesStep?.finish(); break;
+            case 4: this.originStep?.finish(); break;
+            case 5: this.educationStep?.finishStep(); break;
+            case 6: this.careerStep?.startMusteringOut(); break;
+            case 7: this.musteringStep?.finish(); break;
+        }
     }
 
     initiateReset() {
@@ -58,26 +109,20 @@ export class CharacterWizardComponent {
 
     confirmReset() {
         this.showResetDialog = false;
-        
-        // 1. Clear Data
         this.characterService.reset();
-        
-        // 2. Trigger UI Refresh
-        // We toggle isResetting to True, then False to forcing *ngIf recreation
         this.isResetting = true;
-        
-        // We need a slight delay to allow Angular to process the destruction
         setTimeout(() => {
             this.currentStep = 1;
             this.isResetting = false;
-            this.cdr.detectChanges(); // Force update
+            this.cdr.detectChanges();
         }, 100);
     }
+
     onCareerComplete() {
-        this.currentStep = 5;
+        this.currentStep = 7;
     }
 
     onMusteringOutComplete() {
-        this.currentStep = 6;
+        this.currentStep = 8;
     }
 }

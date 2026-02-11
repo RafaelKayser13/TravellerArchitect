@@ -1,0 +1,30 @@
+<header class="step-header-container fade-in">
+    <div class="label-stack" *ngIf="superLabel || topLabel">
+        <div class="super-label" *ngIf="superLabel">
+            <span class="hud-label-tiny">[ {{ superLabel }} ]</span>
+        </div>
+        <div class="top-label" *ngIf="topLabel">
+            <span class="hud-label-tiny secondary">[ {{ topLabel }} ]</span>
+        </div>
+    </div>
+    <div class="hud-box-header">
+        <div class="header-main">
+            <span class="index">{{ stepSymbol }}_{{ stepNumber }}</span>
+            <div class="title-wrap">
+                <h2 class="title">{{ title }}</h2>
+                <div class="title-bracket"></div>
+            </div>
+        </div>
+        <div class="decoration" *ngIf="decorationVisible">
+            <div class="line"></div>
+            <div class="bit"></div>
+            <div class="bit"></div>
+        </div>
+    </div>
+    <div class="subtitle-bar">
+        <p class="subtitle">> {{ subtitle }}</p>
+        <div class="scanning-dots">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+</header>

@@ -1,12 +1,19 @@
 <div class="attributes-layout">
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="03" 
+        superLabel="CHARACTER_BIOMETRICS_V2.0"
+        topLabel="ATTRIBUTE_READOUT"
+        title="BIOMETRIC_SEQUENCING" 
+        subtitle="INITIALIZING_CHARACTER_DATA_OUTPUT... [ STANDBY ]">
+    </app-step-header>
 
     <!-- Cards Grid -->
     <div class="cards-circle">
         <div class="stat-card" *ngFor="let char of characteristicsList; let i = index"
             [class.selected]="selectedStat === char" [class.rolling]="rollingState[char]" (click)="selectCard(char)">
 
-            <div class="hud-label" style="position: absolute; top: 5px; right: 8px; font-size: 0.45rem;">[ 0{{i+1}} ]
-            </div>
+            <div class="hud-label top-right">[ 0{{i+1}} ]</div>
 
             <div class="card-header">
                 <h3>{{ char }}</h3>
@@ -18,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="card-body" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+            <div class="card-body">
                 <!-- Visual Dice -->
                 <div class="dice-pair">
                     <app-die [value]="getDieValue(char, 1)" [rolling]="rollingState[char]"></app-die>
@@ -33,7 +40,7 @@
                         <input type="number" *ngIf="editingState[char]" [ngModel]="getScore(char)"
                             (ngModelChange)="updateScore(char, $event)" (blur)="stopEditing(char)"
                             (keyup.enter)="stopEditing(char)" (click)="$event.stopPropagation()" class="edit-input"
-                            autoFocus>
+                            [attr.aria-label]="char + ' Score'" autoFocus>
 
                         <button class="btn-icon edit-btn" [class.visible]="!editingState[char] && isComplete"
                             (click)="startEditing(char, $event)" title="Edit Score">
@@ -47,18 +54,17 @@
                 </div>
             </div>
 
-            <div class="hud-label"
-                style="position: absolute; bottom: 4px; left: 8px; font-size: 0.35rem; opacity: 0.4;">READOUT_ACTIVE
-            </div>
+            <div class="hud-label bottom-left">READOUT_ACTIVE</div>
         </div>
     </div>
 
     <!-- Controls (Moved to Bottom) -->
     <div class="central-control">
-        <button class="btn-roll-center" (click)="rollSequence()" [disabled]="isRolling">
+        <button class="btn-roll-center" (click)="rollSequence()" [disabled]="isRolling" *ngIf="!isComplete">
             <span>{{ isRolling ? 'SEQUENCING...' : 'INITIALIZE ROLL' }}</span>
         </button>
-        <p class="instruction" *ngIf="!isComplete">> STANDBY: CHARACTER_DATA_MISSING</p>
+
         <p class="instruction" *ngIf="isComplete">> STATUS: SEQUENCE_COMPLETE // SWAP_ENABLED</p>
+        <p class="instruction" *ngIf="!isComplete && !isRolling">> STANDBY: CHARACTER_DATA_MISSING</p>
     </div>
 </div>

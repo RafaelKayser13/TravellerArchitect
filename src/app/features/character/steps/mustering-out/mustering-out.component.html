@@ -1,8 +1,12 @@
-<div class="mustering-container fade-in">
-    <div class="hud-box-header">
-        <span class="index">SEC_05</span>
-        <h3>SERVICE_LIQUIDATION_TERMINAL</h3>
-    </div>
+<div class="mustering-container">
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="07" 
+        superLabel="SERVICE_LIQUIDATION_V3.0"
+        topLabel="TERMINATION_SUMMARY"
+        title="SERVICE_TERMINATION_PROTOCOL" 
+        subtitle="MUSTER_OUT_ROCEEDING // PENSION_CALCULATION: ¤{{ pension() | number }}">
+    </app-step-header>
 
     <div class="hud-module info">
         <div class="corner-detail tl"></div>
@@ -43,6 +47,11 @@
                 <div class="corner-detail tr"></div>
                 <span class="v-label">EQUITY_LIQUIDATION</span>
                 <span class="v-desc">Cash benefit acquisition. Limit: {{ cashRolls() }}/3</span>
+                <div class="benefit-preview" *ngIf="currentCareerDef()">
+                    <div class="benefit-item" *ngFor="let b of currentCareerDef()?.musteringOutCash; let i = index">
+                        <span class="num">{{i+1}}</span> {{b | number}}
+                    </div>
+                </div>
             </button>
 
             <button class="vector-btn material" (click)="rollBenefit('Material')">
@@ -50,6 +59,11 @@
                 <div class="corner-detail tr"></div>
                 <span class="v-label">ASSET_REQUISITION</span>
                 <span class="v-desc">Materials, Ship Shares, or Augmentations.</span>
+                <div class="benefit-preview" *ngIf="currentCareerDef()">
+                    <div class="benefit-item" *ngFor="let b of currentCareerDef()?.musteringOutBenefits; let i = index">
+                        <span class="num">{{i+1}}</span> {{b}}
+                    </div>
+                </div>
             </button>
         </div>
     </div>
@@ -76,10 +90,4 @@
         </div>
     </div>
 
-    <div class="global-actions" *ngIf="rollsUsed() >= totalRolls()">
-        <div class="divider"></div>
-        <button class="btn-action finalize" (click)="finish()">
-            COMMIT_SERVICE_RECORD_AND_FINALIZE
-        </button>
-    </div>
 </div>

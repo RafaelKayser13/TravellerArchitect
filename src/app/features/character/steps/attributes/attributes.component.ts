@@ -1,18 +1,22 @@
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DieComponent } from '../../../../features/shared/die/die.component';
 
+import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+
 @Component({
   selector: 'app-attributes',
   standalone: true,
-  imports: [CommonModule, FormsModule, DieComponent],
+  imports: [CommonModule, DieComponent, FormsModule, StepHeaderComponent],
   templateUrl: './attributes.component.html',
   styleUrls: ['./attributes.component.scss']
 })
-export class AttributesComponent {
+export class AttributesComponent implements OnInit {
+  @Output() complete = new EventEmitter<void>();
+
   protected diceService = inject(DiceService);
   protected characterService = inject(CharacterService);
   private cdr = inject(ChangeDetectorRef);
@@ -33,6 +37,9 @@ export class AttributesComponent {
 
   constructor() {
     this.initializeState();
+  }
+
+  ngOnInit() {
   }
 
   initializeState() {
@@ -86,6 +93,10 @@ export class AttributesComponent {
         })
       ).subscribe();
     });
+  }
+
+  finish() {
+    this.complete.emit();
   }
 
   selectCard(char: string) {

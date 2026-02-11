@@ -14,10 +14,12 @@ interface EduEvent {
     lifeEvent?: boolean;
 }
 
+import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+
 @Component({
     selector: 'app-education',
     standalone: true,
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, StepHeaderComponent],
     templateUrl: './education.component.html',
     styleUrls: ['./education.component.scss']
 })
@@ -552,6 +554,10 @@ export class EducationComponent {
             education: update,
             age: currentAge + 4
         });
+    }
+
+    canProceedToNext(): boolean {
+        return this.educationStep === 'Finished' && this.graduationStatus !== 'Pending';
     }
 
     finishStep() {

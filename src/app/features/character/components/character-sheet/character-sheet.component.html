@@ -3,19 +3,38 @@
     <header class="dossier-header">
         <div class="hud-box-header">
             <span class="index">DOSSIER_ID: {{ character().id || 'PENDING_REGISTRATION' }}</span>
+            <div class="player-tag" *ngIf="character().playerName">
+                <span class="m-label">PLAYER:</span>
+                <span class="m-val">{{ character().playerName }}</span>
+            </div>
             <h3>TACTICAL_CHARACTER_SUMMARY</h3>
         </div>
 
-        <div class="identity-grid">
-            <div class="id-main">
+        <div class="identity-grid-v2">
+            <!-- Portrait Column (Visual Recon) -->
+            <div class="portrait-column">
+                <div class="portrait-frame">
+                    <img *ngIf="character().portraitUrl" [src]="character().portraitUrl" alt="Portrait">
+                    <div *ngIf="!character().portraitUrl" class="no-signal">
+                        <span class="glitch-text">NO_SIGNAL</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Identity Info (Classified Data) -->
+            <div class="id-info-column">
                 <div class="field large">
                     <span class="label">SUBJECT_NAME</span>
-                    <div class="value">{{ character().name || 'UNNAMED_OPERATIVE' }}</div>
+                    <div class="value-row">
+                        <span class="value">{{ character().name || 'UNNAMED_OPERATIVE' }}</span>
+                        <span class="nickname" *ngIf="character().nickname">"{{ character().nickname }}"</span>
+                    </div>
                 </div>
-                <div class="metadata-row">
+
+                <div class="metadata-grid">
                     <div class="meta-item">
                         <span class="m-label">SPECIES</span>
-                        <span class="m-val">{{ character().species }}</span>
+                        <span class="m-val highlight">{{ character().species }}</span>
                     </div>
                     <div class="meta-item">
                         <span class="m-label">ORIGIN</span>
@@ -26,20 +45,18 @@
                         <span class="m-val">{{ character().age }} STANDARD_YEARS</span>
                     </div>
                     <div class="meta-item">
+                        <span class="m-label">PHENOTYPE</span>
+                        <span class="m-val highlight">{{ character().gender }}</span>
+                    </div>
+                    <div class="meta-item">
                         <span class="m-label">AUTH_LEVEL</span>
-                        <span class="m-val highlight">SEC_CLEARANCE_0{{ character().careerHistory.length }}</span>
+                        <span class="m-val yellow">SEC_CLEARANCE_0{{ character().careerHistory.length }}</span>
                     </div>
                 </div>
-            </div>
-            <div class="biometrics-panel">
-                <div class="dna-strand">
-                    <span class="hud-label-tiny">GENETIC_COMPOSITION</span>
-                    <div class="gene-mods" *ngIf="character().genes.length > 0">
-                        <span class="gene-tag" *ngFor="let gene of character().genes">{{ gene.name }}</span>
-                    </div>
-                    <div class="gene-mods empty" *ngIf="character().genes.length === 0">
-                        [ NO_DNAM_MODIFICATIONS_DETECTED ]
-                    </div>
+
+                <div class="biometrics-row" *ngIf="character().description">
+                    <span class="m-label">PHYSICAL_BIO:</span>
+                    <p class="bio-text">{{ character().description }}</p>
                 </div>
             </div>
         </div>
@@ -49,10 +66,6 @@
         <!-- Characteristics Column -->
         <aside class="characteristics-column">
             <div class="hud-module stats">
-                <div class="corner-detail tl"></div>
-                <div class="corner-detail tr"></div>
-                <div class="corner-detail bl"></div>
-                <div class="corner-detail br"></div>
                 <div class="hud-box-header">
                     <span class="index">CH_01</span>
                     <h3>CORE_CHARACTERISTICS</h3>
@@ -113,8 +126,6 @@
 
             <!-- Origin & Homeworld -->
             <div class="hud-module world" *ngIf="character().homeworld">
-                <div class="corner-detail tl"></div>
-                <div class="corner-detail tr"></div>
                 <div class="hud-box-header">
                     <span class="index">OR_01</span>
                     <h3>HOMEWORLD_ORIGIN</h3>
@@ -142,8 +153,6 @@
 
             <!-- Finances & Assets -->
             <div class="hud-module finances">
-                <div class="corner-detail bl"></div>
-                <div class="corner-detail br"></div>
                 <div class="hud-box-header">
                     <span class="index">FN_01</span>
                     <h3>ECONOMIC_STATUS_DATA</h3>
@@ -173,9 +182,8 @@
 
         <!-- Skills & Training Main Column -->
         <main class="data-column">
+            <!-- Skills Section -->
             <div class="hud-module skills">
-                <div class="corner-detail tl"></div>
-                <div class="corner-detail tr"></div>
                 <div class="hud-box-header">
                     <span class="index">SK_01</span>
                     <h3>ACQUIRED_SKILL_ARRAY</h3>
@@ -184,8 +192,8 @@
                     <div class="skill-matrix">
                         <div class="skill-entry" *ngFor="let skill of character().skills">
                             <div class="s-header">
-                                <span class="s-lvl">LV.{{ skill.level }}</span>
                                 <span class="s-name">{{ skill.name }}</span>
+                                <span class="s-lvl">LV.{{ skill.level }}</span>
                             </div>
                             <span class="s-spec" *ngIf="skill.specialization">[{{ skill.specialization }}]</span>
                         </div>
@@ -198,8 +206,6 @@
 
             <!-- Career Timeline -->
             <div class="hud-module chronology">
-                <div class="corner-detail bl"></div>
-                <div class="corner-detail br"></div>
                 <div class="hud-box-header">
                     <span class="index">CH_02</span>
                     <h3>SERVICE_RECORD_CHRONOLOGY</h3>
@@ -208,13 +214,11 @@
                     <div class="history-entry" *ngFor="let term of character().careerHistory">
                         <div class="h-timeline">
                             <span class="h-term">TERM_0{{ term.termNumber }}</span>
-                            <div class="h-line"></div>
                         </div>
                         <div class="h-details">
                             <div class="h-main">
                                 <span class="h-career">{{ term.careerName }}</span>
-                                <span class="h-rank" *ngIf="term.rankTitle">{{ term.rankTitle }} (R{{ term.rank
-                                    }})</span>
+                                <span class="h-rank" *ngIf="term.rankTitle">{{ term.rankTitle }} (R{{ term.rank }})</span>
                                 <span class="h-rank" *ngIf="!term.rankTitle">RANK_0{{ term.rank }}</span>
                             </div>
                             <div class="h-assignment" *ngIf="term.assignment">ASSIGNMENT: {{ term.assignment }}</div>
@@ -258,11 +262,11 @@
     <footer class="sheet-actions-footer">
         <div class="divider"></div>
         <div class="action-buttons">
-            <button class="btn-action-sheet" (click)="exportJson()">
+            <button class="btn-action-sheet" (click)="exportJson()" id="btn-export-json">
                 <span class="index">CMD_01</span>
                 EXPORT_DATA_JSON
             </button>
-            <button class="btn-action-sheet finalize" (click)="exportPdf()">
+            <button class="btn-action-sheet finalize" (click)="exportPdf()" id="btn-export-pdf">
                 <span class="index">CMD_02</span>
                 PRINT_OFFICIAL_DOSSIER
             </button>

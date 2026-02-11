@@ -6,10 +6,13 @@ import { CAREERS } from '../../../../data/careers';
 
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 
+import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-mustering-out',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, StepHeaderComponent],
   templateUrl: './mustering-out.component.html',
   styleUrls: ['./mustering-out.component.scss']
 })
@@ -60,6 +63,13 @@ export class MusteringOutComponent {
       // Standard: 4000 at term 5, +2000 per term thereafter.
       // Formula: (Terms - 3) * 2000
       return (terms - 3) * 2000;
+  });
+
+  currentCareerDef = computed(() => {
+      const char = this.character();
+      const lastTerm = char.careerHistory[char.careerHistory.length - 1];
+      if (!lastTerm) return null;
+      return CAREERS.find(c => c.name === lastTerm.careerName) || null;
   });
 
   ngOnInit() {
@@ -199,6 +209,10 @@ export class MusteringOutComponent {
       console.log(`[MusteringOut] Rolled ${roll}${dm ? (dm > 0 ? '+'+dm : dm) : ''} (${type}): ${result}`);
   }
   
+  canProceedToNext(): boolean {
+    return this.rollsUsed() >= this.totalRolls();
+  }
+
   finish() {
       // Mark character as finished
       this.characterService.updateCharacter({ isFinished: true });

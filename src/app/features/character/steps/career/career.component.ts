@@ -9,10 +9,12 @@ import { DiceDisplayService } from '../../../../core/services/dice-display.servi
 
 type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT';
 
+import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+
 @Component({
   selector: 'app-career',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, StepHeaderComponent],
   templateUrl: './career.component.html',
   styleUrls: ['./career.component.scss']
 })
@@ -736,6 +738,10 @@ export class CareerComponent {
   }
 
   // --- MUSTERING OUT ---
+  canProceedToNext(): boolean {
+      return this.currentState() === 'CHOOSE_CAREER' && this.characterService.character().careerHistory.length > 0;
+  }
+
   startMusteringOut() {
       this.log('Finalizing Career Phase...');
       // Emit complete to Wizard to move to Step 5 (Mustering Out Component)

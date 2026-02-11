@@ -1,12 +1,13 @@
 @import '../../../../../styles.scss';
 
 .mustering-container {
-    padding: 2rem;
-    max-width: 1000px;
+    padding: 1.5rem;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    box-sizing: border-box;
 
     .hud-box-header {
         display: flex;
@@ -84,6 +85,8 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    backdrop-filter: blur(var(--backdrop-blur));
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
 
     .hud-box-header {
@@ -212,6 +215,38 @@
         letter-spacing: 1px;
     }
 
+    .benefit-preview {
+        margin-top: 1.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem;
+        border-top: 1px solid rgba(0, 243, 255, 0.1);
+        padding-top: 1rem;
+        pointer-events: none;
+        opacity: 0.4;
+        transition: opacity 0.3s;
+
+        .benefit-item {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            .num {
+                color: var(--neon-cyan);
+                font-weight: bold;
+                font-size: 0.65rem;
+                width: 14px;
+                opacity: 0.6;
+            }
+        }
+    }
+
     &:hover:not(:disabled) {
         border-color: var(--neon-cyan);
         background: rgba(0, 243, 255, 0.08);
@@ -225,6 +260,15 @@
 
         .v-desc {
             opacity: 0.8;
+        }
+
+        .benefit-preview {
+            opacity: 1;
+            border-top-color: rgba(0, 243, 255, 0.3);
+
+            .benefit-item {
+                color: #fff;
+            }
         }
 
         .corner-detail {

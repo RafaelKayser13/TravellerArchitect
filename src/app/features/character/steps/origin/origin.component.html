@@ -1,11 +1,18 @@
 <div class="origin-container">
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="04" 
+        superLabel="PLANETARY_DATABASE_HUB"
+        topLabel="GEOGRAPHIC_ORIGIN"
+        title="NATIONALITY_ESTABLISHMENT" 
+        subtitle="ENFORCING_SOCIO-POLITICAL_TERRITORIAL_DATA... [ OK ]">
+    </app-step-header>
     <section>
         <h2 class="step-title">Select Nationality</h2>
         <div class="card-grid">
             <div class="selection-card" *ngFor="let nat of nationalities; let i = index"
                 [class.selected]="selectedNationality?.name === nat.name" (click)="selectNationality(nat)">
-                <span class="hud-label" style="position: absolute; top: 10px; right: 15px; opacity: 0.4;">[ NAT_{{i+1}}
-                    ]</span>
+                <span class="hud-label">[ NAT_{{i+1}} ]</span>
                 <h3>{{ nat.name }}</h3>
                 <p class="tier">{{ nat.tier === 1 ? 'Superpower' : 'Tier ' + nat.tier }}</p>
                 <div class="description">{{ nat.description }}</div>
@@ -37,8 +44,7 @@
         <div class="card-grid">
             <div class="selection-card" *ngFor="let world of availableWorlds; let i = index"
                 [class.selected]="selectedWorld?.name === world.name" (click)="selectWorld(world)">
-                <span class="hud-label" style="position: absolute; top: 10px; right: 15px; opacity: 0.4;">[
-                    WORLD_{{i+1}} ]</span>
+                <span class="hud-label">[ WORLD_{{i+1}} ]</span>
                 <h3>{{ world.name }}</h3>
                 <div class="world-meta">
                     <span class="badge"
@@ -81,5 +87,6 @@
             <p *ngIf="['King', 'Huntsland', 'New Columbia'].includes(selectedWorld.name)">HEAVY_WORLDER: Genetic STR/END
                 modification detected.</p>
         </div>
+
     </section>
 </div>

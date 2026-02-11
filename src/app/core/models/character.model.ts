@@ -36,6 +36,10 @@ export interface World {
 export const INITIAL_CHARACTER: Character = {
   id: '',
   name: '',
+  nickname: '',
+  playerName: '',
+  description: '',
+  portraitUrl: '',
   species: 'Human',
   nationality: '',
   originType: 'Earth',
@@ -58,6 +62,7 @@ export const INITIAL_CHARACTER: Character = {
   notes: '',
   creationDate: new Date(),
   isFinished: false,
+  gender: 'Male',
   history: []
 };
 
@@ -96,6 +101,10 @@ export interface GeneMod {
 export interface Character {
   id: string;
   name: string;
+  nickname?: string;
+  playerName?: string;
+  description?: string;
+  portraitUrl?: string;
   species: string; // Typically 'Human' for 2300AD standard
   nationality: string;
   
@@ -141,5 +150,6 @@ export interface Character {
   // New: 2300AD Logic
   benefitRollDebt?: number; // Tracks lost rolls due to Cybernetic Save
   
+  gender: string;
   history: string[]; // Log of all events
 }

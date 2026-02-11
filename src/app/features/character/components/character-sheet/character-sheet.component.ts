@@ -32,9 +32,13 @@ export class CharacterSheetComponent {
     const docDefinition: any = {
       content: [
         { text: 'Traveller 2300AD Character Sheet', style: 'header' },
-        { text: `Name: ${char.name}`, style: 'subheader' },
+        { text: `Name: ${char.name}${char.nickname ? ' "' + char.nickname + '"' : ''}`, style: 'subheader' },
+        { text: `Player: ${char.playerName || 'N/A'}`, style: 'subheader' },
+        { text: `Species: ${char.species}`, style: 'subheader' },
         { text: `Nationality: ${char.nationality}`, style: 'subheader' },
+        { text: `Gender: ${char.gender}`, style: 'subheader' },
         { text: `Age: ${char.age}`, style: 'subheader' },
+        { text: `Description: ${char.description || 'N/A'}`, margin: [0, 5, 0, 5] },
         { text: '\n' },
         
         { text: 'Characteristics', style: 'sectionHeader' },

@@ -1,33 +1,12 @@
  .attributes-layout {
      width: 100%;
      margin: 0 auto;
-     padding: 1rem;
+     padding: 1.5rem;
      position: relative;
      max-width: 1200px;
      box-sizing: border-box;
-     /* Include padding in width/height */
      overflow: hidden;
      min-height: min-content;
-
-     @media (min-width: 768px) {
-         padding: 1.5rem 1.5rem 0.5rem;
-     }
-
-     &::before {
-         content: "[ CHARACTER_BIOMETRICS_V2.0 ]";
-         position: absolute;
-         top: 0px;
-         left: 1rem;
-         font-family: var(--font-mono);
-         color: var(--neon-cyan);
-         font-size: 0.6rem;
-         letter-spacing: 2px;
-         opacity: 0.6;
-
-         @media (min-width: 768px) {
-             left: 2rem;
-         }
-     }
  }
 
  .cards-circle {
@@ -55,7 +34,8 @@
      position: relative;
      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
      cursor: pointer;
-     backdrop-filter: blur(var(--backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
+    backdrop-filter: blur(var(--backdrop-blur));
      display: flex;
      flex-direction: column;
      align-items: center;
@@ -154,6 +134,25 @@
              }
          }
      }
+
+    .hud-label {
+        position: absolute;
+        font-family: var(--font-mono);
+        color: var(--neon-cyan);
+
+        &.top-right {
+            top: 5px;
+            right: 8px;
+            font-size: 0.45rem;
+        }
+
+        &.bottom-left {
+            bottom: 4px;
+            left: 8px;
+            font-size: 0.35rem;
+            opacity: 0.4;
+        }
+    }
  }
 
  .dice-pair {
@@ -171,6 +170,13 @@
          transform: scale(0.6);
      }
  }
+
+ .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
 
  .value-display {
      display: flex;
@@ -288,13 +294,25 @@
          }
 
          &:disabled {
-             border-color: var(--text-dim);
-             color: var(--text-dim);
-             box-shadow: none;
-             cursor: not-allowed;
-             opacity: 0.4;
-         }
-     }
+            border-color: var(--text-dim);
+            color: var(--text-dim);
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+
+        &.next {
+            border-color: var(--cyber-yellow);
+            color: var(--cyber-yellow);
+            box-shadow: 0 0 15px rgba(255, 238, 0, 0.3);
+
+            &:hover {
+                background: var(--cyber-yellow);
+                color: #000;
+                box-shadow: 0 0 25px rgba(255, 238, 0, 0.5);
+            }
+        }
+    }
  }
 
  .instruction {

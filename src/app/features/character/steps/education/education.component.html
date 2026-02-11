@@ -1,6 +1,12 @@
 <div class="education-container">
-  <h2>ACADEMIC_ENROLLMENT</h2>
-  <p>SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED TO NATIONAL DRAFT</p>
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="05" 
+        superLabel="ACADEMIC_RECORDS_SYSTEM"
+        topLabel="ACADEMIC_HISTORY"
+        title="ACADEMIC_ENROLLMENT" 
+        subtitle="SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED TO NATIONAL DRAFT">
+    </app-step-header>
 
   <div class="education-stack" *ngIf="$any(admissionStatus) === 'NotApplied'">
     <!-- University -->
@@ -207,7 +213,6 @@
     <div *ngIf="educationStep === 'Finished' && graduationStatus !== 'Pending'" class="graduation-result">
       <h3>{{ graduationStatus === 'Failed' ? 'GRADUATION_FAILED' : 'GRADUATION_CONFIRMED' }}</h3>
       <p *ngIf="graduationStatus === 'Honors'">[ HONORS_DISTINCTION_DETECTED ]</p>
-      <button class="btn-cyber" (click)="finishStep()" style="margin-top: 2rem;">PROCEED_TO_CAREER_HUB</button>
     </div>
   </div>
 </div>

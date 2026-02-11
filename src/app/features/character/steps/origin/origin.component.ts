@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
@@ -9,10 +9,12 @@ import { World } from '../../../../core/models/character.model';
 
 import { DiceService } from '../../../../core/services/dice.service';
 
+import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+
 @Component({
   selector: 'app-origin',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, StepHeaderComponent],
   templateUrl: './origin.component.html',
   styleUrls: ['./origin.component.scss']
 })
@@ -21,6 +23,7 @@ export class OriginComponent {
   @ViewChild('homeworldSection') homeworldSection!: ElementRef;
   @ViewChild('skillsSection') skillsSection!: ElementRef;
 
+  @Output() complete = new EventEmitter<void>();
   protected characterService = inject(CharacterService);
   protected diceService = inject(DiceService);
 
@@ -300,6 +303,14 @@ export class OriginComponent {
     }
     // Note: We don't call save() here anymore because save() just does bio/stats, which haven't changed.
     // But we might want to check for side effects? No.
+  }
+
+  canProceed(): boolean {
+    return this.selectedBackgroundSkills.length === this.backgroundSkillsCount;
+  }
+
+  finish() {
+    this.complete.emit();
   }
 
 }

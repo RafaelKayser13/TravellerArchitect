@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CharacterWizardComponent } from './character-wizard.component';
-import { CharacterService } from '../../../../core/services/character.service';
-import { DiceService } from '../../../../core/services/dice.service';
+import { CharacterService } from '../../../core/services/character.service';
+import { DiceService } from '../../../core/services/dice.service';
 
 describe('CharacterWizardComponent', () => {
   let component: CharacterWizardComponent;

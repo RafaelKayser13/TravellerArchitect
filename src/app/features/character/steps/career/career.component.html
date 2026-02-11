@@ -1,8 +1,12 @@
 <div class="career-container">
-    <div class="career-header">
-        <span class="hud-label-tiny">[ CHRONOS_STATUS ]</span>
-        <h2>Term {{ currentTerm() }} (Age {{ currentAge() }})</h2>
-    </div>
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="06" 
+        superLabel="SERVICE_HISTORY_PROTOCOL"
+        topLabel="CHRONOS_STATUS"
+        title="CAREER_SERVICE_RECORDS" 
+        subtitle="Term {{ currentTerm() }} (Age {{ currentAge() }})">
+    </app-step-header>
 
     <!-- 1. CHOOSE CAREER -->
     <div *ngIf="currentState() === 'CHOOSE_CAREER'" class="career-stack fade-in">
@@ -107,24 +111,53 @@
                 <button class="vector-btn" (click)="rollSkill('Personal')">
                     <span class="v-label">PERSONAL_DEVELOPMENT</span>
                     <span class="v-desc">Str, Dex, End, Int...</span>
+                    <div class="skill-preview">
+                        <div class="skill-item" *ngFor="let s of selectedCareer?.personalSkills; let i = index">
+                            <span class="num">{{i+1}}</span> {{s}}
+                        </div>
+                    </div>
                 </button>
+
                 <button class="vector-btn" (click)="rollSkill('Service')">
                     <span class="v-label">SERVICE_SKILLS</span>
-                    <span class="v-desc">Core Technical Training</span>
+                    <span class="v-desc">Basic training & field experience</span>
+                    <div class="skill-preview">
+                        <div class="skill-item" *ngFor="let s of selectedCareer?.serviceSkills; let i = index">
+                            <span class="num">{{i+1}}</span> {{s}}
+                        </div>
+                    </div>
                 </button>
-                <button class="vector-btn" (click)="rollSkill('Specialist')" *ngIf="selectedAssignment">
-                    <span class="v-label">SPECIALIST: {{ selectedAssignment.name }}</span>
-                    <span class="v-desc">Assignment Vector</span>
+
+                <button class="vector-btn" (click)="rollSkill('Specialist')" [disabled]="!selectedAssignment">
+                    <span class="v-label">SPECIALIST_KNOWLEDGE</span>
+                    <span class="v-desc">{{ selectedAssignment?.name || 'Assignments' }} Specific Skills</span>
+                    <div class="skill-preview" *ngIf="selectedAssignment">
+                        <div class="skill-item" *ngFor="let s of selectedAssignment.skillTable; let i = index">
+                            <span class="num">{{i+1}}</span> {{s}}
+                        </div>
+                    </div>
                 </button>
+
                 <button class="vector-btn" (click)="rollSkill('Advanced')"
-                    [disabled]="characterService.character().characteristics.edu.value < 8">
+                    [disabled]="(characterService.character().characteristics.edu.value + characterService.character().characteristics.edu.modifier) < 8">
                     <span class="v-label">ADVANCED_EDUCATION</span>
-                    <span class="v-desc">Req: EDU 8+</span>
+                    <span class="v-desc">Requires EDU 8+</span>
+                    <div class="skill-preview">
+                        <div class="skill-item" *ngFor="let s of selectedCareer?.advancedEducation; let i = index">
+                            <span class="num">{{i+1}}</span> {{s}}
+                        </div>
+                    </div>
                 </button>
-                <button class="vector-btn" (click)="rollSkill('Officer')" *ngIf="selectedCareer?.officerSkills"
-                    [disabled]="!isCommissioned()">
+
+                <button class="vector-btn" *ngIf="selectedCareer?.officerSkills" (click)="rollSkill('Officer')"
+                    [disabled]="getRank() <= 0">
                     <span class="v-label">OFFICER_TRAINING</span>
-                    <span class="v-desc">Req: Commission</span>
+                    <span class="v-desc">Command & Management skills</span>
+                    <div class="skill-preview">
+                        <div class="skill-item" *ngFor="let s of selectedCareer?.officerSkills; let i = index">
+                            <span class="num">{{i+1}}</span> {{s}}
+                        </div>
+                    </div>
                 </button>
             </div>
         </div>

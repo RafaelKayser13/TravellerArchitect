@@ -104,4 +104,35 @@ export class DiceRollerComponent implements OnDestroy {
   get effectiveTotal(): number {
       return this.total + (this.request?.dm || 0);
   }
+
+  get tableRows(): { roll: string, value: string, active: boolean }[] {
+      const data = this.request?.debugTableData;
+      if (!data || !Array.isArray(data)) return [];
+
+      const currentTotal = this.showResult ? this.effectiveTotal : -999;
+
+      return data.map((item, index) => {
+          let roll = (index + 1).toString();
+          let value = '';
+          let isActive = false;
+
+          if (typeof item === 'string') {
+              value = item;
+          } else if (typeof item === 'number') {
+              value = item.toLocaleString();
+          } else if (typeof item === 'object' && item !== null) {
+              if (item.roll !== undefined) {
+                  roll = item.roll.toString();
+                  value = item.description || item.name || '';
+              } else {
+                  value = JSON.stringify(item);
+              }
+          }
+
+          // Check if this row is the result of the current roll (accounting for DMs)
+          isActive = this.showResult && roll === currentTotal.toString();
+
+          return { roll, value, active: isActive };
+      });
+  }
 }

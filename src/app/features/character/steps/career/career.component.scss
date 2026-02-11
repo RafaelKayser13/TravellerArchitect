@@ -9,17 +9,7 @@
     position: relative;
     box-sizing: border-box;
 
-    &::before {
-        content: "[ SERVICE_TERM_DECRYPTED ]";
-        position: absolute;
-        top: 0;
-        left: 2rem;
-        font-family: var(--font-mono);
-        color: var(--neon-cyan);
-        font-size: 0.6rem;
-        letter-spacing: 2px;
-        opacity: 0.5;
-    }
+
 }
 
 .career-header {
@@ -97,6 +87,7 @@
     border: 1px solid rgba(0, 243, 255, 0.1);
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-backdrop-filter: blur(var(--backdrop-blur));
     backdrop-filter: blur(var(--backdrop-blur));
     position: relative;
     overflow: hidden;
@@ -601,6 +592,38 @@
         letter-spacing: 1px;
     }
 
+    .skill-preview {
+        margin-top: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+        border-top: 1px solid rgba(0, 243, 255, 0.1);
+        padding-top: 0.8rem;
+        pointer-events: none;
+        opacity: 0.4;
+        transition: opacity 0.3s;
+
+        .skill-item {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            .num {
+                color: var(--neon-cyan);
+                font-weight: bold;
+                font-size: 0.6rem;
+                width: 12px;
+                opacity: 0.6;
+            }
+        }
+    }
+
     &:hover:not(:disabled) {
         border-color: var(--neon-cyan);
         background: rgba(0, 243, 255, 0.08);
@@ -620,6 +643,15 @@
         .v-desc {
             opacity: 0.8;
             color: #fff;
+        }
+
+        .skill-preview {
+            opacity: 1;
+            border-top-color: rgba(0, 243, 255, 0.3);
+
+            .skill-item {
+                color: #fff;
+            }
         }
     }
 
@@ -776,6 +808,8 @@
     box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
     max-width: 600px;
     width: 90%;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 
     .grid-options {
         display: grid;

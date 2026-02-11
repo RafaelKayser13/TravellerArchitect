@@ -1,0 +1,168 @@
+@import '../../../../styles.scss';
+
+.step-header-container {
+    margin-bottom: 2rem;
+    position: relative;
+    width: 100%;
+
+    .label-stack {
+        margin-bottom: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+
+        .hud-label-tiny {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--neon-cyan);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            background: rgba(0, 243, 255, 0.05);
+            padding: 2px 6px;
+            border-left: 2px solid var(--neon-cyan);
+            display: inline-block;
+
+            &.secondary {
+                opacity: 0.5;
+                font-size: 0.6rem;
+                padding-left: 12px;
+                border-left-width: 1px;
+                border-left-color: rgba(0, 243, 255, 0.3);
+            }
+        }
+    }
+
+    .hud-box-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+
+        .header-main {
+            display: flex;
+            align-items: flex-end;
+            gap: 1.5rem;
+
+            .index {
+                font-family: var(--font-mono);
+                font-size: 0.8rem;
+                color: var(--neon-cyan);
+                letter-spacing: 2px;
+                opacity: 0.8;
+                border: 1px solid rgba(0, 243, 255, 0.3);
+                padding: 0.2rem 0.6rem;
+                background: rgba(0, 243, 255, 0.05);
+            }
+
+            .title-wrap {
+                position: relative;
+                
+                .title {
+                    margin: 0;
+                    font-family: var(--font-header);
+                    font-size: 1.8rem;
+                    color: #fff;
+                    letter-spacing: 4px;
+                    text-transform: uppercase;
+                    line-height: 1;
+                    text-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+                }
+
+                .title-bracket {
+                    position: absolute;
+                    bottom: -8px;
+                    left: 0;
+                    width: 30px;
+                    height: 4px;
+                    background: var(--neon-cyan);
+                    box-shadow: 0 0 10px var(--neon-cyan-glow);
+                }
+            }
+        }
+
+        .decoration {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.2rem;
+
+            .line {
+                width: 100px;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.3));
+            }
+
+            .bit {
+                width: 4px;
+                height: 4px;
+                background: var(--neon-cyan);
+                opacity: 0.5;
+            }
+        }
+    }
+
+    .subtitle-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.8rem;
+        padding-left: 0.5rem;
+
+        .subtitle {
+            margin: 0;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        .scanning-dots {
+            display: flex;
+            gap: 0.4rem;
+
+            span {
+                width: 3px;
+                height: 3px;
+                background: var(--neon-cyan);
+                border-radius: 50%;
+                animation: blink 1.5s infinite;
+
+                &:nth-child(2) { animation-delay: 0.2s; }
+                &:nth-child(3) { animation-delay: 0.4s; }
+            }
+        }
+    }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+@media (max-width: 768px) {
+    .step-header-container {
+        .hud-box-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+
+            .header-main {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.8rem;
+
+                .title {
+                    font-size: 1.4rem !important;
+                }
+            }
+
+            .decoration {
+                display: none;
+            }
+        }
+    }
+}

@@ -9,17 +9,7 @@
     position: relative;
     box-sizing: border-box;
 
-    &::before {
-        content: "[ ACADEMIC_RECORD_ENCRYPTED ]";
-        position: absolute;
-        top: 0;
-        left: 2rem;
-        font-family: var(--font-mono);
-        color: var(--neon-cyan);
-        font-size: 0.6rem;
-        letter-spacing: 2px;
-        opacity: 0.5;
-    }
+
 
     h2 {
         color: var(--text-main);

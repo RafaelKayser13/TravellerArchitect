@@ -5,6 +5,7 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
     z-index: 10000;
     display: flex;
@@ -152,6 +153,114 @@
 
 .processing-sec {
     flex: 1;
+}
+
+.table-overlay-container {
+    margin-top: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    .label-tiny {
+        font-family: var(--font-mono);
+        font-size: 0.5rem;
+        color: var(--text-dim);
+        margin-bottom: 0.6rem;
+        opacity: 0.7;
+        letter-spacing: 1px;
+    }
+}
+
+.outcomes-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.8rem;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    border-radius: 2px;
+    overflow-y: auto;
+    max-height: 250px;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(0, 243, 255, 0.1);
+    }
+
+    .outcome-row {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 0.4rem 0.6rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        position: relative;
+        transition: all 0.2s;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .roll-val {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--neon-cyan);
+            font-weight: bold;
+            width: 25px;
+            text-align: center;
+        }
+
+        .outcome-desc {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            transition: color 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &.active {
+            background: rgba(0, 243, 255, 0.1);
+            border-color: var(--neon-cyan);
+
+            .roll-val {
+                color: var(--cyber-yellow);
+                text-shadow: 0 0 10px rgba(255, 238, 0, 0.4);
+            }
+
+            .outcome-desc {
+                color: #fff;
+                font-weight: bold;
+            }
+
+            .active-indicator {
+                position: absolute;
+                right: 8px;
+                width: 6px;
+                height: 6px;
+                background: var(--neon-cyan);
+                border-radius: 50%;
+                box-shadow: 0 0 10px var(--neon-cyan);
+                animation: pulse 1s infinite alternate;
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+    from {
+        opacity: 0.4;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .dice-stack {
