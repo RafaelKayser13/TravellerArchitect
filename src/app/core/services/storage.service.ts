@@ -11,6 +11,7 @@ export class StorageService {
 
   save<T>(key: string, data: T): void {
     try {
+      if (typeof localStorage === 'undefined' || !localStorage.setItem) return;
       localStorage.setItem(this.PREFIX + key, JSON.stringify(data));
     } catch (e) {
       console.error('Error saving to localStorage', e);
@@ -19,6 +20,7 @@ export class StorageService {
 
   load<T>(key: string): T | null {
     try {
+      if (typeof localStorage === 'undefined' || !localStorage.getItem) return null;
       const item = localStorage.getItem(this.PREFIX + key);
       return item ? JSON.parse(item) : null;
     } catch (e) {
@@ -28,10 +30,12 @@ export class StorageService {
   }
 
   remove(key: string): void {
+    if (typeof localStorage === 'undefined' || !localStorage.removeItem) return;
     localStorage.removeItem(this.PREFIX + key);
   }
 
   clearAll(): void {
+    if (typeof localStorage === 'undefined' || !localStorage.removeItem) return;
     // Only clear items with our prefix to avoid messing with other apps on localhost
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith(this.PREFIX)) {

@@ -1,0 +1,92 @@
+<div class="package-container">
+    <app-step-header stepSymbol="PKG" stepNumber="08" superLabel="CAMPAIGN_INTEGRATION_V1.0"
+        topLabel="SKILL_PACKAGE_SELECTION" title="OPERATIONAL_ROLE_PROTOCOL"
+        subtitle="SELECT_CAMPAIGN_UNIT_PACKAGE // STANDARDIZING_GROUP_PERFORMANCE">
+    </app-step-header>
+
+    <div class="hud-module info">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">PKG_01</span>
+            <h3>OPERATIONAL_PROFILE_SELECTION</h3>
+        </div>
+        <div class="hud-content">
+            <p class="description">
+                Campaign Skill Packages ensure your character has the baseline competencies required for specific 2300AD operations. 
+                Select one package; any selected skills you already possess at level 1 or higher will not increase further. 
+                Skills at level 0 will be upgraded to level 1.
+            </p>
+        </div>
+    </div>
+
+    <div class="package-grid">
+        <div *ngFor="let pkg of packages" class="package-card"
+            [class.selected]="selectedPackage() === pkg"
+            (click)="selectPackage(pkg)">
+            <div class="corner-detail tl"></div>
+            <div class="corner-detail tr"></div>
+            
+            <div class="card-header">
+                <span class="pkg-marker">PROFILE</span>
+                <h3>{{ pkg.name }}</h3>
+            </div>
+            
+            <div class="card-content">
+                <p class="pkg-desc">{{ pkg.description }}</p>
+                
+                <div class="skills-preview">
+                    <span class="hud-label-tiny">COMPONENT_SKILLS</span>
+                    <div class="skills-list">
+                        <span *ngFor="let skill of pkg.skills" class="skill-tag">
+                            {{ skill }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="selection-indicator">
+                <span class="status">{{ selectedPackage() === pkg ? 'ACTIVE_PROTOCOL' : 'SELECT_PROFILE' }}</span>
+                <span class="icon">{{ selectedPackage() === pkg ? '◢' : '□' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="selection-view" *ngIf="selectedPackage()">
+        <div class="hud-box-header">
+            <span class="index">SL_01</span>
+            <h3>SKILL_SELECTION (SOLO_PROTOCOL)</h3>
+        </div>
+        
+        <div class="selection-content">
+            <p class="hint">Select exactly 4 skills from the chosen package to add to your character dossiers.</p>
+            
+            <div class="selection-grid">
+                <div class="skill-selectable" *ngFor="let skill of selectedPackage()?.skills"
+                     [class.selected]="selectedSkills().includes(skill)"
+                     [class.disabled]="selectedSkills().length >= 4 && !selectedSkills().includes(skill)"
+                     (click)="toggleSkill(skill)">
+                    <div class="status-box">
+                        <span class="check" *ngIf="selectedSkills().includes(skill)">✓</span>
+                    </div>
+                    <span class="skill-name">{{ skill }}</span>
+                </div>
+            </div>
+
+            <div class="selection-status">
+                <span class="count">{{ selectedSkills().length }} / 4</span>
+                <span class="msg" *ngIf="selectedSkills().length < 4">UNITS_REMAINING</span>
+                <span class="msg success" *ngIf="selectedSkills().length === 4">PROTOCOL_READY</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="global-actions" *ngIf="selectedPackage() && selectedSkills().length === 4">
+        <div class="divider"></div>
+        <button class="btn-action finalize" (click)="$event.stopPropagation(); finish()">
+            COMMIT_OPERATIONAL_PROFILE
+        </button>
+    </div>
+</div>

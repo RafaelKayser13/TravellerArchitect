@@ -1,15 +1,17 @@
 @import '../../../../styles.scss';
 
 .step-header-container {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem; /* REDUCED SPACE */
     position: relative;
     width: 100%;
 
     .label-stack {
         margin-bottom: 0.8rem;
         display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
+        flex-direction: row; /* SIDE BY SIDE */
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
 
         .hud-label-tiny {
             font-family: var(--font-mono);

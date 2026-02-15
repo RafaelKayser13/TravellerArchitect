@@ -23,6 +23,7 @@ export interface RollRequest {
 })
 export class DiceDisplayService {
   request = signal<RollRequest | null>(null);
+  debugMode = signal<boolean>(false);
 
   roll(
       reason: string, 

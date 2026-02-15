@@ -42,19 +42,18 @@ export class CharacterService {
       }
     });
 
+    // 2300AD Spec: Ship Share Dividends (Lv 1,000 per year per share)
+    const shares = char.finances.shipShares || 0;
+    if (shares > 0) {
+        totalPension += (shares * 1000);
+    }
+
     return totalPension;
   });
 
   readonly totalRolls = computed(() => {
-    const history = this.character().careerHistory;
-    let rolls = history.length;
-    const lastTerm = history[history.length - 1];
-    if (lastTerm) {
-      if (lastTerm.rank >= 1 && lastTerm.rank <= 2) rolls += 1;
-      if (lastTerm.rank >= 3 && lastTerm.rank <= 4) rolls += 2;
-      if (lastTerm.rank >= 5) rolls += 3;
-    }
-    return rolls;
+    const allocated = this.character().finances.benefitRollsAllocated || {};
+    return Object.values(allocated).reduce((a, b) => a + b, 0);
   });
 
   constructor(
@@ -226,16 +225,17 @@ export class CharacterService {
 
   // --- DM Tracking ---
 
-  updateDm(type: 'qualification' | 'advancement' | 'benefit', value: number) {
+  updateDm(type: 'qualification' | 'survival' | 'advancement' | 'benefit', value: number) {
     this.characterSignal.update(current => {
       const updated = { ...current };
       if (type === 'qualification') updated.nextQualificationDm = (updated.nextQualificationDm || 0) + value;
+      if (type === 'survival') updated.nextSurvivalDm = (updated.nextSurvivalDm || 0) + value;
       if (type === 'advancement') updated.nextAdvancementDm = (updated.nextAdvancementDm || 0) + value;
       if (type === 'benefit') updated.nextBenefitDm = (updated.nextBenefitDm || 0) + value;
 
       const updatedWithHistory = {
         ...updated,
-        history: [...(current.history || []), `**DM Bonus**: +${value} to next ${type} roll`]
+        history: [...(current.history || []), `**DM Bonus**: ${value >= 0 ? '+' : ''}${value} to next ${type} roll`]
       };
       this.storage.save('autosave', updatedWithHistory);
       return updatedWithHistory;
@@ -286,10 +286,41 @@ export class CharacterService {
     this.characterSignal.update(current => {
       const updated = {
         ...current,
+        forcedCareer: careerName,
         history: [...(current.history || []), `**Next Career Forced**: ${careerName}`]
       };
-      // Note: For now we just log it, CareerComponent will need to check history 
-      // or a new property if we want to force-select the career in the UI.
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  clearForcedCareer() {
+    this.characterSignal.update(current => {
+      const updated = { ...current, forcedCareer: '' };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  ejectFromCareer(careerName: string) {
+    this.characterSignal.update(current => {
+      const ejected = [...(current.ejectedCareers || [])];
+      if (!ejected.includes(careerName)) {
+        ejected.push(careerName);
+      }
+      const updated = { 
+        ...current, 
+        ejectedCareers: ejected,
+        history: [...(current.history || []), `**EJECTED**: Character was ejected from the ${careerName} career.`]
+      };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  clearEjectedCareers() {
+    this.characterSignal.update(current => {
+      const updated = { ...current, ejectedCareers: [] };
       this.storage.save('autosave', updated);
       return updated;
     });
@@ -372,9 +403,13 @@ export class CharacterService {
     });
   }
 
-  spendBenefitRoll(careerName?: string, count: number = 1) {
+  spendBenefitRoll(careerName?: string, count: number = 1, isCash: boolean = false) {
     this.characterSignal.update(current => {
       const finances = { ...current.finances };
+
+      if (isCash) {
+        finances.cashRollsSpent = (finances.cashRollsSpent || 0) + count;
+      }
 
       if (careerName && finances.benefitRollsAllocated && finances.benefitRollsAllocated[careerName]) {
         finances.benefitRollsAllocated = { ...finances.benefitRollsAllocated };
@@ -386,6 +421,46 @@ export class CharacterService {
       }
 
       const updated = { ...current, finances };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  finalizeCharacter() {
+    this.characterSignal.update(current => {
+      const char = current;
+      let pension = 0;
+      
+      // 2300AD: Standard Pension (Military Rank 4+ or 20+ years service)
+      const careerHistory = char.careerHistory || [];
+      const totalTerms = careerHistory.length;
+      const highestMilitaryRank = Math.max(...careerHistory.filter(h => ['Army', 'Navy', 'Marine', 'Agent'].includes(h.careerName)).map(h => h.rank), 0);
+      
+      if (highestMilitaryRank >= 4 || totalTerms >= 5) {
+          // Standard pension logic (simplified for 2300AD summary)
+          pension = 10000 + (totalTerms * 2000);
+      }
+      
+      // 2300AD: Ship Share Dividends - Lv 1,000 per year per share
+      const shipShares = char.finances.shipShares || 0;
+      const dividends = shipShares * 1000;
+      
+      const totalPension = pension + dividends;
+      
+      const updated = {
+        ...current,
+        finances: {
+          ...current.finances,
+          pension: totalPension
+        },
+        isFinished: true
+      };
+      
+      this.log(`## character Finalized`);
+      if (pension > 0) this.log(`- Pension: Lv ${pension.toLocaleString()} / year`);
+      if (dividends > 0) this.log(`- Ship Share Dividends: Lv ${dividends.toLocaleString()} / year`);
+      this.log(`- Total Annual Income: Lv ${totalPension.toLocaleString()}`);
+      
       this.storage.save('autosave', updated);
       return updated;
     });

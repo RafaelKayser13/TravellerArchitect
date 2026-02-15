@@ -83,6 +83,16 @@ export const NPC_QUIRKS: { [key: number]: string } = {
     66: 'Has a dark secret',
 };
 
+// --- 1D6 NPC Nature Table (2300AD) ---
+export const NPC_NATURES: { [key: number]: string } = {
+    1: 'Criminal / Pirate',
+    2: 'Government / Military Official',
+    3: 'Corporate Executive',
+    4: 'Former Lover / Family Member',
+    5: 'Alien / Outsider',
+    6: 'Professional Rival',
+};
+
 // --- Helper Functions ---
 
 let npcCounter = 0;
@@ -129,6 +139,9 @@ export function createNpc(
 ): NPC {
     const role = getRandomNpcRole();
     const quirk = getRandomNpcQuirk();
+    const natureRoll = Math.floor(Math.random() * 6) + 1;
+    const nature = NPC_NATURES[natureRoll];
+
     return {
         id: generateNpcId(),
         name: name || `Unknown ${role}`,
@@ -137,5 +150,6 @@ export function createNpc(
         notes: notes || `${type.charAt(0).toUpperCase() + type.slice(1)} from ${origin}`,
         quirk,
         role,
+        nature,
     };
 }

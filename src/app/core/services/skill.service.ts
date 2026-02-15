@@ -72,6 +72,18 @@ export class SkillService {
             'Athletics', 'Tactics'
         ].includes(awardName);
 
+        // 2300AD Specializations
+        const specializations: Record<string, string[]> = {
+            'Engineer': ['Life Support', 'M-Drive', 'Power', 'Stutterwarp'],
+            'Flyer': ['Airship', 'Ornithopter', 'Rotor', 'Vectored Thrust', 'Wing'],
+            'Science': [
+                'Archaeology', 'Astronomy', 'Biology', 'Chemistry', 'Cosmology',
+                'Cybernetics', 'Economics', 'Genetics', 'History', 'Linguistics',
+                'Philosophy', 'Physics', 'Planetology', 'Psionicology', 'Psychology',
+                'Robotics', 'Sophontology', 'Xenology'
+            ]
+        };
+
         const choiceRequired = isGeneric && newLevel >= 1 && (!existing || existing.level === 0);
 
         if (!choiceRequired) {
@@ -86,7 +98,7 @@ export class SkillService {
     }
 
     calculateSkillCap(int: number, edu: number): number {
-        return 3 * (int + edu);
+        return int + edu;
     }
 
     isOverCap(skills: Skill[], int: number, edu: number): boolean {

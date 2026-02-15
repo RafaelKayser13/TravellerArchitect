@@ -120,6 +120,27 @@
             color: var(--cyber-yellow);
         }
     }
+
+    &.disabled {
+        opacity: 0.5;
+        filter: grayscale(0.8);
+        cursor: not-allowed;
+        border-color: rgba(255, 255, 255, 0.05);
+
+        &:hover {
+            background: transparent;
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .card-header h3 {
+            opacity: 0.5;
+        }
+
+        .highlight {
+            color: var(--text-dim) !important;
+            opacity: 0.5;
+        }
+    }
 }
 
 .card-layout {
@@ -191,6 +212,26 @@
             opacity: 0.8;
             margin-top: 0.4rem;
             max-width: 500px;
+        }
+
+        .disabled-reason {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.2);
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--power-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+
+            .icon {
+                font-size: 0.8rem;
+            }
         }
     }
 }
@@ -503,6 +544,12 @@
     color: var(--cyber-yellow);
     border: 1px solid rgba(255, 238, 0, 0.3);
     clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+}
+
+
+.outcome-message {
+    text-align: center;
+    font-weight: bold;
 }
 
 .tactical-row {
@@ -849,5 +896,139 @@
 
     to {
         opacity: 1;
+    }
+}
+
+/* NPC Modals Styling */
+
+.npc-id-form {
+    margin-top: 1.5rem;
+    
+    .p-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+}
+
+.cyber-input {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-cyan);
+    color: #fff;
+    padding: 1rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    width: 100%;
+    outline: none;
+    box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
+    transition: all 0.3s;
+
+    &:focus {
+        border-color: var(--cyber-yellow);
+        box-shadow: 0 0 15px var(--neon-yellow-glow), inset 0 0 10px rgba(255, 238, 0, 0.1);
+    }
+}
+
+.npc-conversion-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 10px;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--power-red);
+    }
+}
+
+.npc-select-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(255, 0, 0, 0.05);
+    border: 1px solid rgba(255, 0, 0, 0.2);
+    color: var(--power-red);
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
+
+    .n-name {
+        font-family: var(--font-header);
+        font-size: 1rem;
+        letter-spacing: 1px;
+    }
+
+    .n-type {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        opacity: 0.6;
+        text-transform: uppercase;
+    }
+
+    &:hover {
+        background: var(--power-red);
+        color: #fff;
+        border-color: var(--power-red);
+        box-shadow: 0 0 15px var(--power-red-glow);
+
+        .n-type {
+            opacity: 1;
+        }
+    }
+}
+
+.highlight-vivid {
+    color: var(--neon-cyan);
+    font-weight: 800;
+    text-shadow: 0 0 10px var(--neon-cyan-glow);
+}
+
+.choice-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+
+    .choice-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: rgba(var(--neon-cyan-rgb), 0.05);
+        border: 1px solid rgba(var(--neon-cyan-rgb), 0.1);
+        border-right: 4px solid var(--neon-cyan);
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(var(--neon-cyan-rgb), 0.1);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .full-width {
+            width: 100%;
+            text-align: left;
+            padding: 0.8rem 1.2rem;
+        }
+
+        .choice-outcome {
+            margin: 0;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            padding-left: 0.5rem;
+            border-left: 2px solid rgba(var(--neon-cyan-rgb), 0.2);
+            line-height: 1.4;
+        }
     }
 }

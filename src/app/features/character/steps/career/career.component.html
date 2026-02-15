@@ -12,7 +12,9 @@
 
         <div class="career-list">
             <div *ngFor="let career of careers; let i = index" class="career-card"
-                [class.selected]="selectedCareer === career" (click)="selectCareer(career)">
+                [class.selected]="selectedCareer === career" 
+                [class.disabled]="isCareerDisabled(career)"
+                (click)="selectCareer(career)">
 
                 <div class="card-layout">
                     <!-- Info Column -->
@@ -26,6 +28,11 @@
                                     career.qualificationStat
                                     }} {{ career.qualificationTarget }}+</span></p>
                             <div class="description-text">{{ career.description }}</div>
+                            
+                            <!-- New: Disabled Reason -->
+                            <div *ngIf="isCareerDisabled(career)" class="disabled-reason">
+                                <span class="icon">⚠</span> {{ getDisabledReason(career) }}
+                            </div>
                         </div>
                     </div>
 
@@ -48,7 +55,7 @@
 
                         <div class="card-footer-actions">
                             <button class="btn-action" [disabled]="!selectedAssignment" (click)="qualify()">
-                                ATTEMPT_QUALIFICATION
+                                {{ characterService.character().forcedCareer === selectedCareer.name ? 'CONFIRM_ENROLLMENT' : 'ATTEMPT_QUALIFICATION' }}
                             </button>
                         </div>
                     </div>
@@ -62,6 +69,36 @@
             <button class="btn-action finalize" (click)="startMusteringOut()">
                 FINALIZE_SERVICE_RECORD & MUSTER_OUT
             </button>
+        </div>
+    </div>
+
+    <!-- 1b. QUALIFICATION FAILURE (Term 1 Fallback) -->
+    <div *ngIf="currentState() === 'QUALIFICATION_FAILURE'" class="hud-module error fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04A</span>
+            <h3>QUALIFICATION_FAILURE_FALLBACK</h3>
+        </div>
+        <div class="hud-content">
+            <p class="hud-alert error">ENTRY_DENIED: Personnel failed to qualify for the selected career path.</p>
+            <p class="instruction">In accordance with 2300AD Service Protocols, select one fallback vector:</p>
+            
+            <div class="action-grid">
+                <button class="btn-action warn" (click)="chooseDraft()">
+                    <span class="primary">THE_DRAFT</span>
+                    <span class="secondary">MANDATORY_PLACEMENT (DICE_ROLL)</span>
+                </button>
+                <button class="btn-action" (click)="chooseDrifter()">
+                    <span class="primary">DRIFTER_LIFE</span>
+                    <span class="secondary">VOLUNTARY_UNSKILLED_SERVICE</span>
+                </button>
+            </div>
+        </div>
+        <div class="hud-footer">
+            <p class="status-msg">[ NOTE ]: Accepting the Draft results in a random career. Drifter ensures immediate placement.</p>
         </div>
     </div>
 
@@ -236,7 +273,7 @@
 
         <div class="hud-footer">
             <button *ngIf="currentState() === 'EVENT'" class="btn-action"
-                (click)="proceedToAdvancement()">ACKNOWLEDGE_PROCEED</button>
+                (click)="currentEventText.includes('AGING') ? transitionToEndOfTerm() : proceedToAdvancement()">ACKNOWLEDGE_PROCEED</button>
             <button *ngIf="currentState() === 'MISHAP'" class="btn-danger"
                 (click)="finishTerm('MUSTER')">TERMINATE_SERVICE_RECORD</button>
         </div>
@@ -367,6 +404,16 @@
                 <p *ngIf="characterService.character().history.join('').includes('Forced: Prisoner')"
                     class="highlight-vivid">SENTENCED: Transitioning to Prisoner Protocol.</p>
             </div>
+
+            <!-- Field Mission Log -->
+            <div class="mission-log-container">
+                <span class="hud-label">[ FIELD_MISSION_LOG ]</span>
+                <div class="mission-log-entries">
+                    <div *ngFor="let note of termEventLog()" class="log-entry">
+                        <span class="prefix">>></span> {{ note }}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="hud-footer">
             <button class="btn-action" (click)="continueCareer()" [disabled]="forcedOut">START_NEXT_TERM</button>
@@ -381,19 +428,80 @@
     <!-- 1. NPC Naming Prompt -->
     <div *ngIf="isNpcPrompt" class="modal-overlay fade-in">
         <div class="modal hud-module info">
+            <div class="corner-detail tl"></div>
+            <div class="corner-detail tr"></div>
+            <div class="corner-detail bl"></div>
+            <div class="corner-detail br"></div>
             <div class="hud-box-header">
-                <h3>NPC_IDENTIFICATION_REQUIRED</h3>
+                <span class="index">NPC_ID</span>
+                <h3>RELATIONSHIP_IDENTIFICATION</h3>
             </div>
             <div class="hud-content">
-                <p>New relationship established: <span class="highlight">{{ pendingNpcType.toUpperCase() }}</span></p>
-                <div class="p-input-group">
-                    <span class="hud-label">[ ASSIGN_IDENTIFIER ]</span>
-                    <input type="text" [(ngModel)]="npcNameInput" placeholder="Enter NPC name or designation..."
-                        class="hud-input" />
+                <p class="instruction">Personnel record updated with new <span class="highlight-vivid">{{ pendingNpcType.toUpperCase() }}</span> interaction.</p>
+                <div class="npc-id-form">
+                    <div class="p-input-group">
+                        <span class="hud-label">[ ASSIGN_IDENTIFIER ]</span>
+                        <input type="text" [(ngModel)]="npcNameInput" placeholder="ENTER DESIGNATION..."
+                            class="cyber-input" />
+                    </div>
                 </div>
             </div>
             <div class="hud-footer">
                 <button class="btn-action" (click)="confirmNpcGeneration()">CONFIRM_RECORD</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1b. NPC Conversion Prompt (Betrayal) -->
+    <div *ngIf="isNpcConversionPrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module warning">
+            <div class="corner-detail tl"></div>
+            <div class="corner-detail tr"></div>
+            <div class="corner-detail bl"></div>
+            <div class="corner-detail br"></div>
+            <div class="hud-box-header">
+                <span class="index">SEC_04B</span>
+                <h3>RELATIONSHIP_ALTERATION_PROTOCOL</h3>
+            </div>
+            <div class="hud-content">
+                <p class="hud-alert error">INTELLIGENCE_REPORT: A betrayal has been detected in your network.</p>
+                <p class="instruction">SELECT AN EXISTING CONTACT TO CONVERT INTO A RIVAL/ENEMY:</p>
+                <div class="npc-conversion-list">
+                    <button *ngFor="let npc of characterService.character().npcs" class="npc-select-btn"
+                        (click)="convertNpc(npc.id)">
+                        <span class="n-name">{{ npc.name }}</span>
+                        <span class="n-type">{{ npc.type }}</span>
+                    </button>
+                </div>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-secondary" (click)="isNpcConversionPrompt = false">ABORT_CONVERSION</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1c. Neural Jack Prompt (2300AD) -->
+    <div *ngIf="isNeuralJackPrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>AUGMENTATION_OPPORTUNITY: NEURAL_JACK</h3>
+            </div>
+            <div class="hud-content">
+                <p>The service offers a permanent Neural Jack interface.</p>
+                <div class="hud-alert warning">
+                    <p>EFFECTS: +1 Skill Roll next term.</p>
+                    <p>PENALTY: -2 SOC, -2 EDU (this term).</p>
+                </div>
+                <div class="tactical-row">
+                    <select [(ngModel)]="neuralJackCostType" class="cyber-select" title="Neural Jack Cost Type">
+                        <option value="cash">Cost: 10,000 Lv</option>
+                        <option value="benefit">Cost: 1 Benefit Roll</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-action" (click)="resolveNeuralJack(true)">ACCEPT_PROCEDURE</button>
+                <button class="btn-secondary" (click)="resolveNeuralJack(false)">DECLINE</button>
             </div>
         </div>
     </div>
@@ -425,7 +533,7 @@
             <div class="hud-content">
                 <div class="event-log-box" [class.success]="skillCheckMessage.includes('Success')"
                     [class.error]="skillCheckMessage.includes('Failure')">
-                    <p class="event-text" style="text-align: center; font-weight: bold;">{{ skillCheckMessage }}</p>
+                    <p class="event-text outcome-message">{{ skillCheckMessage }}</p>
                 </div>
             </div>
             <div class="hud-footer">
@@ -467,11 +575,14 @@
             </div>
             <div class="hud-content">
                 <p class="instruction">{{ lifeEventChoiceNote }}</p>
-                <div class="grid-options">
-                    <button *ngFor="let opt of lifeEventChoiceOptions" class="btn-action"
-                        (click)="$event.stopPropagation(); handleLifeEventChoice(opt)">
-                        {{ opt.toUpperCase().replace(' ', '_') }}
-                    </button>
+                <div class="choice-grid">
+                    <div *ngFor="let opt of lifeEventChoiceOptions" class="choice-item">
+                        <button class="btn-action full-width"
+                            (click)="$event.stopPropagation(); handleLifeEventChoice(opt)">
+                            {{ opt.toUpperCase().replace(' ', '_') }}
+                        </button>
+                        <p class="choice-outcome">{{ getChoiceDescription(opt) }}</p>
+                    </div>
                 </div>
             </div>
         </div>

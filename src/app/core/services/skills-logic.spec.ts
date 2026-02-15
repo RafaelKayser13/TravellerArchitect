@@ -85,19 +85,18 @@ describe('SkillService Logic (MgT 2E 2022 / 2300AD)', () => {
         expect(result.choiceRequired).toBe(false);
     });
 
-    it('Global Skill Cap: 3 * (INT + EDU)', () => {
+    it('Global Skill Cap: (INT + EDU)', () => {
         const skills: Skill[] = [
-            { name: 'S1', level: 4 },
-            { name: 'S2', level: 4 },
-            { name: 'S3', level: 4 }
-        ]; // Total 12
+            { name: 'S1', level: 2 },
+            { name: 'S2', level: 2 }
+        ]; // Total 4
         const int = 2; // Stat value, not mod
         const edu = 2; // Stat value
-        // Cap = 3 * (2 + 2) = 12
-        expect(service.calculateSkillCap(int, edu)).toBe(12);
+        // Cap = (2 + 2) = 4
+        expect(service.calculateSkillCap(int, edu)).toBe(4);
         expect(service.isOverCap(skills, int, edu)).toBe(false);
 
-        skills.push({ name: 'S4', level: 1 }); // Total 13
+        skills.push({ name: 'S4', level: 1 }); // Total 5
         expect(service.isOverCap(skills, int, edu)).toBe(true);
     });
 });

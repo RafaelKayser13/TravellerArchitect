@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal, Output, EventEmitter } from '@angular/core';
+import { Component, inject, computed, signal, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
@@ -6,10 +6,12 @@ import { DiceService } from '../../../../core/services/dice.service';
 import { CAREERS } from '../../../../data/careers';
 import { CareerDefinition, Assignment } from '../../../../core/models/career.model';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
+import { NATIONALITIES } from '../../../../data/nationalities';
 
-const MILITARY_CAREERS = ['Army', 'Navy', 'Marine', 'Agent'];
+const MILITARY_CAREERS = ['Army', 'Navy', 'Marine'];
+const MEDICAL_MILITARY_BUCKET = ['Army', 'Navy', 'Marine'];
 
-type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT';
+type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT';
 
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
@@ -20,7 +22,7 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
     templateUrl: './career.component.html',
     styleUrls: ['./career.component.scss']
 })
-export class CareerComponent {
+export class CareerComponent implements OnInit {
     protected characterService = inject(CharacterService);
     protected diceService = inject(DiceService);
     protected diceDisplay = inject(DiceDisplayService);
@@ -43,6 +45,7 @@ export class CareerComponent {
     lastDm = 0;
     success = false;
     leavingHomeSuccess = false;
+    termEventLog = signal<string[]>([]);
 
     // Event Text
     currentEventText = '';
@@ -56,6 +59,8 @@ export class CareerComponent {
 
     // New Advancement State
     bonusSkillRolls = signal(0);
+    currentRank = signal(0);
+    isCommissionedCurrent = signal(false);
     mandatoryContinue = false;
     forcedOut = false;
     isCommissionAttempt = false;
@@ -103,6 +108,7 @@ export class CareerComponent {
     // 2300AD: Career Specific States
     isForeignLegionActive = false;
     isNeuralJackPrompt = false;
+    isNpcConversionPrompt = false;
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
 
     // Prisoner System
@@ -116,14 +122,116 @@ export class CareerComponent {
 
     constructor() { }
 
+    ngOnInit() {
+        const char = this.characterService.character();
+        if (char.forcedCareer) {
+            const forced = this.careers.find(c => c.name.toLowerCase() === char.forcedCareer?.toLowerCase());
+            if (forced) {
+                this.characterService.log(`**Enforcing Forced Career**: ${forced.name}`);
+                this.selectCareer(forced);
+                // For Prisoner, it's usually automatic success
+                if (forced.name === 'Prisoner') {
+                    // Logic to jump to qualification/basic training
+                }
+            }
+        }
+    }
+
     // --- 1. CHOOSE CAREER ---
+    private addToEventLog(message: string) {
+        this.termEventLog.update(log => [...log, message]);
+    }
+
     selectCareer(career: CareerDefinition) {
+        if (this.isCareerDisabled(career)) {
+            this.log(`REJECTED: ${this.getDisabledReason(career)}`);
+            return;
+        }
+
+        this.termEventLog.set([]); // Reset log for new career
         this.selectedCareer = career;
         this.selectedAssignment = null;
-        setTimeout(() => {
-            const el = document.getElementById('assignment-list');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 200);
+
+        // Initialize per-career state
+        this.currentRank.set(0);
+        this.isCommissionedCurrent.set(false);
+        this.isNpcConversionPrompt = false;
+        this.isNeuralJackPrompt = false;
+
+        // 2300AD: Academy Honors starts at Rank 1
+        const char = this.characterService.character();
+        if (char.education?.academy && char.education?.honors && this.isMilitaryCareer()) {
+            this.currentRank.set(1);
+            this.isCommissionedCurrent.set(true);
+        }
+
+        // REMOVED FORCED SCROLL RESET to prevent jumping
+    }
+
+    isCareerDisabled(career: CareerDefinition): boolean {
+        const char = this.characterService.character();
+        const nation = NATIONALITIES.find(n => n.name === char.nationality);
+        const tier = nation?.tier || 3;
+
+        // 1. Nation Tier Restriction (Term 1)
+        if (this.currentTerm() === 1 && tier >= 5) {
+            const forbidden = ['Scout', 'Merchant', 'Navy'];
+            if (forbidden.includes(career.name)) return true;
+        }
+
+        // 2. Re-entry Ban (Ejected)
+        if (char.ejectedCareers?.includes(career.name)) return true;
+
+        // 4. Academy Service Obligation (Forced Career)
+        if (char.forcedCareer && char.forcedCareer !== career.name) return true;
+
+        // 3. Attribute Requirements
+        if (career.minAttributes) {
+            for (const [stat, min] of Object.entries(career.minAttributes)) {
+                const charStat = (char.characteristics as any)[stat.toLowerCase()];
+                if (charStat && charStat.value < min) return true;
+                // Special case for DEX or INT (Entertainer)
+                if (stat.includes('dex or int')) {
+                    if (char.characteristics.dex.value < 5 && char.characteristics.int.value < 5) return true;
+                }
+            }
+        }
+
+        // 4. Spacer/Army Rule (Term 1)
+        if (this.currentTerm() === 1 && char.originType === 'Spacer' && career.name === 'Army') return true;
+
+        return false;
+    }
+
+    getDisabledReason(career: CareerDefinition): string {
+        const char = this.characterService.character();
+        const nation = NATIONALITIES.find(n => n.name === char.nationality);
+        const tier = nation?.tier || 3;
+
+        if (this.currentTerm() === 1 && tier >= 5) {
+            const forbidden = ['Scout', 'Merchant', 'Navy'];
+            if (forbidden.includes(career.name)) return `Requires Tier 4 nation (Current: Tier ${tier})`;
+        }
+
+        if (char.ejectedCareers?.includes(career.name)) return 'Ejected recently (barred for 1 term)';
+
+        if (char.forcedCareer && char.forcedCareer !== career.name) {
+            return `SERVICE_OBLIGATION: Academy graduate must serve in ${char.forcedCareer}.`;
+        }
+
+        if (career.minAttributes) {
+            for (const [stat, min] of Object.entries(career.minAttributes)) {
+                const charStat = (char.characteristics as any)[stat.toLowerCase()];
+                if (charStat && charStat.value < min) return `Requires ${stat.toUpperCase()} ${min}`;
+                if (stat.includes('dex or int')) {
+                    if (char.characteristics.dex.value < 5 && char.characteristics.int.value < 5) return `Requires DEX or INT 5`;
+                }
+            }
+        }
+
+        if (this.currentTerm() === 1 && char.originType === 'Spacer' && career.name === 'Army') return 'Spacers cannot join Army in Term 1';
+
+        return '';
     }
 
     selectAssignment(assignment: Assignment) {
@@ -137,10 +245,7 @@ export class CareerComponent {
             this.isLifeEventChoice = true;
         }
 
-        setTimeout(() => {
-            const el = document.getElementById('qualify-btn');
-            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 200);
+        // REMOVED FORCED SCROLL TO BOTTOM to prevent jumping
     }
 
     async qualify() {
@@ -152,13 +257,35 @@ export class CareerComponent {
         const char = this.characterService.character();
         let autoQualify = false;
 
+        // 2300AD: Nation Tier Restriction (Term 1)
+        const nation = NATIONALITIES.find(n => n.name === char.nationality);
+        const tier = nation?.tier || 3;
+        if (this.currentTerm() === 1 && tier >= 5) {
+            const forbidden = ['Scout', 'Merchant', 'Navy'];
+            if (forbidden.includes(career.name)) {
+                this.log(`REJECTED: ${char.nationality} (Tier ${tier}) does not have the infrastructure for ${career.name} careers yet.`);
+                this.currentState.set('QUALIFICATION_FAILURE');
+                return;
+            }
+        }
+
         if (career.qualificationTarget === 0) autoQualify = true;
-        if (career.name === 'Noble' && (char.characteristics as any).soc.value >= 10) autoQualify = true;
-        if (career.name === 'Spaceborne' && char.nationality === 'Spaceborne') autoQualify = true;
+        if (career.name === 'Prisoner') autoQualify = true;
+        if ((career.name === 'Noble' || (career as any).name === 'Elite') && (char.characteristics as any).soc.value >= 10) autoQualify = true;
+        if (career.name === 'Spaceborne' && char.originType === 'Spacer') autoQualify = true;
+        
+        // 2300AD: Academy Graduation Forced Career
+        if (char.forcedCareer === career.name) autoQualify = true;
 
         if (autoQualify) {
             this.characterService.log(`**Automatic Qualification for ${career.name}**`);
             this.success = true;
+
+            // Clear forced career after entry
+            if (char.forcedCareer === career.name) {
+                this.characterService.updateCharacter({ forcedCareer: '' });
+            }
+
             this.applyRankBonus(0);
             this.currentState.set('BASIC_TRAINING');
             return;
@@ -168,7 +295,14 @@ export class CareerComponent {
 
         const history = char.careerHistory || [];
         const numPrevCareers = new Set(history.map((c: any) => c.careerName)).size;
-        const dm = -1 * numPrevCareers;
+        let dm = -1 * numPrevCareers;
+
+        // 2300AD: Age Penalty for Military Careers
+        const ageThreshold = career.name === 'Navy' ? 34 : 30;
+        if (char.age >= ageThreshold && MILITARY_CAREERS.includes(career.name)) {
+            dm -= 2;
+            this.log(`Age ${ageThreshold}+ Military Penalty: -2 DM to Qualification.`);
+        }
 
         // Handle dual-stat qualification (e.g., "DEX or INT")
         let stat = career.qualificationStat.toLowerCase();
@@ -192,6 +326,12 @@ export class CareerComponent {
         if (statMod !== 0) modifiers.push({ label: `Stat (${charStatKey.toUpperCase()})`, value: statMod });
         if (this.isForeignLegionActive) modifiers.push({ label: 'French Foreign Legion', value: 1 });
 
+        // Apply persisted Qualification DM (from Life Events/Education)
+        const nextQualDm = char.nextQualificationDm || 0;
+        if (nextQualDm !== 0) {
+            modifiers.push({ label: 'Event Bonus', value: nextQualDm });
+        }
+
         let universityMod = 0;
         if (char.education?.university === true) {
             const cName = career.name;
@@ -208,25 +348,78 @@ export class CareerComponent {
             }
         }
 
-        const roll = await this.diceDisplay.roll(
-            `Qualification: ${career.name}`, 2, statMod + dm + universityMod + (this.isForeignLegionActive ? 1 : 0), target, charStatKey.toUpperCase(), undefined, modifiers
+        // Persisted Qualification DMs already added to modifiers and calculation from line 330
+
+        const rollResult = await this.diceDisplay.roll(
+            `Qualification: ${career.name}`, 2, statMod + dm + universityMod + nextQualDm + (this.isForeignLegionActive ? 1 : 0), target, charStatKey.toUpperCase(), undefined, modifiers
         );
 
-        const total = roll + statMod + dm + universityMod + (this.isForeignLegionActive ? 1 : 0);
+        const total = rollResult + statMod + dm + universityMod + nextQualDm + (this.isForeignLegionActive ? 1 : 0);
         this.log(`Rolled ${total} vs ${target}`);
 
         if (total >= target) {
             this.success = true;
             this.characterService.log(`**Qualified for ${career.name}** (${this.selectedAssignment?.name})`);
             this.log('Qualified!');
-            // Apply Rank 0 bonus immediately after qualification
-            this.applyRankBonus(0);
-            this.currentState.set('BASIC_TRAINING');
+            
+            // Clear used bonuses
+            this.characterService.updateCharacter({ nextQualificationDm: 0, forcedCareer: '' });
+            
+            // 2300AD: Academy Honors Commission
+            if (char.education?.academy && char.education?.honors && this.isMilitaryCareer()) {
+                this.characterService.log(`**Academy Honors**: Automatic Commission to Rank 1 (Officer)`);
+                this.log('Honors Commission Applied.');
+                
+                this.isCommissionedCurrent.set(true);
+                this.currentRank.set(1);
+                
+                this.applyRankBonus(1);
+                this.currentState.set('BASIC_TRAINING'); 
+            } else if (char.nationality === 'Japan' && char.japaneseRankBonus && this.isMilitaryCareer() && char.careerHistory.length === 0) {
+                this.characterService.log(`**Japanese Bonus**: Automatic Commission to Rank 1 (Officer)`);
+                this.log('Japanese Rank Bonus Applied.');
+                
+                this.isCommissionedCurrent.set(true);
+                this.currentRank.set(1);
+                this.characterService.updateCharacter({ japaneseRankBonus: false });
+                
+                this.applyRankBonus(1);
+                this.currentState.set('BASIC_TRAINING');
+            } else {
+                // Apply Rank 0 bonus immediately after qualification
+                this.applyRankBonus(0);
+                this.currentState.set('BASIC_TRAINING');
+            }
         } else {
             this.success = false;
-            this.characterService.log(`**Failed Qualification** for ${career.name}. Entering the Draft...`);
-            this.log('Failed Qualification. Entering the Draft...');
-            await this.runDraft();
+            this.characterService.log(`**Failed Qualification** for ${career.name}.`);
+            this.log('Failed Qualification.');
+
+            // Clear used bonuses
+            this.characterService.updateCharacter({ nextQualificationDm: 0, forcedCareer: '' });
+
+            if (this.currentAge() === 18) {
+                this.currentState.set('QUALIFICATION_FAILURE');
+            } else {
+                this.characterService.log('Entering the Draft...');
+                await this.runDraft();
+            }
+        }
+    }
+
+    async chooseDraft() {
+        this.characterService.log('Choosing the Draft...');
+        await this.runDraft();
+    }
+
+    async chooseDrifter() {
+        this.characterService.log('Choosing Drifter path...');
+        const drifter = this.careers.find(c => c.name === 'Drifter');
+        if (drifter) {
+            this.selectedCareer = drifter;
+            this.selectedAssignment = drifter.assignments[0];
+            this.applyRankBonus(0);
+            this.currentState.set('BASIC_TRAINING');
         }
     }
 
@@ -270,13 +463,14 @@ export class CareerComponent {
                 this.increaseStat(skill, 1);
                 this.characterService.log(`**Rank ${rankLevel} Bonus** (${this.selectedCareer.name}): ${skill} +1`);
                 this.log(`Rank ${rankLevel} Bonus: ${skill} +1`);
-            } else if (value.includes('10 or +1')) {
+            } else if (value.includes('10 or +1') || value.includes('12 or +1')) {
+                const targetScore = value.includes('12') ? 12 : 10;
                 const char = this.characterService.character();
                 const statKey = skill.toLowerCase() as keyof typeof char.characteristics;
                 const current = (char.characteristics as any)[statKey]?.value || 0;
-                if (current < 10) {
-                    this.increaseStat(skill, 10 - current);
-                    this.characterService.log(`**Rank ${rankLevel} Bonus** (${this.selectedCareer.name}): ${skill} set to 10`);
+                if (current < targetScore) {
+                    this.increaseStat(skill, targetScore - current);
+                    this.characterService.log(`**Rank ${rankLevel} Bonus** (${this.selectedCareer.name}): ${skill} set to ${targetScore}`);
                 } else {
                     this.increaseStat(skill, 1);
                     this.characterService.log(`**Rank ${rankLevel} Bonus** (${this.selectedCareer.name}): ${skill} +1`);
@@ -312,8 +506,9 @@ export class CareerComponent {
             let skillsToGrant = [...serviceSkills];
 
             // 2300AD: Citizens get all Service and Assignment skills at 0
+            // (Note: The rulebook says "covers all Service and Assignment skills")
             if (this.selectedCareer?.name === 'Citizen' && this.selectedAssignment) {
-                skillsToGrant = [...skillsToGrant, ...this.selectedAssignment.skillTable];
+                skillsToGrant = [...serviceSkills, ...this.selectedAssignment.skillTable];
             }
 
             this.log(`grantBasicTrainingSkills: Skills found: ${skillsToGrant.length} (${skillsToGrant.join(', ')})`);
@@ -321,10 +516,10 @@ export class CareerComponent {
             if (skillsToGrant.length > 0) {
                 skillsToGrant.forEach(s => {
                     this.log(`Adding Skill: ${s} at Level 0`);
-                    this.characterService.addSkill(s, 0, true); // true = isFirstTermBasicTraining
+                    this.characterService.addSkill(s, 0, true);
                 });
-                this.log(`Basic Training: Acquired Service (and Assignment if Citizen) Skills at Level 0.`);
-                this.characterService.log(`**Basic Training** (${this.selectedCareer?.name}): Skills acquired at Level 0`);
+                this.log(`Basic Training: Acquired ALL Service Skills at Level 0.`);
+                this.characterService.log(`**Basic Training** (${this.selectedCareer?.name}): Received all Service Skills at Level 0`);
                 this.basicTrainingGrantedThisTerm = true;
             }
         }
@@ -353,15 +548,25 @@ export class CareerComponent {
         const modifiers: { label: string, value: number }[] = [];
         if (statMod !== 0) modifiers.push({ label: `Stat (${stat.toUpperCase()})`, value: statMod });
 
+        // 2300AD: Academy Graduation grants DM+2 to Commission
+        let academyBonus = 0;
+        if (char.education?.academy && !char.education?.honors && this.isMilitaryCareer()) {
+            academyBonus = 2;
+            modifiers.push({ label: 'Academy Grad', value: 2 });
+        }
+
+        const rollLabels = academyBonus > 0 ? 'Commission Check (+2 Academy)' : 'Commission Check';
         const roll = await this.diceDisplay.roll(
-            'Commission Check', 2, statMod, target, stat.toUpperCase(), undefined, modifiers
+            rollLabels, 2, statMod + academyBonus, target, stat.toUpperCase(), undefined, modifiers
         );
 
-        const total = roll + statMod;
+        const total = roll + statMod + academyBonus;
         this.log(`Commission Check: ${total} vs ${target}`);
 
         if (total >= target) {
             this.success = true;
+            this.isCommissionedCurrent.set(true);
+            this.currentRank.set(1);
             const rankTitle = this.getOfficerRankTitle(1);
             this.characterService.log(`**Commission Granted** (${this.selectedCareer.name}): Promoted to ${rankTitle} (Officer Rank 1)`);
             this.log(`Commissioned! You are now a ${rankTitle} (Officer Rank 1).`);
@@ -399,18 +604,7 @@ export class CareerComponent {
     }
 
     isCommissioned(): boolean {
-        // Commission success in current term
-        if (this.isCommissionAttempt && this.success) return true;
-
-        // Check if previously commissioned (has officer rank in career history)
-        const char = this.characterService.character();
-        const lastTerm = [...char.careerHistory].reverse().find(t => t.careerName === this.selectedCareer?.name);
-        if (lastTerm && lastTerm.commissioned) return true;
-
-        // Military Academy Graduation grants Commission
-        if (char.education?.academy === true && this.isMilitaryCareer()) return true;
-
-        return false;
+        return this.isCommissionedCurrent();
     }
 
     /**
@@ -423,23 +617,26 @@ export class CareerComponent {
     }
 
     async runDraft() {
+        // 2300AD Draft Table: 1-3=Army, 4-5=Marine, 6=Navy
         const draftTable = [
             { roll: 1, career: 'Army' }, { roll: 2, career: 'Army' },
-            { roll: 3, career: 'Marine' }, { roll: 4, career: 'Navy' },
-            { roll: 5, career: 'Navy' }, { roll: 6, career: 'Colonist' }
+            { roll: 3, career: 'Army' }, { roll: 4, career: 'Marine' },
+            { roll: 5, career: 'Marine' }, { roll: 6, career: 'Navy' }
         ];
 
-        const roll = await this.diceDisplay.roll('Draft', 1, 0, 0, '', undefined, [], draftTable);
+        const rollSource = await this.diceDisplay.roll('Draft', 1, 0, 0, '', undefined, [], draftTable);
+        const roll = rollSource;
 
         let draftedCareerName = '';
-        if (roll <= 2) draftedCareerName = 'Army';
-        else if (roll === 3) draftedCareerName = 'Marine';
-        else if (roll <= 5) draftedCareerName = 'Navy';
-        else draftedCareerName = 'Colonist';
+        if (roll <= 3) draftedCareerName = 'Army';
+        else if (roll <= 5) draftedCareerName = 'Marine';
+        else draftedCareerName = 'Navy';
 
         let draftTarget = this.careers.find(c => c.name.includes(draftedCareerName));
-        if (!draftTarget && draftedCareerName === 'Colonist') draftTarget = this.careers.find(c => c.name === 'Scout') || this.careers.find(c => c.name === 'Citizen');
-        if (!draftTarget && draftedCareerName === 'Marine') draftTarget = this.careers.find(c => c.name === 'Marines');
+        // Fallback for Marine vs Marines naming discrepancy
+        if (!draftTarget && draftedCareerName === 'Marine') {
+            draftTarget = this.careers.find(c => c.name === 'Marines');
+        }
 
         if (draftTarget) {
             this.characterService.log(`**Drafted** into ${draftTarget.name} (${draftTarget.assignments[0].name})`);
@@ -569,7 +766,7 @@ export class CareerComponent {
             // Check if we have passed Survival/Event checks (by checking currentEventText)
             if (this.currentEventText) {
                 // Post-Event Bonus Roll done.
-                this.checkPostTermFlow();
+                this.transitionToEndOfTerm();
                 return;
             }
         }
@@ -583,15 +780,13 @@ export class CareerComponent {
                 this.currentState.set('SURVIVAL');
             } else {
                 // If we HAVE done Event, this was likely a bonus roll that exhausted.
-                this.checkPostTermFlow();
+                this.transitionToEndOfTerm();
             }
         }
     }
 
     getRank(): number {
-        const char = this.characterService.character();
-        const term = [...char.careerHistory].reverse().find(t => t.careerName === this.selectedCareer?.name);
-        return term ? term.rank : 0;
+        return this.currentRank();
     }
 
     // --- 3. SURVIVAL & EVENT ---
@@ -607,29 +802,35 @@ export class CareerComponent {
 
         let hwDm = 0;
         let fflDm = this.isForeignLegionActive ? -1 : 0;
-        const hasLeftHome = char.careerHistory.some(t => t.leavingHome);
         const modifiers: { label: string, value: number }[] = [];
 
         if (statMod !== 0) modifiers.push({ label: `Stat (${stat.toUpperCase()})`, value: statMod });
         if (fflDm !== 0) modifiers.push({ label: 'French Foreign Legion', value: fflDm });
 
-        if (!hasLeftHome && char.homeworld && char.homeworld.survivalDm < 0) {
+        if (!char.hasLeftHome && char.homeworld && char.homeworld.survivalDm < 0) {
             hwDm = char.homeworld.survivalDm;
             modifiers.push({ label: 'Homeworld Gravity', value: hwDm });
         }
 
+        const nextSurvDm = char.nextSurvivalDm || 0;
+        if (nextSurvDm !== 0) modifiers.push({ label: 'Bonus DMs', value: nextSurvDm });
+
         const rollLabels = this.isForeignLegionActive ? 'Survival Check (FFL)' : 'Survival Check';
-        const roll = await this.diceDisplay.roll(rollLabels, 2, statMod + hwDm + fflDm, target, stat.toUpperCase(), undefined, modifiers);
-        const total = roll + statMod + hwDm + fflDm;
+        const rollResult = await this.diceDisplay.roll(rollLabels, 2, statMod + hwDm + fflDm + nextSurvDm, target, stat.toUpperCase(), undefined, modifiers);
+        const total = rollResult + statMod + hwDm + fflDm + nextSurvDm;
         this.log(`Survival Check: ${total} vs ${target}`);
+
+        // Clear used bonuses
+        this.characterService.updateCharacter({ nextSurvivalDm: 0 });
 
         if (total >= target) {
             this.success = true;
             this.characterService.log(`**Survival Check** (${this.selectedCareer?.name}): Passed (${total} vs ${target})`);
             this.log('Survived the term.');
+            this.addToEventLog(`SURVIVAL: Successful (${total} vs ${target})`);
 
             // 2300AD: Neural Jack Installation Prompt (Military Terms 1-3, Tier 3+ nations)
-            const tier3Nations = ['French Empire', 'America', 'Generic Tier 3'];
+            const tier3Nations = ['France', 'United States', 'Germany', 'United Kingdom', 'Manchuria', 'Australia', 'Canada', 'Japan', 'Russia', 'Argentina', 'Brazil', 'Azania', 'Mexico', 'Texas', 'Ukraine', 'Inca Republic', 'Trilon Corp', 'Life Foundation'];
             if (this.currentTerm() <= 3 && this.isMilitaryCareer() && tier3Nations.includes(char.nationality)) {
                 const hasJack = char.equipment.some(e => e.includes('Neural Jack'));
                 if (!hasJack) {
@@ -641,8 +842,8 @@ export class CareerComponent {
 
             this.currentState.set('EVENT');
             setTimeout(() => {
-                const el = document.getElementById('event-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                const content = document.querySelector('.wizard-content');
+                if (content) content.scrollTop = content.scrollHeight;
             }, 100);
             this.generateEvent();
         } else {
@@ -659,18 +860,29 @@ export class CareerComponent {
             this.success = true;
             this.characterService.log(`**Cybernetic Implant** accepted. Avoided Mishap. Debt: -1 Benefit Roll.`);
             this.log('Accepted Cybernetic Implant. Avoided Mishap. Debt: -1 Benefit Roll.');
+            
+            // Gain relevant implant
+            const implant = this.injurySeverity === 'Missing Eye or Limb' ? 'Cybernetic Limb' : 'Cybernetic Augment';
             const char = this.characterService.character();
-            this.characterService.updateCharacter({ equipment: [...char.equipment, 'Cybernetic Limb (Benefit Debt)'] });
+            this.characterService.updateCharacter({ 
+                equipment: [...char.equipment, `${implant} (Benefit Debt)`] 
+            });
+            
+            // Spend the benefit roll debt
+            this.characterService.spendBenefitRoll(undefined, 1);
+
             this.currentState.set('EVENT');
             this.generateEvent();
         } else {
             const isDrifter = this.selectedCareer?.name === 'Drifter';
-            const logMsg = isDrifter ? `**Survival Check Failed** but stayed in career (Drifter Rule). Rolling Mishap...` : `**Mishap!** Injured and ejected from ${this.selectedCareer?.name}.`;
+            const careerName = this.selectedCareer?.name || 'Unknown';
+            const logMsg = isDrifter ? `**Survival Check Failed** but stayed in career (Drifter Rule). Rolling Mishap...` : `**Mishap!** Injured and ejected from ${careerName}.`;
             this.characterService.log(logMsg);
             this.log(isDrifter ? 'Survival Check Failed! Rolling Mishap (Stay in Career).' : 'Mishap! You are injured and ejected from the career.');
 
-            if (!isDrifter) {
+            if (!isDrifter && careerName !== 'Spaceborne') {
                 this.forcedOut = true;
+                this.characterService.ejectFromCareer(careerName);
             }
 
             this.currentState.set('MISHAP');
@@ -688,6 +900,7 @@ export class CareerComponent {
 
         const event = table.find(e => e.roll === roll);
         this.currentEventText = event ? event.description : 'Standard Event.';
+        this.addToEventLog(`EVENT: ${this.currentEventText}`);
         this.characterService.log(`**Event** (Roll ${roll}): ${this.currentEventText}`);
         this.log(`Event Roll ${roll}: ${this.currentEventText}`);
 
@@ -814,8 +1027,13 @@ export class CareerComponent {
                 break;
 
             case 'forced-out':
-                this.forcedOut = true;
-                this.characterService.log(`**Mishap Outcome**: Ejected from career.`);
+                if (effect.value !== 0) {
+                    this.forcedOut = true;
+                    this.characterService.log(`**Mishap Outcome**: Ejected from career.`);
+                } else {
+                    this.forcedOut = false;
+                    this.characterService.log(`**Mishap Outcome**: Managed to stay in career.`);
+                }
                 break;
 
             case 'lose-cash-benefits':
@@ -853,8 +1071,7 @@ export class CareerComponent {
                 if (char.npcs.length > 0) {
                     this.pendingNpcType = 'rival'; // Default to rival for Agent mishap
                     this.pendingNpcOrigin = effect.note || 'Marked NPC';
-                    // We'll reuse the NPC prompt but with selection logic in template
-                    this.isNpcPrompt = true;
+                    this.isNpcConversionPrompt = true;
                     this.log('Select an NPC to mark or suffer injury.');
                 } else {
                     await this.applyEventEffect({ type: 'injury' });
@@ -867,6 +1084,10 @@ export class CareerComponent {
 
             case 'narrative':
                 if (effect.note) this.characterService.log(`**Event Detail**: ${effect.note}`);
+                break;
+
+            case 'neural-jack':
+                this.isNeuralJackPrompt = true;
                 break;
         }
     }
@@ -887,19 +1108,37 @@ export class CareerComponent {
             this.currentEventText += ` [Unusual Event: ${results[roll - 1].result}]`;
 
             if (roll === 1) this.characterService.setPsionicPotential(true);
-            if (roll === 2) this.applyEventEffect({ type: 'npc', npcType: 'contact', note: 'Alien Contact' });
+            if (roll === 2) {
+                this.applyEventEffect({ type: 'npc', npcType: 'contact', note: 'Alien Contact' });
+                this.handleSkillReward('Science (Xenology)', 1);
+                this.characterService.log('**Alien Contact**: Gained knowledge of alien biology and culture (Science (Xenology) 1).');
+            }
             if (roll === 3) this.characterService.updateFinances({ benefitRollMod: 1 });
             if (roll === 4) this.characterService.log('**Amnesia**: History before this term is a mystery.');
             if (roll === 5) this.applyEventEffect({ type: 'npc', npcType: 'ally', note: 'Govt Ally' });
             if (roll === 6) {
-                this.handleSkillReward('Science', 1);
-                this.characterService.log('**Ancient Tech**: Gained Science skill.');
+                const resultsSci = [
+                    { roll: 1, result: 'Ancient Biology' },
+                    { roll: 2, result: 'Ancient Engineering' },
+                    { roll: 3, result: 'Ancient Physics' },
+                    { roll: 4, result: 'Ancient Computers' },
+                    { roll: 5, result: 'Ancient Energy' },
+                    { roll: 6, result: 'Ancient Warp Theory' }
+                ];
+                const sciSubRoll = await this.diceDisplay.roll('Ancient Specialization', 1, 0, 0, '', (res) => resultsSci.find(r => r.roll === res)?.result || '');
+                const spec = resultsSci[sciSubRoll - 1].result;
+                
+                this.handleSkillReward(`Science (${spec})`, 1);
+                this.characterService.log(`**Ancient Tech**: Gained knowledge from analyzing a mysterious artifact (Science (${spec}) 1).`);
+                this.characterService.updateCharacter({ notes: (this.characterService.character().notes || '') + `\n- Possesses a deactivated Ancient artifact (${spec}).` });
             }
         }
     }
 
     async handleLifeEventChoice(choice: string) {
         this.isLifeEventChoice = false;
+        const outcome = this.getChoiceDescription(choice);
+        this.addToEventLog(`CHOICE: ${choice}. OUTCOME: ${outcome}`);
         this.characterService.log(`**Choice Selected**: ${choice}`);
 
         if (choice === 'Prison') {
@@ -913,23 +1152,36 @@ export class CareerComponent {
             this.characterService.log('**Crime Consequence**: Lost one Benefit roll.');
         } else if (this.lifeEventChoiceNote.includes('Betrayal')) {
             if (this.selectedCareer?.name === 'Drifter') {
-                const roll = await this.diceDisplay.roll('Prison Check', 2, 0, 0);
-                if (roll === 2) {
-                    this.characterService.setNextCareer('Prisoner');
-                    this.forcedOut = true;
-                    this.characterService.log('**Betrayal**: Caught and sent to prison.');
+                if (choice === 'Prison Check') {
+                    const roll = await this.diceDisplay.roll('Prison Check', 2, 0, 0);
+                    if (roll === 2) {
+                        this.characterService.setNextCareer('Prisoner');
+                        this.forcedOut = true;
+                        this.characterService.log('**Betrayal**: Caught and sent to prison.');
+                    } else {
+                        this.characterService.log('**Betrayal**: Managed to evade capture.');
+                    }
                 } else {
+                    // "Lose Benefits" choice
                     this.applyEventEffect({ type: 'lose-benefit' });
                     this.characterService.log('**Betrayal**: Managed to flee but lost all benefits of this term.');
                 }
             } else if (this.selectedCareer?.name === 'Entertainer') {
                 if (choice.includes('Existing Contact')) {
-                    this.characterService.log('**Betrayal**: One Contact became a Rival.');
+                    this.isNpcConversionPrompt = true;
+                    this.pendingNpcType = 'rival';
+                    this.characterService.log('**Betrayal**: Selecting a Contact to become a Rival.');
                 } else {
                     this.applyEventEffect({ type: 'npc', npcType: 'rival', note: 'Betrayal (Peer)' });
                 }
             } else {
-                this.applyEventEffect({ type: 'npc', npcType: 'rival', note: 'Betrayal' });
+                // Generic Betrayal choice
+                if (choice === 'Convert NPC') {
+                    this.isNpcConversionPrompt = true;
+                    this.pendingNpcType = 'rival'; // Or enemy based on context
+                } else {
+                    this.applyEventEffect({ type: 'npc', npcType: 'rival', note: 'Betrayal' });
+                }
             }
         } else if (this.lifeEventChoiceNote.includes('Patron Offer')) {
             if (choice === 'Accept') {
@@ -939,15 +1191,15 @@ export class CareerComponent {
             }
         } else if (this.lifeEventChoiceNote.includes('Risky Adventure')) {
             if (choice === 'Accept') {
-                const roll = await this.diceDisplay.roll('Risk Roll', 1, 0, 0);
-                if (roll === 1) {
+                const rollResult = await this.diceDisplay.roll('Risk Roll', 1, 0, 0);
+                if (rollResult === 1) {
                     this.characterService.setNextCareer('Prisoner');
                     this.forcedOut = true;
                     this.characterService.log('**Risky Adventure**: Failed! Sent to prison.');
-                } else if (roll === 2) {
+                } else if (rollResult === 2) {
                     await this.generateInjury();
                     this.characterService.log('**Risky Adventure**: Injured during the attempt.');
-                } else if (roll >= 5) {
+                } else if (rollResult >= 5) {
                     this.characterService.updateDm('benefit', 4);
                     this.characterService.log('**Risky Adventure**: Success! Gained DM+4 to a benefit roll.');
                 } else {
@@ -988,11 +1240,12 @@ export class CareerComponent {
             }
         } else if (this.lifeEventChoiceNote.includes('Heroism')) {
             if (choice === 'Promotion') {
-                this.applyRankBonus(this.getRank() + 1);
+                this.currentRank.update(v => v + 1);
                 this.characterService.log('**Heroism**: Received a promotion.');
             } else {
+                this.isCommissionedCurrent.set(true);
+                this.currentRank.set(1);
                 this.characterService.log('**Heroism**: Received a commission.');
-                // Logic for commission would set the character as an officer if not already
             }
         } else if (this.lifeEventChoiceNote.includes('Black Ops Conflict')) {
             if (choice === 'Recuse') {
@@ -1000,8 +1253,8 @@ export class CareerComponent {
                 this.applyEventEffect({ type: 'npc', npcType: 'enemy', note: 'Former Commander' });
                 this.characterService.log('**Black Ops Conflict**: Recused from mission. Ejected from career and gained an Enemy.');
             } else {
-                const roll = await this.diceDisplay.roll('Moral Check', 2, 0, 0);
-                if (roll === 2) {
+                const rollResult = await this.diceDisplay.roll('Moral Check', 2, 0, 0);
+                if (rollResult === 2) {
                     this.applyEventEffect({ type: 'npc', npcType: 'rival', note: 'Moral Rival' });
                     this.increaseStat('SOC', -2);
                     this.characterService.log('**Black Ops Conflict**: Accepted mission but it was a moral disaster. Gained a Rival and lost SOC 2.');
@@ -1022,7 +1275,9 @@ export class CareerComponent {
         } else if (this.lifeEventChoiceNote.includes('Foreign Legion')) {
             if (choice.includes('Join')) {
                 this.isForeignLegionActive = true;
-                this.characterService.log('**French Foreign Legion**: Personnel has enlisted in the Legion.');
+                this.characterService.updateCharacter({ nationality: 'French Empire' });
+                this.characterService.addSkill('Language (French)', 0);
+                this.characterService.log('**French Foreign Legion**: Personnel has enlisted in the Legion. Gained Citizenship (French Empire) and Language (French) 0.');
             } else {
                 this.isForeignLegionActive = false;
                 this.characterService.log('**Army**: Standard service selected.');
@@ -1057,7 +1312,140 @@ export class CareerComponent {
         } else if (this.lifeEventChoiceNote.includes('next career')) {
             this.characterService.setNextCareer(choice);
             this.characterService.log(`**Undercover**: Next career locked to ${choice}.`);
+        } else if (this.lifeEventChoiceNote.includes('Courier Duty')) {
+            if (choice === 'Diplomat 1') {
+                this.characterService.addSkill('Diplomat', 1);
+            } else {
+                this.characterService.updateDm('advancement', 4);
+            }
+            this.characterService.log(`**Courier Duty**: Selected ${choice}.`);
+        } else if (this.lifeEventChoiceNote.includes('Scientific Interference')) {
+            if (choice === 'Accept Interference') {
+                this.characterService.updateDm('advancement', -2);
+                this.applyEventEffect({ type: 'npc', npcType: 'contact', note: 'Research Sponsor' });
+                this.characterService.log('**Scientific Interference**: Accepted. DM-2 to Advancement but gained a Sponsor Contact.');
+            } else {
+                this.characterService.updateDm('advancement', 2);
+                this.applyEventEffect({ type: 'npc', npcType: 'enemy', note: 'Obstructive Bureaucrat' });
+                this.characterService.log('**Scientific Interference**: Reported. DM+2 to Advancement but gained an Enemy.');
+            }
+        } else if (this.lifeEventChoiceNote.includes('Academic Cheating')) {
+            if (choice === 'Cheat for DM+2') {
+                this.characterService.updateDm('advancement', 2);
+                this.applyEventEffect({ type: 'npc', npcType: 'rival', note: 'Peer' });
+                this.characterService.log('**Academic Cheating**: Cheated for DM+2 Advancement. Gained a Rival.');
+            } else {
+                this.characterService.log('**Academic Cheating**: Refused to cheat.');
+            }
+        } else if (this.lifeEventChoiceNote.includes('Lab Accident')) {
+            if (choice === 'Roll Higher Injury') {
+                await this.generateInjury();
+                this.characterService.log('**Lab Accident**: Suffered severe injury.');
+            } else {
+                this.applyEventEffect({ type: 'lose-benefit' });
+                this.characterService.log('**Lab Accident**: Lost one Benefit roll to cover lab costs.');
+            }
+        } else if (this.lifeEventChoiceNote.includes('Gather Intel')) {
+            const electronics = this.characterService.getSkillLevel('Electronics');
+            const deception = this.characterService.getSkillLevel('Deception');
+            const best = Math.max(electronics, deception);
+            const rollResult = await this.diceDisplay.roll('Intel Check', 2, best, 8);
+            if (rollResult + best >= 8) {
+                this.characterService.updateDm('advancement', 2);
+                this.characterService.log('**Intelligence Gathering**: Success! Gained DM+2 Advancement.');
+            } else {
+                this.characterService.log('**Intelligence Gathering**: Failed to gather useful data.');
+            }
+        } else if (this.lifeEventChoiceNote.includes('Rescue Mission')) {
+            const medic = this.characterService.getSkillLevel('Medic');
+            const eng = this.characterService.getSkillLevel('Engineer');
+            const best = Math.max(medic, eng);
+            const rollResult = await this.diceDisplay.roll('Rescue Check', 2, best, 8);
+            if (rollResult + best >= 8) {
+                this.applyEventEffect({ type: 'npc', npcType: 'ally', note: 'Rescued Individual' });
+                this.characterService.log('**Rescue Mission**: Success! Gained an Ally.');
+            } else {
+                this.characterService.log('**Rescue Mission**: Failed to rescue the targets.');
+            }
+        } else if (this.lifeEventChoiceNote.includes('Ambushed')) {
+            if (choice.includes('Flee')) {
+                const pilot = this.characterService.getSkillLevel('Pilot (any)');
+                const rollResult = await this.diceDisplay.roll('Flee Check (Pilot)', 2, pilot, 8);
+                if (rollResult + pilot >= 8) {
+                    this.characterService.updateDm('advancement', 2);
+                    this.characterService.log('**Ambushed**: Successfully fled. Gained DM+2 Advancement.');
+                } else {
+                    this.characterService.log('**Ambushed**: Failed to flee smoothly.');
+                }
+            } else {
+                const persuade = this.characterService.getSkillLevel('Persuade');
+                const rollResult = await this.diceDisplay.roll('Negotiate Check (Persuade)', 2, persuade, 8);
+                if (rollResult + persuade >= 8) {
+                    this.applyEventEffect({ type: 'npc', npcType: 'contact', note: 'Local Power' });
+                    this.characterService.log('**Ambushed**: Successfully negotiated. Gained a Contact.');
+                } else {
+                    this.characterService.log('**Ambushed**: Negotiation failed.');
+                }
+            }
         }
+    }
+
+    /**
+     * Get outcome description for a given choice to display to the player.
+     */
+    getChoiceDescription(choice: string): string {
+        const note = this.lifeEventChoiceNote || '';
+        
+        if (choice === 'Prison') return 'ENTRY_DENIED: Mandatory placement in Penal Colony. Current service terminated.';
+        if (choice === 'Lose Benefit') return 'FINANCIAL_PENALTY: Sacrifice 1 Benefit Roll to resolve the situation.';
+        
+        if (note.includes('Patron Offer')) {
+            return choice === 'Accept' ? 'DM+4 to next Qualification roll. Gain 1 Rival.' : 'Decline opportunity. No effect.';
+        }
+        if (note.includes('Risky Adventure')) {
+            return choice === 'Accept' ? '2D6 Risk: 1=Prison, 2=Injury, 5+=DM+4 Benefit. High risk/reward.' : 'Decline risk.';
+        }
+        if (note.includes('Celebrity Circles')) {
+            return choice === 'Skill' ? 'Choose 1 level in Art, Carouse, or Persuade.' : 'Gain a Contact from upper social circles.';
+        }
+        if (note.includes('Political Criticism')) {
+            return choice === 'Criticize' ? 'DM+2 to Advancement rolls this term. Gain 1 Enemy.' : 'Remain silent. DM-2 to Advancement rolls.';
+        }
+        if (note.includes('Commander Error')) {
+            return choice === 'Report' ? 'DM+2 to Advancement rolls. Gain 1 Enemy (Commander).' : 'Protect commander. Gain 1 Ally (Commander).';
+        }
+        if (note.includes('CO Interest')) {
+            return choice.includes('Tactics') ? 'Gain Tactics (military) 1.' : 'Gain DM+4 to your next Advancement roll.';
+        }
+        if (note.includes('Heroism')) {
+            return choice === 'Promotion' ? 'Immediate promotion to the next rank.' : 'Receive commission (become an Officer).';
+        }
+        if (note.includes('Black Ops Conflict')) {
+            return choice === 'Recuse' ? 'Ejected from career. Gain 1 Enemy (Former Commander).' : 'Continue mission. Risk Rivalry and SOC-2 loss.';
+        }
+        if (note.includes('Bribery')) {
+            return choice.includes('Accept') ? 'Gain Lv 5,000 cash and 1 Rival.' : 'Refuse bribe. Choose Advocate or Investigate skill.';
+        }
+        if (note.includes('Foreign Legion')) {
+            return choice.includes('Join') ? 'Switch to French Foreign Legion. Gain Citizenship (French) and Language 0.' : 'Continue standard Army service.';
+        }
+        if (note.includes('Undercover')) {
+            return choice.includes('Accept') ? 'Gain 1 Contact. Must transition to Rogue or Agent next term.' : 'Decline mission.';
+        }
+        if (note.includes('Scientific Interference')) {
+            return choice === 'Accept Interference' ? 'DM-2 to Advancement. Gain a Sponsor Contact.' : 'Report bureaucrat. DM+2 to Advancement. Gain an Enemy.';
+        }
+        if (note.includes('Academic Cheating')) {
+            return choice === 'Cheat for DM+2' ? 'DM+2 to Advancement. Gain 1 Rival.' : 'Refuse to cheat.';
+        }
+        if (note.includes('Lab Accident')) {
+            return choice === 'Roll Higher Injury' ? 'Suffer physical injury (Severity Roll required).' : 'Sacrifice 1 Benefit Roll to cover lab costs.';
+        }
+        if (note.includes('Ambushed')) {
+            return choice.includes('Flee') ? 'Skill Check (Pilot): Success=DM+2 Advancement.' : 'Skill Check (Persuade): Success=Gain 1 Contact.';
+        }
+
+        return 'RESOLUTION_PROTOCOL: Executing choice-specific logic.';
     }
 
     async generateLifeEvent() {
@@ -1159,14 +1547,70 @@ export class CareerComponent {
         this.isNpcPrompt = false;
         this.npcNameInput = '';
 
-        // Connections Rule Check
+        /* 
+           NOTE: 'Connections Rule' (skill per NPC) is replaced by 
+           'Step 10: Skill Packages' in 2300AD Solo Play.
+           Disabling this prompt here to avoid redundant skill gains.
+        */
+        /*
         if (this.characterService.character().connectionsUsed < 2) {
             this.isConnectionsRuleEligible = true;
-            // Get all skills with level > 0 to offer as connection bonus
             this.connectionsSkillChoices = this.characterService.character().skills
-                .filter(s => s.level > 0)
                 .map(s => s.name);
         }
+        */
+    }
+
+    async convertNpc(npcId: string) {
+        this.characterService.convertNpc(npcId, this.pendingNpcType);
+        this.isNpcConversionPrompt = false;
+        this.characterService.log(`**Betrayal**: An NPC has been converted to ${this.pendingNpcType}.`);
+    }
+
+    async resolveNeuralJack(accepted: boolean) {
+        this.isNeuralJackPrompt = false;
+        if (!accepted) {
+            this.log('Neural Jack opportunity declined.');
+            return;
+        }
+
+        const char = this.characterService.character();
+        
+        // Prevent duplicate installation
+        if (char.equipment.includes('Neural Jack')) {
+            this.log('Neural Jack is already installed.');
+            this.characterService.log('**Neural Jack**: Attempted to install duplicate hardware. Operation aborted.');
+            return;
+        }
+
+        // Apply costs
+        if (this.neuralJackCostType === 'cash') {
+            if (char.finances.cash < 10000) {
+                // Not enough cash? Force benefit roll or debt?
+                // Documentation says 10,000 Lv. We'll apply it as debt if they don't have enough.
+                this.characterService.updateFinances({ debt: (char.finances.debt || 0) + 10000 });
+                this.characterService.log('**Neural Jack**: Procedure accepted. Incurred 10,000 Lv debt.');
+            } else {
+                this.characterService.updateFinances({ cash: char.finances.cash - 10000 });
+                this.characterService.log('**Neural Jack**: Procedure accepted. Paid 10,000 Lv.');
+            }
+        } else {
+            const career = this.selectedCareer?.name || 'Unknown';
+            this.characterService.spendBenefitRoll(career, 1);
+            this.characterService.log(`**Neural Jack**: Procedure accepted. Sacrificed 1 Benefit Roll from ${career}.`);
+        }
+
+        // Apply Stat Penalties
+        this.increaseStat('SOC', -2);
+        this.increaseStat('EDU', -2);
+        this.characterService.updateDm('advancement', 1);
+
+        // Apply Bonus for Next Term
+        this.characterService.updateCharacter({
+            equipment: [...char.equipment, 'Neural Jack']
+        });
+
+        this.log('Neural Jack installed. +1 DM to Advancement rolls. SOC/EDU reduced by 2.');
     }
 
     applyConnectionsRule(skillName: string) {
@@ -1182,11 +1626,30 @@ export class CareerComponent {
         this.isConnectionsRuleEligible = false;
     }
 
+    log(msg: string) {
+        this.characterService.log(msg);
+    }
+
+    increaseStat(stat: string, val: number) {
+        const char = this.characterService.character();
+        const statKey = stat.toLowerCase() as keyof typeof char.characteristics;
+        const currentValue = char.characteristics[statKey].value;
+        
+        const updatedChars = { ...char.characteristics };
+        updatedChars[statKey] = {
+            ...updatedChars[statKey],
+            value: currentValue + val
+        };
+        
+        this.characterService.updateCharacteristics(updatedChars);
+    }
+
     async generateInjury() {
-        const roll = await this.diceDisplay.roll('Injury Severity', 1, 0, 0, '');
-        this.injuryRoll = roll;
-        this.isInjuryPrompt = true;
-        this.selectedInjuryStat = '';
+        const { INJURY_TABLE } = await import('../../../../data/life-events');
+        const roll = await this.diceDisplay.roll('Injury Severity', 1, 0, 0, '', (res) => {
+            const result = INJURY_TABLE.find(i => i.roll === res);
+            return result ? `${result.name}: ${result.description}` : 'Injured';
+        }, [], INJURY_TABLE);
 
         switch (roll) {
             case 1:
@@ -1237,30 +1700,42 @@ export class CareerComponent {
         const career = this.selectedCareer?.name || '';
         const rank = this.getRank();
 
-        // 1. Coverage
-        const coverageRes = await this.diceService.roll(2, 6);
-        const coverageRoll = coverageRes.total + rank;
-        if (['Army', 'Navy', 'Marines', 'Agent'].includes(career)) {
-            if (coverageRoll < 4) this.medicalCoverage = 0;
-            else if (coverageRoll < 8) this.medicalCoverage = 0.75;
-            else this.medicalCoverage = 1.0;
-        } else if (['Agent', 'Noble', 'Scholar', 'Entertainer', 'Merchant', 'Citizen'].includes(career)) {
-            if (coverageRoll < 4) this.medicalCoverage = 0;
-            else if (coverageRoll < 8) this.medicalCoverage = 0.5;
-            else if (coverageRoll < 12) this.medicalCoverage = 0.75;
-            else this.medicalCoverage = 1.0;
+        // 1. Coverage - 2300AD Rules
+        const roll = await this.diceDisplay.roll('Medical Coverage Check', 2, rank, 0);
+        const total = roll + rank;
+
+        let coveragePercent = 0;
+        if (['Army', 'Navy', 'Marines', 'Marine', 'Agent'].includes(career)) {
+            if (total >= 8) coveragePercent = 1.0;
+            else if (total >= 4) coveragePercent = 0.75;
+            else coveragePercent = 0;
+        } else if (['Scout', 'Rogue', 'Drifter'].includes(career)) {
+            if (total >= 12) coveragePercent = 0.75;
+            else if (total >= 8) coveragePercent = 0.50;
+            else coveragePercent = 0;
         } else {
-            // Scout/Rogue/Drifter/Spaceborne
-            if (coverageRoll < 8) this.medicalCoverage = 0;
-            else if (coverageRoll < 12) this.medicalCoverage = 0.5;
-            else this.medicalCoverage = 0.75;
+            // Others (Citizen, Merchant, etc.)
+            if (total >= 12) coveragePercent = 1.0;
+            else if (total >= 8) coveragePercent = 0.75;
+            else if (total >= 4) coveragePercent = 0.50;
+            else coveragePercent = 0;
         }
 
-        // 2. Cost (5000 per point)
-        let totalPoints = this.injuryMajorLoss;
-        if (this.injuryRoll === 1) totalPoints += 4; // Nearly killed has +2 to other two stats
+        this.medicalCoverage = coveragePercent;
+        this.characterService.log(`**Medical Coverage**: Organization covered ${coveragePercent * 100}% of treatment costs.`);
+        this.log(`Medical Coverage: ${coveragePercent * 100}%`);
 
-        this.medicalRestorationCost = totalPoints * 5000;
+        // 2. Cost (Lv 5,000 per point)
+        let totalPoints = this.injuryMajorLoss;
+        if (this.injuryRoll === 1) totalPoints += 4; // Nearly killed has +2 to other two stats (2+2=4)
+
+        // Special Rule: Missing Eye/Limb (Result 3) costs Lv 10,000 to restore
+        if (this.injuryRoll === 3) {
+            this.medicalRestorationCost = 10000;
+        } else {
+            this.medicalRestorationCost = totalPoints * 5000;
+        }
+
         this.medicalDebtCalculated = this.medicalRestorationCost * (1 - this.medicalCoverage);
     }
 
@@ -1317,7 +1792,8 @@ export class CareerComponent {
         }, [], table);
 
         const mishap = table.find(m => m.roll === roll);
-        this.currentEventText = mishap ? mishap.description : 'Discharged.';
+        this.currentEventText = mishap ? mishap.description : 'DISCHARGED: Operational failure result in mandatory service termination.';
+        this.addToEventLog(`MISHAP: ${this.currentEventText}`);
         this.characterService.log(`**Mishap** (Roll ${roll}): ${this.currentEventText}`);
         this.log(`Mishap Roll ${roll}: ${this.currentEventText}`);
 
@@ -1333,10 +1809,13 @@ export class CareerComponent {
     proceedToAdvancement() {
         if (this.isCommissionAttempt) {
             this.log('Commission attempted this term. Skipping Advancement Roll.');
-            this.checkPostTermFlow();
+            this.transitionToEndOfTerm();
         } else {
             this.currentState.set('ADVANCEMENT');
-            this.rollAdvancement();
+            setTimeout(() => {
+                const content = document.querySelector('.wizard-content');
+                if (content) content.scrollTop = content.scrollHeight;
+            }, 100);
         }
     }
 
@@ -1359,17 +1838,27 @@ export class CareerComponent {
             if (paroleDm !== 0) modifiers.push({ label: 'Parole Modifiers', value: paroleDm });
         }
 
+        // Global Advancement DM
+        const nextAdvDm = char.nextAdvancementDm || 0;
+        if (nextAdvDm !== 0) modifiers.push({ label: 'Bonus DMs', value: nextAdvDm });
+
         const rollResult = await this.diceDisplay.roll(
             this.selectedCareer.name === 'Prisoner' ? 'Release Check' : 'Advancement Check',
-            2, statMod + paroleDm, target, stat.toUpperCase(), undefined, modifiers
+            2, statMod + paroleDm + nextAdvDm, target, stat.toUpperCase(), undefined, modifiers
         );
 
-        const total = rollResult + statMod + paroleDm;
+        const total = rollResult + statMod + paroleDm + nextAdvDm;
+
+        // Clear used bonuses
+        this.characterService.updateCharacter({ nextAdvancementDm: 0 });
+
         const isPrisoner = this.selectedCareer.name === 'Prisoner';
 
         if (total >= target || (isPrisoner && rollResult >= 12)) {
             this.success = true;
+            this.addToEventLog(`ADVANCEMENT: Successful (${total} vs ${target})`);
             const newRank = this.getRank() + 1;
+            this.currentRank.set(newRank);
             const rankTitle = this.isCommissioned() ? this.getOfficerRankTitle(newRank) : this.getRankTitleFor(newRank);
 
             if (isPrisoner) {
@@ -1393,8 +1882,6 @@ export class CareerComponent {
                 this.characterService.log(`Advancement grants **1 Extra Skill Roll**`);
                 this.log('Gain 1 Bonus Skill Roll. You must take this now.');
                 this.currentState.set('SKILL_TRAINING');
-            } else {
-                this.checkPostTermFlow();
             }
         } else {
             this.success = false;
@@ -1408,48 +1895,95 @@ export class CareerComponent {
                 this.log(`Forced Out! (Result ${total} <= Terms ${terms}). Must Muster Out.`);
             }
 
-            this.checkPostTermFlow();
+            this.transitionToEndOfTerm();
         }
+    }
+
+    protected async transitionToEndOfTerm() {
+        this.currentState.set('LEAVING_HOME');
+        await this.checkPostTermFlow();
     }
 
     // Centralized Post-Term Checks
     async checkPostTermFlow() {
-        const age = this.currentAge() + 4;
-        this.checkAging(age);
+        const age = this.currentAge();
+        await this.checkAging(age);
     }
 
     // --- 5. AGING & LEAVING HOME ---
 
     async checkAging(age: number) {
         const terms = this.currentTerm();
-        if (age < 50) {
-            this.rollLeavingHome();
+        // 2300AD: Aging begins at Age 50 AND after fulfilling at least 8 terms (or equivalent years)
+        // Book 1, pg. 10: "Aging does not begin until age 50".
+        if (age < 50 || terms < 8) {
+            await this.rollLeavingHome();
             return;
         }
-        this.log(`Aging Check (Age ${age}).`);
-        const roll = await this.diceDisplay.roll('Aging Check', 2, -1 * terms, 0, '', undefined, [{ label: 'Terms', value: -1 * terms }]);
-        const total = roll - terms;
+
+        this.log(`Critical Aging Threshold Reached (Age ${age}, Term ${terms}).`);
+        const rollResult = await this.diceDisplay.roll('Aging Check', 2, -1 * terms, 0, '', undefined, [{ label: 'Terms Served', value: -1 * terms }]);
+        const total = rollResult - terms;
         this.log(`Aging Check Result: ${total}`);
+        this.addToEventLog(`AGING_CHECK: Roll ${rollResult} - ${terms} Terms = ${total}`);
 
-        if (total <= -6) {
-            this.log('Aging Crisis! Reduce 3 stats by 1.');
-            this.increaseStat('STR', -1); this.increaseStat('DEX', -1); this.increaseStat('END', -1);
-            this.currentState.set('MISHAP'); // Crisis forces out
-        } else if (total <= -2) {
-            this.log('Aging Effect: Reduce 1 physical stat by 1.');
+        let effectDesc = '';
+
+        if (total <= 0) {
+            effectDesc = 'AGING_CRISIS: Significant physical and mental decline detected.';
+            this.log('Aging Crisis! Significant physical and mental decline.');
+            this.increaseStat('STR', -2); this.increaseStat('DEX', -2); this.increaseStat('END', -2);
+            this.increaseStat('INT', -1);
+            this.characterService.log('**Aging Crisis**: STR -2, DEX -2, END -2, INT -1.');
+            this.currentState.set('MISHAP'); // Crisis usually ends career
+        } else if (total === 1) {
+            effectDesc = 'AGING_EFFECT: Critical degradation in STR, DEX, and END (-2 each).';
+            this.increaseStat('STR', -2); this.increaseStat('DEX', -2); this.increaseStat('END', -2);
+            this.characterService.log('**Aging Effect**: STR -2, DEX -2, END -2.');
+            this.currentState.set('EVENT');
+        } else if (total === 2) {
+            effectDesc = 'AGING_EFFECT: Significant degradation in STR and DEX (-2 each).';
+            this.increaseStat('STR', -2); this.increaseStat('DEX', -2);
+            this.characterService.log('**Aging Effect**: STR -2, DEX -2.');
+            this.currentState.set('EVENT');
+        } else if (total === 3) {
+            effectDesc = 'AGING_EFFECT: Moderate degradation in STR (-2).';
+            this.increaseStat('STR', -2);
+            this.characterService.log('**Aging Effect**: STR -2.');
+            this.currentState.set('EVENT');
+        } else if (total === 4) {
+            effectDesc = 'AGING_EFFECT: Minor degradation in STR and DEX (-1 each).';
+            this.increaseStat('STR', -1); this.increaseStat('DEX', -1);
+            this.characterService.log('**Aging Effect**: STR -1, DEX -1.');
+            this.currentState.set('EVENT');
+        } else if (total === 5) {
+            effectDesc = 'AGING_EFFECT: Slight degradation in STR (-1).';
             this.increaseStat('STR', -1);
+            this.characterService.log('**Aging Effect**: STR -1.');
+            this.currentState.set('EVENT');
+        } else {
+            this.log('No aging effects detected.');
+            await this.rollLeavingHome();
+            return;
         }
 
-        if (this.currentState() !== 'MISHAP') {
-            this.rollLeavingHome();
-        }
+        this.currentEventText = effectDesc;
+        
+        // Ensure reporting view is visible
+        setTimeout(() => {
+            const content = document.querySelector('.wizard-content');
+            if (content) content.scrollTop = content.scrollHeight;
+        }, 100);
     }
 
     async rollLeavingHome() {
         const char = this.characterService.character();
-        if (char.careerHistory.some(t => t.leavingHome)) {
+        if (char.hasLeftHome) {
             this.leavingHomeSuccess = true;
-            this.currentState.set('TERM_END');
+            // Only set to TERM_END if we aren't already in a mandatory state (like MISHAP)
+            if (this.currentState() === 'LEAVING_HOME') {
+                this.currentState.set('TERM_END');
+            }
             return;
         }
 
@@ -1461,19 +1995,26 @@ export class CareerComponent {
         if (char.originType === 'Spacer') { bonuses += 2; modifiers.push({ label: 'Spacer Origin', value: 2 }); }
         if (this.selectedCareer?.name.includes('Scout')) { bonuses += 2; modifiers.push({ label: 'Scout Career', value: 2 }); }
 
-        const roll = await this.diceDisplay.roll('Leaving Home Check', 2, bonuses, 8, '', undefined, modifiers);
-        const total = roll + bonuses;
+        const rollResult = await this.diceDisplay.roll('Leaving Home Check', 2, bonuses, 8, '', undefined, modifiers);
+        const total = rollResult + bonuses;
         this.log(`Leaving Home Check: ${total} vs 8`);
 
         if (total >= 8) {
             this.leavingHomeSuccess = true;
+            this.characterService.updateCharacter({ hasLeftHome: true });
             this.log('You successfully left home!');
         } else {
             this.leavingHomeSuccess = false;
             this.log('Still tied to homeworld.');
         }
 
-        this.currentState.set('TERM_END');
+        if (this.currentState() === 'LEAVING_HOME' || this.currentState() === 'ADVANCEMENT' || this.currentState() === 'SKILL_TRAINING') {
+            this.currentState.set('TERM_END');
+            setTimeout(() => {
+                const content = document.querySelector('.wizard-content');
+                if (content) content.scrollTop = content.scrollHeight;
+            }, 100);
+        }
     }
 
     // --- 6. CHANGE ASSIGNMENT ---
@@ -1511,7 +2052,7 @@ export class CareerComponent {
 
     // --- 7. FINISH TERM ---
 
-    finishTerm(destination: 'CONTINUE' | 'MUSTER' = 'CONTINUE') {
+    async finishTerm(destination: 'CONTINUE' | 'MUSTER' = 'CONTINUE') {
         const char = this.characterService.character();
         const careerName = this.selectedCareer?.name || 'Unknown';
 
@@ -1526,6 +2067,21 @@ export class CareerComponent {
             } else {
                 currentRank++;
             }
+        }
+
+        // 2300AD: French Foreign Legion Bonus
+        // Citizenship and Language (French) 0 after 1 term
+        if (this.isForeignLegionActive) {
+            this.characterService.ensureSkillLevel('Language (French)', 0);
+            this.characterService.updateCharacter({ nationality: 'French Empire' }); // Granted French Citizenship
+            this.characterService.log('**Foreign Legion Completion**: Granted French Citizenship and Language (French) 0.');
+            this.log('Term in FFL completed. You are now a citizen of the French Empire.');
+        }
+
+        // 2300AD: Social Standing Rule - +1 kLv per term if SOC 10+
+        if (char.characteristics.soc.value >= 10) {
+            this.increaseStat('SOC', 1);
+            this.characterService.log('**Elite Status**: SOC increased by 1 (SOC 10+ bonus).');
         }
 
         const newAge = char.age + 4;
@@ -1544,18 +2100,21 @@ export class CareerComponent {
                     termNumber: this.currentTerm(),
                     careerName: currentCareerName,
                     rank: currentRank,
-                    events: [this.currentEventText],
+                    events: [...this.termEventLog()],
                     benefits: [],
                     ageStart: char.age,
                     ageEnd: newAge,
                     survived: !isMishap,
-                    commissioned: this.isCommissionAttempt && this.success,
+                    commissioned: this.isCommissionedCurrent(),
                     advanced: this.success && !isMishap && !this.isCommissionAttempt,
                     leavingHome: this.leavingHomeSuccess,
                     benefitRollsGained: 1
                 }
             ]
         });
+
+        // Note: checkPostTermFlow is now called BEFORE setting TERM_END
+        // to ensure it happens once per term before the user decision.
 
         // Reset per-term state
         this.success = false;
@@ -1564,6 +2123,7 @@ export class CareerComponent {
         this.bonusSkillRolls.set(0);
         this.isCommissionAttempt = false;
         this.basicTrainingGrantedThisTerm = false;
+        this.isForeignLegionActive = false; // Ensure FFL is reset
 
         if (destination === 'MUSTER' || isMishap || this.forcedOut) {
             // Apply Rank Bonus Rolls at MUSTER
@@ -1584,18 +2144,66 @@ export class CareerComponent {
             this.characterService.log(`**Mustered Out** of ${currentCareerName}`);
             this.log('Mustered out of career. You may choose a new career or Finalize.');
         } else {
-            // Continue Logic
+            // Continue Logic: Clear ejected bans after serving a full term
+            this.characterService.clearEjectedCareers();
+
             if (this.nextAssignment) {
                 this.characterService.log(`**Assignment Changed** to ${this.nextAssignment.name}`);
                 this.selectedAssignment = this.nextAssignment;
                 this.nextAssignment = null;
             }
             this.currentState.set('SKILL_TRAINING');
+            this.termEventLog.set([]); // Reset log for next term
         }
         this.mandatoryContinue = false;
     }
 
+    /**
+     * Determine medical coverage for injuries based on organization and rank.
+     */
+    async calculateMedicalCoverage() {
+        const char = this.characterService.character();
+        const rank = this.getRank();
+        const roll = await this.diceDisplay.roll('Medical Coverage Check', 2, rank, 0);
+        const total = roll + rank;
+
+        let percentage = 0;
+        const cName = this.selectedCareer?.name || '';
+
+        if (MEDICAL_MILITARY_BUCKET.includes(cName)) {
+            if (total >= 12) percentage = 100;
+            else if (total >= 8) percentage = 100;
+            else if (total >= 4) percentage = 75;
+            else percentage = 0;
+        } else if (['Scout', 'Rogue', 'Drifter', 'Spaceborne'].includes(cName)) {
+            if (total >= 12) percentage = 75;
+            else if (total >= 8) percentage = 50;
+            else percentage = 0;
+        } else {
+            // Others (Citizen, Merchant, etc.)
+            if (total >= 12) percentage = 100;
+            else if (total >= 8) percentage = 75;
+            else if (total >= 4) percentage = 50;
+            else percentage = 0;
+        }
+
+        this.medicalCoverage = percentage;
+        this.characterService.log(`**Medical Coverage**: Organization covered ${percentage}% of treatment costs.`);
+        this.log(`Medical Coverage: ${percentage}%`);
+        
+        return percentage;
+    }
+
     continueCareer() {
+        const char = this.characterService.character();
+        const history = [...char.careerHistory].reverse();
+        const lastTerm = history.find(t => t.careerName === this.selectedCareer?.name);
+        
+        if (lastTerm) {
+            this.currentRank.set(lastTerm.rank);
+            this.isCommissionedCurrent.set(lastTerm.commissioned || false);
+        }
+
         this.finishTerm('CONTINUE');
     }
 
@@ -1614,7 +2222,7 @@ export class CareerComponent {
 
     getRankTitle(): string {
         if (!this.selectedAssignment) return 'Rank 0';
-        const r = this.getRank();
+        const r = this.currentRank();
         if (this.isCommissioned()) return this.getOfficerRankTitle(r);
         return this.getRankTitleFor(r);
     }
@@ -1625,27 +2233,9 @@ export class CareerComponent {
         return r ? r.title : `Rank ${rank}`;
     }
 
-    log(msg: string) {
-        console.log(`[CareerComponent] ${msg}`);
-    }
 
-    increaseStat(stat: string, val: number) {
-        const char = this.characterService.character();
-        // Deep-clone characteristics to avoid mutating Signal state
-        const chars = Object.keys(char.characteristics).reduce((acc, k) => {
-            const key = k as keyof typeof char.characteristics;
-            acc[key] = { ...char.characteristics[key] };
-            return acc;
-        }, {} as any) as typeof char.characteristics;
 
-        const key = stat.toLowerCase() as keyof typeof chars;
-        if (chars[key]) {
-            const oldValue = chars[key].value;
-            chars[key].value += val;
-            chars[key].modifier = this.diceService.getModifier(chars[key].value);
-            this.characterService.updateCharacteristics(chars);
-        }
-    }
+
 
     @Output() complete = new EventEmitter<void>();
 }

@@ -131,7 +131,15 @@
                         </div>
 
                         <div class="final-row">
-                            <div class="final-val">{{ effectiveTotal }}</div>
+                            <div class="final-val-wrapper">
+                                <span class="final-val" *ngIf="!diceService.debugMode()">{{ effectiveTotal }}</span>
+                                <input *ngIf="diceService.debugMode()" 
+                                       type="number" 
+                                       class="debug-roll-input" 
+                                       [value]="total"
+                                       (input)="updateManualTotal($event)"
+                                       title="DEBUG: Override base roll (Total = Base + Mods)">
+                            </div>
                             <div class="status" *ngIf="request && request.target > 0">
                                 <span class="success" *ngIf="isSuccess">OP_SUCCESS</span>
                                 <span class="fail" *ngIf="!isSuccess">OP_FAILURE</span>

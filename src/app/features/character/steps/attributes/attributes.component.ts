@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit, Output, EventEmitter, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
@@ -16,10 +16,12 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
 })
 export class AttributesComponent implements OnInit {
   @Output() complete = new EventEmitter<void>();
+  @Output() stateChange = new EventEmitter<void>();
 
   protected diceService = inject(DiceService);
   protected characterService = inject(CharacterService);
   private cdr = inject(ChangeDetectorRef);
+  private ngZone = inject(NgZone);
 
   characteristicsList = ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC'];
 
@@ -30,6 +32,7 @@ export class AttributesComponent implements OnInit {
   // UI State
   rollingState: { [key: string]: boolean } = {};
   editingState: { [key: string]: boolean } = {};
+  glitchState: { [key: string]: boolean } = {};
   selectedStat: string | null = null;
 
   isRolling = false;
@@ -48,6 +51,7 @@ export class AttributesComponent implements OnInit {
       this.diceValues[char] = [1, 1]; // Default faces
       this.rollingState[char] = false;
       this.editingState[char] = false;
+      this.glitchState[char] = false;
     });
 
     // Check if character already has data
@@ -83,13 +87,24 @@ export class AttributesComponent implements OnInit {
           this.diceValues[char] = [d1, d2];
           this.scores[char] = d1 + d2;
           this.rollingState[char] = false;
+          
+          // Trigger a brief glitch effect on reveal
+          this.glitchState[char] = true;
+          setTimeout(() => {
+            this.glitchState[char] = false;
+            this.cdr.detectChanges();
+          }, 300);
+
           this.cdr.detectChanges(); // Trigger update per card
         }),
         finalize(() => {
-          this.isRolling = false;
-          this.isComplete = true;
-          this.save();
-          this.cdr.detectChanges(); // Final update
+          this.ngZone.run(() => {
+            this.isRolling = false;
+            this.isComplete = true;
+            this.save();
+            this.cdr.detectChanges(); // Final update for local views
+            this.stateChange.emit(); // Notify wizard to refresh its disabled state
+          });
         })
       ).subscribe();
     });
@@ -170,13 +185,24 @@ export class AttributesComponent implements OnInit {
     return this.diceService.getModifier(this.scores[char]);
   }
 
+  getStatPercentage(char: string): number {
+    const score = this.scores[char];
+    if (!score) return 0;
+    // 2D6 max is 12, but 2300AD can have mods up to 15+ 
+    // We'll normalize to 15 as the "full" bar for visual impact
+    return Math.min((score / 15) * 100, 100);
+  }
+
   save() {
     const newChars = { ...this.characterService.character().characteristics };
 
     this.characteristicsList.forEach(key => {
       const score = this.scores[key];
       const modelKey = key.toLowerCase();
+      const existing = (newChars as any)[modelKey] || {};
+      
       (newChars as any)[modelKey] = {
+        ...existing,
         name: key,
         value: score,
         modifier: this.diceService.getModifier(score)

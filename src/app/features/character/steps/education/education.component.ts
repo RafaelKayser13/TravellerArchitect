@@ -5,6 +5,7 @@ import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { NATIONALITIES } from '../../../../data/nationalities';
+import { LIFE_EVENTS } from '../../../../data/life-events';
 
 // Event Interface
 interface EduEvent {
@@ -96,6 +97,10 @@ export class EducationComponent {
     eventResult: string = '';
     rollLog: string[] = [];
 
+    // NPC Naming Prompt State
+    isNpcPrompt = false;
+    pendingNpcs: any[] = [];
+
     // Refactor State
     educationStep: 'Selection' | 'UniversitySkillSelect' | 'Studying' | 'Graduation' | 'AcademySkillSelect' | 'Finished' = 'Selection';
 
@@ -145,20 +150,24 @@ export class EducationComponent {
             // If already admitted, set the step and scroll
             if (this.educationType === 'University' && this.admissionStatus === 'Admitted') {
                 this.educationStep = 'UniversitySkillSelect';
-                this.scrollTo('skillsSection');
             } else if (this.admissionStatus === 'Admitted') {
                 // Academy - admitted but skill selection happens on graduation
                 this.educationStep = 'Studying';
-                this.scrollTo('resultsSection');
-            } else {
-                this.scrollTo('resultsSection');
             }
+            this.scrollToTop();
         }
     }
 
     ngOnInit() {
         // Ensure DMs are calculated when component loads and data is ready
         setTimeout(() => this.calculateAdmissionDMs(), 100);
+    }
+
+    resetAdmission() {
+        this.admissionStatus = 'NotApplied';
+        this.educationStep = 'Selection';
+        this.educationType = 'None';
+        this.calculateAdmissionDMs();
     }
 
     // Parse UWP for Tech Level (last digit usually, or after dash)
@@ -217,6 +226,42 @@ export class EducationComponent {
         }
 
         this.admissionDMs = { local: localDm, offWorld: offWorldDm };
+    }
+
+    getAcademyValidation(type: string): { available: boolean, reason?: string } {
+        const char = this.characterService.character();
+        const nation = NATIONALITIES.find(n => n.name === char.nationality);
+        const tier = nation?.tier || 3;
+        const stats = char.characteristics;
+
+        // 1. Origin Restrictions
+        if (type === 'Army' && char.originType === 'Spacer') {
+            return { available: false, reason: 'REJECTED: Spacers cannot join the Army in Term 1.' };
+        }
+
+        // 2. Nationality Tier Restrictions (2300AD Rule 248)
+        if (tier >= 5 && (type === 'Navy' || type === 'Scouts')) {
+            return { available: false, reason: `REJECTED: ${char.nationality} (Tier ${tier}) does not support ${type} careers.` };
+        }
+
+        // 3. Attribute Requirements (as per CAREERS definitions)
+        if (type === 'Army' || type === 'Marines' || type === 'Navy') {
+            if (stats.str.value < 5 || stats.dex.value < 5 || stats.end.value < 5) {
+                return { available: false, reason: 'REJECTED: Requires STR 5+, DEX 5+, and END 5+.' };
+            }
+        }
+
+        if (type === 'Scouts') {
+            if (stats.int.value < 6 || stats.end.value < 6) {
+                return { available: false, reason: 'REJECTED: Requires INT 6+ and END 6+.' };
+            }
+        }
+
+        return { available: true };
+    }
+
+    isAcademySkillSelected(skill: string): boolean {
+        return Object.values(this.selectedAcademySkills).includes(skill);
     }
 
     async apply() {
@@ -308,14 +353,20 @@ export class EducationComponent {
         this.characterService.log(`**Entered University**: EDU +1. Select Major (Level 1) and Minor (Level 0).`);
         this.log(`Entered University. EDU +1. Please select your Major (Level 1) and Minor (Level 0) skills.`);
         this.educationStep = 'UniversitySkillSelect';
-        this.scrollTo('skillsSection');
+        this.scrollToTop();
     }
 
     enterAcademy() {
+        const char = this.characterService.character();
         const isOffWorld = this.admissionMethod === 'OffWorld';
-        if (isOffWorld) {
-            this.characterService.updateCharacter({ education: { ...this.characterService.character().education, offworld: true } });
-        }
+        
+        this.characterService.updateCharacter({ 
+            education: { 
+                ...char.education, 
+                academy: true,
+                offworld: isOffWorld 
+            } 
+        });
 
         const skills = this.academySkills[this.academyType] || [];
         skills.forEach(s => {
@@ -326,7 +377,7 @@ export class EducationComponent {
         this.characterService.log(`**Entered ${this.academyType} Academy**: Basic Training granted (Service Skills at Level 0)`);
         this.log(`Entered ${this.academyType} Academy. Gained Basic Training (Service Skills 0).`);
         this.educationStep = 'Studying';
-        this.scrollTo('resultsSection');
+        this.scrollToTop();
     }
 
     async graduate() {
@@ -335,7 +386,7 @@ export class EducationComponent {
         // Check failure from event (Tragedy/Expelled)
         if (this.graduationStatus === 'Failed') {
             this.educationStep = 'Finished';
-            this.scrollTo('resultsSection');
+            this.scrollToTop();
             return;
         }
 
@@ -398,31 +449,23 @@ export class EducationComponent {
                 this.applyGraduationBenefits(false);
             }
             this.saveResult(true, this.graduationStatus === 'Honors');
+            this.educationStep = 'Finished';
         } else {
             this.graduationStatus = 'Failed';
             this.characterService.log(`**Failed to Graduate** (${this.educationType})`);
             this.log('Failed to graduate.');
             this.saveResult(false, false);
-            if (this.graduationStatus !== 'Failed') {
-                if (this.educationType === 'Academy') {
-                    this.educationStep = 'AcademySkillSelect';
-                    this.scrollTo('skillsSection');
-                } else {
-                    this.educationStep = 'Finished';
-                    this.scrollTo('resultsSection');
-                }
-            } else {
-                this.educationStep = 'Finished';
-                this.scrollTo('resultsSection');
-            }
+            this.educationStep = 'Finished';
+            // Academy failures that still allow career entry are handled in confirmAcademyGraduation or similar,
+            // but for 2300AD failure to graduate university just means you start career normally.
         }
     }
 
     async runEvent() {
-        const roll = await this.diceDisplay.roll('Term Event', 2, 0, 0, '', (result) => {
+        const roll = await this.diceDisplay.roll('Education Event', 2, 0, 0, '', (result) => {
             const evt = this.eventsTable.find(e => e.roll === result);
             return evt ? evt.desc : 'Nothing significant.';
-        });
+        }, [], this.eventsTable);
 
         const evt = this.eventsTable.find(e => e.roll === roll);
         this.eventResult = evt ? evt.desc : 'Nothing significant.';
@@ -449,20 +492,23 @@ export class EducationComponent {
                 this.characterService.addSkill('Carouse', 1);
                 break;
             case 'Allies':
-                const alliesCount = Math.ceil(Math.random() * 3); // 1D3
+                const rollResult = await this.diceDisplay.roll('Allies Gained (1D3)', 1, 0, 0, '', (res) => `Roll ${res} :: Gain ${Math.ceil(res / 2)} Allies during studies.`);
+                const alliesCount = Math.ceil(rollResult / 2);
+                this.pendingNpcs = [];
                 for (let i = 0; i < alliesCount; i++) {
-                    this.characterService.addNpc({
+                    this.pendingNpcs.push({
                         id: crypto.randomUUID(),
-                        name: 'University Friend',
+                        name: `University Friend ${i + 1}`,
                         type: 'ally',
                         origin: 'Education (Roll 6)',
-                        notes: 'A close friend from academic years. Met during university/academy terms.'
+                        notes: 'A close friend from academic years.'
                     });
                 }
+                this.isNpcPrompt = true;
                 break;
             case 'Politics':
                 const polRoll = await this.diceDisplay.roll('Politics Check (SOC)', 2, 0, 8, 'SOC');
-                if (polRoll >= 8) {
+                if (polRoll + this.diceService.getModifier(this.characterService.character().characteristics.soc.value + this.characterService.character().characteristics.soc.modifier) >= 8) {
                     this.characterService.addNpc({
                         id: crypto.randomUUID(),
                         name: 'Political Ally',
@@ -490,28 +536,61 @@ export class EducationComponent {
                 break;
             case 'Recognition':
                 this.characterService.updateCharacteristics(this.modifyStat('SOC', 1));
+                this.characterService.log('**Recognition**: Academic or social achievement! SOC +1.');
                 break;
         }
 
         if (evt.lifeEvent) {
+            this.characterService.log('**Education**: Triggering Life Event.');
             this.log('Triggering Life Event...');
-            // In a real scenario, we'd emit signal to parent or trigger life event step
-            this.characterService.log('**Event**: Triggering Life Event table.');
+            this.educationStep = 'Studying';
+            
+            // Generate a real roll for life event table
+            const leRoll = await this.diceDisplay.roll('Life Event', 2, 0, 0, '', (res) => {
+                const le = LIFE_EVENTS.find(e => e.roll === res);
+                return le ? le.name : 'Unknown Event';
+            }, [], LIFE_EVENTS);
+
+            const leEffect = LIFE_EVENTS.find(e => e.roll === leRoll);
+            
+            if (leEffect) {
+                this.characterService.log(`**Life Event** (Roll ${leRoll}): ${leEffect.name} - ${leEffect.description}`);
+                
+                // For education life events, we handle the basic ones. 
+                // Complex ones (choice, injury) might need more UI, but for now we follow the existing pattern.
+                for (const eff of leEffect.effects || []) {
+                    if (eff.type === 'npc') {
+                        this.characterService.addNpc({
+                            id: crypto.randomUUID(),
+                            name: `${leEffect.name} Contact`,
+                            type: eff.npcType || 'contact',
+                            origin: `Life Event during Education`,
+                            notes: leEffect.description
+                        });
+                    } else if (eff.type === 'qualification-dm') {
+                        this.characterService.updateDm('qualification', eff.value || 0);
+                    } else if (eff.type === 'benefit-mod') {
+                        this.characterService.updateFinances({ benefitRollMod: eff.value });
+                    }
+                }
+            }
         }
     }
 
     async handlePrank() {
-        const roll = await this.diceDisplay.roll('Prank Check (SOC)', 2, 0, 8, 'SOC');
-        if (roll === 2) { // Critical failure on natural 2
+        const rawRoll = await this.diceDisplay.roll('Prank Check (SOC)', 2, 0, 8, 'SOC');
+        if (rawRoll === 2) { // Critical failure on natural 2
             this.graduated = false;
             this.graduationStatus = 'Failed';
             this.expelledToPrison = true;
             this.characterService.setEducationStatus(false, false);
+            this.characterService.setNextCareer('Prisoner');
             this.characterService.log('**EXPELLED**: Prank went catastrophically wrong. Mandatory transition to Prisoner.');
+            this.educationStep = 'Finished';
             return;
         }
 
-        if (roll >= 8) {
+        if (rawRoll >= 8) {
             this.characterService.addNpc({
                 id: crypto.randomUUID(),
                 name: 'Prank Victim',
@@ -553,12 +632,17 @@ export class EducationComponent {
 
         if (method === 'Flee') {
             this.warNextCareer = 'Drifter';
+            this.characterService.setNextCareer('Drifter');
+            this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log('**Fleeing**: Resigned from education to avoid draft. Next Career: Drifter.');
         } else {
             const roll = Math.floor(Math.random() * 6) + 1;
             if (roll <= 3) this.warNextCareer = 'Army';
             else if (roll <= 5) this.warNextCareer = 'Marine';
             else this.warNextCareer = 'Navy';
+            
+            this.characterService.setNextCareer(this.warNextCareer);
+            this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log(`**Drafted**: Education terminated by national service. Drafted into ${this.warNextCareer}.`);
         }
     }
@@ -588,9 +672,11 @@ export class EducationComponent {
     }
 
     selectHobbySkill(skill: string) {
-        this.characterService.addSkill(skill, 0); // Gain at 0 or increase +1
+        // Gain at level 0. If already possessed, increase by 1 level.
+        this.characterService.addSkill(skill, 0); 
         this.showHobbySelection = false;
-        this.characterService.log(`**Hobby**: Acquired interest in ${skill}.`);
+        this.characterService.log(`**Hobby**: Acquired interest in ${skill} (Leve 0).`);
+        this.log(`Acquired skill: ${skill} (Level 0).`);
     }
 
     openTutorSelection() {
@@ -610,8 +696,13 @@ export class EducationComponent {
 
     async selectTutorSkill(skill: string) {
         this.showTutorSelection = false;
-        const roll = await this.diceDisplay.roll(`Tutor Check (${skill})`, 2, 0, 9, skill);
-        if (roll >= 9) {
+        const char = this.characterService.character();
+        const stat = 'edu';
+        const charStat = (char.characteristics as any)[stat];
+        const statMod = this.diceService.getModifier(charStat.value + charStat.modifier);
+        
+        const roll = await this.diceDisplay.roll(`Tutor Check (${skill})`, 2, statMod, 9, 'EDU');
+        if (roll + statMod >= 9) {
             this.characterService.addSkill(skill, 1);
             this.characterService.addNpc({
                 id: crypto.randomUUID(),
@@ -620,7 +711,7 @@ export class EducationComponent {
                 origin: 'Tutor Interest (Roll 10)',
                 notes: 'A brilliant but demanding academic mentor. Demanded perfection from their students.'
             });
-            this.characterService.log(`**Tutor Mastery**: Improved ${skill} through rigorous study.`);
+            this.characterService.log(`**Tutor Mastery**: Improved ${skill} through rigorous study. Gained Tutor as a Rival.`);
         } else {
             this.characterService.log(`**Tutor Failure**: Study sessions with the tutor yielded no measurable gains.`);
         }
@@ -678,11 +769,25 @@ export class EducationComponent {
         this.characterService.log(`**Academy Graduation** (${this.academyType}): Improved ${skills.join(', ')} to Level 1`);
         this.log(`Academy Training Complete. Improved: ${skills.join(', ')}.`);
 
+        // Map Academy Type to Career Name for forced entry
+        let careerName = this.academyType as string;
+        if (careerName === 'Marines') careerName = 'Marine';
+        if (careerName === 'Scouts') careerName = 'Scout';
+
+        // Set forced career to skip qualification roll in the career step
+        this.characterService.updateCharacter({ forcedCareer: careerName });
+
         // Check HonorsCommission
         if (this.graduationStatus === 'Honors') {
-            this.characterService.log(`**Honors Commission**: Commissioned as Rank 1 Officer in ${this.academyType}`);
-            this.log('Honors: Commissioned as Rank 1 Officer.');
-            // Logic to set rank would go here
+            const char = this.characterService.character();
+            this.characterService.updateCharacter({
+                education: {
+                    ...char.education,
+                    honors: true
+                }
+            });
+            this.characterService.log(`**Honors Commission**: Commissioned as Rank 1 Officer in ${careerName}`);
+            this.log(`Honors: Commissioned as Rank 1 Officer in ${careerName}.`);
         }
 
         this.educationStep = 'Finished';
@@ -763,17 +868,24 @@ export class EducationComponent {
         this.complete.emit();
     }
 
+    // NPC Confirmation
+    confirmNpcs() {
+        for (const npc of this.pendingNpcs) {
+            this.characterService.addNpc(npc);
+        }
+        this.isNpcPrompt = false;
+        this.pendingNpcs = [];
+    }
+
     log(msg: string) {
         console.log(`[EducationComponent] ${msg}`);
         // this.rollLog.push(msg); // Removed for UI cleanliness
     }
 
-    private scrollTo(section: 'resultsSection' | 'skillsSection') {
+    private scrollToTop() {
         setTimeout(() => {
-            const element = section === 'resultsSection' ? this.resultsSection : this.skillsSection;
-            if (element) {
-                element.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            const content = document.querySelector('.wizard-content');
+            if (content) content.scrollTop = 0;
         }, 100);
     }
 }

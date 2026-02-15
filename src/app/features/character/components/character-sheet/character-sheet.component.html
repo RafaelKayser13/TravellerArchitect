@@ -1,344 +1,418 @@
-<div class="sheet-container fade-in">
-    <!-- Header Section: Identity & Biometrics -->
-    <header class="dossier-header">
-        <div class="hud-box-header">
-            <span class="index">DOSSIER_ID: {{ character().id || 'PENDING_REGISTRATION' }}</span>
-            <div class="player-tag" *ngIf="character().playerName">
-                <span class="m-label">PLAYER:</span>
-                <span class="m-val">{{ character().playerName }}</span>
+<div class="sheet-container fade-in dashboard-layout">
+    <!-- 1. Top Bar: Identity & Actions -->
+    <header class="dashboard-header">
+        <div class="char-id-bar">
+            <div class="id-module">
+                <span class="id-label">NODE_01</span>
+                <span class="id-val highlight">ACTIVE</span>
             </div>
-            <h3>TACTICAL_CHARACTER_SUMMARY</h3>
+            <div class="id-module">
+                <span class="id-label">STREAM_ID</span>
+                <span class="id-val success">SECURE</span>
+            </div>
+            <div class="id-module">
+                <span class="id-label">OPERATIVE_ID</span>
+                <span class="id-val">{{ character().id || 'PENDING' }}</span>
+            </div>
+            <div class="id-module">
+                <span class="id-label">PLAYER_NAME</span>
+                <span class="id-val highlight">{{ character().playerName || 'USER_G_01' }}</span>
+            </div>
+            <div class="id-module status">
+                <span class="id-label">UNIT_STATUS</span>
+                <span class="id-val success">ACTIVE</span>
+            </div>
         </div>
 
-        <div class="identity-grid-v2">
-            <!-- Portrait Column (Visual Recon) -->
+        <div class="identity-block horizontal-layout">
             <div class="portrait-column">
-                <div class="portrait-frame">
+                <div class="portrait-frame vertical">
                     <img *ngIf="character().portraitUrl" [src]="character().portraitUrl" alt="Portrait">
                     <div *ngIf="!character().portraitUrl" class="no-signal">
-                        <span class="glitch-text">NO_SIGNAL</span>
+                        <div class="static-noise"></div>
+                        <span class="signal-lost">SIGNAL_LOST</span>
                     </div>
+                    <div class="scan-overlay"></div>
                 </div>
             </div>
 
-            <!-- Identity Info (Classified Data) -->
-            <div class="id-info-column">
-                <div class="field large">
-                    <span class="label">SUBJECT_NAME</span>
-                    <div class="value-row">
-                        <span class="value">{{ character().name || 'UNNAMED_OPERATIVE' }}</span>
+            <div class="info-column">
+                <div class="name-block">
+                    <h1 class="char-name">
+                        {{ character().name || 'UNNAMED_OPERATIVE' }}
                         <span class="nickname" *ngIf="character().nickname">"{{ character().nickname }}"</span>
+                    </h1>
+                    <div class="sub-tags">
+                        <span class="tag">{{ character().species }}</span>
+                        <span class="tag">{{ character().gender }}</span>
+                        <span class="tag">{{ character().age }} YRS</span>
+                        <span class="tag highlight">CLEARANCE_0{{ character().careerHistory.length }}</span>
                     </div>
                 </div>
 
-                <div class="metadata-grid">
-                    <div class="meta-item">
-                        <span class="m-label">SPECIES</span>
-                        <span class="m-val highlight">{{ character().species }}</span>
+                <div class="dossier-grid">
+                    <div class="d-item">
+                        <span class="d-label">NATIONALITY</span>
+                        <span class="d-val">{{ character().nationality }}</span>
                     </div>
-                    <div class="meta-item">
-                        <span class="m-label">ORIGIN</span>
-                        <span class="m-val">{{ character().originType }}</span>
+                    <div class="d-item">
+                        <span class="d-label">ORIGIN_TYPE</span>
+                        <span class="d-val highlight">{{ character().originType }}</span>
                     </div>
-                    <div class="meta-item">
-                        <span class="m-label">EST_AGE</span>
-                        <span class="m-val">{{ character().age }} STANDARD_YEARS</span>
+                    <div class="d-item">
+                        <span class="d-label">UNIVERSAL_PERSONNEL_PROFILE</span>
+                        <span class="d-val upp-style">{{ uppString() }}</span>
                     </div>
-                    <div class="meta-item">
-                        <span class="m-label">PHENOTYPE</span>
-                        <span class="m-val highlight">{{ character().gender }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <span class="m-label">AUTH_LEVEL</span>
-                        <span class="m-val yellow">SEC_CLEARANCE_0{{ character().careerHistory.length }}</span>
-                    </div>
-                </div>
-
-                <div class="biometrics-row" *ngIf="character().description">
-                    <span class="m-label">PHYSICAL_BIO:</span>
-                    <p class="bio-text">{{ character().description }}</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="dossier-grid">
-        <!-- Characteristics Column -->
-        <aside class="characteristics-column">
-            <div class="hud-module stats">
-                <div class="hud-box-header">
-                    <span class="index">CH_01</span>
-                    <h3>CORE_CHARACTERISTICS</h3>
-                </div>
-                <div class="hud-content">
-                    <div class="stat-grid-sheet">
-                        <div class="stat-box-sheet">
-                            <span class="s-name">STR</span>
-                            <span class="s-val">{{ character().characteristics.str.value }}</span>
-                            <span class="s-mod" [class.pos]="character().characteristics.str.modifier >= 0">
-                                {{ character().characteristics.str.modifier >= 0 ? '+' : '' }}{{
-                                character().characteristics.str.modifier }}
-                            </span>
-                        </div>
-                        <div class="stat-box-sheet">
-                            <span class="s-name">DEX</span>
-                            <span class="s-val">{{ character().characteristics.dex.value }}</span>
-                            <span class="s-mod" [class.pos]="character().characteristics.dex.modifier >= 0">
-                                {{ character().characteristics.dex.modifier >= 0 ? '+' : '' }}{{
-                                character().characteristics.dex.modifier }}
-                            </span>
-                        </div>
-                        <div class="stat-box-sheet">
-                            <span class="s-name">END</span>
-                            <span class="s-val">{{ character().characteristics.end.value }}</span>
-                            <span class="s-mod" [class.pos]="character().characteristics.end.modifier >= 0">
-                                {{ character().characteristics.end.modifier >= 0 ? '+' : '' }}{{
-                                character().characteristics.end.modifier }}
-                            </span>
-                        </div>
-                        <div class="stat-box-sheet">
-                            <span class="s-name">INT</span>
-                            <span class="s-val">{{ character().characteristics.int.value }}</span>
-                            <span class="s-mod" [class.pos]="character().characteristics.int.modifier >= 0">
-                                {{ character().characteristics.int.modifier >= 0 ? '+' : '' }}{{
-                                character().characteristics.int.modifier }}
-                            </span>
-                        </div>
-                        <div class="stat-box-sheet">
-                            <span class="s-name">EDU</span>
-                            <span class="s-val">{{ character().characteristics.edu.value }}</span>
-                            <span class="s-mod" [class.pos]="character().characteristics.edu.modifier >= 0">
-                                {{ character().characteristics.edu.modifier >= 0 ? '+' : '' }}{{
-                                character().characteristics.edu.modifier }}
-                            </span>
-                        </div>
-                        <div class="stat-box-sheet">
-                            <span class="s-name">SOC</span>
-                            <span class="s-val">{{ character().characteristics.soc.value }}</span>
-                            <span class="s-mod" [class.pos]="character().characteristics.soc.modifier >= 0">
-                                {{ character().characteristics.soc.modifier >= 0 ? '+' : '' }}{{
-                                character().characteristics.soc.modifier }}
-                            </span>
-                        </div>
-                    </div>
+    <!-- 2. Primary Stats Row -->
+    <section class="characteristics-row">
+        <!-- STR -->
+        <div class="stat-card-pair">
+            <div class="stat-card current">
+                <span class="stat-label">STR_CUR</span>
+                <span class="stat-value">{{ character().characteristics.str.value }}</span>
+                <div class="stat-mod" [class.pos]="character().characteristics.str.modifier >= 0">
+                    {{ character().characteristics.str.modifier >= 0 ? '+' : '' }}{{ character().characteristics.str.modifier }}
                 </div>
             </div>
+            <div class="stat-card total">
+                <span class="stat-label">STR_BASE</span>
+                <span class="stat-value">{{ character().characteristics.str.originalValue || character().characteristics.str.value }}</span>
+            </div>
+        </div>
 
-            <!-- Origin & Homeworld -->
-            <div class="hud-module world" *ngIf="character().homeworld">
-                <div class="hud-box-header">
-                    <span class="index">OR_01</span>
-                    <h3>HOMEWORLD_ORIGIN</h3>
-                </div>
-                <div class="hud-content">
-                    <div class="world-data">
-                        <div class="w-primary">
-                            <span class="w-name">{{ character().homeworld?.name }}</span>
-                            <span class="w-uwp">{{ character().homeworld?.uwp }}</span>
-                        </div>
-                        <div class="tactical-row mini">
-                            <div class="t-item">
-                                <span class="t-label">GRAVITY</span>
-                                <span class="t-val">{{ character().homeworld?.gravity }}G ({{
-                                    character().homeworld?.gravityCode }})</span>
-                            </div>
-                            <div class="t-item">
-                                <span class="t-label">NATION</span>
-                                <span class="t-val">{{ character().nationality }}</span>
-                            </div>
-                        </div>
-                    </div>
+        <!-- DEX -->
+        <div class="stat-card-pair">
+            <div class="stat-card current">
+                <span class="stat-label">DEX_CUR</span>
+                <span class="stat-value">{{ character().characteristics.dex.value }}</span>
+                <div class="stat-mod" [class.pos]="character().characteristics.dex.modifier >= 0">
+                    {{ character().characteristics.dex.modifier >= 0 ? '+' : '' }}{{ character().characteristics.dex.modifier }}
                 </div>
             </div>
+            <div class="stat-card total">
+                <span class="stat-label">DEX_BASE</span>
+                <span class="stat-value">{{ character().characteristics.dex.originalValue || character().characteristics.dex.value }}</span>
+            </div>
+        </div>
 
-            <!-- Finances & Assets -->
-            <div class="hud-module finances">
-                <div class="hud-box-header">
-                    <span class="index">FN_01</span>
-                    <h3>ECONOMIC_STATUS_DATA</h3>
-                </div>
-                <div class="hud-content">
-                    <div class="finance-grid">
-                        <div class="f-item">
-                            <span class="f-label">LIQUID_CASH</span>
-                            <span class="f-val highlight">Lv {{ character().finances.cash | number:'1.0-0' }}</span>
-                        </div>
-                        <div class="f-item" *ngIf="character().finances.shipShares > 0">
-                            <span class="f-label">SHIP_SHARES</span>
-                            <span class="f-val">{{ character().finances.shipShares }} UNIT(S)</span>
-                        </div>
-                        <div class="f-item" *ngIf="character().finances.debt > 0">
-                            <span class="f-label debt">FINANCIAL_DEBT</span>
-                            <span class="f-val danger">Lv {{ character().finances.debt | number:'1.0-0' }}</span>
-                        </div>
-                        <div class="f-item" *ngIf="characterService.pension() > 0">
-                            <span class="f-label">ANNUAL_PENSION</span>
-                            <span class="f-val">Lv {{ characterService.pension() * 10000 | number:'1.0-0' }}</span>
-                        </div>
-                    </div>
+        <!-- END -->
+        <div class="stat-card-pair">
+            <div class="stat-card current">
+                <span class="stat-label">END_CUR</span>
+                <span class="stat-value">{{ character().characteristics.end.value }}</span>
+                <div class="stat-mod" [class.pos]="character().characteristics.end.modifier >= 0">
+                    {{ character().characteristics.end.modifier >= 0 ? '+' : '' }}{{ character().characteristics.end.modifier }}
                 </div>
             </div>
-        </aside>
+            <div class="stat-card total">
+                <span class="stat-label">END_BASE</span>
+                <span class="stat-value">{{ character().characteristics.end.originalValue || character().characteristics.end.value }}</span>
+            </div>
+        </div>
 
-        <!-- Skills & Status Column -->
-        <main class="data-column">
-            <!-- 1. Skills Hierarchical Matrix -->
-            <div class="hud-module skills">
-                <div class="hud-box-header">
-                    <span class="index">SK_01</span>
-                    <h3>SKILL_HIERARCHY_ARRAY</h3>
+        <!-- INT -->
+        <div class="stat-card-pair">
+            <div class="stat-card current">
+                <span class="stat-label">INT_CUR</span>
+                <span class="stat-value">{{ character().characteristics.int.value }}</span>
+                <div class="stat-mod" [class.pos]="character().characteristics.int.modifier >= 0">
+                    {{ character().characteristics.int.modifier >= 0 ? '+' : '' }}{{ character().characteristics.int.modifier }}
                 </div>
-                <div class="hud-content">
+            </div>
+            <div class="stat-card total">
+                <span class="stat-label">INT_BASE</span>
+                <span class="stat-value">{{ character().characteristics.int.originalValue || character().characteristics.int.value }}</span>
+            </div>
+        </div>
+
+        <!-- EDU -->
+        <div class="stat-card-pair">
+            <div class="stat-card current">
+                <span class="stat-label">EDU_CUR</span>
+                <span class="stat-value">{{ character().characteristics.edu.value }}</span>
+                <div class="stat-mod" [class.pos]="character().characteristics.edu.modifier >= 0">
+                    {{ character().characteristics.edu.modifier >= 0 ? '+' : '' }}{{ character().characteristics.edu.modifier }}
+                </div>
+            </div>
+            <div class="stat-card total">
+                <span class="stat-label">EDU_BASE</span>
+                <span class="stat-value">{{ character().characteristics.edu.originalValue || character().characteristics.edu.value }}</span>
+            </div>
+        </div>
+
+        <!-- SOC -->
+        <div class="stat-card-pair">
+            <div class="stat-card current">
+                <span class="stat-label">SOC_CUR</span>
+                <span class="stat-value">{{ character().characteristics.soc.value }}</span>
+                <div class="stat-mod" [class.pos]="character().characteristics.soc.modifier >= 0">
+                    {{ character().characteristics.soc.modifier >= 0 ? '+' : '' }}{{ character().characteristics.soc.modifier }}
+                </div>
+            </div>
+            <div class="stat-card total">
+                <span class="stat-label">SOC_BASE</span>
+                <span class="stat-value">{{ character().characteristics.soc.originalValue || character().characteristics.soc.value }}</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="main-dashboard-grid">
+        <!-- 3. Left Sidebar: Neural Encoding (Skills) -->
+        <aside class="sidebar-skills">
+            <div class="dashboard-card skills-card">
+                <div class="card-header">
+                    <div class="header-pips"><span class="pip dim"></span><span class="pip cyan pulse"></span></div>
+                    <h3>NEURAL_MAP</h3>
+                    <span class="count">{{ character().skills.length }}</span>
+                </div>
+                <div class="card-content full-skills">
                     <div class="skill-tree">
                         <!-- Grouped Skills -->
                         <div class="skill-group" *ngFor="let group of skillsTree().groups">
                             <div class="group-header">
                                 <span class="g-name">{{ group.name }}</span>
-                                <span class="g-line"></span>
                             </div>
                             <div class="group-children">
-                                <div class="skill-entry mini" *ngFor="let child of group.children">
-                                    <span class="s-name">>> {{ child.specialization }}</span>
-                                    <span class="s-lvl">LV.{{ child.level }}</span>
+                                <div class="skill-entry" *ngFor="let child of group.children">
+                                    <span class="s-name">{{ child.specialization }}</span>
+                                    <div class="s-dots">
+                                        <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < child.level"></div>
+                                    </div>
+                                    <span class="s-lvl">{{ child.level }}</span>
                                 </div>
                             </div>
                         </div>
                         <!-- Standalone Skills -->
                         <div class="skill-entry" *ngFor="let skill of skillsTree().standalone">
-                            <div class="s-header">
-                                <span class="s-name">{{ skill.name }}</span>
-                                <span class="s-lvl">LV.{{ skill.level }}</span>
-                                <span class="s-spec" *ngIf="skill.specialization">[{{ skill.specialization }}]</span>
+                            <span class="s-name">{{ skill.name }} <small *ngIf="skill.specialization">[{{ skill.specialization }}]</small></span>
+                            <div class="s-dots">
+                                <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < skill.level"></div>
+                            </div>
+                            <span class="s-lvl">{{ skill.level }}</span>
+                        </div>
+                        <div class="empty-state" *ngIf="character().skills.length === 0">NO_SKILLS</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 4. Central Content: Modular Data Cards -->
+        <main class="content-modules">
+            <div class="row-modules">
+                <!-- Origin & Homeworld -->
+                <div class="dashboard-card info-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip cyan"></span><span class="pip dim"></span></div>
+                        <h3>ORIGIN_DATA</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tech-tag">BIO_MAP_S02</div>
+                        <div class="data-row">
+                            <span class="label">HOMEWORLD</span>
+                            <span class="val">{{ character().homeworld?.name }} <small>({{ character().homeworld?.uwp }})</small></span>
+                        </div>
+                        <div class="data-row">
+                            <span class="label">NATIONALITY</span>
+                            <span class="val">{{ character().nationality }}</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="label">BIO_RECORD</span>
+                            <p class="val-text">{{ character().description || 'NO_RECORD' }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic Status -->
+                <div class="dashboard-card finance-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip amber"></span><span class="pip amber pulse"></span></div>
+                        <h3>FINANCIAL_LEDGER</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tech-tag">CREDIT_ENCRYPTION_v4</div>
+                        <div class="cash-display">
+                            <span class="label">LIQUID_ASSETS</span>
+                            <span class="val crimson">Lv {{ character().finances.cash | number:'1.0-0' }}</span>
+                        </div>
+                        <div class="finance-grid">
+                            <div class="data-row">
+                                <span class="label">SHARES</span>
+                                <span class="val">{{ character().finances.shipShares || 0 }}</span>
+                            </div>
+                            <div class="data-row danger" *ngIf="character().finances.debt > 0">
+                                <span class="label">DEBT</span>
+                                <span class="val">Lv {{ character().finances.debt | number:'1.0-0' }}</span>
+                            </div>
+                            <div class="data-row" *ngIf="characterService.pension() > 0">
+                                <span class="label">PENSION</span>
+                                <span class="val">Lv {{ characterService.pension() * 10000 | number:'1.0-0' }}</span>
                             </div>
                         </div>
-                        <div class="empty-state" *ngIf="character().skills.length === 0">
-                            [ NO_ACTIVE_SKILL_SIGNALS ]
-                        </div>
+                    </div>
+                </div>
+
+                <!-- Academic Record (University) -->
+                <div class="dashboard-card education-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip cyan"></span><span class="pip dim"></span></div>
+                        <h3>ACADEMIC_RECORD</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tech-tag">ARCHIVE_QUERY: SUCCESS</div>
+                        <ng-container *ngIf="character().education.university; else noAcademic">
+                            <div class="data-row">
+                                <span class="label">UNIVERSITY</span>
+                                <span class="val success">GRADUATED</span>
+                            </div>
+                            <div class="data-row" *ngIf="character().education.major">
+                                <span class="label">MAJOR</span>
+                                <span class="val">{{ character().education.major }}</span>
+                            </div>
+                            <div class="data-row" *ngIf="character().education.minor">
+                                <span class="label">MINOR</span>
+                                <span class="val">{{ character().education.minor }}</span>
+                            </div>
+                        </ng-container>
+                        <ng-template #noAcademic>
+                            <div class="empty-state-mini">ACADEMIC_DATA_NOT_FOUND</div>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <!-- Military Record (Academy) -->
+                <div class="dashboard-card education-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip cyan pulse"></span><span class="pip"></span></div>
+                        <h3>MILITARY_RECORD</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tech-tag">SERVICE_ID: VERIFIED</div>
+                        <ng-container *ngIf="character().education.academy; else noMilitary">
+                            <div class="data-row">
+                                <span class="label">MILITARY_ACADEMY</span>
+                                <span class="val success">HONORS_GRADUATE</span>
+                            </div>
+                            <div class="data-row" *ngIf="character().careerHistory[0]?.careerName">
+                                <span class="label">COMMISSION_PATH</span>
+                                <span class="val">{{ character().careerHistory[0]?.careerName }}</span>
+                            </div>
+                        </ng-container>
+                        <ng-template #noMilitary>
+                            <div class="empty-state-mini">MILITARY_DATA_NOT_FOUND</div>
+                        </ng-template>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. Status & Medical Section (Injuries / Implants) -->
-            <div class="status-grid">
-                <!-- Injuries -->
-                <div class="hud-module status medical">
-                    <div class="hud-box-header">
-                        <span class="index">MD_01</span>
+            <!-- Trauma & Implants -->
+            <div class="row-modules">
+                <div class="dashboard-card status-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip cyan"></span><span class="pip cyan pulse"></span></div>
                         <h3>TRAUMA_LOG</h3>
                     </div>
-                    <div class="hud-content">
+                    <div class="card-content">
                         <div class="injury-list">
-                            <div class="injury-item" *ngFor="let injury of character().injuries"
-                                [class.treated]="injury.treated">
-                                <span class="marker" [class.danger]="!injury.treated" [class.success]="injury.treated">
-                                    {{ injury.treated ? '✓' : '!!' }}
-                                </span>
-                                <div class="injury-info">
-                                    <span class="item-name">{{ injury.name }}</span>
-                                    <span class="item-stat" *ngIf="!injury.treated">[{{ injury.stat }} -{{
-                                        injury.reduction }}]</span>
-                                    <span class="item-treated" *ngIf="injury.treated">RESTORED</span>
-                                </div>
+                            <div class="injury-item" *ngFor="let injury of character().injuries" [class.treated]="injury.treated">
+                                <span class="label">{{ injury.name }}</span>
+                                <span class="val red" *ngIf="!injury.treated">-{{ injury.reduction }} {{ injury.stat }}</span>
+                                <span class="val success" *ngIf="injury.treated">STABILIZED</span>
                             </div>
-                            <div class="empty-state" *ngIf="character().injuries.length === 0">
-                                [ NO_TRAUMA_DETECTED ]
-                            </div>
+                            <div class="empty-state" *ngIf="character().injuries.length === 0">OPTIMAL_CONDITION</div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Implants -->
-                <div class="hud-module status cyber">
-                    <div class="hud-box-header">
-                        <span class="index">CB_01</span>
-                        <h3>CYBER_INTEGRATION</h3>
+                <div class="dashboard-card status-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip dim"></span><span class="pip cyan"></span></div>
+                        <h3>AUGMENTATIONS</h3>
                     </div>
-                    <div class="hud-content">
+                    <div class="card-content">
                         <div class="implant-list">
                             <div class="implant-item" *ngFor="let item of implants()">
-                                <span class="marker yellow">++</span>
-                                <span class="item-name">{{ item }}</span>
+                                <span class="val">{{ item }}</span>
                             </div>
-                            <div class="empty-state" *ngIf="implants().length === 0">
-                                [ NO_AUGMENTATIONS_FOUND ]
-                            </div>
+                            <div class="empty-state" *ngIf="implants().length === 0">ORGANIC_PURE</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. Relationship Matrix -->
-            <div class="hud-module relationships">
-                <div class="hud-box-header">
-                    <span class="index">RS_01</span>
-                    <h3>SOCIAL_RELATIONSHIP_MATRIX</h3>
-                </div>
-                <div class="hud-content">
-                    <div class="relationship-grid">
-                        <div class="npc-type-group" *ngFor="let group of categorizedNpcs()">
-                            <span class="type-label" [class]="group.type.toLowerCase()">{{ group.type }}</span>
-                            <div class="npc-list">
-                                <div class="npc-card" *ngFor="let npc of group.list">
-                                    <span class="n-name">{{ npc.name }}</span>
-                                    <span class="n-origin">{{ npc.origin }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="empty-state" *ngIf="character().npcs.length === 0">
-                            [ NO_RELATIONSHIP_NETWORKS ]
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. Career Timeline -->
-            <div class="hud-module chronology">
-                <div class="hud-box-header">
-                    <span class="index">CH_02</span>
+            <!-- Career Timeline -->
+            <div class="dashboard-card history-card">
+                <div class="card-header">
                     <h3>SERVICE_RECORD_CHRONOLOGY</h3>
+                    <span class="count">{{ character().careerHistory.length }} TERMS</span>
                 </div>
-                <div class="hud-content history-terminal">
-                    <div class="history-entry" *ngFor="let term of character().careerHistory">
-                        <div class="h-timeline">
-                            <span class="h-term">TERM_0{{ term.termNumber }}</span>
-                        </div>
-                        <div class="h-details">
-                            <div class="h-main">
-                                <span class="h-career">{{ term.careerName }}</span>
-                                <span class="h-rank" *ngIf="term.rankTitle">{{ term.rankTitle }} (R{{ term.rank
-                                    }})</span>
-                                <span class="h-rank" *ngIf="!term.rankTitle">RANK_0{{ term.rank }}</span>
+                <div class="card-content">
+                    <div class="conduit-timeline">
+                        <div class="conduit-entry" *ngFor="let term of character().careerHistory">
+                            <div class="conduit-marker">
+                                <span class="term-tag">T{{ term.termNumber }}</span>
+                                <div class="conduit-line"></div>
                             </div>
-                            <div class="h-assignment" *ngIf="term.assignment">ASSIGNMENT: {{ term.assignment }}</div>
-                            <div class="h-events">
-                                <div class="ev-item" *ngFor="let ev of term.events">
-                                    <span class="dot"></span>
-                                    <span class="text">{{ ev }}</span>
+                            <div class="conduit-content">
+                                <div class="conduit-header">
+                                    <span class="career">{{ term.careerName | uppercase }}</span>
+                                    <span class="rank" *ngIf="term.rankTitle">{{ term.rankTitle }} <small>R{{ term.rank }}</small></span>
+                                    <span class="assignment" *ngIf="term.assignment">// {{ term.assignment }}</span>
+                                    <span class="age-bracket">{{ 18 + (term.termNumber * 4) }}Y</span>
+                                </div>
+                                <div class="conduit-body">
+                                    <ul class="conduit-logs">
+                                        <li *ngFor="let ev of term.events">
+                                            <span class="log-prefix">></span> {{ ev }}
+                                        </li>
+                                    </ul>
+                                    <div class="conduit-tags" *ngIf="term.benefits.length > 0">
+                                        <span class="mini-tag" *ngFor="let b of term.benefits">{{ b }}</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="h-benefits" *ngIf="term.benefits.length > 0">
-                                <span class="hud-label-tiny">TOTAL_BENEFITS:</span>
-                                <span class="benefit-tag" *ngFor="let b of term.benefits">{{ b }}</span>
-                            </div>
                         </div>
-                    </div>
-                    <div class="empty-state" *ngIf="character().careerHistory.length === 0">
-                        [ NO_SERVICE_HISTORY_FOUND ]
+                        <div class="empty-state" *ngIf="character().careerHistory.length === 0">NO_SERVICE_RECORD_ENCODED</div>
                     </div>
                 </div>
             </div>
 
-            <!-- 5. General Inventory -->
-            <div class="hud-module equipment" *ngIf="generalEquipment().length > 0">
-                <div class="hud-box-header">
-                    <span class="index">EQ_01</span>
-                    <h3>GENERAL_INVENTORY</h3>
+            <!-- Relationships & Equipment -->
+            <div class="row-modules">
+                <div class="dashboard-card rel-card">
+                    <div class="card-header">
+                        <div class="header-pips"><span class="pip cyan"></span><span class="pip cyan dim"></span></div>
+                        <h3>RELATIONSHIP_MATRIX</h3>
+                        <span class="count">{{ character().npcs.length }}</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="npc-grid">
+                            <div class="npc-dossier" *ngFor="let npc of character().npcs">
+                                <div class="dossier-header">
+                                    <span class="relation">{{ npc.type | uppercase }}</span>
+                                    <span class="nature {{ npc.nature.toLowerCase() }}" *ngIf="npc.nature">{{ npc.nature }}</span>
+                                </div>
+                                <div class="dossier-body">
+                                    <h4 class="npc-name">{{ npc.name }}</h4>
+                                    <div class="npc-meta">
+                                        <span class="role">{{ npc.role }}</span>
+                                        <span class="quirk" *ngIf="npc.quirk">"{{ npc.quirk }}"</span>
+                                    </div>
+                                    <p class="notes" *ngIf="npc.notes">{{ npc.notes }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="empty-state" *ngIf="character().npcs.length === 0">ISOLATED_OPERATIVE</div>
+                    </div>
                 </div>
-                <div class="hud-content">
-                    <div class="inventory-grid">
-                        <div class="inv-item" *ngFor="let item of generalEquipment()">
-                            <span class="marker">>></span>
-                            <span class="item-name">{{ item }}</span>
+                <div class="dashboard-card inv-card" *ngIf="generalEquipment().length > 0">
+                    <div class="card-header"><h3>EQUIPMENT</h3></div>
+                    <div class="card-content">
+                        <div class="inv-mini-list">
+                            <div class="inv-mini" *ngFor="let item of generalEquipment()">{{ item }}</div>
                         </div>
                     </div>
                 </div>
@@ -346,17 +420,16 @@
         </main>
     </div>
 
-    <!-- Actions Footer -->
-    <footer class="sheet-actions-footer">
-        <div class="divider"></div>
-        <div class="action-buttons">
-            <button class="btn-action-sheet" (click)="exportJson()" id="btn-export-json">
-                <span class="index">CMD_01</span>
-                EXPORT_DATA_JSON
+    <!-- 5. Global Actions Footer -->
+    <footer class="dashboard-footer">
+        <div class="action-console">
+            <button class="btn-tactical" (click)="exportJson()">
+                <span class="btn-decor"></span>
+                <span class="btn-text">EXPORT_RAW_DATA</span>
             </button>
-            <button class="btn-action-sheet finalize" (click)="exportPdf()" id="btn-export-pdf">
-                <span class="index">CMD_02</span>
-                PRINT_OFFICIAL_DOSSIER
+            <button class="btn-tactical primary" (click)="exportPdf()">
+                <span class="btn-decor"></span>
+                <span class="btn-text">INITIALIZE_PRINT_SEQUENCE</span>
             </button>
         </div>
     </footer>

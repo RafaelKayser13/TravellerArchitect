@@ -37,6 +37,7 @@ export class OriginComponent {
   // Background Skills
   showSkillsSelection = false;
   backgroundSkillsCount = 0;
+  isJapanBonusPrompt = false;
   selectedBackgroundSkills: string[] = [];
 
   coreSkills = [
@@ -67,11 +68,16 @@ export class OriginComponent {
     }
 
     if (char.originType) {
-      // Map 'Earth' to 'Core' for UI consistency
-      if (char.originType === 'Earth' || char.originType === 'Core') {
-        this.selectedOriginType = 'Core';
+      // Validate current originType against species
+      if (this.isOriginTypeAvailable(char.originType as any)) {
+        if (char.originType === 'Earth' || char.originType === 'Core') {
+          this.selectedOriginType = 'Core';
+        } else {
+          this.selectedOriginType = char.originType as 'Frontier' | 'Spacer';
+        }
       } else {
-        this.selectedOriginType = char.originType as 'Frontier' | 'Spacer';
+        this.selectedOriginType = null;
+        this.characterService.updateCharacter({ originType: '', homeworld: undefined });
       }
     } else {
       this.selectedOriginType = null;
@@ -81,8 +87,14 @@ export class OriginComponent {
     this.updateWorlds();
 
     if (char.homeworld) {
+      // Validate homeworld against species
       const found = this.availableWorlds.find(w => w.name === char.homeworld?.name);
-      this.selectedWorld = found || char.homeworld;
+      if (found) {
+        this.selectedWorld = found;
+      } else {
+        this.selectedWorld = null;
+        this.characterService.updateCharacter({ homeworld: undefined });
+      }
     }
 
     // Restore Background Skills selection only if we have valid origin data
@@ -105,37 +117,74 @@ export class OriginComponent {
   selectNationality(nat: Nationality) {
     this.selectedNationality = nat;
     this.onNationalityChange();
-
-    // Scroll to next section
-    setTimeout(() => {
-      if (this.originTypeSection) {
-        this.originTypeSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+    this.processAutoSelections();
+    this.scrollToFirstMissingStep();
   }
 
   setOriginType(type: 'Core' | 'Frontier' | 'Spacer') {
     this.selectedOriginType = type;
     this.onOriginTypeChange();
-
-    // Scroll to next section
-    setTimeout(() => {
-      if (this.homeworldSection) {
-        this.homeworldSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 100);
+    this.processAutoSelections();
+    this.scrollToFirstMissingStep();
   }
 
   selectWorld(world: World) {
     this.selectedWorld = world;
     this.onWorldChange();
+    this.scrollToFirstMissingStep();
+  }
 
-    // Scroll to next section
-    setTimeout(() => {
-      if (this.skillsSection) {
-        this.skillsSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  private processAutoSelections() {
+    let changed = true;
+    while (changed) {
+      changed = false;
+
+      // 1. Auto-select Origin Type if only one is available
+      if (this.selectedNationality && !this.selectedOriginType) {
+        const availableTypes: ('Core' | 'Frontier' | 'Spacer')[] = ['Core', 'Frontier', 'Spacer'];
+        const validTypes = availableTypes.filter(t => this.isOriginTypeAvailable(t));
+        if (validTypes.length === 1) {
+          this.selectedOriginType = validTypes[0];
+          this.onOriginTypeChange();
+          changed = true;
+        }
       }
-    }, 100);
+
+      // 2. Auto-select Homeworld if only one is available
+      if (this.selectedNationality && this.selectedOriginType && !this.selectedWorld) {
+        this.updateWorlds();
+        if (this.availableWorlds.length === 1) {
+          this.selectedWorld = this.availableWorlds[0];
+          this.onWorldChange();
+          changed = true;
+        }
+      }
+    }
+  }
+
+  private scrollToFirstMissingStep() {
+    setTimeout(() => {
+      let targetId = '';
+
+      if (!this.selectedNationality) {
+        return; 
+      } else if (!this.selectedOriginType) {
+        targetId = '.origin-type-section';
+      } else if (!this.selectedWorld) {
+        targetId = '.homeworld-section';
+      } else if (!this.canProceed()) {
+        targetId = '.skills-section';
+      }
+
+      if (targetId) {
+        const element = document.querySelector(targetId);
+        const content = document.querySelector('.wizard-content');
+        if (element && content) {
+          const top = (element as HTMLElement).offsetTop - 20;
+          content.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
+    }, 150);
   }
 
   // ... imports remain the same, ensuring World is imported from model ...
@@ -145,12 +194,64 @@ export class OriginComponent {
     this.save();
   }
 
+  isNationalityAvailable(nat: Nationality): boolean {
+    const species = this.characterService.character().species;
+    
+    // In 2300AD, Heavy-Worlders are primarily from USA, Australia, Manchuria, Texas, Inca, or Trilon
+    if (species === 'Human (Heavy-Worlder)') {
+      const allowedNations = ['United States', 'Australia', 'Manchuria', 'Texas', 'Inca Republic', 'Trilon Corp'];
+      return allowedNations.includes(nat.name);
+    }
+    
+    // Spacers are everywhere, but especially Tier 1-2 and Trilon/Life Foundation
+    return true;
+  }
+
+  isOriginTypeAvailable(type: 'Core' | 'Frontier' | 'Spacer'): boolean {
+    const species = this.characterService.character().species;
+    if (species === 'Human (Spacer)') {
+      return type === 'Spacer';
+    }
+    if (['Human (Heavy-Worlder)', 'Human (Cold-Adapted)', 'Human (Dry-Worlder)'].includes(species)) {
+      return type === 'Frontier';
+    }
+    return true;
+  }
+
+  getIncompatibilityReason(type: 'Nationality' | 'OriginType', value: any): string | null {
+    const species = this.characterService.character().species;
+    
+    if (type === 'Nationality') {
+      if (species === 'Human (Heavy-Worlder)') {
+        const allowedNations = ['United States', 'Australia', 'Manchuria', 'Texas', 'Inca Republic', 'Trilon Corp'];
+        if (!allowedNations.includes(value.name)) {
+          return 'Heavy-Worlders lack colonies in this nation.';
+        }
+      }
+    }
+
+    if (type === 'OriginType') {
+      if (species === 'Human (Spacer)' && value !== 'Spacer') {
+        return 'Spacer biology requires orbital environments.';
+      }
+      if (['Human (Heavy-Worlder)', 'Human (Cold-Adapted)', 'Human (Dry-Worlder)'].includes(species) && value !== 'Frontier') {
+        return 'Adapted species requires specific colonial environments.';
+      }
+    }
+
+    return null;
+  }
+
   onOriginTypeChange() {
     // If Spacer is selected, we have fixed stats (usually) or a generic 'Space' world
     this.selectedBackgroundSkills = []; // Reset selections as list changes
     if (this.selectedOriginType === 'Spacer') {
       this.selectedBackgroundSkills.push('Vacc Suit');
-      this.characterService.addSkill('Vacc Suit', 0);
+      this.characterService.ensureSkillLevel('Vacc Suit', 0);
+
+      // 2300AD: Spacers gain Language (Zhargon) 1
+      this.characterService.ensureSkillLevel('Language (Zhargon)', 1);
+      this.characterService.log('**Spacer Origin**: Gained Language (Zhargon) 1');
     }
     this.updateWorlds();
     this.save();
@@ -170,32 +271,47 @@ export class OriginComponent {
       return;
     }
 
-    if (this.selectedOriginType === 'Core') {
-      this.availableWorlds = WORLDS.filter(w => w.tier === 'Core');
-    } else if (this.selectedOriginType === 'Spacer') {
-      // Spacer Logic: They don't pick a 'Planet' usually, but a habitat.
-      // The spec says: Homeworld = "Space/Station"
-      // We can either create a dummy world or let them pick a "Base" system.
-      // For visual consistency, let's create a virtual 'Space Station' world option associated with the nation?
-      // OR simply hide the world selector and auto-set a 'Space Station' world.
+    const species = this.characterService.character().species;
 
-      // Let's create a virtual world for the UI to display
+    // Filter available worlds by species requirements
+    let allWorlds = WORLDS;
+    
+    if (species === 'Human (Heavy-Worlder)') {
+      allWorlds = allWorlds.filter(w => w.gravityCode === 'High' || w.gravityCode === 'Extreme' || (w.environment && w.environment.includes('Heavy')));
+    } else if (species === 'Human (Cold-Adapted)') {
+      allWorlds = allWorlds.filter(w => w.environment && w.environment.includes('Cold'));
+    } else if (species === 'Human (Dry-Worlder)') {
+      allWorlds = allWorlds.filter(w => w.environment && w.environment.includes('Dry'));
+    }
+
+    if (this.selectedOriginType === 'Core') {
+      // Human (Spacer) or adapted humans cannot be Core origin unless standard human
+      if (['Human (Spacer)', 'Human (Heavy-Worlder)', 'Human (Cold-Adapted)', 'Human (Dry-Worlder)'].includes(species)) {
+        this.availableWorlds = [];
+      } else {
+        this.availableWorlds = allWorlds.filter(w => w.tier === 'Core');
+      }
+    } else if (this.selectedOriginType === 'Spacer') {
+      // 2300AD: Spacer species MUST be Spacer origin. Standard humans can also be spacers.
       this.availableWorlds = [{
         name: `${this.selectedNationality.name} Orbital/Station`,
         uwp: 'Zero-G Habitat',
         gravity: 0,
         gravityCode: 'Low',
         survivalDm: -1,
-        path: 'Hard', // Usually High Tech
+        path: 'Hard',
         nation: this.selectedNationality.name,
         tier: 'Spacer',
-        system: 'Various'
+        system: 'Various',
+        environment: ['Space', 'Low-G']
       }];
       this.selectedWorld = this.availableWorlds[0];
     } else {
       // Frontier
-      this.availableWorlds = getWorldsByNation(this.selectedNationality.name)
-        .filter(w => w.tier === 'Frontier' || w.tier === 'Core'); // Some definitions might blur, but strictly Frontier usually
+      this.availableWorlds = allWorlds.filter(w => 
+        (w.nation === this.selectedNationality?.name || w.nation === 'Independent') && 
+        (w.tier === 'Frontier' || w.tier === 'Core')
+      );
     }
   }
 
@@ -208,8 +324,16 @@ export class OriginComponent {
       const charUpdate: any = {
         nationality: this.selectedNationality.name,
         originType: this.selectedOriginType,
-        homeworld: this.selectedWorld
+        homeworld: this.selectedWorld,
+        isSoftPath: this.selectedWorld?.path === 'Soft'
       };
+
+      // 2b. PSA (Planetary Selection Adaptation) - Survival 0 for Soft Path
+      if (charUpdate.isSoftPath && this.selectedWorld) {
+        const psaSkill = `Survival (${this.selectedWorld.name})`;
+        this.characterService.ensureSkillLevel(psaSkill, 0);
+        this.characterService.log(`**Soft Path Benefit**: Gained ${psaSkill} 0 (PSA).`);
+      }
 
       // 3. Apply Gravity & DNAM logic here
       // We need to fetch current characteristics to modify them
@@ -228,43 +352,142 @@ export class OriginComponent {
         const code = this.selectedWorld.gravityCode;
         const g = this.selectedWorld.gravity;
 
-        if (code === 'Zero-G') { /* Handled by Spacer DNAM usually */ }
-        else if (g < 0.1) {
-          chars.str.gravityMod = -2; chars.dex.gravityMod = 2; chars.end.gravityMod = -2;
-        } else if (g < 0.21) {
-          chars.str.gravityMod = -1; chars.dex.gravityMod = 1; chars.end.gravityMod = -1;
-        } else if (g > 2.0 && g < 3.0) {
+        // 2300AD Spec: Low-G worlds give permanent -1 STR & END
+        if (code === 'Low') {
+          chars.str.gravityMod = -1;
+          chars.end.gravityMod = -1;
+          console.log('Applying Low-G Penalty: STR -1, END -1');
+        } 
+        else if (g > 2.0 && g < 3.0) {
           chars.str.gravityMod = 1; chars.dex.gravityMod = -1; chars.end.gravityMod = 1;
         } else if (g >= 3.0) {
           chars.str.gravityMod = 2; chars.dex.gravityMod = -2; chars.end.gravityMod = 2;
+        }
+
+        // 3a-ii. Heavy-Worlder Reroll (STR/END if < 10)
+        if (char.species === 'Human (Heavy-Worlder)' && (code === 'High' || code === 'Extreme')) {
+          if (chars.str.value < 10) {
+            const r1 = Math.floor(Math.random() * 6) + 1;
+            const r2 = Math.floor(Math.random() * 6) + 1;
+            const newStr = r1 + r2;
+            if (newStr > chars.str.value) {
+              this.characterService.log(`**Heavy-Worlder Reroll**: STR ${chars.str.value} -> ${newStr}`);
+              chars.str.value = newStr;
+            }
+          }
+          if (chars.end.value < 10) {
+            const r1 = Math.floor(Math.random() * 6) + 1;
+            const r2 = Math.floor(Math.random() * 6) + 1;
+            const newEnd = r1 + r2;
+            if (newEnd > chars.end.value) {
+              this.characterService.log(`**Heavy-Worlder Reroll**: END ${chars.end.value} -> ${newEnd}`);
+              chars.end.value = newEnd;
+            }
+          }
         }
       }
 
       // 3b. DNAM Logic
       const dnamList: any[] = [];
       if (this.selectedWorld && ['King', 'Huntsland', 'New Columbia'].includes(this.selectedWorld.name)) {
-        chars.str.geneticMod = 3;
-        chars.end.geneticMod = 3;
-        dnamList.push({ name: 'King Ultra', description: 'STR +1D, END +1D. Requires respirator.' });
+        // King Ultra: STR +1D, END +1D (average +3 used for simplicity, but could be a roll)
+        const strRoll = Math.floor(Math.random() * 6) + 1;
+        const endRoll = Math.floor(Math.random() * 6) + 1;
+        chars.str.geneticMod = strRoll;
+        chars.end.geneticMod = endRoll;
+        dnamList.push({ name: 'King Ultra', description: `STR +${strRoll}, END +${endRoll}. Requires respirator.` });
+        this.characterService.log(`**DNAM King Ultra**: Gained STR +${strRoll}, END +${endRoll}.`);
       }
 
       // Spacer
       if (this.selectedOriginType === 'Spacer') {
         dnamList.push({ name: 'Zero-G Adaptation', description: 'Adapted to microgravity.' });
-        // Recalculate Gravity Mod to be 0 (Light/Low) instead of penalty
+        // Recalculate Gravity Mod to be 0 for Spacers (no penalty in low-g)
         chars.str.gravityMod = 0; chars.dex.gravityMod = 0; chars.end.gravityMod = 0;
       }
 
       charUpdate.characteristics = chars;
       charUpdate.genes = dnamList;
 
-      // 5. Skills Metadata (Count)
+      // 5. Skills Metadata (Count) - 2300AD Tier Based
+      const tier = this.selectedNationality ? this.selectedNationality.tier : 3;
+      let baseCount = 3;
+      if (tier <= 2) baseCount = 4;
+      else if (tier === 3) baseCount = 3;
+      else if (tier === 4) baseCount = 2;
+      else baseCount = 1; // Tier 5+
+
       const edu = chars.edu.value + chars.edu.modifier;
       const eduDm = this.diceService.getModifier(edu);
-      this.backgroundSkillsCount = (this.selectedOriginType === 'Spacer' ? 4 : 3) + eduDm;
+      this.backgroundSkillsCount = baseCount + eduDm + (this.selectedOriginType === 'Spacer' ? 1 : 0);
       if (this.backgroundSkillsCount < 1) this.backgroundSkillsCount = 1;
 
       this.showSkillsSelection = true;
+
+      // 4. Background Rewards (Languages & Nationality Bonus)
+      if (this.selectedNationality) {
+        // Native Language Level 2
+        const nativeLang = this.selectedNationality.languages[0];
+        if (nativeLang) {
+          const langSkill = `Language (${nativeLang})`;
+          this.characterService.ensureSkillLevel(langSkill, 2);
+          this.characterService.log(`**Nationality Reward**: Gained ${langSkill} at Level 2`);
+        }
+
+        // 2300AD Specification Nationality Bonuses:
+        const n = this.selectedNationality.name;
+        if (n === 'United States' || n === 'America') {
+          this.characterService.ensureSkillLevel('Recon', 0);
+          this.characterService.log('**American Bonus**: Gained Recon 0');
+        } else if (n === 'Inca Republic') {
+          this.characterService.ensureSkillLevel('Melee (Blade)', 0);
+          this.characterService.log('**Inca Bonus**: Gained Melee (Blade) 0');
+        } else if (n === 'Australia') {
+          this.characterService.ensureSkillLevel('Survival', 0);
+          this.characterService.log('**Australian Bonus**: Gained Survival 0');
+        } else if (n === 'France') {
+          this.characterService.addSkill('Diplomat', 1);
+          this.characterService.log('**French Bonus**: Gained Diplomat 1');
+        } else if (n === 'Manchuria') {
+          this.characterService.addSkill('Science', 1);
+          this.characterService.log('**Manchurian Bonus**: Gained Science 1');
+        } else if (n === 'Germany') {
+          this.characterService.addSkill('Engineer', 1);
+          this.characterService.log('**German Bonus**: Gained Engineer 1');
+        } else if (n === 'Japan') {
+          this.isJapanBonusPrompt = true;
+        } else if (n === 'Argentina') {
+          this.characterService.addSkill('Pilot (any)', 1);
+          this.characterService.log('**Argentine Bonus**: Gained Pilot (any) 1');
+        } else if (n === 'Azania') {
+          this.characterService.addSkill('Persuade', 1);
+          this.characterService.log('**Azanian Bonus**: Gained Persuade 1');
+        } else if (n === 'Brazil') {
+          this.characterService.addSkill('Athletics (any)', 1);
+          this.characterService.log('**Brazilian Bonus**: Gained Athletics (any) 1');
+        } else if (n === 'United Kingdom' || n === 'UK') {
+          this.characterService.addSkill('Gun Combat (Slug)', 1);
+          this.characterService.log('**British Bonus**: Gained Gun Combat (Slug) 1');
+        } else if (n === 'Mexico') {
+          this.characterService.addSkill('Drive (any)', 1);
+          this.characterService.log('**Mexican Bonus**: Gained Drive (any) 1');
+        } else if (n === 'Russia') {
+          this.characterService.addSkill('Heavy Weapons (any)', 1);
+          this.characterService.log('**Russian Bonus**: Gained Heavy Weapons (any) 1');
+        } else if (n === 'Texas') {
+          this.characterService.addSkill('Gun Combat (Slug)', 1);
+          this.characterService.log('**Texan Bonus**: Gained Gun Combat (Slug) 1');
+        } else if (n === 'Ukraine') {
+          this.characterService.addSkill('Streetwise', 1);
+          this.characterService.log('**Ukrainian Bonus**: Gained Streetwise 1');
+        }
+
+        // Tier 1 / Corporate Bonus (SOC 9+)
+        if (this.selectedNationality.tier === 1 && chars.soc.value >= 9) {
+          this.characterService.ensureSkillLevel('Gun Combat (Slug)', 0);
+          this.characterService.log('**Elite Nationality Bonus**: Gained Gun Combat (Slug) 0 (SOC 9+)');
+        }
+      }
 
       this.characterService.updateCharacter(charUpdate);
 
@@ -300,6 +523,32 @@ export class OriginComponent {
 
   canProceed(): boolean {
     return this.selectedBackgroundSkills.length === this.backgroundSkillsCount;
+  }
+
+  increaseStat(stat: string, val: number) {
+    const char = this.characterService.character();
+    const statKey = stat.toLowerCase() as keyof typeof char.characteristics;
+    const currentValue = char.characteristics[statKey].value;
+
+    const updatedChars = { ...char.characteristics };
+    updatedChars[statKey] = {
+      ...updatedChars[statKey],
+      value: currentValue + val
+    };
+
+    this.characterService.updateCharacteristics(updatedChars);
+  }
+
+  selectJapanBonus(type: 'EDU' | 'Rank') {
+    this.isJapanBonusPrompt = false;
+    if (type === 'EDU') {
+      this.increaseStat('EDU', 1);
+      this.characterService.updateCharacter({ japaneseRankBonus: false });
+      this.characterService.log('**Japanese Bonus**: Chosen EDU +1');
+    } else {
+      this.characterService.updateCharacter({ japaneseRankBonus: true });
+      this.characterService.log('**Japanese Bonus**: Chosen +1 Rank (Commission)');
+    }
   }
 
   finish() {

@@ -70,14 +70,7 @@ export class DiceRollerComponent implements OnDestroy {
         this.showResult = true;
         
         // Check for result description (e.g. Event text)
-        if (this.request?.getResultDescription) {
-            // Note: Events usually use the raw roll, but some might use total. 
-            // The lookup function provided by caller should handle the logic (e.g. expecting dice sum).
-            // Usually we pass the DIce Sum (2d6) to the table.
-            this.resultDescription = this.request.getResultDescription(this.total);
-        } else {
-            this.resultDescription = '';
-        }
+        this.updateResultDescription();
 
         this.cdr.detectChanges(); // FORCE view update
     } catch (e) {
@@ -85,6 +78,24 @@ export class DiceRollerComponent implements OnDestroy {
         this.rolling = false;
         this.showResult = true; // Fallback to show whatever we have
         this.cdr.detectChanges();
+    }
+  }
+
+  updateManualTotal(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const value = parseInt(input.value, 10);
+    if (!isNaN(value)) {
+      this.total = value;
+      this.updateResultDescription();
+      this.cdr.detectChanges();
+    }
+  }
+
+  private updateResultDescription() {
+    if (this.request?.getResultDescription) {
+      this.resultDescription = this.request.getResultDescription(this.total);
+    } else {
+      this.resultDescription = '';
     }
   }
 
@@ -123,7 +134,7 @@ export class DiceRollerComponent implements OnDestroy {
           } else if (typeof item === 'object' && item !== null) {
               if (item.roll !== undefined) {
                   roll = item.roll.toString();
-                  value = item.description || item.name || '';
+                  value = item.description || item.name || item.desc || item.career || item.outcome || '';
               } else {
                   value = JSON.stringify(item);
               }

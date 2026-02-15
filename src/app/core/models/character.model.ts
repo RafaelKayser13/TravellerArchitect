@@ -30,6 +30,7 @@ export interface World {
   system: string;
   notes?: string;
   techLevel?: number; // Added TL
+  environment?: string[]; // e.g. ["Cold", "Dry", "High-G"]
 }
 
 // ... (skipping to INITIAL_CHARACTER)
@@ -60,7 +61,7 @@ export const INITIAL_CHARACTER: Character = {
   npcs: [],
   connectionsUsed: 0,
   age: 18,
-  finances: { cash: 0, pension: 0, debt: 0, medicalDebt: 0, shipShares: 0 },
+  finances: { cash: 0, pension: 0, debt: 0, medicalDebt: 0, shipShares: 0, cashRollsSpent: 0 },
   education: { university: null, academy: null },
   equipment: [],
   notes: '',
@@ -69,7 +70,12 @@ export const INITIAL_CHARACTER: Character = {
   gender: 'Male',
   psionicPotential: false,
   history: [],
-  injuries: []
+  injuries: [],
+  forcedCareer: '',
+  hasLeftHome: false,
+  isSoftPath: false,
+  ejectedCareers: [],
+  japaneseRankBonus: false
 };
 
 export interface CareerTerm {
@@ -103,6 +109,7 @@ export interface Finances {
   benefitRollsSpent?: number; // 2300AD: Spent during career (e.g. Neural Jack)
   isGambler?: boolean; // Merchant gambling event active
   benefitRollsAllocated?: { [careerName: string]: number }; // New: track rolls by career source
+  cashRollsSpent?: number; // New: Global limit of 3 cash rolls
 }
 
 export interface GeneMod {
@@ -171,11 +178,17 @@ export interface Character {
 
   // DM Tracking for cross-term effects
   nextQualificationDm?: number;
+  nextSurvivalDm?: number;
   nextAdvancementDm?: number;
   nextBenefitDm?: number;
 
   psionicPotential: boolean; // New: Tracks eligibility for Psion career
-
+  forcedCareer?: string;      // New: Mandatory next career (Draft, Prison, etc.)
+  hasLeftHome: boolean;       // 2300AD Survival Mechanic
+  isSoftPath: boolean;        // 2300AD Genetic Mod Benefit Penalty
+  ejectedCareers: string[];   // 2300AD Career Re-entry ban
+  nextTermSkillBonus?: number; // 2300AD: Neural Jack effect
+  japaneseRankBonus?: boolean; // 2300AD: Japan Bonus choice
   gender: string;
   history: string[];
   injuries: {

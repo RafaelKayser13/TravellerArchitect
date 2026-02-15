@@ -1,6 +1,6 @@
 <div class="education-container">
   <app-step-header stepSymbol="SEC" stepNumber="05" superLabel="ACADEMIC_RECORDS_SYSTEM" topLabel="ACADEMIC_HISTORY"
-    title="ACADEMIC_ENROLLMENT" subtitle="SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED TO NATIONAL DRAFT">
+    title="ACADEMIC_ENROLLMENT" subtitle="SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED DIRECTLY TO A CAREER">
   </app-step-header>
 
   <div class="education-stack" *ngIf="$any(admissionStatus) === 'NotApplied'">
@@ -75,13 +75,26 @@
         <div class="config-column" *ngIf="educationType === 'Academy'" (click)="$event.stopPropagation()">
           <div class="branch-selector">
             <span class="hud-label">[ SELECT_MIL_BRANCH ]</span>
-            <select [(ngModel)]="academyType" class="cyber-select">
-              <option value="Army">ARMY (END BRANCH)</option>
-              <option value="Marines">MARINES (END BRANCH)</option>
-              <option value="Navy">NAVY (INT BRANCH)</option>
-              <option value="Scouts">SCOUTS (INT BRANCH)</option>
-              <option value="Spaceborne">SPACEBORNE (INT BRANCH)</option>
+            <select [(ngModel)]="academyType" class="cyber-select" [class.invalid]="!getAcademyValidation(academyType).available">
+              <option value="Army" [disabled]="!getAcademyValidation('Army').available">
+                ARMY {{ !getAcademyValidation('Army').available ? '(BLOCKED)' : '(END BRANCH)' }}
+              </option>
+              <option value="Marines" [disabled]="!getAcademyValidation('Marines').available">
+                MARINES {{ !getAcademyValidation('Marines').available ? '(BLOCKED)' : '(END BRANCH)' }}
+              </option>
+              <option value="Navy" [disabled]="!getAcademyValidation('Navy').available">
+                NAVY {{ !getAcademyValidation('Navy').available ? '(BLOCKED)' : '(INT BRANCH)' }}
+              </option>
+              <option value="Scouts" [disabled]="!getAcademyValidation('Scouts').available">
+                SCOUTS {{ !getAcademyValidation('Scouts').available ? '(BLOCKED)' : '(INT BRANCH)' }}
+              </option>
+              <option value="Spaceborne" [disabled]="!getAcademyValidation('Spaceborne').available">
+                SPACEBORNE {{ !getAcademyValidation('Spaceborne').available ? '(BLOCKED)' : '(INT BRANCH)' }}
+              </option>
             </select>
+            <div class="validation-reason" *ngIf="!getAcademyValidation(academyType).available">
+               <span class="warning-icon">⚠</span> {{ getAcademyValidation(academyType).reason }}
+            </div>
           </div>
 
           <div class="admission-method">
@@ -106,33 +119,33 @@
           </div>
 
           <button class="btn-action" (click)="apply()"
-            [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'">
+            [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected' || !getAcademyValidation(academyType).available">
             INIT_MIL_APPLICATION
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Draft -->
+    <!-- Skip Education -->
     <div class="education-card draft-card" [class.selected]="educationType === 'None'" (click)="educationType = 'None'">
       <div class="card-layout">
         <div class="info-column">
           <div class="card-header">
             <span class="index">03</span>
-            <h3>National Draft</h3>
+            <h3>Direct Career Entry</h3>
           </div>
           <div class="details">
             <p><span class="label">STATUS:</span> <span class="highlight">IMMEDIATE_ENLISTMENT</span></p>
-            <p><span class="label">ACTION:</span> <span class="highlight">BYPASS EDUCATION</span></p>
+            <p><span class="label">ACTION:</span> <span class="highlight">SKIP HIGHER EDUCATION</span></p>
           </div>
         </div>
 
         <div class="config-column" *ngIf="educationType === 'None'" (click)="$event.stopPropagation()">
           <div class="draft-notice">
-            <p>Skip higher education and proceed directly to mandatory service draft.
-              This will advance the timeline to SERVICE_TERM_01.</p>
+            <p>Skip higher education and proceed directly to a Career at age 18.
+              This allows you to gain Basic Training and promotions four years earlier.</p>
           </div>
-          <button class="btn-action warn" (click)="finishStep()">PROCEED_TO_DRAFT</button>
+          <button class="btn-action warn" (click)="finishStep()">PROCEED_TO_CAREER</button>
         </div>
       </div>
     </div>
@@ -142,37 +155,79 @@
   <div class="results" *ngIf="$any(admissionStatus) !== 'NotApplied'" #resultsSection>
     <div class="status-box" [ngClass]="admissionStatus.toLowerCase()" *ngIf="$any(admissionStatus) === 'Rejected'">
       <h3>APPLICATION_REJECTED</h3>
-      <button class="btn-cyber" (click)="finishStep()" style="margin-top: 2rem;">START_A_CAREER</button>
+      <p>The academic selection board has reviewed your profile and declined admission at this time.</p>
+      <div class="hud-footer" style="margin-top: 2rem; gap: 1rem; flex-direction: row;">
+        <button class="btn-action secondary" (click)="resetAdmission()">RETRY / CHANGE_PATH</button>
+        <button class="btn-action" (click)="finishStep()">START_A_CAREER</button>
+      </div>
     </div>
 
     <!-- University Skill Selection (Step 2) -->
-    <div class="skill-selection" *ngIf="educationStep === 'UniversitySkillSelect'" #skillsSection>
-      <h3>ADM_SUCCESSFUL</h3>
-      <p>ALLOCATE SPECIALIZATION SCHEMATICS FOR ADOPTION</p>
+    <div class="skill-selection university-polish hud-module info fade-in" *ngIf="educationStep === 'UniversitySkillSelect'" #skillsSection>
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
 
-      <div class="selectors">
-        <div class="sel-group">
-          <label>MAJOR_VECTOR (LVL 1)</label>
-          <select [(ngModel)]="selectedMajorSkill">
-            <option value="" disabled>SELECT_SCHEMATIC</option>
-            <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
-          </select>
-        </div>
-        <div class="sel-group">
-          <label>MINOR_VECTOR (LVL 0)</label>
-          <select [(ngModel)]="selectedMinorSkill">
-            <option value="" disabled>SELECT_SCHEMATIC</option>
-            <option *ngFor="let s of universitySkillList" [value]="s" [disabled]="s === selectedMajorSkill">
-              {{ s }}
-            </option>
-          </select>
+      <div class="hud-box-header schematic-spec">
+        <div class="header-line"></div>
+        <span class="index">UNI_SCHEM_V04</span>
+        <h3>ADMISSION_CONFIRMED</h3>
+        <div class="status-badge pulse">AWAITING_VECTOR_DEFINITION</div>
+      </div>
+
+      <div class="hud-content">
+        <div class="vector-schematic-overlay"></div>
+        <p class="instruction">DEFINE PRIMARY AND SECONDARY SPECIALIZATION VECTORS:</p>
+
+        <div class="vector-dropdown-group">
+          <!-- Major Vector -->
+          <div class="vector-field">
+            <span class="hud-label">[ PRI_VECTOR_01 ]</span>
+            <label>MAJOR_VECTOR_DEFINITION (LVL 1)</label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="selectedMajorSkill" class="cyber-select" title="Major Vector Schematic Selector">
+                <option value="" disabled>SELECT_SCHEMATIC_VECTOR</option>
+                <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
+              </select>
+              <div class="select-indicator"></div>
+            </div>
+          </div>
+
+          <!-- Minor Vector -->
+          <div class="vector-field">
+            <span class="hud-label">[ SEC_VECTOR_02 ]</span>
+            <label>MINOR_VECTOR_DEFINITION (LVL 0)</label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="selectedMinorSkill" class="cyber-select" title="Minor Vector Schematic Selector">
+                <option value="" disabled>SELECT_SCHEMATIC_VECTOR</option>
+                <option *ngFor="let s of universitySkillList" [value]="s" [disabled]="s === selectedMajorSkill">
+                  {{ s }}
+                </option>
+              </select>
+              <div class="select-indicator"></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <button class="btn-cyber" [disabled]="!selectedMajorSkill || !selectedMinorSkill"
-        (click)="confirmUniversitySkills()">
-        FINALIZE_ENROLLMENT
-      </button>
+      <div class="hud-footer tactical">
+        <div class="readout-group">
+          <div class="data-readout">
+            <span class="label">MAJOR:</span>
+            <span class="val">{{ selectedMajorSkill || 'N/A' }}</span>
+          </div>
+          <div class="data-readout">
+            <span class="label">MINOR:</span>
+            <span class="val">{{ selectedMinorSkill || 'N/A' }}</span>
+          </div>
+        </div>
+        <button class="btn-action elite" [disabled]="!selectedMajorSkill || !selectedMinorSkill"
+          (click)="confirmUniversitySkills()">
+          <span class="primary">EXEC_ENROLLMENT</span>
+          <span class="secondary">INITIALIZE_ACADEMIC_PROTOCOL</span>
+        </button>
+      </div>
     </div>
 
     <!-- Studying State -->
@@ -185,29 +240,70 @@
     </div>
 
     <!-- Academy Graduation Skill Selection -->
-    <div class="skill-selection" *ngIf="educationStep === 'AcademySkillSelect'">
-      <h3>GRADUATION_COMPLETE</h3>
-      <p>SELECT 3 SPECIALIST TRACE_SKILLS (SET TO LVL 1)</p>
+    <div class="skill-selection-module academy-polish hud-module info fade-in" *ngIf="educationStep === 'AcademySkillSelect'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+      
+      <div class="hud-box-header military-spec">
+        <div class="scan-line"></div>
+        <span class="index">MIL_SPEC_802</span>
+        <h3>ACADEMY_HONORS_GRADUATION</h3>
+        <div class="status-badge pulse">AWAITING_SPECIALIZATION_INPUT</div>
+      </div>
 
-      <div class="skill-grid">
-        <div class="skill-opt" *ngFor="let skill of availableAcademySkills" [class.selected]="
-            selectedAcademySkills[0] === skill ||
-            selectedAcademySkills[1] === skill ||
-            selectedAcademySkills[2] === skill
-          " (click)="toggleAcademySkill(skill)">
-          {{ skill }}
+      <div class="hud-content">
+        <div class="schematic-overlay"></div>
+        <p class="instruction">IDENTIFIED CAPABILITIES DETECTED. ALLOCATE 3 TRACE_SKILLS TO ACTIVE PROTOCOL:</p>
+
+        <div class="skill-blueprint-grid">
+          <div class="skill-chip" *ngFor="let skill of availableAcademySkills" 
+            [class.selected]="isAcademySkillSelected(skill)" 
+            (click)="toggleAcademySkill(skill)">
+            <div class="chip-inner">
+              <div class="chip-socket"></div>
+              <span class="skill-name">{{ skill }}</span>
+              <div class="status-led"></div>
+            </div>
+            <div class="chip-highlight"></div>
+          </div>
         </div>
       </div>
 
-      <button class="btn-cyber" [disabled]="(selectedAcademySkills | keyvalue).length !== 3"
-        (click)="confirmAcademyGraduation()">
-        CONFIRM_SPECIALIZATION
-      </button>
+      <div class="hud-footer tactical">
+        <div class="data-readout">
+          <span class="label">SYST_LOAD:</span>
+          <div class="load-bar">
+            <div class="fill" [style.width.%]="((selectedAcademySkills | keyvalue).length / 3) * 100"></div>
+          </div>
+          <span class="val">{{ (selectedAcademySkills | keyvalue).length }} / 3</span>
+        </div>
+        <button class="btn-action elite" [disabled]="(selectedAcademySkills | keyvalue).length !== 3"
+          (click)="confirmAcademyGraduation()">
+          <span class="primary">ENGAGE_PROTOCOL</span>
+          <span class="secondary">FINALIZE_GRADUATION_RECORD</span>
+        </button>
+      </div>
     </div>
 
     <div *ngIf="educationStep === 'Finished' && graduationStatus !== 'Pending'" class="graduation-result">
-      <h3>{{ graduationStatus === 'Failed' ? 'GRADUATION_FAILED' : 'GRADUATION_CONFIRMED' }}</h3>
-      <p *ngIf="graduationStatus === 'Honors'">[ HONORS_DISTINCTION_DETECTED ]</p>
+      <div class="graduation-visual-overlay">
+        <div *ngIf="educationType === 'University' && graduationStatus !== 'Failed'" class="wireframe-container active">
+          <img src="assets/images/ui/wireframe_brain.png" alt="Brain Schematic" class="wireframe-asset brain">
+        </div>
+        <div *ngIf="educationType === 'Academy' && graduationStatus !== 'Failed'" class="wireframe-container active">
+          <img src="assets/images/ui/wireframe_star.png" alt="Star Schematic" class="wireframe-asset star">
+        </div>
+        <div *ngIf="graduationStatus === 'Honors'" class="wireframe-container active honors">
+          <img src="assets/images/ui/wireframe_medal.png" alt="Medal Schematic" class="wireframe-asset medal">
+        </div>
+      </div>
+
+      <div class="result-text-block">
+        <h3>{{ graduationStatus === 'Failed' ? 'GRADUATION_FAILED' : 'GRADUATION_CONFIRMED' }}</h3>
+        <p *ngIf="graduationStatus === 'Honors'" class="honors-text">[ HONORS_DISTINCTION_DETECTED ]</p>
+      </div>
 
       <!-- Special Redirections -->
       <div class="redirection-notice" *ngIf="expelledToPrison">

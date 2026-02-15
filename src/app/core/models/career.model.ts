@@ -15,7 +15,7 @@ export interface CareerMishap {
 
 // --- Typed Event Effect System ---
 
-export type NpcType = 'ally' | 'contact' | 'rival' | 'enemy';
+export type NpcType = 'ally' | 'contact' | 'rival' | 'enemy' | 'patron';
 
 export interface CareerEventEffect {
     type: 'life-event'       // Redirect to Life Events table
@@ -44,7 +44,8 @@ export interface CareerEventEffect {
     | 'parole-mod'
     | 'trait-gain'       // Add permanent note/trait to history
     | 'npc-note'         // Add status/note to an NPC
-    | 'narrative';       // Pure narrative event with history log
+    | 'narrative'        // Pure narrative event with history log
+    | 'neural-jack';     // 2300AD: Neural Jack opportunity
     // Conditional fields based on type
     skills?: string[];       // For 'skill-choice': list of options
     skill?: string;          // For 'skill-gain': specific skill name
@@ -91,9 +92,11 @@ export interface CareerDefinition {
     advancedEducation: string[];
     advancedEducationMinEdu?: number; // Default 8, some careers require 10
     officerSkills?: string[];
+    minAttributes?: { [stat: string]: number }; // New: Career requirement
     officerRanks?: Rank[];
     musteringOutCash: number[];
     musteringOutBenefits: string[];
+    traits?: string[]; // New: Career-specific traits (e.g. 0-G DNAM for Spaceborne)
 }
 
 // --- Life Events & Injury Models ---
@@ -132,5 +135,6 @@ export interface NPC {
     notes: string;        // e.g. "Foiled their smuggling ring"
     quirk?: string;       // From D66 quirk table
     role?: string;        // From D66 role table
+    nature?: string;      // 2300AD: 1D6 nature table
 }
 

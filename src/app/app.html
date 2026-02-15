@@ -10,7 +10,27 @@
       <div class="v-readout">v2.1.0_PROTOTYPE</div>
     </div>
     <nav>
-      <!-- Future Nav Items -->
+      <div class="header-actions">
+        <button class="system-menu-trigger" (click)="toggleSystemMenu()">
+          <span>SYSTEM_01</span>
+          <i class="icon">▤</i>
+        </button>
+        
+        <div class="system-dropdown" *ngIf="showSystemMenu()">
+          <div class="menu-item" (click)="toggleDebugMode()" [class.active]="diceService.debugMode()">
+            <i class="icon">{{ diceService.debugMode() ? '✅' : '⬜' }}</i>
+            <span>DEBUG_MODE</span>
+          </div>
+          <div class="menu-item" (click)="openDebug()">
+            <i class="icon">🐞</i>
+            <span>DEBUG_CONSOLE</span>
+          </div>
+          <div class="menu-item" (click)="toggleSystemMenu()">
+            <i class="icon">⚙</i>
+            <span>PREFERENCES</span>
+          </div>
+        </div>
+      </div>
     </nav>
   </header>
 
