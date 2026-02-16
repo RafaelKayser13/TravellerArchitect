@@ -1,0 +1,487 @@
+{
+  "id": "citizen",
+  "name": "Citizen",
+  "description": "Individuals serving in a corporation, bureaucracy, or industry.",
+  "qualification": {
+    "stat": "EDU",
+    "target": 5,
+    "minAttributes": { "edu": 5 }
+  },
+  "skills": {
+    "personal": ["EDU +1", "INT +1", "Carouse", "Gambler", "Drive (any)", "Jack-of-all-Trades"],
+    "service": ["Drive (any)", "Flyer (any)", "Streetwise", "Melee (any)", "Steward", "Profession (any)"],
+    "advanced": ["Art (any)", "Advocate", "Diplomat", "Language (any)", "Electronics (computers)", "Medic"]
+  },
+  "advancedEducationMinEdu": 10,
+  "assignments": [
+    {
+      "name": "Corporate",
+      "survival": { "stat": "SOC", "target": 6 },
+      "advancement": { "stat": "INT", "target": 6 },
+      "skills": ["Advocate", "Admin", "Broker", "Electronics (computers)", "Diplomat", "Leadership"],
+      "ranks": [
+        { "level": 0, "title": "Citizen" },
+        { "level": 1, "title": "Employee" },
+        { "level": 2, "title": "Manager", "bonus": { "skill": "Admin", "value": 1 } },
+        { "level": 3, "title": "Senior Manager" },
+        { "level": 4, "title": "Senior Manager", "bonus": { "skill": "Advocate", "value": 1 } },
+        { "level": 5, "title": "Executive" },
+        { "level": 6, "title": "Director", "bonus": { "stat": "SOC", "value": 1 } }
+      ]
+    },
+    {
+      "name": "Worker",
+      "survival": { "stat": "END", "target": 4 },
+      "advancement": { "stat": "EDU", "target": 8 },
+      "skills": ["Drive (any)", "Mechanic", "Electronics (any)", "Engineer (any)", "Profession (any)", "Science (any)"],
+      "ranks": [
+        { "level": 0, "title": "Worker" },
+        { "level": 1, "title": "Worker" },
+        { "level": 2, "title": "Technician", "bonus": { "skill": "Profession (any)", "value": 1 } },
+        { "level": 3, "title": "Technician" },
+        { "level": 4, "title": "Craftsman", "bonus": { "skill": "Mechanic", "value": 1 } },
+        { "level": 5, "title": "Senior Craftsman" },
+        { "level": 6, "title": "Master Technician", "bonus": { "skill": "Engineer (any)", "value": 1 } }
+      ]
+    },
+    {
+      "name": "Colonist",
+      "survival": { "stat": "INT", "target": 7 },
+      "advancement": { "stat": "EDU", "target": 5 },
+      "skills": ["Animals (any)", "Athletics (any)", "Jack-of-all-Trades", "Drive (any)", "Survival", "Recon"],
+      "ranks": [
+        { "level": 0, "title": "Citizen" },
+        { "level": 1, "title": "Citizen" },
+        { "level": 2, "title": "Settler", "bonus": { "skill": "Survival", "value": 1 } },
+        { "level": 3, "title": "Settler" },
+        { "level": 4, "title": "Explorer", "bonus": { "skill": "Navigation", "value": 1 } },
+        { "level": 5, "title": "Explorer" },
+        { "level": 6, "title": "Senior Colonist", "bonus": { "skill": "Gun Combat (any)", "value": 1 } }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Roll on the Mishap table, but you are not ejected from this career.",
+      "gameEvent": {
+        "id": "citizen_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
+          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "Political upheaval.",
+      "gameEvent": {
+        "id": "citizen_event_3",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Political Upheaval",
+          "description": "Your home world or department is racked by political turmoil.",
+          "options": [
+            { "label": "Advocate (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "citizen_event_3_pass_advocate", "onFail": "citizen_event_3_fail" }] },
+            { "label": "Persuade (SOC 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "SOC", "checkTarget": 8, "onPass": "citizen_event_3_pass_persuade", "onFail": "citizen_event_3_fail" }] },
+            { "label": "Explosives (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "citizen_event_3_pass_explosives", "onFail": "citizen_event_3_fail" }] },
+            { "label": "Streetwise (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "citizen_event_3_pass_streetwise", "onFail": "citizen_event_3_fail" }] }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "citizen_event_3_pass_advocate",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Political Success",
+            "description": "You navigate the turmoil successfully and gain influence.",
+            "options": [{ "label": "Gain Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }, { "type": "SKILL_MOD", "target": "Advocate", "value": 1 }] }]
+          }
+        },
+        {
+          "id": "citizen_event_3_pass_persuade",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Political Success",
+            "description": "You navigate the turmoil successfully and gain influence.",
+            "options": [{ "label": "Gain Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }, { "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] }]
+          }
+        },
+        {
+          "id": "citizen_event_3_pass_explosives",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Political Success",
+            "description": "You navigate the turmoil successfully and gain influence.",
+            "options": [{ "label": "Gain Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }, { "type": "SKILL_MOD", "target": "Explosives", "value": 1 }] }]
+          }
+        },
+        {
+          "id": "citizen_event_3_pass_streetwise",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Political Success",
+            "description": "You navigate the turmoil successfully and gain influence.",
+            "options": [{ "label": "Gain Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }, { "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] }]
+          }
+        },
+        {
+          "id": "citizen_event_3_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Political Failure",
+            "description": "You are on the losing side of the upheaval.",
+            "options": [{ "label": "Accept Exile", "effects": [{ "type": "RESOURCE_MOD", "target": "next_survival_dm", "value": -2 }, { "type": "EJECT_CAREER", "note": "Political Failure" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Advocate", "Persuade", "Explosives", "Streetwise"], "onSuccess": [{ "type": "advancement-dm", "value": 2 }, { "type": "any-skill-up" }], "onFailure": [{ "type": "advancement-dm", "value": -2, "note": "Applied to next Survival roll" }] }]
+    },
+    {
+      "roll": 4,
+      "description": "Vehicle hobby.",
+      "gameEvent": {
+        "id": "citizen_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Vehicle Hobby",
+          "description": "You spend your spare time working on vehicles.",
+          "options": [
+            { "label": "Mechanic 1", "effects": [{ "type": "SKILL_MOD", "target": "Mechanic", "value": 1 }] },
+            { "label": "Drive 1", "effects": [{ "type": "SKILL_MOD", "target": "Drive", "value": 1 }] },
+            { "label": "Electronics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (any)", "value": 1 }] },
+            { "label": "Flyer (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Flyer", "value": 1 }] },
+            { "label": "Engineer (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Mechanic", "Drive", "Electronics", "Flyer", "Engineer"] }]
+    },
+    {
+      "roll": 5,
+      "description": "Business expands. Gain DM+1 to any one Benefit roll.",
+      "gameEvent": {
+        "id": "citizen_event_5",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Business Expands",
+          "description": "Your business ventures are successful.",
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-mod", "value": 1 }]
+    },
+    {
+      "roll": 6,
+      "description": "Advanced Training. Roll EDU 10+. Success: gain any skill at level 1.",
+      "gameEvent": {
+        "id": "citizen_event_6",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Advanced Training",
+          "description": "You have the opportunity for specialized training.",
+          "options": [{
+            "label": "Attempt Training (EDU 10+)",
+            "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 10, "onPass": "citizen_event_6_pass", "onFail": "citizen_event_6_fail" }]
+          }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "citizen_event_6_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Successful",
+            "description": "You master a new subject.",
+            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+          }
+        },
+        {
+          "id": "citizen_event_6_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "The material is too difficult.",
+            "options": [{ "label": "Continue", "effects": [] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 10, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }], "onFailure": [] }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "citizen_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "Illegal profit opportunity.",
+      "gameEvent": {
+        "id": "citizen_event_8",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Illegal Profit",
+          "description": "You are offered an opportunity to make some extra credits under the table.",
+          "options": [
+            {
+              "label": "Accept (Streetwise 1)",
+              "effects": [
+                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 },
+                { "type": "SKILL_MOD", "target": "Streetwise", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Shady Associate" } }
+              ]
+            },
+            {
+              "label": "Accept (Deception 1)",
+              "effects": [
+                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 },
+                { "type": "SKILL_MOD", "target": "Deception", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Shady Associate" } }
+              ]
+            },
+            {
+              "label": "Refuse",
+              "effects": []
+            }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Illegal Profit: Accept vs Refuse" }]
+    },
+    {
+      "roll": 9,
+      "description": "Rewarded for diligence. Gain DM+2 to your next Advancement roll.",
+      "gameEvent": {
+        "id": "citizen_event_9",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Diligence Rewarded",
+          "description": "Your hard work is noticed by your superiors.",
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+        }
+      },
+      "effects": [{ "type": "advancement-dm", "value": 2 }]
+    },
+    {
+      "roll": 10,
+      "description": "Technical experience. Increase Electronics or Engineer by +1 level.",
+      "gameEvent": {
+        "id": "citizen_event_10",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Technical Experience",
+          "description": "You spend time working on technical projects.",
+          "options": [
+            { "label": "Electronics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (any)", "value": 1 }] },
+            { "label": "Engineer (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (any)", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Electronics", "Engineer"] }]
+    },
+    {
+      "roll": 11,
+      "description": "Befriend a superior. Gain an Ally.",
+      "gameEvent": {
+        "id": "citizen_event_11",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Helpful Ally",
+          "description": "You form a close relationship with a superior.",
+          "options": [
+            {
+              "label": "Learn Diplomacy (Diplomat 1)",
+              "effects": [
+                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Superior" } },
+                { "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }
+              ]
+            },
+            {
+              "label": "Career Advice (Advancement DM+4)",
+              "effects": [
+                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Superior" } },
+                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "choice", "note": "Friend in High Place: Diplomat 1 OR DM+4 Advancement" }]
+    },
+    {
+      "roll": 12,
+      "description": "Rise to power. You are automatically promoted.",
+      "gameEvent": {
+        "id": "citizen_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Rise to Power",
+          "description": "You are promoted to a position of significant responsibility.",
+          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Rise to Power" }] }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "citizen_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "A serious accident at work or home leaves you severely injured.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    },
+    {
+      "roll": 2,
+      "description": "Life ruined by a criminal gang. Gain an Enemy and lose all Benefit rolls.",
+      "gameEvent": {
+        "id": "citizen_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Ruined",
+          "description": "A criminal gang targets you, ruining your business and reputation.",
+          "options": [{
+            "label": "Accept Losses",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Criminal Gang" } },
+              { "type": "LOSE_BENEFIT", "value": 100 },
+              { "type": "EJECT_CAREER", "note": "Ruined by Gang" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "lose-benefit" }]
+    },
+    {
+      "roll": 3,
+      "description": "Hard times caused by lack of work. Reduce SOC by 1.",
+      "gameEvent": {
+        "id": "citizen_mishap_3",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Struggling",
+          "description": "Economic changes leave you without work for an extended period, damaging your social standing.",
+          "options": [{
+            "label": "Endure",
+            "effects": [
+              { "type": "STAT_MOD", "target": "SOC", "value": -1 },
+              { "type": "EJECT_CAREER", "note": "Long-term Unemployment" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }]
+    },
+    {
+      "roll": 4,
+      "description": "Co-worker betrays you. One Contact becomes a Rival.",
+      "gameEvent": {
+        "id": "citizen_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Betrayal",
+          "description": "A co-worker betrays you to get ahead, and you are forced to leave.",
+          "options": [{
+            "label": "Leave",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Former Co-worker" } },
+              { "type": "EJECT_CAREER", "note": "Betrayed by Co-worker" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc-note", "note": "Betrayed me (now a Rival)" }]
+    },
+    {
+      "roll": 5,
+      "description": "You are bankrupted. Lose all Benefit rolls.",
+      "gameEvent": {
+        "id": "citizen_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Bankruptcy",
+          "description": "Poor investments or bad luck leave you bankrupted.",
+          "options": [{
+            "label": "Accept Bankruptcy",
+            "effects": [
+              { "type": "LOSE_BENEFIT", "value": 100 },
+              { "type": "EJECT_CAREER", "note": "Bankruptcy" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "lose-benefit" }]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "citizen_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured in an accident.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [1000, 5000, 10000, 10000, 10000, 50000, 100000],
+    "benefits": ["Ship Share", "Ally", "INT +1", "EDU +1", "Ship Share", "Weapon", "Two Ship Shares"]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 50,
+      "range8to11": 75,
+      "above12": 100
+    }
+  }
+}

@@ -1,0 +1,440 @@
+{
+  "id": "entertainer",
+  "name": "Entertainer",
+  "description": "Artists, journalists, and performers who create, report, and entertain.",
+  "qualification": {
+    "stat": "DEX or INT",
+    "target": 5,
+    "minAttributes": { "dex": 5, "int": 5 }
+  },
+  "skills": {
+    "personal": ["DEX +1", "INT +1", "SOC +1", "Language (any)", "Carouse", "Jack-of-all-Trades"],
+    "service": ["Art (any)", "Carouse", "Deception", "Drive (any)", "Persuade", "Steward"],
+    "advanced": ["Advocate", "Broker", "Deception", "Science (any)", "Streetwise", "Diplomat"]
+  },
+  "advancedEducationMinEdu": 10,
+  "assignments": [
+    {
+      "name": "Artist",
+      "survival": { "stat": "SOC", "target": 6 },
+      "advancement": { "stat": "INT", "target": 6 },
+      "skills": ["Art (any)", "Carouse", "Electronics (computers)", "Gambler", "Persuade", "Profession (any)"],
+      "ranks": [
+        { "level": 0, "title": "Artist" },
+        { "level": 1, "title": "Artist", "bonus": { "skill": "Art (any)", "value": 1 } },
+        { "level": 2, "title": "Artist" },
+        { "level": 3, "title": "Artist", "bonus": { "skill": "Investigate", "value": 1 } },
+        { "level": 4, "title": "Artist" },
+        { "level": 5, "title": "Famous Artist", "bonus": { "stat": "SOC", "value": 1 } },
+        { "level": 6, "title": "Artist" }
+      ]
+    },
+    {
+      "name": "Journalist",
+      "survival": { "stat": "EDU", "target": 7 },
+      "advancement": { "stat": "INT", "target": 5 },
+      "skills": ["Art (any)", "Electronics (any)", "Drive (any)", "Investigate", "Recon", "Streetwise"],
+      "ranks": [
+        { "level": 0, "title": "Journalist" },
+        { "level": 1, "title": "Freelancer", "bonus": { "skill": "Electronics (comms)", "value": 1 } },
+        { "level": 2, "title": "Staff Writer", "bonus": { "skill": "Investigate", "value": 1 } },
+        { "level": 3, "title": "Journalist" },
+        { "level": 4, "title": "Correspondent", "bonus": { "skill": "Persuade", "value": 1 } },
+        { "level": 5, "title": "Journalist" },
+        { "level": 6, "title": "Senior Correspondent", "bonus": { "stat": "SOC", "value": 1 } }
+      ]
+    },
+    {
+      "name": "Performer",
+      "survival": { "stat": "INT", "target": 5 },
+      "advancement": { "stat": "DEX", "target": 7 },
+      "skills": ["Art (any)", "Athletics (any)", "Carouse", "Deception", "Stealth", "Streetwise"],
+      "ranks": [
+        { "level": 0, "title": "Performer" },
+        { "level": 1, "title": "Performer", "bonus": { "stat": "DEX", "value": 1 } },
+        { "level": 2, "title": "Performer" },
+        { "level": 3, "title": "Performer", "bonus": { "stat": "STR", "value": 1 } },
+        { "level": 4, "title": "Performer" },
+        { "level": 5, "title": "Famous Performer", "bonus": { "stat": "SOC", "value": 1 } },
+        { "level": 6, "title": "Performer" }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Roll on the Mishap table, but you are not ejected from this career.",
+      "gameEvent": {
+        "id": "entertainer_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
+          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "Controversial event.",
+      "gameEvent": {
+        "id": "entertainer_event_3",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Controversial Event",
+          "description": "You are involved in a performance or event that generates significant controversy.",
+          "options": [
+            { "label": "Art (any) (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "entertainer_event_3_pass", "onFail": "entertainer_event_3_fail" }] },
+            { "label": "Investigate (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "entertainer_event_3_pass", "onFail": "entertainer_event_3_fail" }] }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "entertainer_event_3_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Successful Controversy",
+            "description": "The controversy works in your favor, increasing your public profile.",
+            "options": [{ "label": "Gain Recognition", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }] }]
+          }
+        },
+        {
+          "id": "entertainer_event_3_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Backfire",
+            "description": "The controversy damages your reputation.",
+            "options": [{ "label": "Accept Infamy", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Art (any)", "Investigate"], "onSuccess": [{ "type": "stat-bonus", "stat": "SOC", "value": 1 }], "onFailure": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }] }]
+    },
+    {
+      "roll": 4,
+      "description": "Celebrity circles.",
+      "gameEvent": {
+        "id": "entertainer_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Celebrity Circles",
+          "description": "You spend time with the rich and famous.",
+          "options": [
+            { "label": "Gain Contact", "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Celebrity" } }] },
+            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] },
+            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Celebrity Circles: Skill or Contact" }]
+    },
+    {
+      "roll": 5,
+      "description": "Popular work. Gain DM+1 to any Benefit roll.",
+      "gameEvent": {
+        "id": "entertainer_event_5",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Popular Work",
+          "description": "One of your works becomes a major hit.",
+          "options": [{ "label": "Accept Profit", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-dm", "value": 1 }]
+    },
+    {
+      "roll": 6,
+      "description": "Patron. Gain an Ally and DM+2 to next Advancement roll.",
+      "gameEvent": {
+        "id": "entertainer_event_6",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Patron",
+          "description": "A wealthy patron takes an interest in your career.",
+          "options": [{
+            "label": "Accept Support",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "ally", "note": "Wealthy Patron" } },
+              { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "advancement-dm", "value": 2 }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "entertainer_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "Celebrity circles.",
+      "gameEvent": {
+        "id": "entertainer_event_8",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Celebrity Circles",
+          "description": "You spend time with the rich and famous.",
+          "options": [
+            { "label": "Gain Contact", "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Celebrity" } }] },
+            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] },
+            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Celebrity Circles", "skills": ["Skill", "Contact"] }]
+    },
+    {
+      "roll": 9,
+      "description": "Political criticism.",
+      "gameEvent": {
+        "id": "entertainer_event_9",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Political Criticism",
+          "description": "You have the opportunity to use your platform to criticize the government or a powerful organization.",
+          "options": [
+            {
+              "label": "Speak Out (SOC+1)",
+              "effects": [
+                { "type": "STAT_MOD", "target": "SOC", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Offended official/agency" } }
+              ]
+            },
+            {
+              "label": "Stay Quiet",
+              "effects": []
+            }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Political Criticism", "skills": ["Criticize", "Refuse"] }]
+    },
+    {
+      "roll": 10,
+      "description": "Tour.",
+      "gameEvent": {
+        "id": "entertainer_event_10",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Tour",
+          "description": "You go on a professional tour.",
+          "options": [
+            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }, { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] },
+            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }, { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] },
+            { "label": "Language (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Language (any)", "value": 1 }, { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Carouse", "Persuade", "Language (any)"] }, { "type": "benefit-dm", "value": 1 }]
+    },
+    {
+      "roll": 11,
+      "description": "Celebrity circles.",
+      "gameEvent": {
+        "id": "entertainer_event_11",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Celebrity Circles",
+          "description": "You spend time with the rich and famous.",
+          "options": [
+            { "label": "Gain Contact", "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Celebrity" } }] },
+            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] },
+            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Celebrity Circles", "skills": ["Skill", "Contact"] }]
+    },
+    {
+      "roll": 12,
+      "description": "Betrayal.",
+      "gameEvent": {
+        "id": "entertainer_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Betrayal and Alliance",
+          "description": "You are betrayed by an associate, but find a new and more powerful ally in the process.",
+          "options": [{
+            "label": "Accept the Change",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Betrayer" } },
+              { "type": "ADD_NPC", "value": { "type": "ally", "note": "New Supporter" } }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Betrayal", "skills": ["Existing Contact", "New Rival"] }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Scandal. Ejected.",
+      "gameEvent": {
+        "id": "entertainer_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Scandal",
+          "description": "A major scandal erupts, destroying your public image and forcing you out of the spotlight.",
+          "options": [{
+            "label": "Leave Profession",
+            "effects": [
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Major Scandal" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "forced-out" }, { "type": "lose-benefit" }]
+    },
+    {
+      "roll": 2,
+      "description": "Bad publicity. Reduce SOC by 1.",
+      "gameEvent": {
+        "id": "entertainer_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Bad Publicity",
+          "description": "A series of unfortunate events or comments leads to a PR nightmare.",
+          "options": [{
+            "label": "Accept Fallout",
+            "effects": [
+              { "type": "STAT_MOD", "target": "SOC", "value": -1 },
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Bad Publicity" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }, { "type": "forced-out" }, { "type": "lose-benefit" }]
+    },
+    {
+      "roll": 3,
+      "description": "Betrayed. Peer becomes Rival. Ejected.",
+      "gameEvent": {
+        "id": "entertainer_mishap_3",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Systemic Betrayal",
+          "description": "A close peer or associate betrays you to steal a role or contract.",
+          "options": [{
+            "label": "Leave Industry",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Former Peer" } },
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Industry Betrayal" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Betrayal", "skills": ["Existing Contact", "New Rival"] }, { "type": "forced-out" }, { "type": "lose-benefit" }]
+    },
+    {
+      "roll": 4,
+      "description": "Censorship. Ejected.",
+      "gameEvent": {
+        "id": "entertainer_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Censored",
+          "description": "Your work is deemed too controversial or dangerous, and the authorities or industry blackball you.",
+          "options": [{
+            "label": "Go Quiet",
+            "effects": [
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Censorship" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "forced-out" }, { "type": "lose-benefit" }]
+    },
+    {
+      "roll": 5,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "entertainer_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured during a performance or tour.",
+          "options": [{
+            "label": "Roll Injury",
+            "effects": [
+              { "type": "TRIGGER_EVENT", "value": "injury_roll" },
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Medical Discharge" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "injury" }, { "type": "forced-out" }, { "type": "lose-benefit" }]
+    },
+    {
+      "roll": 6,
+      "description": "Bad publicity. Reduce SOC by 1. Ejected.",
+      "gameEvent": {
+        "id": "entertainer_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Career Destruction",
+          "description": "A concerted effort by your enemies or the press destroys your social standing.",
+          "options": [{
+            "label": "Accept Fate",
+            "effects": [
+              { "type": "STAT_MOD", "target": "SOC", "value": -1 },
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Career Destroyed" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }, { "type": "forced-out" }, { "type": "lose-benefit" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [0, 0, 10000, 10000, 40000, 40000, 80000],
+    "benefits": ["Contact", "SOC +1", "Contact", "INT +1", "EDU +1", "Two Ship Shares", "Ship Share"]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 50,
+      "range8to11": 75,
+      "above12": 100
+    }
+  }
+}
