@@ -1,27 +1,15 @@
 <div class="dice-overlay" *ngIf="request">
-    <div class="dice-container" [class.success]="showResult && isSuccess"
-        [class.fail]="showResult && !isSuccess && request.target > 0">
-        <!-- HUD Decorators -->
-        <div class="hud-bracket tl"></div>
-        <div class="hud-bracket tr"></div>
-        <div class="hud-bracket bl"></div>
-        <div class="hud-bracket br"></div>
-        <div class="scan-line" *ngIf="rolling"></div>
+    <app-hud-window
+        [isOpen]="true"
+        [title]="request.reason"
+        [width]="'700px'"
+        type="standard"
+        readoutTL="SIG_LOCK: STABLE"
+        [readoutTR]="'PROC_ID: ' + (Math.random() * 99999).toFixed(0)"
+        readoutBL="VOLTAGE: 4.2V"
+        readoutBR="PARITY: PASS">
 
-        <div class="digital-readouts">
-            <div class="readout top-left">SIG_LOCK: STABLE</div>
-            <div class="readout top-right">PROC_ID: {{ (Math.random() * 99999).toFixed(0) }}</div>
-            <div class="readout bottom-left">VOLTAGE_REF: 4.2V</div>
-            <div class="readout bottom-right">PARITY_CHECK: PASS</div>
-        </div>
-
-        <!-- NEW HEADER -->
-        <div class="hud-main-header">
-            <div class="header-line"></div>
-            <h1>{{ request.reason }}</h1>
-            <div class="header-line"></div>
-        </div>
-
+        <!-- Two Column Content -->
         <div class="hud-dual-wrapper">
             <!-- Left: Input/Stats & Table Overlay -->
             <div class="hud-column input-sec">
@@ -155,11 +143,13 @@
             </div>
         </div>
 
-        <!-- NEW FOOTER -->
-        <div class="hud-main-footer" *ngIf="showResult">
-            <div class="footer-decor"></div>
-            <button class="btn-continue" (click)="continue()">NEXT_PROTOCOL</button>
-            <div class="footer-decor"></div>
-        </div>
-    </div>
+        <ng-container footer>
+            <div class="action-wrapper" *ngIf="showResult">
+                <button class="btn-continue" (click)="continue()">
+                    [ NEXT_PROTOCOL ]
+                </button>
+            </div>
+        </ng-container>
+
+    </app-hud-window>
 </div>

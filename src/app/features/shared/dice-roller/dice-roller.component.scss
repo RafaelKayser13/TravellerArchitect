@@ -1,108 +1,14 @@
+/* DIce Roller Styles - Refactored to use HudWindowComponent */
+
+/* .dice-overlay is now just a container for positioning if needed, 
+   but HudWindow handles fixed positioning. We can probably remove it 
+   or keep it as a transparent pass-through if the component host needs it. 
+   For now, we remove the background/backdrop-filter as HudWindow has it. */
 .dice-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.85);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* HudWindow handles the overlay background */
 }
 
-.dice-container {
-    background: var(--bg-panel);
-    border: 1px solid rgba(0, 243, 255, 0.2);
-    padding: 1.2rem;
-    position: relative;
-    max-width: 750px;
-    width: 90%;
-    overflow: hidden;
-    clip-path: polygon(0 0,
-            calc(100% - 40px) 0,
-            100% 40px,
-            100% 100%,
-            40px 100%,
-            0 calc(100% - 40px));
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-    display: flex;
-    flex-direction: column;
-    animation: popupIn 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-
-    &.success {
-        border-color: var(--neon-green);
-        box-shadow: 0 0 40px var(--neon-green-glow);
-    }
-
-    &.fail {
-        border-color: var(--power-red);
-        box-shadow: 0 0 40px var(--power-red-glow);
-    }
-}
-
-/* HEADER STYLE */
-.hud-main-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
-    margin-bottom: 0.8rem;
-
-    h1 {
-        font-family: var(--font-header);
-        font-size: 1.1rem;
-        color: #fff;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        white-space: nowrap;
-        margin: 0;
-    }
-
-    .header-line {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(to right, transparent, rgba(0, 243, 255, 0.3), transparent);
-    }
-}
-
-/* FOOTER STYLE */
-.hud-main-footer {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
-    margin-top: 0.8rem;
-
-    .btn-continue {
-        flex: 0 0 300px;
-        margin: 0 auto;
-        padding: 0.6rem;
-        background: var(--neon-cyan);
-        color: var(--bg-pitch);
-        border: none;
-        font-family: var(--font-header);
-        font-weight: 900;
-        font-size: 0.9rem;
-        letter-spacing: 4px;
-        cursor: pointer;
-        clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-        transition: all 0.2s;
-
-        &:hover {
-            background: #fff;
-            transform: scale(1.02);
-        }
-    }
-
-    .footer-decor {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(to right, transparent, rgba(0, 243, 255, 0.3), transparent);
-    }
-}
+/* CONTENT STYLES (Projected into HudWindow) */
 
 .hud-dual-wrapper {
     display: flex;
@@ -669,96 +575,31 @@
     }
 }
 
-.hud-bracket {
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    border: 1.5px solid var(--neon-cyan);
-    opacity: 0.4;
-    pointer-events: none;
-
-    &.tl {
-        top: 10px;
-        left: 10px;
-        border-right: none;
-        border-bottom: none;
-    }
-
-    &.tr {
-        top: 10px;
-        right: 10px;
-        border-left: none;
-        border-bottom: none;
-    }
-
-    &.bl {
-        bottom: 10px;
-        left: 10px;
-        border-right: none;
-        border-top: none;
-    }
-
-    &.br {
-        bottom: 10px;
-        right: 10px;
-        border-left: none;
-        border-top: none;
-    }
-}
-
-.scan-line {
-    position: absolute;
-    top: 0;
-    left: 0;
+/* Action Button Style */
+.action-wrapper {
+    display: flex;
+    justify-content: center;
     width: 100%;
-    height: 1px;
+}
+
+.btn-continue {
+    flex: 0 0 300px;
+    margin: 0 auto;
+    padding: 0.6rem;
     background: var(--neon-cyan);
-    box-shadow: 0 0 10px var(--neon-cyan);
-    opacity: 0.2;
-    z-index: 5;
-    pointer-events: none;
-    animation: scanMove 3s infinite linear;
-}
+    color: var(--bg-pitch);
+    border: none;
+    font-family: var(--font-header);
+    font-weight: 900;
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    cursor: pointer;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    transition: all 0.2s;
 
-.digital-readouts {
-    pointer-events: none;
-
-    .readout {
-        position: absolute;
-        font-family: var(--font-mono);
-        font-size: 0.4rem;
-        color: var(--neon-cyan);
-        opacity: 0.2;
-
-        &.top-left {
-            top: 25px;
-            left: 40px;
-        }
-
-        &.top-right {
-            top: 25px;
-            right: 60px;
-        }
-
-        &.bottom-left {
-            bottom: 25px;
-            left: 40px;
-        }
-
-        &.bottom-right {
-            bottom: 10px;
-            right: 60px;
-        }
-    }
-}
-
-@keyframes scanMove {
-    0% {
-        transform: translateY(0);
-    }
-
-    100% {
-        transform: translateY(100vh);
+    &:hover {
+        background: #fff;
+        transform: scale(1.02);
     }
 }
 
@@ -772,18 +613,6 @@
     }
 }
 
-@keyframes popupIn {
-    from {
-        opacity: 0;
-        transform: scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
 @media (max-width: 600px) {
     .hud-dual-wrapper {
         flex-direction: column;
@@ -792,13 +621,8 @@
     .hud-column {
         max-width: 100% !important;
     }
-
-    .hud-main-footer .btn-continue {
+    
+    .btn-continue {
         flex: 0 0 100%;
-    }
-
-    .digital-readouts,
-    .hud-bracket {
-        display: none;
     }
 }

@@ -3,6 +3,42 @@
         title="CAREER_SERVICE_RECORDS" subtitle="Term {{ currentTerm() }} (Age {{ currentAge() }})">
     </app-step-header>
 
+    <!-- --- DYNAMIC EVENT OVERLAY (NEW SYSTEM) --- -->
+    <!-- --- DYNAMIC EVENT OVERLAY (NEW SYSTEM) --- -->
+    <!-- --- DYNAMIC EVENT OVERLAY (NEW SYSTEM) --- -->
+    <app-hud-window
+        *ngIf="activeEvent"
+        [title]="activeEvent.ui.title"
+        [isOpen]="true"
+        width="700px"
+        [readoutTL]="'EVENT_LOG: ' + (activeEvent.id | uppercase)"
+        readoutTR="SOURCE: CAREER_MTX">
+        
+        <div class="event-content">
+            <div class="event-description">
+                <p *ngIf="activeEvent.ui.description" [innerHTML]="activeEvent.ui.description"></p>
+            </div>
+            
+            <div class="visual-rep" *ngIf="activeEvent.ui.imageUrl">
+                <div class="img-frame">
+                    <img [src]="activeEvent.ui.imageUrl" class="event-image" 
+                         alt="Visual Record" [alt]="activeEvent.ui.title">
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <ng-container footer>
+            <div class="event-actions">
+                <button *ngFor="let opt of activeEvent.ui.options; let i = index"
+                        class="btn-confirm"
+                        (click)="eventEngine.selectOption(i)">
+                    [ {{ opt.label }} ]
+                </button>
+            </div>
+        </ng-container>
+    </app-hud-window>
+
     <!-- 1. CHOOSE CAREER -->
     <div *ngIf="currentState() === 'CHOOSE_CAREER'" class="career-stack fade-in">
         <div class="hud-box-header">
@@ -126,8 +162,8 @@
         </div>
     </div>
 
-    <!-- STATE: SKILL_TRAINING -->
-    <div *ngIf="currentState() === 'SKILL_TRAINING'" class="hud-module info fade-in">
+    <!-- STATE: SKILL_TRAINING & POST_TERM_SKILL_TRAINING -->
+    <div *ngIf="currentState() === 'SKILL_TRAINING' || currentState() === 'POST_TERM_SKILL_TRAINING'" class="hud-module info fade-in">
         <div class="corner-detail tl"></div>
         <div class="corner-detail tr"></div>
         <div class="corner-detail bl"></div>
@@ -170,7 +206,7 @@
                     </div>
                 </button>
 
-                <button class="vector-btn" (click)="rollSkill('Advanced')"
+                <button class="vector-btn" (click)="rollSkill('Advanced')" *ngIf="hasAdvancedEducation"
                     [disabled]="(characterService.character().characteristics.edu.value + characterService.character().characteristics.edu.modifier) < 8">
                     <span class="v-label">ADVANCED_EDUCATION</span>
                     <span class="v-desc">Requires EDU 8+</span>
@@ -423,166 +459,20 @@
         </div>
     </div>
 
-    <!-- EVENT EFFECTS MODALS -->
-
-    <!-- 1. NPC Naming Prompt -->
-    <div *ngIf="isNpcPrompt" class="modal-overlay fade-in">
-        <div class="modal hud-module info">
-            <div class="corner-detail tl"></div>
-            <div class="corner-detail tr"></div>
-            <div class="corner-detail bl"></div>
-            <div class="corner-detail br"></div>
-            <div class="hud-box-header">
-                <span class="index">NPC_ID</span>
-                <h3>RELATIONSHIP_IDENTIFICATION</h3>
-            </div>
-            <div class="hud-content">
-                <p class="instruction">Personnel record updated with new <span class="highlight-vivid">{{ pendingNpcType.toUpperCase() }}</span> interaction.</p>
-                <div class="npc-id-form">
-                    <div class="p-input-group">
-                        <span class="hud-label">[ ASSIGN_IDENTIFIER ]</span>
-                        <input type="text" [(ngModel)]="npcNameInput" placeholder="ENTER DESIGNATION..."
-                            class="cyber-input" />
-                    </div>
-                </div>
-            </div>
-            <div class="hud-footer">
-                <button class="btn-action" (click)="confirmNpcGeneration()">CONFIRM_RECORD</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 1b. NPC Conversion Prompt (Betrayal) -->
-    <div *ngIf="isNpcConversionPrompt" class="modal-overlay fade-in">
-        <div class="modal hud-module warning">
-            <div class="corner-detail tl"></div>
-            <div class="corner-detail tr"></div>
-            <div class="corner-detail bl"></div>
-            <div class="corner-detail br"></div>
-            <div class="hud-box-header">
-                <span class="index">SEC_04B</span>
-                <h3>RELATIONSHIP_ALTERATION_PROTOCOL</h3>
-            </div>
-            <div class="hud-content">
-                <p class="hud-alert error">INTELLIGENCE_REPORT: A betrayal has been detected in your network.</p>
-                <p class="instruction">SELECT AN EXISTING CONTACT TO CONVERT INTO A RIVAL/ENEMY:</p>
-                <div class="npc-conversion-list">
-                    <button *ngFor="let npc of characterService.character().npcs" class="npc-select-btn"
-                        (click)="convertNpc(npc.id)">
-                        <span class="n-name">{{ npc.name }}</span>
-                        <span class="n-type">{{ npc.type }}</span>
-                    </button>
-                </div>
-            </div>
-            <div class="hud-footer">
-                <button class="btn-secondary" (click)="isNpcConversionPrompt = false">ABORT_CONVERSION</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 1c. Neural Jack Prompt (2300AD) -->
-    <div *ngIf="isNeuralJackPrompt" class="modal-overlay fade-in">
+    <!-- EVENT ENGINE GENERIC UI -->
+    <div *ngIf="eventEngine.currentEvent()?.ui?.options?.length" class="modal-overlay fade-in">
         <div class="modal hud-module info">
             <div class="hud-box-header">
-                <h3>AUGMENTATION_OPPORTUNITY: NEURAL_JACK</h3>
+                <h3>{{ eventEngine.currentEvent()?.ui?.title }}</h3>
             </div>
             <div class="hud-content">
-                <p>The service offers a permanent Neural Jack interface.</p>
-                <div class="hud-alert warning">
-                    <p>EFFECTS: +1 Skill Roll next term.</p>
-                    <p>PENALTY: -2 SOC, -2 EDU (this term).</p>
-                </div>
-                <div class="tactical-row">
-                    <select [(ngModel)]="neuralJackCostType" class="cyber-select" title="Neural Jack Cost Type">
-                        <option value="cash">Cost: 10,000 Lv</option>
-                        <option value="benefit">Cost: 1 Benefit Roll</option>
-                    </select>
-                </div>
-            </div>
-            <div class="hud-footer">
-                <button class="btn-action" (click)="resolveNeuralJack(true)">ACCEPT_PROCEDURE</button>
-                <button class="btn-secondary" (click)="resolveNeuralJack(false)">DECLINE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 2. Skill Choice Prompt -->
-    <div *ngIf="isSkillChoicePrompt" class="modal-overlay fade-in">
-        <div class="modal hud-module info">
-            <div class="hud-box-header">
-                <h3>TACTICAL_SKILL_REQUISITION</h3>
-            </div>
-            <div class="hud-content">
-                <p class="instruction">Select one specialization from available vectors:</p>
-                <div class="grid-options">
-                    <button *ngFor="let skill of skillChoices" class="btn-secondary"
-                        (click)="confirmSkillChoice(skill)">
-                        {{ skill }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 3. Skill Check Outcome -->
-    <div *ngIf="isSkillCheckOutcome" class="modal-overlay fade-in">
-        <div class="modal hud-module status">
-            <div class="hud-box-header">
-                <h3>SKILL_CHECK_RESOLUTION</h3>
-            </div>
-            <div class="hud-content">
-                <div class="event-log-box" [class.success]="skillCheckMessage.includes('Success')"
-                    [class.error]="skillCheckMessage.includes('Failure')">
-                    <p class="event-text outcome-message">{{ skillCheckMessage }}</p>
-                </div>
-            </div>
-            <div class="hud-footer">
-                <button class="btn-action" (click)="isSkillCheckOutcome = false">ACKNOWLEDGE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Connections Rule Prompt -->
-    <div *ngIf="isConnectionsRuleEligible" class="modal-overlay fade-in">
-        <div class="modal hud-module warning">
-            <div class="hud-box-header">
-                <h3>CONNECTIONS_RULE_OPPORTUNITY</h3>
-            </div>
-            <div class="hud-content">
-                <p>Establishing a relationship allows you to improve a shared skill. (Used {{
-                    characterService.character().connectionsUsed }}/2)</p>
-                <p class="instruction" *ngIf="connectionsSkillChoices.length > 0">Select skill to increase by +1:</p>
-                <div class="grid-options" *ngIf="connectionsSkillChoices.length > 0">
-                    <button *ngFor="let skill of connectionsSkillChoices" class="btn-secondary"
-                        (click)="applyConnectionsRule(skill)">
-                        {{ skill }}
-                    </button>
-                </div>
-                <p *ngIf="connectionsSkillChoices.length === 0" class="hud-alert error">No compatible skills at level 1+
-                    to improve.</p>
-            </div>
-            <div class="hud-footer">
-                <button class="btn-secondary" (click)="skipConnectionsRule()">SKIP_OPPORTUNITY</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5. Life Event Choice Modal -->
-    <div *ngIf="isLifeEventChoice" class="modal-overlay fade-in">
-        <div class="modal hud-module info">
-            <div class="hud-box-header">
-                <h3>LIFE_ALTERING_DECISION</h3>
-            </div>
-            <div class="hud-content">
-                <p class="instruction">{{ lifeEventChoiceNote }}</p>
+                <p class="instruction">{{ eventEngine.currentEvent()?.ui?.description }}</p>
                 <div class="choice-grid">
-                    <div *ngFor="let opt of lifeEventChoiceOptions" class="choice-item">
-                        <button class="btn-action full-width"
-                            (click)="$event.stopPropagation(); handleLifeEventChoice(opt)">
-                            {{ opt.toUpperCase().replace(' ', '_') }}
-                        </button>
-                        <p class="choice-outcome">{{ getChoiceDescription(opt) }}</p>
-                    </div>
+                    <button *ngFor="let opt of eventEngine.currentEvent()?.ui?.options; let i = index" 
+                            class="btn-action full-width"
+                            (click)="eventEngine.selectOption(i)">
+                        {{ opt.label }}
+                    </button>
                 </div>
             </div>
         </div>

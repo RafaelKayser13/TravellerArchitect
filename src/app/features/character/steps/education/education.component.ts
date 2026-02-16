@@ -5,7 +5,8 @@ import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { NATIONALITIES } from '../../../../data/nationalities';
-import { LIFE_EVENTS } from '../../../../data/life-events';
+import { EventEngineService } from '../../../../core/services/event-engine.service';
+import { createEducationEvent } from '../../../../data/events/shared/education-events';
 
 // Event Interface
 interface EduEvent {
@@ -77,19 +78,6 @@ export class EducationComponent {
 
 
 
-    eventsTable: EduEvent[] = [
-        { roll: 2, desc: 'Psionic Contact. Potential for Psion career unlocked.', effect: 'Psion' },
-        { roll: 3, desc: 'Tragedy. Graduation failed. Education terminated.', effect: 'Tragedy' },
-        { roll: 4, desc: 'Prank Gone Wrong. Success: Rival. Fail: Enemy. Fail Crítica (2): Expelled.', effect: 'Prank' },
-        { roll: 5, desc: 'Partying. Gain Carouse (Level 1).', effect: 'Carouse' },
-        { roll: 6, desc: 'Friends. Gain 1D3 Allies.', effect: 'Allies' },
-        { roll: 7, desc: 'Life Event.', lifeEvent: true },
-        { roll: 8, desc: 'Political Movement. Success: 1 Ally, 1 Enemy. Fail: No effect.', effect: 'Politics' },
-        { roll: 9, desc: 'Hobby. Gain any skill at Level 0 (except Jack-of-all-Trades).', effect: 'Hobby' },
-        { roll: 10, desc: 'Interests from Tutor. Roll Skill 9+ for +1 Level and Rival.', effect: 'Tutor' },
-        { roll: 11, desc: 'War/Draft. Participation required unless SOC 9+.', effect: 'War' },
-        { roll: 12, desc: 'Recognition. SOC +1.', effect: 'Recognition' }
-    ];
 
     // State
     admissionStatus: string = 'NotApplied';
@@ -114,6 +102,7 @@ export class EducationComponent {
 
     // Inject DiceDisplayService
     protected diceDisplay = inject(DiceDisplayService);
+    protected eventEngine = inject(EventEngineService);
 
     // Interactive Event State
     showHobbySelection = false;
@@ -315,6 +304,26 @@ export class EducationComponent {
             totalDm += statMod;
         }
 
+        // 3. Term Penalties (Core Rulebook Rules 592, 614)
+        const term = char.careerHistory.length + 1; // Current term number
+        if (this.educationType === 'University') {
+            if (term === 2) {
+                totalDm -= 1;
+                modifiers.push({ label: 'Term 2 Penalty', value: -1 });
+            } else if (term === 3) {
+                totalDm -= 2;
+                modifiers.push({ label: 'Term 3 Penalty', value: -2 });
+            }
+        } else if (this.educationType === 'Academy') {
+            if (term === 2) {
+                totalDm -= 2;
+                modifiers.push({ label: 'Term 2 Penalty', value: -2 });
+            } else if (term === 3) {
+                totalDm -= 4;
+                modifiers.push({ label: 'Term 3 Penalty', value: -4 });
+            }
+        }
+
         // Modal Roll
         const rollTitle = this.educationType === 'Academy' ? `Admission check - Military Academy (${this.academyType})` : `Admission Check - University`;
 
@@ -454,127 +463,104 @@ export class EducationComponent {
             this.graduationStatus = 'Failed';
             this.characterService.log(`**Failed to Graduate** (${this.educationType})`);
             this.log('Failed to graduate.');
+
+            // Rule 632: Academy failures that still allow automatic career entry (Roll > 2)
+            if (this.educationType === 'Academy' && roll > 2) {
+                let careerName = this.academyType as string;
+                if (careerName === 'Marines') careerName = 'Marine';
+                if (careerName === 'Scouts') careerName = 'Scout';
+                this.characterService.updateCharacter({ forcedCareer: careerName });
+                this.log(`Rule 632: Despite failure, your time in the academy grants automatic entry to the ${careerName}.`);
+                this.characterService.log(`**Academy Discharge**: Granted automatic entry to ${careerName} (Rule 632).`);
+            }
+
             this.saveResult(false, false);
             this.educationStep = 'Finished';
-            // Academy failures that still allow career entry are handled in confirmAcademyGraduation or similar,
-            // but for 2300AD failure to graduate university just means you start career normally.
         }
     }
 
-    async runEvent() {
-        const roll = await this.diceDisplay.roll('Education Event', 2, 0, 0, '', (result) => {
-            const evt = this.eventsTable.find(e => e.roll === result);
-            return evt ? evt.desc : 'Nothing significant.';
-        }, [], this.eventsTable);
+    private registerEducationHandlers() {
+        this.eventEngine.registerCustomHandler('PSIONIC_CONTACT', () => {
+            this.characterService.setPsionicPotential(true);
+            this.characterService.log('**Psionic Potential**: Latent abilities discovered during studies.');
+        });
 
-        const evt = this.eventsTable.find(e => e.roll === roll);
-        this.eventResult = evt ? evt.desc : 'Nothing significant.';
+        this.eventEngine.registerCustomHandler('TRAGEDY', () => {
+            this.graduated = false;
+            this.graduationStatus = 'Failed';
+            this.characterService.setEducationStatus(false, false);
+            this.characterService.log('**Tragedy**: Education terminated abruptly.');
+        });
 
-        if (!evt) return;
+        this.eventEngine.registerCustomHandler('PRANK', async () => {
+            await this.handlePrank();
+        });
 
-        this.characterService.log(`**Education Event** (Roll ${roll}): ${this.eventResult}`);
-        this.log(`Event [${roll}]: ${this.eventResult}`);
-
-        switch (evt.effect) {
-            case 'Psion':
-                this.characterService.setPsionicPotential(true);
-                break;
-            case 'Tragedy':
-                this.graduated = false;
-                this.graduationStatus = 'Failed';
-                this.characterService.setEducationStatus(false, false);
-                this.characterService.log('**Tragedy**: Education terminated abruptly.');
-                break;
-            case 'Prank':
-                await this.handlePrank();
-                break;
-            case 'Carouse':
-                this.characterService.addSkill('Carouse', 1);
-                break;
-            case 'Allies':
-                const rollResult = await this.diceDisplay.roll('Allies Gained (1D3)', 1, 0, 0, '', (res) => `Roll ${res} :: Gain ${Math.ceil(res / 2)} Allies during studies.`);
-                const alliesCount = Math.ceil(rollResult / 2);
-                this.pendingNpcs = [];
-                for (let i = 0; i < alliesCount; i++) {
-                    this.pendingNpcs.push({
-                        id: crypto.randomUUID(),
-                        name: `University Friend ${i + 1}`,
-                        type: 'ally',
-                        origin: 'Education (Roll 6)',
-                        notes: 'A close friend from academic years.'
-                    });
-                }
-                this.isNpcPrompt = true;
-                break;
-            case 'Politics':
-                const polRoll = await this.diceDisplay.roll('Politics Check (SOC)', 2, 0, 8, 'SOC');
-                if (polRoll + this.diceService.getModifier(this.characterService.character().characteristics.soc.value + this.characterService.character().characteristics.soc.modifier) >= 8) {
-                    this.characterService.addNpc({
-                        id: crypto.randomUUID(),
-                        name: 'Political Ally',
-                        type: 'ally',
-                        origin: 'Political Movement (Roll 8)',
-                        notes: 'A powerful political supporter. Met during political activism.'
-                    });
-                    this.characterService.addNpc({
-                        id: crypto.randomUUID(),
-                        name: 'Political Enemy',
-                        type: 'enemy',
-                        origin: 'Political Movement (Roll 8)',
-                        notes: 'An ideological rival. Opponent during the campus political movement.'
-                    });
-                }
-                break;
-            case 'Hobby':
-                this.openHobbySelection();
-                break;
-            case 'Tutor':
-                this.openTutorSelection();
-                break;
-            case 'War':
-                await this.handleWar();
-                break;
-            case 'Recognition':
-                this.characterService.updateCharacteristics(this.modifyStat('SOC', 1));
-                this.characterService.log('**Recognition**: Academic or social achievement! SOC +1.');
-                break;
-        }
-
-        if (evt.lifeEvent) {
-            this.characterService.log('**Education**: Triggering Life Event.');
-            this.log('Triggering Life Event...');
-            this.educationStep = 'Studying';
-            
-            // Generate a real roll for life event table
-            const leRoll = await this.diceDisplay.roll('Life Event', 2, 0, 0, '', (res) => {
-                const le = LIFE_EVENTS.find(e => e.roll === res);
-                return le ? le.name : 'Unknown Event';
-            }, [], LIFE_EVENTS);
-
-            const leEffect = LIFE_EVENTS.find(e => e.roll === leRoll);
-            
-            if (leEffect) {
-                this.characterService.log(`**Life Event** (Roll ${leRoll}): ${leEffect.name} - ${leEffect.description}`);
-                
-                // For education life events, we handle the basic ones. 
-                // Complex ones (choice, injury) might need more UI, but for now we follow the existing pattern.
-                for (const eff of leEffect.effects || []) {
-                    if (eff.type === 'npc') {
-                        this.characterService.addNpc({
-                            id: crypto.randomUUID(),
-                            name: `${leEffect.name} Contact`,
-                            type: eff.npcType || 'contact',
-                            origin: `Life Event during Education`,
-                            notes: leEffect.description
-                        });
-                    } else if (eff.type === 'qualification-dm') {
-                        this.characterService.updateDm('qualification', eff.value || 0);
-                    } else if (eff.type === 'benefit-mod') {
-                        this.characterService.updateFinances({ benefitRollMod: eff.value });
-                    }
-                }
+        this.eventEngine.registerCustomHandler('FRIENDS', async () => {
+            const rollResult = await this.diceDisplay.roll('Allies Gained (1D3)', 1, 0, 0, '', (res) => `Roll ${res} :: Gain ${Math.ceil(res / 2)} Allies during studies.`);
+            const alliesCount = Math.ceil(rollResult / 2);
+            this.pendingNpcs = [];
+            for (let i = 0; i < alliesCount; i++) {
+                this.pendingNpcs.push({
+                    id: crypto.randomUUID(),
+                    name: `University Friend ${i + 1}`,
+                    type: 'ally',
+                    origin: 'Education (Roll 6)',
+                    notes: 'A close friend from academic years.'
+                });
             }
-        }
+            this.isNpcPrompt = true;
+        });
+
+        this.eventEngine.registerCustomHandler('POLITICS', async () => {
+            const char = this.characterService.character();
+            const statMod = this.diceService.getModifier(char.characteristics.soc.value + char.characteristics.soc.modifier);
+            const polRoll = await this.diceDisplay.roll('Politics Check (SOC)', 2, statMod, 8, 'SOC');
+            
+            if (polRoll + statMod >= 8) {
+                this.characterService.addNpc({
+                    id: crypto.randomUUID(),
+                    name: 'Political Ally',
+                    type: 'ally',
+                    origin: 'Political Movement (Roll 8)',
+                    notes: 'A powerful political supporter. Met during political activism.'
+                });
+                this.characterService.addNpc({
+                    id: crypto.randomUUID(),
+                    name: 'Political Enemy',
+                    type: 'enemy',
+                    origin: 'Political Movement (Roll 8)',
+                    notes: 'An ideological rival. Opponent during the campus political movement.'
+                });
+            }
+        });
+
+        this.eventEngine.registerCustomHandler('HOBBY', () => {
+            this.openHobbySelection();
+        });
+
+        this.eventEngine.registerCustomHandler('TUTOR', () => {
+            this.openTutorSelection();
+        });
+
+        this.eventEngine.registerCustomHandler('WAR', async () => {
+            await this.handleWar();
+        });
+    }
+
+    async runEvent() {
+        this.registerEducationHandlers();
+
+        const roll = await this.diceDisplay.roll('Education Event', 2, 0, 0, '', (result) => {
+            const entry = createEducationEvent(result);
+            return entry.ui.description;
+        });
+
+        this.characterService.log(`**Education Event** (Roll ${roll})`);
+        
+        const event = createEducationEvent(roll);
+        this.eventEngine.registerEvent(event);
+        this.eventEngine.triggerEvent(event.id);
     }
 
     async handlePrank() {

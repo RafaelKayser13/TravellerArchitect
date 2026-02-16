@@ -8,8 +8,77 @@
     margin: 0 auto;
     position: relative;
     box-sizing: border-box;
+}
 
+// Reuse generic NPC overlay styles or define specific event-hud overrides
+// Event Overlay Content
+.event-content {
+    display: flex;
+    flex-direction: column;
 
+    .event-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #fff;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        border-left: 2px solid var(--neon-cyan-glow);
+        padding-left: 1rem;
+        background: linear-gradient(90deg, rgba(0, 243, 255, 0.05) 0%, transparent 100%);
+        padding: 1rem;
+    }
+
+    .visual-rep {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: center;
+        
+        .img-frame {
+            position: relative;
+            border: 1px solid var(--neon-cyan-glow);
+            padding: 4px;
+            background: rgba(0,0,0,0.3);
+            
+            img {
+                max-width: 100%;
+                max-height: 250px;
+                display: block;
+                filter: sepia(20%) hue-rotate(180deg) contrast(1.1) saturate(0.8);
+                mix-blend-mode: luminosity;
+                transition: all 0.5s;
+
+                &:hover {
+                    filter: none;
+                    mix-blend-mode: normal;
+                }
+            }
+        }
+    }
+}
+
+.event-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    
+    .btn-confirm {
+        // Inherit or override explicit styles if needed
+        background: var(--neon-cyan);
+        color: #000;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        font-family: var(--font-accent);
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 0 15px var(--neon-cyan-glow);
+        }
+    }
 }
 
 .career-header {
@@ -1029,6 +1098,96 @@
             padding-left: 0.5rem;
             border-left: 2px solid rgba(var(--neon-cyan-rgb), 0.2);
             line-height: 1.4;
+        }
+    }
+}
+
+/* Modal Styles */
+.modal-overlay {
+    z-index: 9999; /* Ensure on top */
+}
+
+.modal-content.cyberpunk-frame {
+    background: rgba(10, 15, 20, 0.95);
+    border: 1px solid var(--neon-cyan);
+    box-shadow: 0 0 50px rgba(0, 243, 255, 0.15), inset 0 0 20px rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        100% calc(100% - 20px), 
+        calc(100% - 20px) 100%, 
+        0 100%
+    );
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--neon-cyan);
+        box-shadow: 0 0 10px var(--neon-cyan-glow);
+    }
+
+    h3.modal-title {
+        color: #fff;
+        font-family: var(--font-header);
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0 0 1.5rem 0;
+        border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        padding-bottom: 0.5rem;
+        text-shadow: 0 0 5px var(--neon-cyan-glow);
+    }
+
+    .modal-body {
+        p {
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .event-image {
+            width: 100%;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            margin-bottom: 1.5rem;
+            filter: sepia(0.2) contrast(1.1);
+        }
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+
+        .btn-tactical {
+            background: transparent;
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 0.8rem 1.5rem;
+            font-family: var(--font-accent);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 2px;
+            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+            min-width: 120px;
+            
+            &:hover {
+                background: var(--neon-cyan);
+                color: var(--bg-pitch);
+                box-shadow: 0 0 15px var(--neon-cyan-glow);
+                transform: translateY(-2px);
+            }
         }
     }
 }

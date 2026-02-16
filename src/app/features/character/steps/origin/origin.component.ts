@@ -8,7 +8,7 @@ import { Nationality } from '../../../../core/models/nationality.model';
 import { World } from '../../../../core/models/character.model';
 
 import { DiceService } from '../../../../core/services/dice.service';
-
+import { EventEngineService } from '../../../../core/services/event-engine.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
@@ -26,6 +26,7 @@ export class OriginComponent {
   @Output() complete = new EventEmitter<void>();
   protected characterService = inject(CharacterService);
   protected diceService = inject(DiceService);
+  protected eventEngine = inject(EventEngineService);
 
   nationalities = NATIONALITIES;
   availableWorlds: World[] = [];
@@ -45,7 +46,7 @@ export class OriginComponent {
     'Language', 'Mechanics', 'Medic', 'Profession', 'Science', 'Streetwise'
   ];
   frontierSkills = [
-    'Admin', 'Animals', 'Art', 'Athletics', 'Carouse', 'Drive', 'Mechanics',
+    'Admin', 'Animals', 'Art', 'Athletics', 'Carouse', 'Drive', 'Gun Combat', 'Mechanics',
     'Medic', 'Seafarer', 'Steward', 'Survival', 'Vacc Suit'
   ];
   spacerSkills = [
@@ -54,9 +55,22 @@ export class OriginComponent {
   ];
 
   get availableSkills() {
-    if (this.selectedOriginType === 'Spacer') return this.spacerSkills;
-    if (this.selectedOriginType === 'Frontier') return this.frontierSkills;
-    return this.coreSkills;
+    let list: string[] = [];
+    if (this.selectedOriginType === 'Spacer') list = [...this.spacerSkills];
+    else if (this.selectedOriginType === 'Frontier') list = [...this.frontierSkills];
+    else list = [...this.coreSkills];
+
+    // Rule 239: SOC 9+ for Gun Combat in Manchurian, Incan, Argentinean colonies
+    const char = this.characterService.character();
+    const restrictedNations = ['Manchuria', 'Inca Republic', 'Argentina'];
+    const isRestricted = restrictedNations.includes(char.nationality || '');
+    const soc = char.characteristics.soc.value;
+
+    if (isRestricted && soc < 9) {
+        return list.filter(s => s !== 'Gun Combat');
+    }
+
+    return list;
   }
 
   constructor() {
@@ -104,7 +118,7 @@ export class OriginComponent {
         .filter(s => relevantSkills.includes(s.name))
         .map(s => s.name);
 
-      if (this.selectedNationality && this.selectedWorld) {
+        if (this.selectedNationality && this.selectedWorld) {
         this.showSkillsSelection = true;
         const edu = (char.characteristics as any).edu.value;
         const eduDm = this.diceService.getModifier(edu);
@@ -112,6 +126,44 @@ export class OriginComponent {
         if (this.backgroundSkillsCount < 1) this.backgroundSkillsCount = 1;
       }
     }
+
+    this.registerHandlers();
+  }
+
+  private registerHandlers() {
+    this.eventEngine.registerCustomHandler('JAPAN_BONUS', () => {
+       this.isJapanBonusPrompt = true;
+    });
+
+    this.eventEngine.registerCustomHandler('DNAM_KING_ULTRA', () => {
+       const strRoll = Math.floor(Math.random() * 6) + 1;
+       const endRoll = Math.floor(Math.random() * 6) + 1;
+       const chars = { ...this.characterService.character().characteristics };
+       chars.str.geneticMod = (chars.str.geneticMod || 0) + strRoll;
+       chars.end.geneticMod = (chars.end.geneticMod || 0) + endRoll;
+       
+       this.characterService.updateCharacteristics(chars);
+       this.characterService.log(`**DNAM King Ultra**: Gained STR +${strRoll}, END +${endRoll}.`);
+       // Add gene mod entry if not exists
+       const currentGenes = this.characterService.character().genes || [];
+       if (!currentGenes.find(g => g.name === 'King Ultra')) {
+           this.characterService.updateCharacter({ 
+               genes: [...currentGenes, { name: 'King Ultra', description: `STR +${strRoll}, END +${endRoll}. Requires respirator.` }] 
+           });
+       }
+    });
+
+    this.eventEngine.registerCustomHandler('RESET_ORIGIN_MODS', () => {
+        const char = this.characterService.character();
+        const chars = { ...char.characteristics };
+        ['str', 'dex', 'end'].forEach(k => {
+            const key = k as 'str' | 'dex' | 'end';
+            chars[key].gravityMod = 0;
+            chars[key].geneticMod = 0;
+        });
+        this.characterService.updateCharacteristics(chars);
+        this.characterService.updateCharacter({ genes: [] });
+    });
   }
 
   selectNationality(nat: Nationality) {
@@ -317,10 +369,13 @@ export class OriginComponent {
 
   save() {
     if (this.selectedNationality) {
-      // 1. Determine Language
+      // 1. Reset previous mods to allow re-selection
+      this.eventEngine.applyEffects([{ type: 'CUSTOM', customId: 'RESET_ORIGIN_MODS' }]);
+
+      // 2. Determine Language
       const nativeLanguage = this.selectedNationality.languages[0] || 'English';
 
-      // 2. Prepare Updates
+      // 3. Prepare Updates
       const charUpdate: any = {
         nationality: this.selectedNationality.name,
         originType: this.selectedOriginType,
@@ -328,57 +383,93 @@ export class OriginComponent {
         isSoftPath: this.selectedWorld?.path === 'Soft'
       };
 
-      // 2b. PSA (Planetary Selection Adaptation) - Survival 0 for Soft Path
-      if (charUpdate.isSoftPath && this.selectedWorld) {
-        const psaSkill = `Survival (${this.selectedWorld.name})`;
+      // 4. Update Character State first
+      this.characterService.updateCharacter(charUpdate);
+
+      // 5. Apply Data-Driven Effects
+      // 5a. Nationality Effects
+      if (this.selectedNationality.effects) {
+        this.eventEngine.applyEffects(this.selectedNationality.effects);
+      }
+
+      // 5b. World Effects
+      if (this.selectedWorld && this.selectedWorld.effects) {
+        this.eventEngine.applyEffects(this.selectedWorld.effects);
+      }
+
+      // 5c. Native Language Level 2
+      const langSkill = `Language (${nativeLanguage})`;
+      this.characterService.ensureSkillLevel(langSkill, 2);
+      this.characterService.log(`**Nationality Reward**: Gained ${langSkill} at Level 2`);
+
+      // 6. Manual Gravity and Adaptation Logic (remaining for now as it's complex)
+      this.applyPhysicalAdaptations();
+
+      // 7. Recalculate Skills Metadata (Count)
+      this.calculateBackgroundSkillCount();
+      
+      this.showSkillsSelection = true;
+    }
+  }
+
+  private applyPhysicalAdaptations() {
+      const char = this.characterService.character();
+      const chars = { ...char.characteristics };
+
+      // 1. PSA (Planetary Selection Adaptation) - Survival 0 for Soft Path
+      if (char.isSoftPath && char.homeworld) {
+        const psaSkill = `Survival (${char.homeworld.name})`;
         this.characterService.ensureSkillLevel(psaSkill, 0);
         this.characterService.log(`**Soft Path Benefit**: Gained ${psaSkill} 0 (PSA).`);
       }
 
-      // 3. Apply Gravity & DNAM logic here
-      // We need to fetch current characteristics to modify them
-      const char = this.characterService.character();
-      const chars = { ...char.characteristics };
+      // 2. Gravity Mods (Rule 209)
+      if (char.homeworld) {
+        const code = char.homeworld.gravityCode; // Keep for Heavy-Worlder Reroll
+        const g = char.homeworld.gravity;
 
-      // Reset mods first to avoid double application if user switches back and forth
-      ['str', 'dex', 'end'].forEach(k => {
-        const key = k as 'str' | 'dex' | 'end';
-        chars[key].gravityMod = 0;
-        chars[key].geneticMod = 0;
-      });
+        // Reset mods first (handled by RESET_ORIGIN_MODS in save(), but ensuring clean state here)
+        chars.str.gravityMod = 0;
+        chars.dex.gravityMod = 0;
+        chars.end.gravityMod = 0;
 
-      // 3a. Gravity Mods
-      if (this.selectedWorld) {
-        const code = this.selectedWorld.gravityCode;
-        const g = this.selectedWorld.gravity;
-
-        // 2300AD Spec: Low-G worlds give permanent -1 STR & END
-        if (code === 'Low') {
+        if (g < 0.1) {
+          // Zero-gravity
+          chars.str.gravityMod = -2;
+          chars.dex.gravityMod = 2;
+          chars.end.gravityMod = -2;
+          this.characterService.log('**Gravity Mod (Zero-G)**: STR -2, DEX +2, END -2');
+        } else if (g < 0.21) {
+          // Light
           chars.str.gravityMod = -1;
+          chars.dex.gravityMod = 1;
           chars.end.gravityMod = -1;
-          console.log('Applying Low-G Penalty: STR -1, END -1');
-        } 
-        else if (g > 2.0 && g < 3.0) {
-          chars.str.gravityMod = 1; chars.dex.gravityMod = -1; chars.end.gravityMod = 1;
+          this.characterService.log('**Gravity Mod (Light)**: STR -1, DEX +1, END -1');
+        } else if (g >= 2.0 && g < 3.0) {
+          // Heavy
+          chars.str.gravityMod = 1;
+          chars.dex.gravityMod = -1;
+          chars.end.gravityMod = 1;
+          this.characterService.log('**Gravity Mod (Heavy)**: STR +1, DEX -1, END +1');
         } else if (g >= 3.0) {
-          chars.str.gravityMod = 2; chars.dex.gravityMod = -2; chars.end.gravityMod = 2;
+          // Extreme
+          chars.str.gravityMod = 2;
+          chars.dex.gravityMod = -2;
+          chars.end.gravityMod = 2;
+          this.characterService.log('**Gravity Mod (Extreme)**: STR +2, DEX -2, END +2');
         }
 
-        // 3a-ii. Heavy-Worlder Reroll (STR/END if < 10)
+        // 3. Heavy-Worlder Reroll (STR/END if < 10)
         if (char.species === 'Human (Heavy-Worlder)' && (code === 'High' || code === 'Extreme')) {
           if (chars.str.value < 10) {
-            const r1 = Math.floor(Math.random() * 6) + 1;
-            const r2 = Math.floor(Math.random() * 6) + 1;
-            const newStr = r1 + r2;
+            const newStr = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1);
             if (newStr > chars.str.value) {
               this.characterService.log(`**Heavy-Worlder Reroll**: STR ${chars.str.value} -> ${newStr}`);
               chars.str.value = newStr;
             }
           }
           if (chars.end.value < 10) {
-            const r1 = Math.floor(Math.random() * 6) + 1;
-            const r2 = Math.floor(Math.random() * 6) + 1;
-            const newEnd = r1 + r2;
+            const newEnd = (Math.floor(Math.random() * 6) + 1) + (Math.floor(Math.random() * 6) + 1);
             if (newEnd > chars.end.value) {
               this.characterService.log(`**Heavy-Worlder Reroll**: END ${chars.end.value} -> ${newEnd}`);
               chars.end.value = newEnd;
@@ -387,114 +478,42 @@ export class OriginComponent {
         }
       }
 
-      // 3b. DNAM Logic
-      const dnamList: any[] = [];
-      if (this.selectedWorld && ['King', 'Huntsland', 'New Columbia'].includes(this.selectedWorld.name)) {
-        // King Ultra: STR +1D, END +1D (average +3 used for simplicity, but could be a roll)
-        const strRoll = Math.floor(Math.random() * 6) + 1;
-        const endRoll = Math.floor(Math.random() * 6) + 1;
-        chars.str.geneticMod = strRoll;
-        chars.end.geneticMod = endRoll;
-        dnamList.push({ name: 'King Ultra', description: `STR +${strRoll}, END +${endRoll}. Requires respirator.` });
-        this.characterService.log(`**DNAM King Ultra**: Gained STR +${strRoll}, END +${endRoll}.`);
-      }
-
-      // Spacer
-      if (this.selectedOriginType === 'Spacer') {
-        dnamList.push({ name: 'Zero-G Adaptation', description: 'Adapted to microgravity.' });
-        // Recalculate Gravity Mod to be 0 for Spacers (no penalty in low-g)
-        chars.str.gravityMod = 0; chars.dex.gravityMod = 0; chars.end.gravityMod = 0;
-      }
-
-      charUpdate.characteristics = chars;
-      charUpdate.genes = dnamList;
-
-      // 5. Skills Metadata (Count) - 2300AD Tier Based
-      const tier = this.selectedNationality ? this.selectedNationality.tier : 3;
-      let baseCount = 3;
-      if (tier <= 2) baseCount = 4;
-      else if (tier === 3) baseCount = 3;
-      else if (tier === 4) baseCount = 2;
-      else baseCount = 1; // Tier 5+
-
-      const edu = chars.edu.value + chars.edu.modifier;
-      const eduDm = this.diceService.getModifier(edu);
-      this.backgroundSkillsCount = baseCount + eduDm + (this.selectedOriginType === 'Spacer' ? 1 : 0);
-      if (this.backgroundSkillsCount < 1) this.backgroundSkillsCount = 1;
-
-      this.showSkillsSelection = true;
-
-      // 4. Background Rewards (Languages & Nationality Bonus)
-      if (this.selectedNationality) {
-        // Native Language Level 2
-        const nativeLang = this.selectedNationality.languages[0];
-        if (nativeLang) {
-          const langSkill = `Language (${nativeLang})`;
-          this.characterService.ensureSkillLevel(langSkill, 2);
-          this.characterService.log(`**Nationality Reward**: Gained ${langSkill} at Level 2`);
-        }
-
-        // 2300AD Specification Nationality Bonuses:
-        const n = this.selectedNationality.name;
-        if (n === 'United States' || n === 'America') {
-          this.characterService.ensureSkillLevel('Recon', 0);
-          this.characterService.log('**American Bonus**: Gained Recon 0');
-        } else if (n === 'Inca Republic') {
-          this.characterService.ensureSkillLevel('Melee (Blade)', 0);
-          this.characterService.log('**Inca Bonus**: Gained Melee (Blade) 0');
-        } else if (n === 'Australia') {
-          this.characterService.ensureSkillLevel('Survival', 0);
-          this.characterService.log('**Australian Bonus**: Gained Survival 0');
-        } else if (n === 'France') {
-          this.characterService.addSkill('Diplomat', 1);
-          this.characterService.log('**French Bonus**: Gained Diplomat 1');
-        } else if (n === 'Manchuria') {
-          this.characterService.addSkill('Science', 1);
-          this.characterService.log('**Manchurian Bonus**: Gained Science 1');
-        } else if (n === 'Germany') {
-          this.characterService.addSkill('Engineer', 1);
-          this.characterService.log('**German Bonus**: Gained Engineer 1');
-        } else if (n === 'Japan') {
-          this.isJapanBonusPrompt = true;
-        } else if (n === 'Argentina') {
-          this.characterService.addSkill('Pilot (any)', 1);
-          this.characterService.log('**Argentine Bonus**: Gained Pilot (any) 1');
-        } else if (n === 'Azania') {
-          this.characterService.addSkill('Persuade', 1);
-          this.characterService.log('**Azanian Bonus**: Gained Persuade 1');
-        } else if (n === 'Brazil') {
-          this.characterService.addSkill('Athletics (any)', 1);
-          this.characterService.log('**Brazilian Bonus**: Gained Athletics (any) 1');
-        } else if (n === 'United Kingdom' || n === 'UK') {
-          this.characterService.addSkill('Gun Combat (Slug)', 1);
-          this.characterService.log('**British Bonus**: Gained Gun Combat (Slug) 1');
-        } else if (n === 'Mexico') {
-          this.characterService.addSkill('Drive (any)', 1);
-          this.characterService.log('**Mexican Bonus**: Gained Drive (any) 1');
-        } else if (n === 'Russia') {
-          this.characterService.addSkill('Heavy Weapons (any)', 1);
-          this.characterService.log('**Russian Bonus**: Gained Heavy Weapons (any) 1');
-        } else if (n === 'Texas') {
-          this.characterService.addSkill('Gun Combat (Slug)', 1);
-          this.characterService.log('**Texan Bonus**: Gained Gun Combat (Slug) 1');
-        } else if (n === 'Ukraine') {
-          this.characterService.addSkill('Streetwise', 1);
-          this.characterService.log('**Ukrainian Bonus**: Gained Streetwise 1');
-        }
-
-        // Tier 1 / Corporate Bonus (SOC 9+)
-        if (this.selectedNationality.tier === 1 && chars.soc.value >= 9) {
+      // 4. Elite Nationality Bonus (Tier 1/Corp + SOC 9+)
+      const nat = this.nationalities.find(n => n.name === char.nationality);
+      if (nat && nat.tier === 1 && chars.soc.value >= 9) {
           this.characterService.ensureSkillLevel('Gun Combat (Slug)', 0);
           this.characterService.log('**Elite Nationality Bonus**: Gained Gun Combat (Slug) 0 (SOC 9+)');
-        }
       }
 
-      this.characterService.updateCharacter(charUpdate);
-
-      // Note: We do NOT wipe/reset skills here anymore to prevent data loss.
-      // Skill toggling is handled in toggleSkill() or relies on the user making selections.
-    }
+      this.characterService.updateCharacteristics(chars);
   }
+
+  private calculateBackgroundSkillCount() {
+      const char = this.characterService.character();
+      const edu = char.characteristics.edu.value + char.characteristics.edu.modifier;
+      const eduDm = this.diceService.getModifier(edu);
+
+      if (this.selectedOriginType === 'Frontier') {
+          // Rule 223: 3 + EDU DM
+          this.backgroundSkillsCount = 3 + eduDm;
+      } else if (this.selectedOriginType === 'Spacer') {
+          // Rule 281: 4 + EDU DM
+          this.backgroundSkillsCount = 4 + eduDm;
+      } else {
+          // Rule 176 (Implicit): Tier-based for Core
+          const nat = this.nationalities.find(n => n.name === char.nationality);
+          const tier = nat ? nat.tier : 3;
+          let baseCount = 3;
+          if (tier <= 2) baseCount = 4;
+          else if (tier === 3) baseCount = 3;
+          else if (tier === 4) baseCount = 2;
+          else baseCount = 1;
+          this.backgroundSkillsCount = baseCount + eduDm;
+      }
+
+      if (this.backgroundSkillsCount < 1) this.backgroundSkillsCount = 1;
+  }
+
 
   toggleSkill(skill: string) {
     if (this.selectedOriginType === 'Spacer' && skill === 'Vacc Suit') {

@@ -55,54 +55,48 @@
 
         <div class="step" [class.active]="currentStep >= 2" [class.current]="currentStep === 2" (click)="goToStep(2)">
           <div class="circle">02</div>
-          <span class="label">SPECIES</span>
+          <span class="label">BIOMETRICS</span>
         </div>
         <div class="line" [class.active]="currentStep > 2"></div>
 
         <div class="step" [class.active]="currentStep >= 3" [class.current]="currentStep === 3" (click)="goToStep(3)">
           <div class="circle">03</div>
-          <span class="label">BIOMETRICS</span>
+          <span class="label">ORIGIN</span>
         </div>
         <div class="line" [class.active]="currentStep > 3"></div>
 
         <div class="step" [class.active]="currentStep >= 4" [class.current]="currentStep === 4" (click)="goToStep(4)">
           <div class="circle">04</div>
-          <span class="label">ORIGIN</span>
+          <span class="label">EDUCATION</span>
         </div>
         <div class="line" [class.active]="currentStep > 4"></div>
 
         <div class="step" [class.active]="currentStep >= 5" [class.current]="currentStep === 5" (click)="goToStep(5)">
           <div class="circle">05</div>
-          <span class="label">EDUCATION</span>
+          <span class="label">CAREER</span>
         </div>
         <div class="line" [class.active]="currentStep > 5"></div>
 
         <div class="step" [class.active]="currentStep >= 6" [class.current]="currentStep === 6" (click)="goToStep(6)">
           <div class="circle">06</div>
-          <span class="label">CAREER</span>
+          <span class="label">MUSTER</span>
         </div>
         <div class="line" [class.active]="currentStep > 6"></div>
 
         <div class="step" [class.active]="currentStep >= 7" [class.current]="currentStep === 7" (click)="goToStep(7)">
           <div class="circle">07</div>
-          <span class="label">MUSTER</span>
+          <span class="label">NETWORK</span>
         </div>
         <div class="line" [class.active]="currentStep > 7"></div>
 
         <div class="step" [class.active]="currentStep >= 8" [class.current]="currentStep === 8" (click)="goToStep(8)">
           <div class="circle">08</div>
-          <span class="label">NETWORK</span>
+          <span class="label">PACKAGE</span>
         </div>
         <div class="line" [class.active]="currentStep > 8"></div>
 
         <div class="step" [class.active]="currentStep >= 9" [class.current]="currentStep === 9" (click)="goToStep(9)">
           <div class="circle">09</div>
-          <span class="label">PROFILE</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 9"></div>
-
-        <div class="step" [class.active]="currentStep >= 10" [class.current]="currentStep === 10" (click)="goToStep(10)">
-          <div class="circle">10</div>
           <span class="label">FINALIZE</span>
         </div>
       </div>
@@ -110,15 +104,14 @@
       <!-- Content Area -->
       <div class="wizard-content" *ngIf="!isResetting">
         <app-identity *ngIf="currentStep === 1" (complete)="nextStep()"></app-identity>
-        <app-species *ngIf="currentStep === 2" (complete)="nextStep()"></app-species>
-        <app-attributes *ngIf="currentStep === 3" (stateChange)="cdr.detectChanges()" (complete)="nextStep()"></app-attributes>
-        <app-origin *ngIf="currentStep === 4" (complete)="nextStep()"></app-origin>
-        <app-education *ngIf="currentStep === 5" (complete)="nextStep()"></app-education>
-        <app-career *ngIf="currentStep === 6" (onComplete)="onCareerComplete()" (complete)="onCareerComplete()"></app-career>
-        <app-mustering-out *ngIf="currentStep === 7" (complete)="onMusteringOutComplete()"></app-mustering-out>
-        <app-npc-management *ngIf="currentStep === 8" (complete)="onNpcManagementComplete()"></app-npc-management>
-        <app-skill-package *ngIf="currentStep === 9" (complete)="onSkillPackageComplete()"></app-skill-package>
-        <app-character-sheet *ngIf="currentStep === 10"></app-character-sheet>
+        <app-attributes *ngIf="currentStep === 2" (stateChange)="cdr.detectChanges()" (complete)="nextStep()"></app-attributes>
+        <app-origin *ngIf="currentStep === 3" (complete)="nextStep()"></app-origin>
+        <app-education *ngIf="currentStep === 4" (complete)="nextStep()"></app-education>
+        <app-career *ngIf="currentStep === 5" (onComplete)="onCareerComplete()" (complete)="onCareerComplete()"></app-career>
+        <app-mustering-out *ngIf="currentStep === 6" (complete)="onMusteringOutComplete()"></app-mustering-out>
+        <app-npc-management *ngIf="currentStep === 7" (complete)="onNpcManagementComplete()"></app-npc-management>
+        <app-skill-package *ngIf="currentStep === 8" (complete)="onSkillPackageComplete()"></app-skill-package>
+        <app-character-sheet *ngIf="currentStep === 9"></app-character-sheet>
       </div>
 
       <!-- Unified Sticky Action Bar -->

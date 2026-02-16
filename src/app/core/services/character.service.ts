@@ -242,6 +242,44 @@ export class CharacterService {
     });
   }
 
+  async rollLeavingHome(careerName: string, termsInCareer: number, diceService: any): Promise<{ roll: number, dm: number, success: boolean }> {
+      const char = this.character();
+      if (char.hasLeftHome) return { roll: 0, dm: 0, success: true };
+
+      let dm = 0;
+      const modifiers: { label: string, value: number }[] = [];
+
+      // 1. Origin Modifier (Spacer +2)
+      if (char.originType === 'Spacer') {
+          dm += 2;
+          modifiers.push({ label: 'Spacer Origin', value: 2 });
+      }
+
+      // 2. Career Modifier
+      // Navy, Marine, Merchant: +1 per term served
+      if (['Navy', 'Marine', 'Merchant'].includes(careerName)) {
+          dm += termsInCareer;
+          modifiers.push({ label: `${careerName} Career (+1/term)`, value: termsInCareer });
+      }
+      // Scout: +2 per term served
+      if (careerName === 'Scout') {
+          dm += (termsInCareer * 2);
+          modifiers.push({ label: 'Scout Career (+2/term)', value: termsInCareer * 2 });
+      }
+
+      const roll = await diceService.roll2D();
+      const success = (roll + dm) >= 8;
+
+      if (success) {
+          this.updateCharacter({ hasLeftHome: true });
+          this.log(`**LEAVING HOME**: Character has successfully left their homeworld (Roll: ${roll} + DM: ${dm} = ${roll + dm} vs 8+). Homeworld Survival DMs no longer apply.`);
+      } else {
+          this.log(`**STUCK AT HOME**: Character failed to leave their homeworld this term (Roll: ${roll} + DM: ${dm} = ${roll + dm} vs 8+).`);
+      }
+
+      return { roll, dm, success };
+  }
+
   // --- Education & Special Flags ---
 
   setPsionicPotential(value: boolean) {
@@ -289,6 +327,36 @@ export class CharacterService {
         forcedCareer: careerName,
         history: [...(current.history || []), `**Next Career Forced**: ${careerName}`]
       };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  promote(careerName?: string) {
+    this.characterSignal.update(current => {
+      const history = [...current.careerHistory];
+      let index = -1;
+
+      if (careerName) {
+        for (let i = history.length - 1; i >= 0; i--) {
+          if (history[i].careerName === careerName) {
+            index = i;
+            break;
+          }
+        }
+      } else {
+        index = history.length - 1;
+      }
+
+      if (index !== -1) {
+        const term = history[index];
+        if (term.rank < 6) {
+          const newRank = term.rank + 1;
+          history[index] = { ...term, rank: newRank };
+        }
+      }
+
+      const updated = { ...current, careerHistory: history };
       this.storage.save('autosave', updated);
       return updated;
     });
@@ -463,6 +531,63 @@ export class CharacterService {
       
       this.storage.save('autosave', updated);
       return updated;
+    });
+  }
+
+  setNeuralJackInstalled(value: boolean) {
+    this.characterSignal.update(current => {
+      const updated = {
+        ...current,
+        hasNeuralJack: value,
+        history: [...(current.history || []), value ? '**Neural Jack Installed**: Interface active.' : 'Neural Jack removed.']
+      };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  addItem(item: string) {
+    this.characterSignal.update(current => {
+      const updated = {
+        ...current,
+        equipment: [...(current.equipment || []), item],
+        history: [...(current.history || []), `**Item Gained**: ${item}`]
+      };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  addTrait(trait: string) {
+    this.characterSignal.update(current => {
+      const updated = {
+        ...current,
+        traits: [...(current.traits || []), trait],
+        history: [...(current.history || []), `**Trait Gained**: ${trait}`]
+      };
+      this.storage.save('autosave', updated);
+      return updated;
+    });
+  }
+
+  modifyStat(stat: string, value: number) {
+    this.characterSignal.update(current => {
+        const statKey = stat.toLowerCase() as keyof typeof current.characteristics;
+        const currentStat = current.characteristics[statKey];
+        if (!currentStat) return current;
+
+        const updatedStat = { ...currentStat, value: currentStat.value + value };
+        const updatedCharacteristics = { ...current.characteristics, [statKey]: updatedStat };
+        
+        const historyMsg = `**Stat Change**: ${stat.toUpperCase()} ${currentStat.value} -> ${updatedStat.value} (${value > 0 ? '+' : ''}${value})`;
+        
+        const updated = {
+            ...current,
+            characteristics: updatedCharacteristics,
+            history: [...(current.history || []), historyMsg]
+        };
+        this.storage.save('autosave', updated);
+        return updated;
     });
   }
 }

@@ -1,6 +1,7 @@
 <div class="app-shell">
   <div class="dice-layer">
     <app-dice-roller *ngIf="diceService.request()"></app-dice-roller>
+    <app-npc-interaction *ngIf="npcService.request()"></app-npc-interaction>
   </div>
 
   <header class="app-header">

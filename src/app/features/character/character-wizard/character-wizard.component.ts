@@ -73,15 +73,14 @@ export class CharacterWizardComponent {
     /** Label for the sticky footer action button */
     get actionLabel(): string {
         switch (this.currentStep) {
-            case 1: return 'PROCEED > SPECIES';
-            case 2: return 'PROCEED > BIOMETRICS';
-            case 3: return 'PROCEED > ORIGIN';
-            case 4: return 'PROCEED > EDUCATION';
-            case 5: return 'PROCEED > CAREER';
-            case 6: return 'PROCEED > MUSTER_OUT';
-            case 7: return 'PROCEED > NPC_MANAGEMENT';
-            case 8: return 'PROCEED > SKILL_PACKAGE';
-            case 9: return 'FINALIZE_CHARACTER';
+            case 1: return 'PROCEED > BIOMETRICS';
+            case 2: return 'PROCEED > ORIGIN';
+            case 3: return 'PROCEED > EDUCATION';
+            case 4: return 'PROCEED > CAREER';
+            case 5: return 'PROCEED > MUSTER_OUT';
+            case 6: return 'PROCEED > NPC_MANAGEMENT';
+            case 7: return 'PROCEED > SKILL_PACKAGE';
+            case 8: return 'FINALIZE_CHARACTER';
             default: return 'PROCEED';
         }
     }
@@ -90,15 +89,14 @@ export class CharacterWizardComponent {
     get actionEnabled(): boolean {
         switch (this.currentStep) {
             case 1: return this.identityStep ? this.identityStep.isValid() : false;
-            case 2: return !!this.speciesStep?.selectedId;
-            case 3: return !!this.attributesStep?.isComplete;
-            case 4: return this.originStep ? this.originStep.canProceed() : false;
-            case 5: return this.educationStep ? (this.educationStep.canProceedToNext() || this.educationStep.admissionStatus === 'Rejected') : false;
-            case 6: return this.careerStep ? this.careerStep.canProceedToNext() : false;
-            case 7: return this.musteringStep ? this.musteringStep.canProceedToNext() : false;
-            case 8: return this.npcStep ? this.npcStep.isValid() : true;
-            case 9: return !!this.skillPkgStep?.selectedPackage();
-            default: return false;
+            case 2: return !!this.attributesStep?.isComplete;
+            case 3: return this.originStep ? this.originStep.canProceed() : false;
+            case 4: return this.educationStep ? (this.educationStep.canProceedToNext() || this.educationStep.admissionStatus === 'Rejected') : false;
+            case 5: return this.careerStep ? this.careerStep.canProceedToNext() : false;
+            case 6: return this.musteringStep ? this.musteringStep.canProceedToNext() : false;
+            case 7: return this.npcStep ? this.npcStep.isValid() : true;
+            case 8: return !!this.skillPkgStep?.selectedPackage();
+            default: return true;
         }
     }
 

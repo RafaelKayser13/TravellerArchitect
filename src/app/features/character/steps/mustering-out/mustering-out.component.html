@@ -166,22 +166,4 @@
         </button>
     </div>
 
-    <!-- NPC Generation Prompt -->
-    <div *ngIf="isNpcPrompt" class="modal-overlay fade-in">
-        <div class="modal hud-module info">
-            <div class="hud-box-header">
-                <h3>NEW_IDENTITY_RECORD_CREATION</h3>
-            </div>
-            <div class="hud-content">
-                <p>Developing a relationship with a {{ pendingNpcType }}. Enter their designation:</p>
-                <div class="tactical-row">
-                    <input type="text" [(ngModel)]="npcNameInput" placeholder="ENTER_NAME..." class="hud-input"
-                        (keyup.enter)="confirmNpcGeneration()">
-                </div>
-            </div>
-            <div class="hud-footer">
-                <button class="btn-action" (click)="confirmNpcGeneration()">CONFIRM_RECORD</button>
-            </div>
-        </div>
-    </div>
 </div>

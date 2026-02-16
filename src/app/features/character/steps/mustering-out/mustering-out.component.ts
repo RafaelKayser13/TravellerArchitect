@@ -8,6 +8,9 @@ import { DiceDisplayService } from '../../../../core/services/dice-display.servi
 
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 import { FormsModule } from '@angular/forms';
+import { EventEngineService } from '../../../../core/services/event-engine.service';
+import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
+import { getBenefitEffects } from '../../../../data/events/shared/mustering-out';
 
 @Component({
     selector: 'app-mustering-out',
@@ -20,6 +23,8 @@ export class MusteringOutComponent {
     protected characterService = inject(CharacterService);
     protected diceService = inject(DiceService);
     protected diceDisplay = inject(DiceDisplayService);
+    protected eventEngine = inject(EventEngineService);
+    protected npcInteractionService = inject(NpcInteractionService);
 
     character = this.characterService.character;
 
@@ -45,11 +50,6 @@ export class MusteringOutComponent {
 
     // Selected Career for rolling
     selectedCareerName = signal<string | null>(null);
-
-    // NPC Generation Prompt
-    isNpcPrompt = false;
-    pendingNpcType: import('../../../../core/models/career.model').NpcType = 'contact';
-    npcNameInput = '';
 
     careerPools = computed(() => {
         const char = this.character();
@@ -110,8 +110,8 @@ export class MusteringOutComponent {
             modifiers.push({ label: 'Hard Path', value: 1 });
         }
 
-        // 2. Off-World Education (Cash only)
-        if (type === 'Cash' && char.education?.offworld) {
+        // 2. Off-World Education (Rule 258: DM-1 to all benefit rolls)
+        if (char.education?.offworld) {
             dm -= 1;
             modifiers.push({ label: 'Off-World Edu', value: -1 });
         }
@@ -137,7 +137,7 @@ export class MusteringOutComponent {
         // Table Data
         const tableData = type === 'Cash' ? careerDef.musteringOutCash : careerDef.musteringOutBenefits;
 
-        const roll = await this.diceDisplay.roll(
+        const rollResult = await this.diceDisplay.roll(
             'Benefit: ' + type + ' (' + careerName + ')',
             1,
             dm,
@@ -155,140 +155,97 @@ export class MusteringOutComponent {
             tableData
         );
 
-        let finalRoll = roll + dm;
+        let finalRoll = rollResult + dm;
         if (finalRoll > 7) finalRoll = 7;
         if (finalRoll < 1) finalRoll = 1;
 
-        let result = '';
         const tableIndex = finalRoll - 1;
 
         if (type === 'Cash') {
             const cash = careerDef.musteringOutCash[tableIndex];
-            result = `Cash: Lv ${cash}`;
+            const result = `Cash: Lv ${cash}`;
             
-            const currentCash = char.finances.cash;
-            this.characterService.updateCharacter({
-                finances: { ...char.finances, cash: currentCash + cash }
-            });
-
+            this.characterService.updateFinances({ cash: char.finances.cash + cash });
+            this.benefitsLog.update((l: string[]) => [...l, result]);
+            this.characterService.spendBenefitRoll(careerName, 1, true);
         } else {
-            let benefit = careerDef.musteringOutBenefits[tableIndex];
+            const benefitName = careerDef.musteringOutBenefits[tableIndex];
+            const effects = getBenefitEffects(benefitName);
             
-            // 2300AD: TAS Membership does not exist, convert to +1 Ship Share
-            if (benefit === 'TAS Membership') {
-                benefit = 'Ship Share';
-                this.characterService.log('**TAS Conversion**: TAS Membership converted to +1 Ship Share (2300AD Rule).');
-            }
+            // Register custom handlers
+            this.registerMusteringOutHandlers();
 
-            result = `Benefit: ${benefit}`;
-
-            if (benefit.includes('INT +')) {
-                const int = char.characteristics.int;
-                this.characterService.updateCharacter({
-                    characteristics: {
-                        ...char.characteristics,
-                        int: { ...int, value: int.value + 1, modifier: this.diceService.getModifier(int.value + 1) }
-                    }
-                });
-            }
-            else if (benefit.includes('EDU +')) {
-                const edu = char.characteristics.edu;
-                this.characterService.updateCharacter({
-                    characteristics: {
-                        ...char.characteristics,
-                        edu: { ...edu, value: edu.value + 1, modifier: this.diceService.getModifier(edu.value + 1) }
-                    }
-                });
-            }
-            else if (benefit.includes('SOC +')) {
-                const soc = char.characteristics.soc;
-                this.characterService.updateCharacter({
-                    characteristics: {
-                        ...char.characteristics,
-                        soc: { ...soc, value: soc.value + 1, modifier: this.diceService.getModifier(soc.value + 1) }
-                    }
-                });
-            }
-            else if (benefit.includes('Ship Share')) {
-                const currentShares = char.finances.shipShares || 0;
-                this.characterService.updateCharacter({
-                    finances: { ...char.finances, shipShares: currentShares + 1 }
-                });
-                this.characterService.log('**Benefit Gained**: Ship Share (Value: Lv 500,000). Provides Lv 1,000/year dividend.');
-            }
-            else if (benefit === 'Weapon') {
-                // 2300AD: Weapon restriction (Military vs others)
-                const isMilitary = ['Army', 'Navy', 'Marine', 'Agent'].includes(careerName);
-                const isSpaceborne = ['Spaceborne', 'Belter'].includes(careerName);
-                let restriction = 'Slug throwers (Rifle/Pistol only)';
-                if (isMilitary || isSpaceborne) {
-                    restriction = 'Any (including Lasers)';
-                }
-                const equipment = [...char.equipment, `Weapon (${restriction})` ];
-                this.characterService.updateCharacter({ equipment });
-                this.characterService.log(`**Benefit Gained**: Weapon. Restriction: ${restriction}`);
-            }
-            else if (benefit === 'Armour') {
-                 // 2300AD: Armor limit Lv 10,000 / TL 12
-                 // Upgrade Rule: If already has armor, limit increases to Lv 25,000
-                 const hasArmor = char.equipment.some(e => e.includes('Armour'));
-                 const limit = hasArmor ? 'Lv 25,000' : 'Lv 10,000';
-                 
-                 const equipment = [...char.equipment, `Armour (Limit: ${limit} / TL 12)`];
-                 this.characterService.updateCharacter({ equipment });
-                 this.characterService.log(`**Benefit Gained**: Armour. Limit: ${limit}.`);
-            }
-            else if (benefit.includes('Vehicle')) {
-                // 2300AD: Vehicle restriction (Lv 300,000 / TL 10 / Unarmed)
-                const equipment = [...char.equipment, `${benefit} (Limit: Lv 300,000 / TL 10 / Unarmed)`];
-                this.characterService.updateCharacter({ equipment });
-                this.characterService.log(`**Benefit Gained**: ${benefit}. Restriction: Lv 300,000 / TL 10 / Unarmed.`);
-            }
-            else if (benefit === 'TAS Membership') {
-                // 2300AD: TAS Membership = +1 Ship Share
-                this.characterService.updateFinances({ shipShares: (char.finances.shipShares || 0) + 1 });
-                this.characterService.log(`**Benefit Gained**: TAS Membership (Converted to +1 Ship Share).`);
-            }
-            else if (benefit === 'Yacht') {
-                const equipment = [...char.equipment, 'Yacht (Noble Benefit)'];
-                this.characterService.updateCharacter({ equipment });
-                this.characterService.log('**Benefit Gained**: Yacht (Noble). A personal luxury starship is at your disposal.');
-            }
-            else if (benefit === 'Free Trader') {
-                const currentShares = char.finances.shipShares || 0;
-                // In 2300AD, "Free Trader" benefit usually grants 2 Ship Shares or a specific voucher.
-                // We'll treat it as +2 Ship Shares to align with the value.
-                this.characterService.updateCharacter({
-                    finances: { ...char.finances, shipShares: currentShares + 2 }
-                });
-                this.characterService.log('**Benefit Gained**: Free Trader. Gained 2 Ship Shares.');
-            }
-            else if (benefit === 'Contact' || benefit === 'Ally' || benefit === 'Rival') {
-                this.pendingNpcType = benefit.toLowerCase() as any;
-                this.isNpcPrompt = true;
-                this.characterService.log(`**Benefit Gained**: ${benefit}. Awaiting record creation...`);
-            }
-            else {
-                const equipment = [...char.equipment, benefit];
-                this.characterService.updateCharacter({ equipment });
-            }
+            // Apply effects via Engine
+            await this.eventEngine.applyEffects(effects);
+            
+            this.benefitsLog.update((l: string[]) => [...l, `Benefit: ${benefitName}`]);
+            this.characterService.spendBenefitRoll(careerName, 1, false);
         }
 
-        this.benefitsLog.update((l: string[]) => [...l, result]);
-        this.characterService.spendBenefitRoll(careerName, 1, type === 'Cash');
-        console.log(`[MusteringOut] Rolled ${roll}${dm ? (dm > 0 ? '+' + dm : dm) : ''} (${type}): ${result}`);
+        console.log(`[MusteringOut] Rolled ${rollResult}${dm ? (dm > 0 ? '+' + dm : dm) : ''} (${type})`);
+
+        // Check if rolls for this career are exhausted
+        const updatedAlloc = this.character().finances.benefitRollsAllocated || {};
+        if ((updatedAlloc[careerName] || 0) <= 0) {
+            // Find next career with rolls
+            const nextPool = this.careerPools().find(p => p.count > 0);
+            if (nextPool) {
+                this.selectCareer(nextPool.name);
+                // Optional: Toast or Log to user
+            }
+        }
     }
 
-    async confirmNpcGeneration(overrideName?: string) {
-        const { createNpc } = await import('../../../../data/npc-tables');
-        const name = overrideName || this.npcNameInput;
-        const careerName = this.selectedCareerName() || 'Unknown';
-        const npc = createNpc(this.pendingNpcType, `Muster Out: ${careerName}`, '', name);
-        this.characterService.addNpc(npc);
+    private registerMusteringOutHandlers() {
+        this.eventEngine.registerCustomHandler('AWARD_WEAPON', () => {
+            const char = this.character();
+            const careerName = this.selectedCareerName() || '';
+            const isMilitary = ['Army', 'Navy', 'Marine', 'Agent'].includes(careerName);
+            const isSpaceborne = ['Spaceborne', 'Belter'].includes(careerName);
+            let restriction = 'Slug throwers (Rifle/Pistol only)';
+            if (isMilitary || isSpaceborne) {
+                restriction = 'Any (including Lasers)';
+            }
+            this.characterService.addItem(`Weapon (${restriction})`);
+            this.characterService.log(`**Benefit Gained**: Weapon. Restriction: ${restriction}`);
+        });
 
-        this.isNpcPrompt = false;
-        this.npcNameInput = '';
+        this.eventEngine.registerCustomHandler('AWARD_ARMOR', () => {
+            const char = this.character();
+            const hasArmor = char.equipment.some(e => e.includes('Armour'));
+            const limit = hasArmor ? 'Lv 25,000' : 'Lv 10,000';
+            this.characterService.addItem(`Armour (Limit: ${limit} / TL 12)`);
+            this.characterService.log(`**Benefit Gained**: Armour. Limit: ${limit}.`);
+        });
+
+        this.eventEngine.registerCustomHandler('AWARD_VEHICLE', () => {
+            this.characterService.addItem(`Vehicle (Limit: Lv 300,000 / TL 10 / Unarmed)`);
+            this.characterService.log(`**Benefit Gained**: Vehicle. Restriction: Lv 300,000 / TL 10 / Unarmed.`);
+        });
+
+        this.eventEngine.registerCustomHandler('AWARD_NPC', async (payload) => {
+             const type = payload.type || 'Contact';
+             const careerName = this.selectedCareerName() || 'Unknown';
+             
+             // Use our new Interaction Service!
+             const npc = await this.npcInteractionService.promptForNpc({
+                 role: type,
+                 notes: `Gained during Muster Out from ${careerName}`
+             });
+
+             if (npc) {
+                 this.characterService.addNpc(npc);
+                 this.characterService.log(`**Benefit Gained**: Established ${type} relation with ${npc.name}.`);
+             }
+        });
+        
+        this.eventEngine.registerCustomHandler('SET_NEURAL_JACK', () => {
+            this.characterService.updateCharacter({ hasNeuralJack: true });
+            this.characterService.log('**Cybernetics**: Neural Jack interface successfully installed.');
+        });
     }
+
+    // Removed old confirmNpcGeneration method
 
     canProceedToNext(): boolean {
         return this.totalRolls() === 0;

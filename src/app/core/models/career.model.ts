@@ -1,7 +1,11 @@
 
+import { GameEvent } from './game-event.model';
+
 export interface CareerEvent {
     roll: number;
     description: string;
+    gameEvent?: GameEvent;
+    subEvents?: GameEvent[];
     effect?: (char: any) => void;
     label?: string;
     effects?: CareerEventEffect[];
@@ -10,6 +14,8 @@ export interface CareerEvent {
 export interface CareerMishap {
     roll: number;
     description: string;
+    gameEvent?: GameEvent;
+    subEvents?: GameEvent[];
     effects?: CareerEventEffect[];
 }
 
@@ -103,17 +109,20 @@ export interface CareerDefinition {
 
 export interface LifeEvent {
     roll: number; // 2D6 result (2-12)
-    name: string;
+    name?: string;
     description: string;
+    gameEvent?: GameEvent;
     effect?: string; // Structured effect description
     effects?: CareerEventEffect[];
 }
 
 export interface InjuryResult {
     roll: number; // 1D6 result (1-6)
-    name: string;
+    name?: string;
     description: string;
-    statLossFormula: string; // e.g. '1D6 from one + 2 from others', 'STR or DEX -2', etc.
+    gameEvent?: GameEvent;
+    statLossFormula?: string; // e.g. '1D6 from one + 2 from others', 'STR or DEX -2', etc.
+    effects?: CareerEventEffect[];
 }
 
 export interface MedicalBillsEntry {

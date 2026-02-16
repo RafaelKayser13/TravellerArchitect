@@ -1,4 +1,32 @@
 import { CareerDefinition } from '../core/models/career.model';
+import { AGENT_EVENT_TABLE } from './events/agent/agent-events';
+import { AGENT_MISHAP_TABLE } from './events/agent/agent-mishap-events';
+import { ARMY_EVENT_TABLE } from './events/army/army-events';
+import { ARMY_MISHAP_TABLE } from './events/army/army-mishap-events';
+import { CITIZEN_EVENT_TABLE } from './events/citizen/citizen-events';
+import { CITIZEN_MISHAP_TABLE } from './events/citizen/citizen-mishap-events';
+import { DRIFTER_EVENT_TABLE } from './events/drifter/drifter-events';
+import { DRIFTER_MISHAP_TABLE } from './events/drifter/drifter-mishap-events';
+import { ENTERTAINER_EVENT_TABLE } from './events/entertainer/entertainer-events';
+import { ENTERTAINER_MISHAP_TABLE } from './events/entertainer/entertainer-mishap-events';
+import { MARINE_EVENT_TABLE } from './events/marine/marine-events';
+import { MARINE_MISHAP_TABLE } from './events/marine/marine-mishap-events';
+import { MERCHANT_EVENT_TABLE } from './events/merchant/merchant-events';
+import { MERCHANT_MISHAP_TABLE } from './events/merchant/merchant-mishap-events';
+import { NAVY_EVENT_TABLE } from './events/navy/navy-events';
+import { NAVY_MISHAP_TABLE } from './events/navy/navy-mishap-events';
+import { NOBLE_EVENT_TABLE } from './events/noble/noble-events';
+import { NOBLE_MISHAP_TABLE } from './events/noble/noble-mishap-events';
+import { ROGUE_EVENT_TABLE } from './events/rogue/rogue-events';
+import { ROGUE_MISHAP_TABLE } from './events/rogue/rogue-mishap-events';
+import { SCHOLAR_EVENT_TABLE } from './events/scholar/scholar-events';
+import { SCHOLAR_MISHAP_TABLE } from './events/scholar/scholar-mishap-events';
+import { SCOUT_EVENT_TABLE } from './events/scout/scout-events';
+import { SCOUT_MISHAP_TABLE } from './events/scout/scout-mishap-events';
+import { SPACEBORNE_EVENT_TABLE } from './events/spaceborne/spaceborne-events';
+import { SPACEBORNE_MISHAP_TABLE } from './events/spaceborne/spaceborne-mishap-events';
+import { PRISONER_EVENT_TABLE } from './events/prisoner/prisoner-events';
+import { PRISONER_MISHAP_TABLE } from './events/prisoner/prisoner-mishap-events';
 
 export const CAREERS: CareerDefinition[] = [
     // 1. AGENT (Core Rulebook / 2300AD)
@@ -21,10 +49,10 @@ export const CAREERS: CareerDefinition[] = [
                     { level: 0, title: 'Rookie' },
                     { level: 1, title: 'Corporal', bonus: 'Streetwise 1', bonusSkill: 'Streetwise', bonusValue: 1 },
                     { level: 2, title: 'Sergeant' },
-                    { level: 3, title: 'Detective' },
-                    { level: 4, title: 'Lieutenant', bonus: 'Investigate 1', bonusSkill: 'Investigate', bonusValue: 1 },
-                    { level: 5, title: 'Chief', bonus: 'Admin 1', bonusSkill: 'Admin', bonusValue: 1 },
-                    { level: 6, title: 'Commissioner', bonus: 'SOC +1', bonusSkill: 'SOC', bonusValue: '+1' }
+                    { level: 3, title: 'Detective', bonus: 'Investigate 1', bonusSkill: 'Investigate', bonusValue: 1 },
+                    { level: 4, title: 'Lieutenant', bonus: 'Admin 1', bonusSkill: 'Admin', bonusValue: 1 },
+                    { level: 5, title: 'Chief', bonus: 'SOC +1', bonusSkill: 'SOC', bonusValue: '+1' },
+                    { level: 6, title: 'Commissioner' }
                 ]
             },
             {
@@ -33,13 +61,12 @@ export const CAREERS: CareerDefinition[] = [
                 advancementStat: 'INT', advancementTarget: 5,
                 skillTable: ['Investigate', 'Recon', 'Electronics (comms)', 'Stealth', 'Persuade', 'Deception'],
                 ranks: [
-                    { level: 0, title: 'Analyst' },
-                    { level: 1, title: 'Agent', bonus: 'Deception 1', bonusSkill: 'Deception', bonusValue: 1 },
-                    { level: 2, title: 'Field Agent', bonus: 'Investigate 1', bonusSkill: 'Investigate', bonusValue: 1 },
-                    { level: 3, title: 'Senior Agent' },
-                    { level: 4, title: 'Special Agent', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
-                    { level: 5, title: 'Assistant Director' },
-                    { level: 6, title: 'Director' }
+                    { level: 0, title: 'Agent', bonus: 'Deception 1', bonusSkill: 'Deception', bonusValue: 1 },
+                    { level: 1, title: 'Field Agent', bonus: 'Investigate 1', bonusSkill: 'Investigate', bonusValue: 1 },
+                    { level: 2, title: 'Field Agent' },
+                    { level: 3, title: 'Special Agent', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 4, title: 'Assistant Director' },
+                    { level: 5, title: 'Director' }
                 ]
             },
             {
@@ -48,37 +75,17 @@ export const CAREERS: CareerDefinition[] = [
                 advancementStat: 'DEX', advancementTarget: 7,
                 skillTable: ['Investigate', 'Electronics (computers)', 'Stealth', 'Carouse', 'Deception', 'Streetwise'],
                 ranks: [
-                    { level: 0, title: 'Analyst' },
-                    { level: 1, title: 'Agent', bonus: 'Deception 1', bonusSkill: 'Deception', bonusValue: 1 },
-                    { level: 2, title: 'Field Agent', bonus: 'Investigate 1', bonusSkill: 'Investigate', bonusValue: 1 },
-                    { level: 3, title: 'Senior Agent' },
-                    { level: 4, title: 'Special Agent', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
-                    { level: 5, title: 'Assistant Director' },
-                    { level: 6, title: 'Director' }
+                    { level: 0, title: 'Agent', bonus: 'Deception 1', bonusSkill: 'Deception', bonusValue: 1 },
+                    { level: 1, title: 'Field Agent', bonus: 'Investigate 1', bonusSkill: 'Investigate', bonusValue: 1 },
+                    { level: 2, title: 'Field Agent' },
+                    { level: 3, title: 'Special Agent', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 4, title: 'Assistant Director' },
+                    { level: 5, title: 'Director' }
                 ]
             }
         ],
-        eventTable: [
-            { roll: 2, description: 'Disaster! Roll on the Mishap table, but you are not ejected from this career.', effects: [{ type: 'mishap' }] },
-            { roll: 3, description: 'An investigation takes a dangerous turn. Roll Investigate 8+ or Streetwise 8+. Failure: roll on Mishap table. Success: gain Deception 1, Jack-of-all-Trades 1, Persuade 1, or Tactics 1.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['Investigate', 'Streetwise'], onSuccess: [{ type: 'skill-choice', skills: ['Deception', 'Jack-of-all-Trades', 'Persuade', 'Tactics'] }], onFailure: [{ type: 'mishap' }] }] },
-            { roll: 4, description: 'Mission rewarded. Gain DM+1 to any one Benefit roll.', effects: [{ type: 'benefit-mod', value: 1 }] },
-            { roll: 5, description: 'You establish a network of contacts. Gain 1D3 Contacts.', effects: [{ type: 'npc', npcType: 'contact', npcCountDice: '1d3' }] },
-            { roll: 6, description: 'Advanced Training. Roll EDU 8+. Success: increase any known skill by +1 level.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['EDU'], onSuccess: [{ type: 'any-skill-up' }], onFailure: [] }] },
-            { roll: 7, description: 'Life Event. Roll on the Life Events table.', effects: [{ type: 'life-event' }] },
-            { roll: 8, description: 'Undercover mission. Roll Deception 8+. Success: Choose Rogue or Citizen for disguise. Roll event on that career and gain +1 to a skill from it. Failure: Roll mishap on that career.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['Deception'], onSuccess: [{ type: 'choice', note: 'Undercover: Choice between Rogue or Citizen' }], onFailure: [{ type: 'choice', note: 'Undercover Blown: Choice between Rogue or Citizen mishap' }] }] },
-            { roll: 9, description: 'Above and beyond. Gain DM+2 to your next Advancement roll.', effects: [{ type: 'advancement-dm', value: 2 }] },
-            { roll: 10, description: 'Specialist vehicle training. Gain Drive 1, Flyer 1, Pilot 1, or Gunner 1.', effects: [{ type: 'skill-choice', skills: ['Drive', 'Flyer', 'Pilot', 'Gunner'] }] },
-            { roll: 11, description: 'A senior agent mentors you. Gain Investigate 1 or DM+4 to an Advancement roll.', effects: [{ type: 'choice', note: 'Mentor: Investigate 1 OR DM+4 Advancement' }] },
-            { roll: 12, description: 'You uncover a major conspiracy. You are automatically promoted.', effects: [{ type: 'auto-promotion' }] }
-        ],
-        mishapTable: [
-            { roll: 1, description: 'Severely injured in action. Roll on the Injury table.', effects: [{ type: 'injury' }] },
-            { roll: 2, description: 'Bribe offer. Accept (Ejected) or Refuse (Injury x2, lower grav, Enemy, Skill choice, Ejected).', effects: [{ type: 'choice', note: 'Bribery: Accept vs Refuse' }] },
-            { roll: 3, description: 'Investigation Blown. Advocate 8+ to clear name. Failure to clear name might lead to Prison.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['Advocate'], onSuccess: [{ type: 'narrative', note: 'Name cleared. Ejected but keep benefits.' }], onFailure: [{ type: 'career-force', skill: 'Prisoner', note: 'Investigation Blown' }] }] },
-            { roll: 4, description: 'Hunted. Gain an Enemy and Deception 1.', effects: [{ type: 'npc', npcType: 'enemy', note: 'Hunter' }, { type: 'skill-gain', skill: 'Deception', value: 1 }] },
-            { roll: 5, description: 'Work Comes Home. An NPC is marked or you are injured.', effects: [{ type: 'npc-note', note: 'Injured due to my work' }] },
-            { roll: 6, description: 'Injured. Roll on the Injury table.', effects: [{ type: 'injury' }] }
-        ],
+        eventTable: AGENT_EVENT_TABLE,
+        mishapTable: AGENT_MISHAP_TABLE,
         musteringOutCash: [1000, 2000, 5000, 7500, 10000, 25000, 50000],
         musteringOutBenefits: ['Scientific Equipment', 'INT +1', 'Ship Share', 'Weapon', 'Combat Implant', 'SOC +1', 'TAS Membership']
     },
@@ -113,7 +120,7 @@ export const CAREERS: CareerDefinition[] = [
                     { level: 2, title: 'Corporal' },
                     { level: 3, title: 'Lance Sergeant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
                     { level: 4, title: 'Sergeant' },
-                    { level: 5, title: 'Gunnery Sergeant' },
+                    { level: 5, title: 'Gunnery Sergeant', bonus: 'STR +1', bonusSkill: 'STR', bonusValue: '+1' },
                     { level: 6, title: 'Sergeant Major' }
                 ]
             },
@@ -128,13 +135,13 @@ export const CAREERS: CareerDefinition[] = [
                     { level: 2, title: 'Corporal' },
                     { level: 3, title: 'Lance Sergeant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
                     { level: 4, title: 'Sergeant' },
-                    { level: 5, title: 'Gunnery Sergeant' },
+                    { level: 5, title: 'Gunnery Sergeant', bonus: 'STR +1', bonusSkill: 'STR', bonusValue: '+1' },
                     { level: 6, title: 'Sergeant Major' }
                 ]
             },
             {
                 name: 'Cavalry',
-                survivalStat: 'INT', survivalTarget: 7,
+                survivalStat: 'DEX', survivalTarget: 7,
                 advancementStat: 'INT', advancementTarget: 5,
                 skillTable: ['Mechanic', 'Drive (any)', 'Flyer (any)', 'Recon', 'Heavy Weapons (vehicle)', 'Electronics (sensors)'],
                 ranks: [
@@ -143,32 +150,13 @@ export const CAREERS: CareerDefinition[] = [
                     { level: 2, title: 'Corporal' },
                     { level: 3, title: 'Lance Sergeant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
                     { level: 4, title: 'Sergeant' },
-                    { level: 5, title: 'Gunnery Sergeant' },
+                    { level: 5, title: 'Gunnery Sergeant', bonus: 'STR +1', bonusSkill: 'STR', bonusValue: '+1' },
                     { level: 6, title: 'Sergeant Major' }
                 ]
             }
         ],
-        eventTable: [
-            { roll: 2, description: 'Disaster! Roll on the Mishap table, but you are not ejected from this career.', effects: [{ type: 'mishap' }] },
-            { roll: 3, description: 'Neural Jack opportunity. (Term 1-3 only). (Refer to Neural Jack rules).', effects: [{ type: 'neural-jack' }] },
-            { roll: 4, description: 'Urban war. Gain Stealth 1, Streetwise 1, Persuade 1, or Recon 1.', effects: [{ type: 'skill-choice', skills: ['Stealth', 'Streetwise', 'Persuade', 'Recon'] }] },
-            { roll: 5, description: 'Special assignment. Gain DM+1 to any one Benefit roll.', effects: [{ type: 'benefit-mod', value: 1 }] },
-            { roll: 6, description: 'Brutal war. Roll EDU 8+. Success: gain Gun Combat 1 or Leadership 1. Failure: roll on the Injury Table.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['EDU'], onSuccess: [{ type: 'skill-choice', skills: ['Gun Combat', 'Leadership'] }], onFailure: [{ type: 'injury' }] }] },
-            { roll: 7, description: 'Life Event. Roll on the Life Events table.', effects: [{ type: 'life-event' }] },
-            { roll: 8, description: 'Advanced Training. Roll EDU 8+. Success: increase any known skill by +1 level.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['EDU'], onSuccess: [{ type: 'any-skill-up' }], onFailure: [] }] },
-            { roll: 9, description: 'Surrounded and outnumbered. You hold out until relief arrives. Gain DM+2 to your next Advancement roll.', effects: [{ type: 'advancement-dm', value: 2 }] },
-            { roll: 10, description: 'Peacekeeping. Gain Admin 1, Investigate 1, Deception 1, or Recon 1.', effects: [{ type: 'skill-choice', skills: ['Admin', 'Investigate', 'Deception', 'Recon'] }] },
-            { roll: 11, description: 'Commanding officer takes interest. Gain Tactics 1 or DM+4 to Advancement.', effects: [{ type: 'choice', note: 'Officer Interest: Tactics 1 OR DM+4 Advancement' }] },
-            { roll: 12, description: 'Heroism in battle. You are automatically promoted or receive an automatic commission.', effects: [{ type: 'auto-promotion' }] }
-        ],
-        mishapTable: [
-            { roll: 1, description: 'Severely injured in action. Roll on the Injury table.', effects: [{ type: 'injury' }] },
-            { roll: 2, description: 'You are psychologically damaged by your time in the service. Reduce END by 1 and gain PTSD trait.', effects: [{ type: 'stat-bonus', stat: 'END', value: -1 }, { type: 'trait-gain', note: 'Survivor (PTSD)' }] },
-            { roll: 3, description: 'Your unit is slaughtered in a disastrous battle. Gain Survival 1 or Recon 1.', effects: [{ type: 'skill-choice', skills: ['Survival', 'Recon'] }] },
-            { roll: 4, description: 'Scandal. You are discharged. Lose SOC 1.', effects: [{ type: 'stat-bonus', stat: 'SOC', value: -1 }] },
-            { roll: 5, description: 'You are tormented by or quarrel with an officer or fellow soldier. Gain a Rival.', effects: [{ type: 'npc', npcType: 'rival' }] },
-            { roll: 6, description: 'Injured. Roll on the Injury table.', effects: [{ type: 'injury' }] }
-        ],
+        eventTable: ARMY_EVENT_TABLE,
+        mishapTable: ARMY_MISHAP_TABLE,
         musteringOutCash: [2000, 5000, 10000, 10000, 10000, 20000, 30000],
         musteringOutBenefits: ['Combat Implant', 'INT +1', 'EDU +1', 'Weapon', 'Armour', 'SOC +1', 'Ship Share']
     },
@@ -216,7 +204,7 @@ export const CAREERS: CareerDefinition[] = [
             },
             {
                 name: 'Colonist',
-                survivalStat: 'END', survivalTarget: 7,
+                survivalStat: 'INT', survivalTarget: 7,
                 advancementStat: 'EDU', advancementTarget: 5,
                 skillTable: ['Animals (any)', 'Athletics (any)', 'Jack-of-all-Trades', 'Drive (any)', 'Survival', 'Recon'],
                 ranks: [
@@ -230,27 +218,8 @@ export const CAREERS: CareerDefinition[] = [
                 ]
             }
         ],
-        eventTable: [
-            { roll: 2, description: 'Disaster! Roll on the Mishap table, but you are not ejected from this career.', effects: [{ type: 'mishap' }] },
-            { roll: 3, description: 'Political upheaval. Choose Advocate 1, Persuade 1, Explosives 1, or Streetwise 1 and roll that skill 8+. Success: Gain DM+2 Advancement and skill +1. Failure: DM-2 on next Survival and Ejected.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['Advocate', 'Persuade', 'Explosives', 'Streetwise'], onSuccess: [{ type: 'advancement-dm', value: 2 }, { type: 'any-skill-up' }], onFailure: [{ type: 'advancement-dm', value: -2, note: 'Applied to next Survival roll' }] }] },
-            { roll: 4, description: 'Vehicle hobby. Increase Mechanic, Drive, Electronics, Flyer, or Engineer by +1 level.', effects: [{ type: 'skill-choice', skills: ['Mechanic', 'Drive', 'Electronics', 'Flyer', 'Engineer'] }] },
-            { roll: 5, description: 'Business expands. Gain DM+1 to any one Benefit roll.', effects: [{ type: 'benefit-mod', value: 1 }] },
-            { roll: 6, description: 'Advanced Training. Roll EDU 10+. Success: gain any skill at level 1.', effects: [{ type: 'skill-check', target: 10, checkSkills: ['EDU'], onSuccess: [{ type: 'any-skill-up' }], onFailure: [] }] },
-            { roll: 7, description: 'Life Event. Roll on the Life Events table.', effects: [{ type: 'life-event' }] },
-            { roll: 8, description: 'Illegal profit opportunity. Accept: DM+1 Benefit and gain Streetwise 1 or Deception 1. Refuse: nothing.', effects: [{ type: 'choice', note: 'Illegal Profit: Accept vs Refuse' }] },
-            { roll: 9, description: 'Rewarded for diligence. Gain DM+2 to your next Advancement roll.', effects: [{ type: 'advancement-dm', value: 2 }] },
-            { roll: 10, description: 'Technical experience. Increase Electronics or Engineer by +1 level.', effects: [{ type: 'skill-choice', skills: ['Electronics', 'Engineer'] }] },
-            { roll: 11, description: 'Befriend a superior. Gain an Ally. Gain Diplomat 1 or DM+4 to Advancement.', effects: [{ type: 'npc', npcType: 'ally' }, { type: 'choice', note: 'Friend in High Place: Diplomat 1 OR DM+4 Advancement' }] },
-            { roll: 12, description: 'Rise to power. You are automatically promoted.', effects: [{ type: 'auto-promotion' }] }
-        ],
-        mishapTable: [
-            { roll: 1, description: 'Severely injured. Roll on the Injury table.', effects: [{ type: 'injury' }] },
-            { roll: 2, description: 'Life ruined by a criminal gang. Gain an Enemy and lose all Benefit rolls.', effects: [{ type: 'npc', npcType: 'enemy' }, { type: 'lose-benefit' }] },
-            { roll: 3, description: 'Hard times caused by lack of work. Reduce SOC by 1.', effects: [{ type: 'stat-bonus', stat: 'SOC', value: -1 }] },
-            { roll: 4, description: 'Co-worker betrays you. One Contact becomes a Rival.', effects: [{ type: 'npc-note', note: 'Betrayed me (now a Rival)' }] },
-            { roll: 5, description: 'You are bankrupted. Lose all Benefit rolls.', effects: [{ type: 'lose-benefit' }] },
-            { roll: 6, description: 'Injured. Roll on the Injury table.', effects: [{ type: 'injury' }] }
-        ],
+        eventTable: CITIZEN_EVENT_TABLE,
+        mishapTable: CITIZEN_MISHAP_TABLE,
         musteringOutCash: [1000, 5000, 10000, 10000, 10000, 50000, 100000],
         musteringOutBenefits: ['Ship Share', 'Ally', 'INT +1', 'EDU +1', 'TAS Membership', 'Weapon', 'Two Ship Shares']
     },
@@ -310,27 +279,8 @@ export const CAREERS: CareerDefinition[] = [
                 ]
             }
         ],
-        eventTable: [
-            { roll: 2, description: 'Disaster! Roll on the Mishap table, but you are not ejected from this career.', effects: [{ type: 'mishap' }] },
-            { roll: 3, description: 'Patron offer. Do you wish to accept?', effects: [{ type: 'choice', note: 'Patron Offer: Accept vs Refuse' }] },
-            { roll: 4, description: 'Useful skills. Choose one skill to gain/increase.', effects: [{ type: 'skill-choice', skills: ['Jack-of-all-Trades', 'Survival', 'Streetwise', 'Melee (any)'] }] },
-            { roll: 5, description: 'Scavenge. DM+1 to a Benefit roll.', effects: [{ type: 'benefit-dm', value: 1 }] },
-            { roll: 6, description: 'Unusual encounter.', effects: [{ type: 'life-event', note: 'Unusual Event' }] },
-            { roll: 7, description: 'Life Event. Roll on the Life Events table.', effects: [{ type: 'life-event' }] },
-            { roll: 8, description: 'Attacked! Roll Melee 8+, Gun Combat 8+, or Stealth 8+ to avoid injury.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['Melee (any)', 'Gun Combat (any)', 'Stealth'], onSuccess: [], onFailure: [{ type: 'injury' }] }] },
-            { roll: 9, description: 'Patron offer.', effects: [{ type: 'choice', note: 'Patron Offer', skills: ['Accept', 'Refuse'] }] },
-            { roll: 10, description: 'Risky adventure.', effects: [{ type: 'choice', note: 'Risky Adventure', skills: ['Accept', 'Refuse'] }] },
-            { roll: 11, description: 'Life Event.', effects: [{ type: 'life-event' }] },
-            { roll: 12, description: 'Betrayal.', effects: [{ type: 'choice', note: 'Betrayal', skills: ['Moral Check', 'Flee'] }] }
-        ],
-        mishapTable: [
-            { roll: 1, description: 'Severely injured. Roll on the Injury table.', effects: [{ type: 'injury' }] },
-            { roll: 2, description: 'Injured. Roll on the Injury table. Lose Benefit of this term.', effects: [{ type: 'injury' }, { type: 'lose-benefit' }] },
-            { roll: 3, description: 'Gain an Enemy. Ejected.', effects: [{ type: 'npc', npcType: 'enemy' }, { type: 'forced-out' }] },
-            { roll: 4, description: 'Illness. Reduce END by 1. Ejected.', effects: [{ type: 'stat-bonus', stat: 'END', value: -1 }, { type: 'forced-out' }] },
-            { roll: 5, description: 'Betrayed. Choice: 2D6 Prison Check vs Lose Benefits.', effects: [{ type: 'choice', note: 'Betrayal', skills: ['Prison Check', 'Lose Benefits'] }] },
-            { roll: 6, description: 'Amnesia/Betrayed. Ejected.', effects: [{ type: 'forced-out' }, { type: 'trait-gain', note: 'Amnesia' }, { type: 'lose-benefit' }] }
-        ],
+        eventTable: DRIFTER_EVENT_TABLE,
+        mishapTable: DRIFTER_MISHAP_TABLE,
         musteringOutCash: [0, 0, 1000, 2000, 3000, 4000, 8000],
         musteringOutBenefits: ['Contact', 'Weapon', 'Ally', 'Weapon', 'EDU +1', 'Ship Share', 'Two Ship Shares']
     },
@@ -430,10 +380,10 @@ export const CAREERS: CareerDefinition[] = [
         officerRanks: [
             { level: 1, title: 'Lieutenant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
             { level: 2, title: 'Captain' },
-            { level: 3, title: 'Major', bonus: 'Tactics (military) 1', bonusSkill: 'Tactics (military)', bonusValue: 1 },
+            { level: 3, title: 'Force Commander', bonus: 'Tactics (any) 1', bonusSkill: 'Tactics (any)', bonusValue: 1 },
             { level: 4, title: 'Lieutenant Colonel' },
-            { level: 5, title: 'Colonel' },
-            { level: 6, title: 'Brigadier', bonus: 'SOC +1', bonusSkill: 'SOC', bonusValue: '+1' }
+            { level: 5, title: 'Colonel', bonus: 'SOC 10 or +1', bonusSkill: 'SOC', bonusValue: '10 or +1' },
+            { level: 6, title: 'Brigadier' }
         ],
         assignments: [
             {
@@ -442,12 +392,12 @@ export const CAREERS: CareerDefinition[] = [
                 advancementStat: 'EDU', advancementTarget: 7,
                 skillTable: ['Electronics (any)', 'Mechanic', 'Drive (any)', 'Medic', 'Heavy Weapons (any)', 'Gun Combat (any)'],
                 ranks: [
-                    { level: 0, title: 'Marine', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
-                    { level: 1, title: 'Lance Corporal', bonus: 'Melee (blade) 1', bonusSkill: 'Melee (blade)', bonusValue: 1 },
-                    { level: 2, title: 'Corporal', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
-                    { level: 3, title: 'Sergeant' },
-                    { level: 4, title: 'Gunnery Sergeant', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
-                    { level: 5, title: 'Sergeant Major' },
+                    { level: 0, title: 'Marine', bonus: 'Gun Combat (any) 1 or Melee (blade) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 1, title: 'Lance Corporal', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 2, title: 'Corporal' },
+                    { level: 3, title: 'Lance Sergeant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
+                    { level: 4, title: 'Sergeant' },
+                    { level: 5, title: 'Gunnery Sergeant', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
                     { level: 6, title: 'Sergeant Major' }
                 ]
             },
@@ -457,12 +407,12 @@ export const CAREERS: CareerDefinition[] = [
                 advancementStat: 'EDU', advancementTarget: 6,
                 skillTable: ['Vacc Suit', 'Athletics (any)', 'Gunner (any)', 'Melee (blade)', 'Electronics (any)', 'Gun Combat (any)'],
                 ranks: [
-                    { level: 0, title: 'Marine', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
-                    { level: 1, title: 'Lance Corporal', bonus: 'Melee (blade) 1', bonusSkill: 'Melee (blade)', bonusValue: 1 },
-                    { level: 2, title: 'Corporal', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
-                    { level: 3, title: 'Sergeant' },
-                    { level: 4, title: 'Gunnery Sergeant', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
-                    { level: 5, title: 'Sergeant Major' },
+                    { level: 0, title: 'Marine', bonus: 'Gun Combat (any) 1 or Melee (blade) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 1, title: 'Lance Corporal', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 2, title: 'Corporal' },
+                    { level: 3, title: 'Lance Sergeant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
+                    { level: 4, title: 'Sergeant' },
+                    { level: 5, title: 'Gunnery Sergeant', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
                     { level: 6, title: 'Sergeant Major' }
                 ]
             },
@@ -472,12 +422,12 @@ export const CAREERS: CareerDefinition[] = [
                 advancementStat: 'EDU', advancementTarget: 5,
                 skillTable: ['Vacc Suit', 'Heavy Weapons (any)', 'Recon', 'Melee (blade)', 'Tactics (military)', 'Gun Combat (any)'],
                 ranks: [
-                    { level: 0, title: 'Marine', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
-                    { level: 1, title: 'Lance Corporal', bonus: 'Melee (blade) 1', bonusSkill: 'Melee (blade)', bonusValue: 1 },
-                    { level: 2, title: 'Corporal', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
-                    { level: 3, title: 'Sergeant' },
-                    { level: 4, title: 'Gunnery Sergeant', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
-                    { level: 5, title: 'Sergeant Major' },
+                    { level: 0, title: 'Marine', bonus: 'Gun Combat (any) 1 or Melee (blade) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 1, title: 'Lance Corporal', bonus: 'Gun Combat (any) 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
+                    { level: 2, title: 'Corporal' },
+                    { level: 3, title: 'Lance Sergeant', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
+                    { level: 4, title: 'Sergeant' },
+                    { level: 5, title: 'Gunnery Sergeant', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
                     { level: 6, title: 'Sergeant Major' }
                 ]
             }
@@ -710,11 +660,11 @@ export const CAREERS: CareerDefinition[] = [
                 skillTable: ['Advocate', 'Carouse', 'Electronics (any)', 'Steward', 'Diplomat', 'Deception'],
                 ranks: [
                     { level: 0, title: 'Intern' },
-                    { level: 1, title: 'Attaché', bonus: 'Admin 1', bonusSkill: 'Admin', bonusValue: 1 },
-                    { level: 2, title: 'Third Secretary' },
-                    { level: 3, title: 'Second Secretary', bonus: 'Advocate 1', bonusSkill: 'Advocate', bonusValue: 1 },
-                    { level: 4, title: 'First Secretary' },
-                    { level: 5, title: 'Counselor', bonus: 'Diplomat 1', bonusSkill: 'Diplomat', bonusValue: 1 },
+                    { level: 1, title: '3rd Secretary', bonus: 'Admin 1', bonusSkill: 'Admin', bonusValue: 1 },
+                    { level: 2, title: '2nd Secretary' },
+                    { level: 3, title: '1st Secretary', bonus: 'Advocate 1', bonusSkill: 'Advocate', bonusValue: 1 },
+                    { level: 4, title: 'Counsellor' },
+                    { level: 5, title: 'Minister', bonus: 'Diplomat 1', bonusSkill: 'Diplomat', bonusValue: 1 },
                     { level: 6, title: 'Ambassador' }
                 ]
             },
@@ -772,7 +722,7 @@ export const CAREERS: CareerDefinition[] = [
             {
                 name: 'Thief',
                 survivalStat: 'INT', survivalTarget: 6,
-                advancementStat: 'DEX', advancementTarget: 7,
+                advancementStat: 'DEX', advancementTarget: 6,
                 skillTable: ['Stealth', 'Electronics (any)', 'Recon', 'Streetwise', 'Deception', 'Athletics (any)'],
                 ranks: [
                     { level: 0, title: 'Lackey' },
@@ -806,11 +756,11 @@ export const CAREERS: CareerDefinition[] = [
                 skillTable: ['Pilot (any)', 'Astrogation', 'Gunner (any)', 'Engineer (any)', 'Vacc Suit', 'Melee (any)'],
                 ranks: [
                     { level: 0, title: 'Lackey' },
-                    { level: 1, title: 'Henchman', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
+                    { level: 1, title: 'Henchman', bonus: 'Pilot 1 or Gunner 1', bonusSkill: 'Pilot', bonusValue: 1 },
                     { level: 2, title: 'Corporal' },
-                    { level: 3, title: 'Sergeant', bonus: 'Profession (Belter) 1', bonusSkill: 'Profession (Belter)', bonusValue: 1 },
+                    { level: 3, title: 'Sergeant', bonus: 'Gun Combat (any) 1 or Melee 1', bonusSkill: 'Gun Combat (any)', bonusValue: 1 },
                     { level: 4, title: 'Lieutenant' },
-                    { level: 5, title: 'Leader', bonus: 'Gun Combat (Slug) 1', bonusSkill: 'Gun Combat (Slug)', bonusValue: 1 },
+                    { level: 5, title: 'Leader', bonus: 'Leadership 1', bonusSkill: 'Leadership', bonusValue: 1 },
                     { level: 6, title: 'Captain' }
                 ]
             }
@@ -1016,44 +966,44 @@ export const CAREERS: CareerDefinition[] = [
                 name: 'Libertine',
                 survivalStat: 'INT', survivalTarget: 5,
                 advancementStat: 'EDU', advancementTarget: 7,
-                skillTable: ['Pilot (spacecraft)', 'Vacc Suit', 'Deception', 'Mechanic', 'Engineer (any)', 'Electronics (any)'],
+                skillTable: ['Pilot (any)', 'Vacc Suit', 'Deception', 'Mechanic', 'Engineer (any)', 'Electronics (any)'],
                 ranks: [
-                    { level: 0, title: 'Spacer' },
-                    { level: 1, title: 'Able Spacer', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
-                    { level: 2, title: 'Able Spacer' },
-                    { level: 3, title: 'Leading Spacer', bonus: 'Mechanic 1', bonusSkill: 'Mechanic', bonusValue: 1 },
-                    { level: 4, title: 'Leading Spacer' },
-                    { level: 5, title: 'Petty Officer', bonus: 'Electronics (sensors) 1', bonusSkill: 'Electronics (sensors)', bonusValue: 1 },
-                    { level: 6, title: 'Chief Petty Officer' }
+                    { level: 0, title: 'Crewman' },
+                    { level: 1, title: 'Able Spacehand', bonus: 'Mechanic 1', bonusSkill: 'Mechanic', bonusValue: 1 },
+                    { level: 2, title: 'Petty Officer 3rd Class', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
+                    { level: 3, title: 'Petty Officer 2nd Class' },
+                    { level: 4, title: 'Petty Officer 1st Class', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' },
+                    { level: 5, title: 'Chief Petty Officer' },
+                    { level: 6, title: 'Master Chief' }
                 ]
             },
             {
                 name: 'Tinker',
                 survivalStat: 'EDU', survivalTarget: 5,
-                advancementStat: 'INT', advancementTarget: 6,
+                advancementStat: 'INT', advancementTarget: 7,
                 skillTable: ['Mechanic', 'Engineer (any)', 'Electronics (any)', 'Profession (any)', 'Advocate', 'Jack-of-all-Trades'],
                 ranks: [
                     { level: 0, title: 'Tinker' },
-                    { level: 1, title: 'Tinker', bonus: 'Profession (any) 1', bonusSkill: 'Profession (any)', bonusValue: 1 },
+                    { level: 1, title: 'Senior Tinker', bonus: 'Profession (any) 1', bonusSkill: 'Profession (any)', bonusValue: 1 },
                     { level: 2, title: 'Tinker' },
-                    { level: 3, title: 'Tinker', bonus: 'Engineer 1', bonusSkill: 'Engineer', bonusValue: 1 },
+                    { level: 3, title: 'Master Tinker', bonus: 'Engineer 1', bonusSkill: 'Engineer', bonusValue: 1 },
                     { level: 4, title: 'Tinker' },
-                    { level: 5, title: 'Senior Tinker', bonus: 'Electronics 1', bonusSkill: 'Electronics', bonusValue: 1 },
+                    { level: 5, title: 'Clan Leader', bonus: 'Electronics 1', bonusSkill: 'Electronics', bonusValue: 1 },
                     { level: 6, title: 'Master Tinker' }
                 ]
             },
             {
                 name: 'Belter',
-                survivalStat: 'DEX', survivalTarget: 6,
-                advancementStat: 'INT', advancementTarget: 7,
+                survivalStat: 'DEX', survivalTarget: 7,
+                advancementStat: 'END', advancementTarget: 7,
                 skillTable: ['Vacc Suit', 'Pilot (small craft)', 'Electronics (sensors)', 'Mechanic', 'Survival', 'Gunner (turret)'],
                 ranks: [
                     { level: 0, title: 'Belter' },
-                    { level: 1, title: 'Belter', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
+                    { level: 1, title: 'Senior Belter', bonus: 'Vacc Suit 1', bonusSkill: 'Vacc Suit', bonusValue: 1 },
                     { level: 2, title: 'Belter' },
-                    { level: 3, title: 'Belter', bonus: 'Pilot (small craft) 1', bonusSkill: 'Pilot (small craft)', bonusValue: 1 },
+                    { level: 3, title: 'Master Belter', bonus: 'Profession (belter) 1 or Mechanic 1', bonusSkill: 'Profession (belter)', bonusValue: 1 },
                     { level: 4, title: 'Belter' },
-                    { level: 5, title: 'Senior Belter', bonus: 'Electronics (sensors) 1', bonusSkill: 'Electronics (sensors)', bonusValue: 1 },
+                    { level: 5, title: 'Clan Leader', bonus: 'Electronics (sensors) 1', bonusSkill: 'Electronics (sensors)', bonusValue: 1 },
                     { level: 6, title: 'Master Belter' }
                 ]
             }
@@ -1079,7 +1029,7 @@ export const CAREERS: CareerDefinition[] = [
             { roll: 5, description: 'Equipment failure. Lose one Benefit roll.', effects: [{ type: 'lose-benefit' }, { type: 'forced-out' }] },
             { roll: 6, description: 'Injured. Roll on the Injury table.', effects: [{ type: 'injury' }, { type: 'forced-out' }] }
         ],
-        musteringOutCash: [1000, 2000, 5000, 10000, 50000, 100000, 100000],
+        musteringOutCash: [1000, 5000, 10000, 20000, 20000, 40000, 40000],
         musteringOutBenefits: ['Weapon', 'INT +1', 'EDU +1', 'Ship Share', 'Ally', 'Equipment', 'Two Ship Shares']
     },
     // 14. PRISONER (Core Rulebook)
@@ -1095,41 +1045,52 @@ export const CAREERS: CareerDefinition[] = [
             {
                 name: 'Inmate',
                 survivalStat: 'END', survivalTarget: 7,
-                advancementStat: 'INT', advancementTarget: 7, // Release Check
-                skillTable: ['Streetwise', 'Deception', 'Melee (unarmed)', 'Stealth', 'Athletics (any)', 'Jack-of-all-Trades'],
+                advancementStat: 'STR', advancementTarget: 7,
+                skillTable: ['Stealth', 'Melee (unarmed)', 'Streetwise', 'Survival', 'Athletics (strength)', 'Mechanic'],
                 ranks: [
-                    { level: 0, title: 'New Fish' },
+                    { level: 0, title: 'New Fish', bonus: 'Melee (unarmed) 1', bonusSkill: 'Melee (unarmed)', bonusValue: 1 },
                     { level: 1, title: 'Inmate' },
-                    { level: 2, title: 'Senior Inmate' },
+                    { level: 2, title: 'Senior Inmate', bonus: 'Athletics 1', bonusSkill: 'Athletics', bonusValue: 1 },
                     { level: 3, title: 'Trustee' },
-                    { level: 4, title: 'Senior Trustee' },
+                    { level: 4, title: 'Senior Trustee', bonus: 'Advocate 1', bonusSkill: 'Advocate', bonusValue: 1 },
                     { level: 5, title: 'Model Prisoner' },
-                    { level: 6, title: 'Parolee' }
+                    { level: 6, title: 'Parolee', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' }
+                ]
+            },
+            {
+                name: 'Thug',
+                survivalStat: 'STR', survivalTarget: 8,
+                advancementStat: 'END', advancementTarget: 6,
+                skillTable: ['Persuade', 'Melee (unarmed)', 'Melee (unarmed)', 'Melee (blade)', 'Athletics (strength)', 'Athletics (strength)'],
+                ranks: [
+                    { level: 0, title: 'Thug', bonus: 'Melee (unarmed) 1', bonusSkill: 'Melee (unarmed)', bonusValue: 1 },
+                    { level: 1, title: 'Enforcer' },
+                    { level: 2, title: 'Gang Leader', bonus: 'Athletics 1', bonusSkill: 'Athletics', bonusValue: 1 },
+                    { level: 3, title: 'Boss' },
+                    { level: 4, title: 'Kingpin', bonus: 'Advocate 1', bonusSkill: 'Advocate', bonusValue: 1 },
+                    { level: 5, title: 'Warden' },
+                    { level: 6, title: 'General', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' }
+                ]
+            },
+            {
+                name: 'Fixer',
+                survivalStat: 'INT', survivalTarget: 9,
+                advancementStat: 'END', advancementTarget: 5,
+                skillTable: ['Investigate', 'Broker', 'Deception', 'Streetwise', 'Stealth', 'Admin'],
+                ranks: [
+                    { level: 0, title: 'Fixer', bonus: 'Melee (unarmed) 1', bonusSkill: 'Melee (unarmed)', bonusValue: 1 },
+                    { level: 1, title: 'Dealer' },
+                    { level: 2, title: 'Supplier', bonus: 'Athletics 1', bonusSkill: 'Athletics', bonusValue: 1 },
+                    { level: 3, title: 'Smuggler' },
+                    { level: 4, title: 'Broker', bonus: 'Advocate 1', bonusSkill: 'Advocate', bonusValue: 1 },
+                    { level: 5, title: 'Mastermind' },
+                    { level: 6, title: 'Kingpin', bonus: 'END +1', bonusSkill: 'END', bonusValue: '+1' }
                 ]
             }
         ],
-        eventTable: [
-            { roll: 2, description: 'Disaster! Mishap but stay in prison.', effects: [{ type: 'mishap' }, { type: 'forced-out', value: 0 }] },
-            { roll: 3, description: 'Solitary Confinement.', effects: [{ type: 'stat-bonus', stat: 'END', value: -1 }, { type: 'parole-mod', value: -1 }] },
-            { roll: 4, description: 'Prison Labour.', effects: [{ type: 'skill-gain', skill: 'Athletics' }, { type: 'parole-mod', value: 1 }] },
-            { roll: 5, description: 'Prison Gang.', effects: [{ type: 'choice', note: 'Join Gang', skills: ['Join', 'Refuse'] }] },
-            { roll: 6, description: 'Prison Brawl.', effects: [{ type: 'skill-check', target: 8, checkSkills: ['Melee'], onSuccess: [{ type: 'any-skill-up' }], onFailure: [{ type: 'injury' }] }] },
-            { roll: 7, description: 'Life Event.', effects: [{ type: 'life-event' }] },
-            { roll: 8, description: 'Informant.', effects: [{ type: 'choice', note: 'Informant', skills: ['Snitch', 'Refuse'] }] },
-            { roll: 9, description: 'Escape Attempt.', effects: [{ type: 'choice', note: 'Escape', skills: ['Attempt', 'Wait'] }] },
-            { roll: 10, description: 'Good Behaviour.', effects: [{ type: 'parole-mod', value: 2 }] },
-            { roll: 11, description: 'Black Market Merchant.', effects: [{ type: 'skill-gain', skill: 'Broker' }, { type: 'extra-roll' }] },
-            { roll: 12, description: 'Parole Granted. Automatic Release.', effects: [{ type: 'auto-promotion' }] }
-        ],
-        mishapTable: [
-            { roll: 1, description: 'Severely injured. Roll on the Injury table.', effects: [{ type: 'injury' }] },
-            { roll: 2, description: 'sentence extended. -2 to Release checks.', effects: [{ type: 'parole-mod', value: -2 }] },
-            { roll: 3, description: 'Targeted by guards. Reduce END 1.', effects: [{ type: 'stat-bonus', stat: 'END', value: -1 }] },
-            { roll: 4, description: 'Targeted by inmates. Gain Enemy.', effects: [{ type: 'npc', npcType: 'enemy' }] },
-            { roll: 5, description: 'Health crisis. Reduce physical stat.', effects: [{ type: 'stat-reduction-choice' }] },
-            { roll: 6, description: 'Injured. Roll on the Injury table.', effects: [{ type: 'injury' }] }
-        ],
-        musteringOutCash: [0, 0, 0, 0, 0, 0, 0],
-        musteringOutBenefits: ['Contact', 'Streetwise 1', 'DEX +1', 'END +1', 'INT +1', 'Enemy', 'Criminal Record']
+        eventTable: PRISONER_EVENT_TABLE,
+        mishapTable: PRISONER_MISHAP_TABLE,
+        musteringOutCash: [0, 0, 100, 200, 500, 1000, 2500],
+        musteringOutBenefits: ['Contact', 'Blade', 'Choice: Deception/Persuade/Stealth', 'Ally', 'Choice: Melee/Recon/Streetwise', 'STR +1 or END +1', 'Deception, Persuade and Stealth']
     }
 ];

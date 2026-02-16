@@ -15,7 +15,7 @@ export const WORLDS: World[] = [
 
   // AMERICA
   { name: 'Ellis', uwp: 'A755755-C', gravity: 0.92, gravityCode: 'Normal', survivalDm: -1, path: 'Soft', nation: 'United States', tier: 'Frontier', system: 'Ellis', techLevel: 12, environment: ['Dry', 'Frontier'] },
-  { name: 'King (New Columbia)', uwp: 'A540544-C', gravity: 3.08, gravityCode: 'Extreme', survivalDm: -3, path: 'Soft', nation: 'United States', tier: 'Frontier', system: 'King', techLevel: 12, environment: ['Heavy', 'Frontier'] },
+  { name: 'King (New Columbia)', uwp: 'A540544-C', gravity: 3.08, gravityCode: 'Extreme', survivalDm: -3, path: 'Soft', nation: 'United States', tier: 'Frontier', system: 'King', techLevel: 12, environment: ['Heavy', 'Frontier'], effects: [{ type: 'CUSTOM', customId: 'DNAM_KING_ULTRA', note: 'King Ultra Genetic Package' }] },
   { name: 'Hermes', uwp: 'A', gravity: 0.73, gravityCode: 'Low', survivalDm: -2, path: 'Soft', nation: 'United States', tier: 'Frontier', system: 'Hermes', techLevel: 11, environment: ['Cold', 'Frontier'] },
 
   // ARGENTINA
@@ -24,7 +24,7 @@ export const WORLDS: World[] = [
 
   // AUSTRALIA
   { name: 'Botany Bay', uwp: 'A', gravity: 0.87, gravityCode: 'Normal', survivalDm: -1, path: 'Soft', nation: 'Australia', tier: 'Frontier', system: 'Delta Pavonis', techLevel: 11, environment: ['Frontier'] }, 
-  { name: 'Huntsland', uwp: 'A', gravity: 3.08, gravityCode: 'Extreme', survivalDm: -3, path: 'Soft', nation: 'Australia', tier: 'Frontier', system: 'Delta Pavonis', techLevel: 10, environment: ['Heavy', 'Frontier'] },
+  { name: 'Huntsland', uwp: 'A', gravity: 3.08, gravityCode: 'Extreme', survivalDm: -3, path: 'Soft', nation: 'Australia', tier: 'Frontier', system: 'Delta Pavonis', techLevel: 10, environment: ['Heavy', 'Frontier'], effects: [{ type: 'CUSTOM', customId: 'DNAM_KING_ULTRA', note: 'King Ultra Genetic Package' }] },
   { name: 'Kingsland', uwp: 'A', gravity: 1.07, gravityCode: 'Normal', survivalDm: -1, path: 'Soft', nation: 'Australia', tier: 'Frontier', system: 'Delta Pavonis', techLevel: 11, environment: ['Frontier'] },
 
   // AZANIA

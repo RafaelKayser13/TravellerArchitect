@@ -21,15 +21,14 @@
     </div>
 
     <div class="npc-grid">
-        <div *ngFor="let npc of characters().npcs" class="npc-card" [class.editing]="editingNpcId() === npc.id" [ngClass]="npc.type">
+        <div *ngFor="let npc of characters().npcs" class="npc-card" [ngClass]="npc.type">
             <div class="corner-detail tl"></div>
             <div class="corner-detail tr"></div>
 
             <div class="card-header">
                 <span class="type-tag">{{ npc.type.toUpperCase() }}</span>
                 <div class="header-main">
-                    <h3 *ngIf="editingNpcId() !== npc.id">{{ npc.name }}</h3>
-                    <input *ngIf="editingNpcId() === npc.id" [(ngModel)]="editName" class="cyber-input" placeholder="NAME" />
+                    <h3>{{ npc.name }}</h3>
                 </div>
             </div>
 
@@ -41,19 +40,14 @@
 
                 <div class="notes-section">
                     <span class="label">INTEL_NOTES:</span>
-                    <p *ngIf="editingNpcId() !== npc.id" class="notes-text">{{ npc.notes || 'No data recorded.' }}</p>
-                    <textarea *ngIf="editingNpcId() === npc.id" [(ngModel)]="editNotes" class="cyber-textarea" placeholder="RECORD INTEL..."></textarea>
+                    <p class="notes-text">{{ npc.notes || 'No data recorded.' }}</p>
                 </div>
             </div>
 
             <div class="card-footer">
-                <div class="actions" *ngIf="editingNpcId() !== npc.id">
-                    <button class="btn-mini" (click)="startEdit(npc)">EDIT</button>
+                <div class="actions">
+                    <button class="btn-mini" (click)="editNpc(npc)">EDIT</button>
                     <button class="btn-mini risk" (click)="removeNpc(npc.id)">DELETE</button>
-                </div>
-                <div class="actions" *ngIf="editingNpcId() === npc.id">
-                    <button class="btn-mini success" (click)="saveEdit()">SAVE</button>
-                    <button class="btn-mini" (click)="cancelEdit()">CANCEL</button>
                 </div>
             </div>
         </div>

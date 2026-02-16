@@ -18,6 +18,8 @@ export interface Skill {
   specialization?: string;
 }
 
+import { EventEffect } from './game-event.model';
+
 export interface World {
   name: string;
   uwp: string; // Universal World Profile
@@ -31,6 +33,7 @@ export interface World {
   notes?: string;
   techLevel?: number; // Added TL
   environment?: string[]; // e.g. ["Cold", "Dry", "High-G"]
+  effects?: EventEffect[];
 }
 
 // ... (skipping to INITIAL_CHARACTER)
@@ -60,6 +63,7 @@ export const INITIAL_CHARACTER: Character = {
   careerHistory: [],
   npcs: [],
   connectionsUsed: 0,
+  traits: [],
   age: 18,
   finances: { cash: 0, pension: 0, debt: 0, medicalDebt: 0, shipShares: 0, cashRollsSpent: 0 },
   education: { university: null, academy: null },
@@ -75,7 +79,9 @@ export const INITIAL_CHARACTER: Character = {
   hasLeftHome: false,
   isSoftPath: false,
   ejectedCareers: [],
-  japaneseRankBonus: false
+  japaneseRankBonus: false,
+  augments: [],
+  hasNeuralJack: false
 };
 
 export interface CareerTerm {
@@ -150,6 +156,7 @@ export interface Character {
   // NPC Relationships
   npcs: NPC[];
   connectionsUsed: number; // Max 2 per character creation (Connections Rule)
+  traits: string[]; // e.g. "Survivor", "Violent", etc.
 
   age: number;
   finances: Finances;
@@ -199,4 +206,17 @@ export interface Character {
     cost: number;
     treated: boolean;
   }[];
+  augments: Augment[];
+  hasNeuralJack: boolean;
+} 
+
+export interface Augment {
+    name: string;
+    type: 'Cybernetic' | 'DNAM' | 'Genetic';
+    location?: string;
+    techLevel?: number;
+    description?: string;
+    effects?: string;
+    cost: number;
+    isNatural: boolean;
 }

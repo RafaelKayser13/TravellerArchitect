@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DiceDisplayService, RollRequest } from '../../../core/services/dice-display.service';
+import { HudWindowComponent } from '../hud-window/hud-window.component';
 
 @Component({
   selector: 'app-dice-roller',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HudWindowComponent],
   templateUrl: './dice-roller.component.html',
   styleUrls: ['./dice-roller.component.scss']
 })

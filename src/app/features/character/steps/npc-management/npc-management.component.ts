@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
+import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
 import { NPC } from '../../../../core/models/career.model';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
@@ -14,37 +15,23 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
 })
 export class NpcManagementComponent {
   protected characterService = inject(CharacterService);
+  protected npcService = inject(NpcInteractionService);
   
   characters = this.characterService.character;
   
-  editingNpcId = signal<string | null>(null);
-  editName = '';
-  editNotes = '';
-
-  startEdit(npc: NPC) {
-    this.editingNpcId.set(npc.id);
-    this.editName = npc.name;
-    this.editNotes = npc.notes || '';
-  }
-
-  saveEdit() {
-    const id = this.editingNpcId();
-    if (!id) return;
-
-    const char = this.characterService.character();
-    const updatedNpcs = char.npcs.map(n => 
-      n.id === id ? { ...n, name: this.editName, notes: this.editNotes } : n
-    );
-
-    this.characterService.updateCharacter({ npcs: updatedNpcs });
-    this.editingNpcId.set(null);
-  }
-
-  cancelEdit() {
-    this.editingNpcId.set(null);
+  async editNpc(npc: NPC) {
+    const updatedNpc = await this.npcService.promptForNpc(npc);
+    if (updatedNpc) {
+      const char = this.characterService.character();
+      const updatedNpcs = char.npcs.map(n => 
+        n.id === npc.id ? updatedNpc : n
+      );
+      this.characterService.updateCharacter({ npcs: updatedNpcs });
+    }
   }
 
   removeNpc(id: string) {
+    // We could add a confirmation dialog here too!
     this.characterService.removeNpc(id);
   }
 
