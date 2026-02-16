@@ -2,7 +2,7 @@ import { Component, inject, computed, signal, Output, EventEmitter, OnInit } fro
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
-import { CAREERS } from '../../../../data/careers';
+import { CareerService } from '../../../../core/services/career.service';
 
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 
@@ -25,6 +25,7 @@ export class MusteringOutComponent {
     protected diceDisplay = inject(DiceDisplayService);
     protected eventEngine = inject(EventEngineService);
     protected npcInteractionService = inject(NpcInteractionService);
+    protected careerService = inject(CareerService);
 
     character = this.characterService.character;
 
@@ -70,7 +71,7 @@ export class MusteringOutComponent {
     currentCareerDef = computed(() => {
         const name = this.selectedCareerName();
         if (!name) return null;
-        return CAREERS.find(c => c.name === name) || null;
+        return this.careerService.getCareer(name) || null;
     });
 
     ngOnInit() {
@@ -85,6 +86,7 @@ export class MusteringOutComponent {
         this.selectedCareerName.set(name);
     }
 
+
     async rollBenefit(type: 'Cash' | 'Material') {
         const char = this.character();
         const careerName = this.selectedCareerName();
@@ -95,7 +97,7 @@ export class MusteringOutComponent {
 
         if (type === 'Cash' && this.cashRolls() >= this.maxCashRolls) return;
 
-        const careerDef = CAREERS.find(c => c.name === careerName);
+        const careerDef = this.careerService.getCareer(careerName);
         if (!careerDef) return;
 
         const modifiers: { label: string, value: number }[] = [];
@@ -188,10 +190,9 @@ export class MusteringOutComponent {
         const updatedAlloc = this.character().finances.benefitRollsAllocated || {};
         if ((updatedAlloc[careerName] || 0) <= 0) {
             // Find next career with rolls
-            const nextPool = this.careerPools().find(p => p.count > 0);
-            if (nextPool) {
-                this.selectCareer(nextPool.name);
-                // Optional: Toast or Log to user
+            const nextPool = this.careerPools().filter(p => p.count > 0);
+            if (nextPool.length > 0) {
+                this.selectCareer(nextPool[0].name);
             }
         }
     }

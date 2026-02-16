@@ -78,9 +78,9 @@ export class CharacterWizardComponent {
             case 3: return 'PROCEED > EDUCATION';
             case 4: return 'PROCEED > CAREER';
             case 5: return 'PROCEED > MUSTER_OUT';
-            case 6: return 'PROCEED > NPC_MANAGEMENT';
-            case 7: return 'PROCEED > SKILL_PACKAGE';
-            case 8: return 'FINALIZE_CHARACTER';
+            case 6: return 'PROCEED > NETWORK';
+            case 7: return 'PROCEED > PACKAGE';
+            case 8: return 'FINALIZE_CHARACTER'; // Step 8 -> 9 (Sheet)
             default: return 'PROCEED';
         }
     }
@@ -102,21 +102,21 @@ export class CharacterWizardComponent {
 
     /** Show the footer on steps 1-8, hide on step 9 (character sheet) */
     get showActionBar(): boolean {
-        return this.currentStep >= 1 && this.currentStep <= 9;
+        // Steps 1-8 have actions. Step 9 is the final sheet (maybe has Print/Export but not "Next")
+        return this.currentStep >= 1 && this.currentStep <= 8;
     }
 
     /** Handle action button click — triggers finish() on active step */
     onActionClick() {
         switch (this.currentStep) {
             case 1: this.identityStep?.finish(); break;
-            case 2: this.speciesStep?.finish(); break;
-            case 3: this.attributesStep?.finish(); break;
-            case 4: this.originStep?.finish(); break;
-            case 5: this.educationStep?.finishStep(); break;
-            case 6: this.careerStep?.startMusteringOut(); break;
-            case 7: this.musteringStep?.finish(); break;
-            case 8: this.npcStep?.finish(); break; // NPC management finish
-            case 9: this.skillPkgStep?.finish(); break;
+            case 2: this.attributesStep?.finish(); break;
+            case 3: this.originStep?.finish(); break;
+            case 4: this.educationStep?.finishStep(); break;
+            case 5: this.careerStep?.startMusteringOut(); break;
+            case 6: this.musteringStep?.finish(); break;
+            case 7: this.npcStep?.finish(); break;
+            case 8: this.skillPkgStep?.finish(); break;
         }
     }
 
@@ -140,18 +140,18 @@ export class CharacterWizardComponent {
     }
 
     onCareerComplete() {
-        this.currentStep = 7;
+        this.currentStep = 6;
     }
 
     onMusteringOutComplete() {
-        this.currentStep = 8;
+        this.currentStep = 7;
     }
 
     onNpcManagementComplete() {
-        this.currentStep = 9;
+        this.currentStep = 8;
     }
 
     onSkillPackageComplete() {
-        this.currentStep = 10;
+        this.currentStep = 9;
     }
 }

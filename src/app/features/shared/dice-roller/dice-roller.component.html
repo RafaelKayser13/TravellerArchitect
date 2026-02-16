@@ -7,7 +7,8 @@
         readoutTL="SIG_LOCK: STABLE"
         [readoutTR]="'PROC_ID: ' + (Math.random() * 99999).toFixed(0)"
         readoutBL="VOLTAGE: 4.2V"
-        readoutBR="PARITY: PASS">
+        readoutBR="PARITY: PASS"
+        [hasFooter]="true">
 
         <!-- Two Column Content -->
         <div class="hud-dual-wrapper">
@@ -143,13 +144,13 @@
             </div>
         </div>
 
-        <ng-container footer>
-            <div class="action-wrapper" *ngIf="showResult">
-                <button class="btn-continue" (click)="continue()">
-                    [ NEXT_PROTOCOL ]
-                </button>
-            </div>
-        </ng-container>
+    <div footer class="footer-container">
+        <div class="action-wrapper" *ngIf="showResult">
+            <button class="btn-continue" (click)="continue()">
+                [ NEXT_PROTOCOL ]
+            </button>
+        </div>
+    </div>
 
     </app-hud-window>
 </div>

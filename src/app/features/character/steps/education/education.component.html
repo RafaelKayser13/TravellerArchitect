@@ -88,9 +88,7 @@
               <option value="Scouts" [disabled]="!getAcademyValidation('Scouts').available">
                 SCOUTS {{ !getAcademyValidation('Scouts').available ? '(BLOCKED)' : '(INT BRANCH)' }}
               </option>
-              <option value="Spaceborne" [disabled]="!getAcademyValidation('Spaceborne').available">
-                SPACEBORNE {{ !getAcademyValidation('Spaceborne').available ? '(BLOCKED)' : '(INT BRANCH)' }}
-              </option>
+
             </select>
             <div class="validation-reason" *ngIf="!getAcademyValidation(academyType).available">
                <span class="warning-icon">⚠</span> {{ getAcademyValidation(academyType).reason }}

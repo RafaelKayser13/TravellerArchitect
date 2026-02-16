@@ -47,7 +47,7 @@
         </div>
 
         <div class="career-list">
-            <div *ngFor="let career of careers; let i = index" class="career-card"
+            <div *ngFor="let career of careers(); let i = index" class="career-card"
                 [class.selected]="selectedCareer === career" 
                 [class.disabled]="isCareerDisabled(career)"
                 (click)="selectCareer(career)">
@@ -473,6 +473,7 @@
                             (click)="eventEngine.selectOption(i)">
                         {{ opt.label }}
                     </button>
+
                 </div>
             </div>
         </div>

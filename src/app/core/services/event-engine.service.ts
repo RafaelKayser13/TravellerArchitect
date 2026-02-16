@@ -5,7 +5,7 @@ import { DiceService } from './dice.service';
 import { DiceDisplayService } from './dice-display.service';
 import { NpcInteractionService } from './npc-interaction.service';
 import { LIFE_EVENT_TABLE, INJURY_TABLE } from '../../data/events/shared/life-events';
-import { CAREERS } from '../../data/careers';
+import { CareerService } from './career.service';
 
 // Handlers
 import { EffectHandler, HandlerContext } from './handlers/effect-handler.interface';
@@ -24,6 +24,7 @@ export class EventEngineService {
     public diceService = inject(DiceService);
     public diceDisplay = inject(DiceDisplayService);
     public npcInteractionService = inject(NpcInteractionService);
+    public careerService = inject(CareerService);
 
     // Handlers
     private handlers: EffectHandler[] = [
@@ -72,7 +73,7 @@ export class EventEngineService {
     }
 
     public checkRankBonuses(careerName: string, assignmentName: string, rank: number) {
-        const career = CAREERS.find(c => c.name === careerName);
+        const career = this.careerService.getCareer(careerName);
         if (!career) return;
 
         const assignment = career.assignments.find(a => a.name === assignmentName);

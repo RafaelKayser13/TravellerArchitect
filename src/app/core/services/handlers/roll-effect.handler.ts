@@ -42,9 +42,19 @@ export class RollEffectHandler implements EffectHandler {
                             // We intercept the normal flow to insert this choice
                             const choiceEvent = { ...PROSTHETIC_CHOICE_EVENT };
                             choiceEvent.id = `prosthetic_choice_${Date.now()}`;
+                            
+                            // Deep clone UI options to modify them effectively
+                            if (choiceEvent.ui.options) {
+                                choiceEvent.ui.options = choiceEvent.ui.options.map(opt => ({ ...opt }));
+                            }
+
                             // Chain to the original onPass event (usually term_event_roll)
                             if (typeof effect.onPass === 'string') {
-                                choiceEvent.nextEventId = effect.onPass;
+                                const nextId = effect.onPass;
+                                choiceEvent.ui.options.forEach(opt => {
+                                    opt.nextEventId = nextId;
+                                    opt.replaceNext = true; // IMPORTANT: Prevent loop by replacing this event
+                                });
                             }
                             
                             ctx.eventEngine.registerEvent(choiceEvent);

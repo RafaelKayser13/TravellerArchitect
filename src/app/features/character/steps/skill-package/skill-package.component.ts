@@ -23,6 +23,10 @@ export class SkillPackageComponent {
   selectPackage(pkg: SkillPackage) {
     this.selectedPackage.set(pkg);
     this.selectedSkills.set([]); // Reset selection when package changes
+    setTimeout(() => {
+        const el = document.querySelector('.skill-selection-area');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   }
 
   toggleSkill(skill: string) {

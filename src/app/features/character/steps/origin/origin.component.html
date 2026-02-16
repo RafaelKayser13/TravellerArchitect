@@ -87,6 +87,22 @@
         </div>
     </section>
 
+    <section *ngIf="selectedWorld" class="philosophy-section">
+        <h2 class="step-title">Colonial Philosophy</h2>
+        <div class="path-selector">
+            <div class="path-option" [class.selected]="selectedPath === 'Hard'" (click)="setPath('Hard')">
+                <h3>HARD PATH</h3>
+                <p>Technological adaptation. Machinery and habitats.</p>
+                <div class="bonus">benefit_roll_dm: +1</div>
+            </div>
+            <div class="path-option" [class.selected]="selectedPath === 'Soft'" (click)="setPath('Soft')">
+                <h3>SOFT PATH</h3>
+                <p>Biological adaptation. DNA mods and symbionts.</p>
+                <div class="bonus">benefit_roll_dm: -1</div>
+            </div>
+        </div>
+    </section>
+
     <section *ngIf="selectedWorld && showSkillsSelection" class="skills-section" #skillsSection>
         <h2 class="step-title">Background Skills</h2>
         <p class="instruction">ALLOCATED {{ selectedBackgroundSkills.length }} of {{ backgroundSkillsCount }} SKILLS

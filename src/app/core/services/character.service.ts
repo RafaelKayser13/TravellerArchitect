@@ -14,6 +14,19 @@ export class CharacterService {
   private characterSignal = signal<Character>(JSON.parse(JSON.stringify(INITIAL_CHARACTER)));
 
   readonly character = this.characterSignal.asReadonly();
+  public currentCareer = signal<string | null>(null);
+
+  private patch(partial: Partial<Character>, historyEntry?: string) {
+    this.characterSignal.update(c => {
+      const next = { ...c, ...partial };
+      if (historyEntry) {
+        next.history = [...(next.history || []), historyEntry];
+      }
+      this.storage.save('autosave', next);
+      return next;
+    });
+  }
+
 
   readonly pension = computed(() => {
     const char = this.character();
@@ -25,10 +38,11 @@ export class CharacterService {
     });
 
     let totalPension = 0;
-    const EXCLUDED_CAREERS = ['Scout', 'Rogue', 'Drifter', 'Spaceborne', 'Prisoner'];
+    const EXCLUDED_CAREERS = ['scout', 'rogue', 'drifter', 'spaceborne', 'prisoner'];
 
     Object.keys(careerTerms).forEach(name => {
-      if (EXCLUDED_CAREERS.includes(name)) return;
+      // Normalize check
+      if (EXCLUDED_CAREERS.includes(name.toLowerCase())) return;
       const terms = careerTerms[name];
       if (terms >= 5) {
         let amount = 0;
@@ -68,61 +82,64 @@ export class CharacterService {
   }
 
   updateCharacter(partial: Partial<Character>) {
-    this.characterSignal.update((current: Character) => {
-      const updated = { ...current, ...partial };
-      // Auto-log specific changes if not explicitly logged? 
-      // Ideally caller logs semantic events, but we can detect changes here if strictly needed.
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch(partial);
   }
 
   updateCharacteristics(chars: Character['characteristics']) {
-    this.characterSignal.update((current: Character) => {
-      const updated = { ...current, characteristics: chars };
-      // Log stat changes with descriptive markdown
-      const diffs: string[] = [];
-      Object.keys(chars).forEach(k => {
-        const key = k as keyof typeof chars;
-        if (chars[key].value !== current.characteristics[key].value) {
-          const diff = chars[key].value - current.characteristics[key].value;
-          const sign = diff > 0 ? '+' : '';
-          diffs.push(`**Stat Change**: ${key.toUpperCase()} ${current.characteristics[key].value} → ${chars[key].value} (${sign}${diff})`);
-        }
-      });
-      if (diffs.length > 0) {
-        const history = [...(current.history || []), ...diffs];
-        updated.history = history;
+    const diffs: string[] = [];
+    const currentChars = this.character().characteristics;
+    Object.keys(chars).forEach(k => {
+      const key = k as keyof typeof chars;
+      if (chars[key].value !== currentChars[key].value) {
+        const diff = chars[key].value - currentChars[key].value;
+        const sign = diff > 0 ? '+' : '';
+        diffs.push(`**Stat Change**: ${key.toUpperCase()} ${currentChars[key].value} → ${chars[key].value} (${sign}${diff})`);
       }
-
-      this.storage.save('autosave', updated);
-      return updated;
     });
+    this.patch({ characteristics: chars }, diffs.length > 0 ? diffs.join(', ') : undefined);
   }
 
-  addSkill(skillName: string, levelToAdd: number = 1, isFirstTermBasicTraining: boolean = false): boolean {
+  modifyStat(stat: string, amount: number) {
+    const char = this.character();
+    const key = stat.toLowerCase() as keyof typeof char.characteristics;
+    if (!char.characteristics[key]) {
+      console.warn(`Stat ${stat} not found on character.`);
+      return;
+    }
+    const current = char.characteristics[key];
+    const newValue = Math.max(1, current.value + amount);
+    const updatedChars = { 
+      ...char.characteristics, 
+      [key]: { ...current, value: newValue } 
+    };
+    
+    const sign = amount >= 0 ? '+' : '';
+    this.patch({ characteristics: updatedChars }, `**Stat Adjusted**: ${stat.toUpperCase()} ${current.value} → ${newValue} (${sign}${amount})`);
+  }
+
+addSkill(skillName: string, levelToAdd: number = 1, isFirstTermBasicTraining: boolean = false): boolean {
     let choiceRequired = false;
 
     this.characterSignal.update((current: Character) => {
-      const { skills, message, choiceRequired: needsChoice } = this.skillService.processSkillAward(
-        current.skills,
-        skillName,
-        levelToAdd === 1 ? undefined : levelToAdd, // 1 is default increase
-        isFirstTermBasicTraining
-      );
+        const { skills, message, choiceRequired: needsChoice } = this.skillService.processSkillAward(
+            current.skills,
+            skillName,
+            levelToAdd === 1 ? undefined : levelToAdd, // 1 is default increase
+            isFirstTermBasicTraining
+        );
 
-      choiceRequired = needsChoice;
+        choiceRequired = needsChoice;
 
-      const history = [...(current.history || []), message];
-      const updated = { ...current, skills, history };
+        const history = [...(current.history || []), message];
+        const updated = { ...current, skills, history };
 
-      // Global Skill Cap Check (Informative log for now)
-      if (this.skillService.isOverCap(updated.skills, updated.characteristics.int.value, updated.characteristics.edu.value)) {
-        updated.history.push(`**WARNING**: Character has exceeded the global skill cap of ${this.skillService.calculateSkillCap(updated.characteristics.int.value, updated.characteristics.edu.value)} levels.`);
-      }
+        // Global Skill Cap Check (Informative log for now)
+        if (this.skillService.isOverCap(updated.skills, updated.characteristics.int.value, updated.characteristics.edu.value)) {
+            updated.history.push(`**WARNING**: Character has exceeded the global skill cap of ${this.skillService.calculateSkillCap(updated.characteristics.int.value, updated.characteristics.edu.value)} levels.`);
+        }
 
-      this.storage.save('autosave', updated);
-      return updated;
+        this.storage.save('autosave', updated);
+        return updated;
     });
 
     return choiceRequired;
@@ -135,19 +152,19 @@ export class CharacterService {
 
   ensureSkillLevel(skillName: string, minLevel: number) {
     this.characterSignal.update((current) => {
-      const { skills, message } = this.skillService.processSkillAward(
-        current.skills,
-        skillName,
-        minLevel
-      );
+        const { skills, message } = this.skillService.processSkillAward(
+            current.skills,
+            skillName,
+            minLevel
+        );
 
-      const history = [...(current.history || []), message];
-      const updated = { ...current, skills, history };
+        const history = [...(current.history || []), message];
+        const updated = { ...current, skills, history };
 
-      this.storage.save('autosave', updated);
-      return updated;
+        this.storage.save('autosave', updated);
+        return updated;
     });
-  }
+}
 
   reset() {
     this.characterSignal.set(JSON.parse(JSON.stringify(INITIAL_CHARACTER)));
@@ -157,15 +174,7 @@ export class CharacterService {
   // --- NPC Management ---
 
   addNpc(npc: NPC) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        npcs: [...current.npcs, npc],
-        history: [...(current.history || []), `**NPC Gained**: ${npc.name} (${npc.type}) - ${npc.origin}`]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({ npcs: [...this.character().npcs, npc] }, `**NPC Gained**: ${npc.name} (${npc.type}) - ${npc.origin}`);
   }
 
   convertNpc(fromId: string, toType: NpcType) {
@@ -211,87 +220,27 @@ export class CharacterService {
   }
 
   removeNpc(id: string) {
-    this.characterSignal.update(current => {
-      const npc = current.npcs.find(n => n.id === id);
-      const updated = {
-        ...current,
-        npcs: current.npcs.filter(n => n.id !== id),
-        history: npc ? [...(current.history || []), `**NPC Removed**: ${npc.name} (${npc.type})`] : current.history
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    const npc = this.character().npcs.find(n => n.id === id);
+    this.patch({ npcs: this.character().npcs.filter(n => n.id !== id) }, npc ? `**NPC Removed**: ${npc.name} (${npc.type})` : undefined);
   }
 
   // --- DM Tracking ---
 
   updateDm(type: 'qualification' | 'survival' | 'advancement' | 'benefit', value: number) {
-    this.characterSignal.update(current => {
-      const updated = { ...current };
-      if (type === 'qualification') updated.nextQualificationDm = (updated.nextQualificationDm || 0) + value;
-      if (type === 'survival') updated.nextSurvivalDm = (updated.nextSurvivalDm || 0) + value;
-      if (type === 'advancement') updated.nextAdvancementDm = (updated.nextAdvancementDm || 0) + value;
-      if (type === 'benefit') updated.nextBenefitDm = (updated.nextBenefitDm || 0) + value;
+    const updated: any = {};
+    if (type === 'qualification') updated.nextQualificationDm = (this.character().nextQualificationDm || 0) + value;
+    if (type === 'survival') updated.nextSurvivalDm = (this.character().nextSurvivalDm || 0) + value;
+    if (type === 'advancement') updated.nextAdvancementDm = (this.character().nextAdvancementDm || 0) + value;
+    if (type === 'benefit') updated.nextBenefitDm = (this.character().nextBenefitDm || 0) + value;
 
-      const updatedWithHistory = {
-        ...updated,
-        history: [...(current.history || []), `**DM Bonus**: ${value >= 0 ? '+' : ''}${value} to next ${type} roll`]
-      };
-      this.storage.save('autosave', updatedWithHistory);
-      return updatedWithHistory;
-    });
+    this.patch(updated, `**DM Bonus**: ${value >= 0 ? '+' : ''}${value} to next ${type} roll`);
   }
 
-  async rollLeavingHome(careerName: string, termsInCareer: number, diceService: any): Promise<{ roll: number, dm: number, success: boolean }> {
-      const char = this.character();
-      if (char.hasLeftHome) return { roll: 0, dm: 0, success: true };
-
-      let dm = 0;
-      const modifiers: { label: string, value: number }[] = [];
-
-      // 1. Origin Modifier (Spacer +2)
-      if (char.originType === 'Spacer') {
-          dm += 2;
-          modifiers.push({ label: 'Spacer Origin', value: 2 });
-      }
-
-      // 2. Career Modifier
-      // Navy, Marine, Merchant: +1 per term served
-      if (['Navy', 'Marine', 'Merchant'].includes(careerName)) {
-          dm += termsInCareer;
-          modifiers.push({ label: `${careerName} Career (+1/term)`, value: termsInCareer });
-      }
-      // Scout: +2 per term served
-      if (careerName === 'Scout') {
-          dm += (termsInCareer * 2);
-          modifiers.push({ label: 'Scout Career (+2/term)', value: termsInCareer * 2 });
-      }
-
-      const roll = await diceService.roll2D();
-      const success = (roll + dm) >= 8;
-
-      if (success) {
-          this.updateCharacter({ hasLeftHome: true });
-          this.log(`**LEAVING HOME**: Character has successfully left their homeworld (Roll: ${roll} + DM: ${dm} = ${roll + dm} vs 8+). Homeworld Survival DMs no longer apply.`);
-      } else {
-          this.log(`**STUCK AT HOME**: Character failed to leave their homeworld this term (Roll: ${roll} + DM: ${dm} = ${roll + dm} vs 8+).`);
-      }
-
-      return { roll, dm, success };
-  }
 
   // --- Education & Special Flags ---
 
   setPsionicPotential(value: boolean) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        psionicPotential: value,
-        history: [...(current.history || []), value ? '**Psionic Potential Detected**: Character is now eligible for Psion career.' : 'Psionic potential removed.']
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({ psionicPotential: value }, value ? '**Psionic Potential Detected**: Character is now eligible for Psion career.' : 'Psionic potential removed.');
   }
 
   setEducationStatus(success: boolean, graduated: boolean = true) {
@@ -321,45 +270,30 @@ export class CharacterService {
   }
 
   setNextCareer(careerName: string) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        forcedCareer: careerName,
-        history: [...(current.history || []), `**Next Career Forced**: ${careerName}`]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({ forcedCareer: careerName }, `**Next Career Forced**: ${careerName}`);
   }
 
   promote(careerName?: string) {
-    this.characterSignal.update(current => {
-      const history = [...current.careerHistory];
-      let index = -1;
-
-      if (careerName) {
-        for (let i = history.length - 1; i >= 0; i--) {
-          if (history[i].careerName === careerName) {
-            index = i;
-            break;
-          }
-        }
-      } else {
-        index = history.length - 1;
-      }
-
-      if (index !== -1) {
-        const term = history[index];
-        if (term.rank < 6) {
-          const newRank = term.rank + 1;
-          history[index] = { ...term, rank: newRank };
+    const history = [...this.character().careerHistory];
+    let index = -1;
+    if (careerName) {
+      for (let i = history.length - 1; i >= 0; i--) {
+        if (history[i].careerName === careerName) {
+          index = i;
+          break;
         }
       }
+    } else {
+      index = history.length - 1;
+    }
 
-      const updated = { ...current, careerHistory: history };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    if (index !== -1) {
+      const term = history[index];
+      if (term.rank < 6) {
+        history[index] = { ...term, rank: term.rank + 1 };
+        this.patch({ careerHistory: history }, `**Promotion**: Promoted to rank ${term.rank + 1} in ${term.careerName}.`);
+      }
+    }
   }
 
   clearForcedCareer() {
@@ -370,28 +304,14 @@ export class CharacterService {
     });
   }
 
-  ejectFromCareer(careerName: string) {
-    this.characterSignal.update(current => {
-      const ejected = [...(current.ejectedCareers || [])];
-      if (!ejected.includes(careerName)) {
-        ejected.push(careerName);
-      }
-      const updated = { 
-        ...current, 
-        ejectedCareers: ejected,
-        history: [...(current.history || []), `**EJECTED**: Character was ejected from the ${careerName} career.`]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+  ejectCareer(careerName: string) {
+    const ejected = [...(this.character().ejectedCareers || [])];
+    if (!ejected.includes(careerName)) ejected.push(careerName);
+    this.patch({ ejectedCareers: ejected }, `**EJECTED**: Character was ejected from the ${careerName} career.`);
   }
 
   clearEjectedCareers() {
-    this.characterSignal.update(current => {
-      const updated = { ...current, ejectedCareers: [] };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({ ejectedCareers: [] });
   }
 
   clearCareerCashHistory(careerName: string) {
@@ -425,169 +345,79 @@ export class CharacterService {
   // --- Logging ---
 
   log(message: string) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        history: [...(current.history || []), message]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({}, message);
   }
 
   addInjury(injuryName: string, stat?: string, reduction: number = 0, cost: number = 0) {
-    this.characterSignal.update(current => {
-      const injury = {
-        id: Math.random().toString(36).substr(2, 9),
-        name: injuryName,
-        stat: stat || 'STR',
-        reduction: reduction,
-        cost: cost,
-        treated: false
-      };
-      const updated = {
-        ...current,
-        injuries: [...(current.injuries || []), injury]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    const injury = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: injuryName,
+      stat: stat || 'STR',
+      reduction: reduction,
+      cost: cost,
+      treated: false
+    };
+    this.patch({ injuries: [...(this.character().injuries || []), injury] });
   }
 
   addBenefitRoll(careerName: string, count: number = 1) {
-    this.characterSignal.update(current => {
-      const allocated = { ...(current.finances.benefitRollsAllocated || {}) };
-      allocated[careerName] = (allocated[careerName] || 0) + count;
-
-      const updated = {
-        ...current,
-        finances: {
-          ...current.finances,
-          benefitRollsAllocated: allocated
-        }
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    const allocated = { ...(this.character().finances.benefitRollsAllocated || {}) };
+    allocated[careerName] = (allocated[careerName] || 0) + count;
+    this.patch({ finances: { ...this.character().finances, benefitRollsAllocated: allocated } });
   }
 
   spendBenefitRoll(careerName?: string, count: number = 1, isCash: boolean = false) {
-    this.characterSignal.update(current => {
-      const finances = { ...current.finances };
+    const finances = { ...this.character().finances };
+    if (isCash) finances.cashRollsSpent = (finances.cashRollsSpent || 0) + count;
 
-      if (isCash) {
-        finances.cashRollsSpent = (finances.cashRollsSpent || 0) + count;
-      }
-
-      if (careerName && finances.benefitRollsAllocated && finances.benefitRollsAllocated[careerName]) {
-        finances.benefitRollsAllocated = { ...finances.benefitRollsAllocated };
-        finances.benefitRollsAllocated[careerName] -= count;
-        if (finances.benefitRollsAllocated[careerName] < 0) finances.benefitRollsAllocated[careerName] = 0;
-      } else {
-        // Fallback or general spend
-        finances.benefitRollsSpent = (finances.benefitRollsSpent || 0) + count;
-      }
-
-      const updated = { ...current, finances };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    if (careerName && finances.benefitRollsAllocated && finances.benefitRollsAllocated[careerName]) {
+      finances.benefitRollsAllocated = { ...finances.benefitRollsAllocated };
+      finances.benefitRollsAllocated[careerName] -= count;
+      if (finances.benefitRollsAllocated[careerName] < 0) finances.benefitRollsAllocated[careerName] = 0;
+    } else {
+      finances.benefitRollsSpent = (finances.benefitRollsSpent || 0) + count;
+    }
+    this.patch({ finances });
   }
 
   finalizeCharacter() {
-    this.characterSignal.update(current => {
-      const char = current;
-      let pension = 0;
-      
-      // 2300AD: Standard Pension (Military Rank 4+ or 20+ years service)
-      const careerHistory = char.careerHistory || [];
-      const totalTerms = careerHistory.length;
-      const highestMilitaryRank = Math.max(...careerHistory.filter(h => ['Army', 'Navy', 'Marine', 'Agent'].includes(h.careerName)).map(h => h.rank), 0);
-      
-      if (highestMilitaryRank >= 4 || totalTerms >= 5) {
-          // Standard pension logic (simplified for 2300AD summary)
-          pension = 10000 + (totalTerms * 2000);
-      }
-      
-      // 2300AD: Ship Share Dividends - Lv 1,000 per year per share
-      const shipShares = char.finances.shipShares || 0;
-      const dividends = shipShares * 1000;
-      
-      const totalPension = pension + dividends;
-      
-      const updated = {
-        ...current,
-        finances: {
-          ...current.finances,
-          pension: totalPension
-        },
-        isFinished: true
-      };
-      
-      this.log(`## character Finalized`);
-      if (pension > 0) this.log(`- Pension: Lv ${pension.toLocaleString()} / year`);
-      if (dividends > 0) this.log(`- Ship Share Dividends: Lv ${dividends.toLocaleString()} / year`);
-      this.log(`- Total Annual Income: Lv ${totalPension.toLocaleString()}`);
-      
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    const char = this.character();
+    let pension = 0;
+    
+    // 2300AD: Standard Pension (Military Rank 4+ or 20+ years service)
+    const careerHistory = char.careerHistory || [];
+    const totalTerms = careerHistory.length;
+    const militaryCareers = ['army', 'navy', 'marine', 'agent'];
+    const highestMilitaryRank = Math.max(...careerHistory.filter(h => militaryCareers.includes(h.careerName.toLowerCase())).map(h => h.rank), 0);
+    
+    if (highestMilitaryRank >= 4 || totalTerms >= 5) {
+        pension = 10000 + (totalTerms * 2000);
+    }
+    
+    const shipShares = char.finances.shipShares || 0;
+    const dividends = shipShares * 1000;
+    const totalPension = pension + dividends;
+    
+    const history = [];
+    history.push(`**Character Finalized**: Total Pension & Dividends: Lv ${totalPension.toLocaleString()} per year.`);
+    if (pension > 0) history.push(`- Pension: Lv ${pension.toLocaleString()} / year`);
+    if (dividends > 0) history.push(`- Ship Share Dividends: Lv ${dividends.toLocaleString()} / year`);
+
+    this.patch({
+      finances: { ...char.finances, pension: totalPension },
+      isFinished: true
+    }, history.join('\n'));
   }
 
   setNeuralJackInstalled(value: boolean) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        hasNeuralJack: value,
-        history: [...(current.history || []), value ? '**Neural Jack Installed**: Interface active.' : 'Neural Jack removed.']
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({ hasNeuralJack: value }, value ? '**Neural Jack Installed**: Interface active.' : 'Neural Jack removed.');
   }
 
   addItem(item: string) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        equipment: [...(current.equipment || []), item],
-        history: [...(current.history || []), `**Item Gained**: ${item}`]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
+    this.patch({ equipment: [...(this.character().equipment || []), item] }, `**Item Gained**: ${item}`);
   }
 
   addTrait(trait: string) {
-    this.characterSignal.update(current => {
-      const updated = {
-        ...current,
-        traits: [...(current.traits || []), trait],
-        history: [...(current.history || []), `**Trait Gained**: ${trait}`]
-      };
-      this.storage.save('autosave', updated);
-      return updated;
-    });
-  }
-
-  modifyStat(stat: string, value: number) {
-    this.characterSignal.update(current => {
-        const statKey = stat.toLowerCase() as keyof typeof current.characteristics;
-        const currentStat = current.characteristics[statKey];
-        if (!currentStat) return current;
-
-        const updatedStat = { ...currentStat, value: currentStat.value + value };
-        const updatedCharacteristics = { ...current.characteristics, [statKey]: updatedStat };
-        
-        const historyMsg = `**Stat Change**: ${stat.toUpperCase()} ${currentStat.value} -> ${updatedStat.value} (${value > 0 ? '+' : ''}${value})`;
-        
-        const updated = {
-            ...current,
-            characteristics: updatedCharacteristics,
-            history: [...(current.history || []), historyMsg]
-        };
-        this.storage.save('autosave', updated);
-        return updated;
-    });
+    this.patch({ traits: [...(this.character().traits || []), trait] }, `**Trait Gained**: ${trait}`);
   }
 }

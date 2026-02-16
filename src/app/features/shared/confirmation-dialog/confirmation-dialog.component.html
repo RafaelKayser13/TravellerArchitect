@@ -5,6 +5,7 @@
     width="500px"
     readoutTL="SECURE_DIALOG"
     [readoutTR]="'TYPE: ' + (type | uppercase)"
+    [hasFooter]="true"
     (close)="onCancel()">
 
     <div class="dialog-content">
@@ -12,7 +13,7 @@
         <div class="status-readout">> SYSTEM_WAITING_FOR_USER_INPUT...</div>
     </div>
 
-    <ng-container footer>
+    <div footer class="footer-container">
         <div class="action-wrapper" [ngClass]="type">
             <button class="btn-cancel" (click)="onCancel()">
                 [ ABORT ]
@@ -21,6 +22,6 @@
                 [ {{ confirmLabel }} ]
             </button>
         </div>
-    </ng-container>
+    </div>
 
 </app-hud-window>

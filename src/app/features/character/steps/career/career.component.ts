@@ -3,20 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
-import { CAREERS } from '../../../../data/careers';
+import { CareerService } from '../../../../core/services/career.service';
 import { CareerDefinition, Assignment } from '../../../../core/models/career.model';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { NATIONALITIES } from '../../../../data/nationalities';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
 import { createSurvivalCheckEvent, createMishapRollEvent, createEventRollEvent } from '../../../../data/events/shared/career-events';
-import { createLifeEventRollEvent, createInjuryEvent } from '../../../../data/events/shared/life-events';
+import { createLifeEventRollEvent, createInjuryEvent, createInjuryRollEvent } from '../../../../data/events/shared/life-events';
 import { NEURAL_JACK_INSTALL_EVENT } from '../../../../data/events/shared/neural-jack-install.event';
 import { effect } from '@angular/core';
 
 const MILITARY_CAREERS = ['Army', 'Navy', 'Marine'];
 const MEDICAL_MILITARY_BUCKET = ['Army', 'Navy', 'Marine'];
 
-type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'POST_TERM_SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT';
+type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'POST_TERM_SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT' | 'NEURAL_JACK_EVENT';
 
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 import { HudWindowComponent } from '../../../shared/hud-window/hud-window.component';
@@ -33,11 +33,13 @@ export class CareerComponent implements OnInit {
     public diceService = inject(DiceService);
     public diceDisplay = inject(DiceDisplayService);
     public eventEngine = inject(EventEngineService);
+    private careerService = inject(CareerService);
 
-    careers = CAREERS;
+    careers = computed(() => this.careerService.getAllCareers());
 
     // State Signals
     currentState = signal<CareerState>('CHOOSE_CAREER');
+    // activeEvent already defined later
     currentTerm = computed(() => this.characterService.character().careerHistory.length + 1);
     currentAge = computed(() => this.characterService.character().age);
 
@@ -46,6 +48,7 @@ export class CareerComponent implements OnInit {
     selectedAssignment: Assignment | null = null;
 
     // Turn Data
+    selectedTable: 'personal' | 'service' | 'advanced' | 'assignment' = 'service';
     rollLog: string[] = [];
     lastRoll = 0;
     lastTarget = 0;
@@ -156,6 +159,13 @@ export class CareerComponent implements OnInit {
                  await this.finishTerm('MUSTER');
             }
         }
+        
+        // Resume from Neural Jack Event
+        if (this.currentState() === 'NEURAL_JACK_EVENT') {
+            this.log('Neural Jack protocol complete. Resuming post-term checks.');
+            const age = this.currentAge();
+            await this.checkAging(age);
+        }
     }
 
     async ngOnInit() {
@@ -170,7 +180,6 @@ export class CareerComponent implements OnInit {
         });
 
         // Register Global Events
-        const { createLifeEventRollEvent, createInjuryRollEvent } = await import('../../../../data/events/shared/life-events');
         this.eventEngine.registerEvent(createLifeEventRollEvent());
         this.eventEngine.registerEvent(createInjuryRollEvent());
 
@@ -223,7 +232,7 @@ export class CareerComponent implements OnInit {
 
         const char = this.characterService.character();
         if (char.forcedCareer) {
-            const forced = this.careers.find(c => c.name.toLowerCase() === char.forcedCareer?.toLowerCase());
+            const forced = this.careers().find((c: CareerDefinition) => c.name.toLowerCase() === char.forcedCareer?.toLowerCase());
             if (forced) {
                 this.characterService.log(`**Enforcing Forced Career**: ${forced.name}`);
                 this.selectCareer(forced);
@@ -254,10 +263,9 @@ export class CareerComponent implements OnInit {
         this.termEventLog.set([]); // Reset log for new career
         this.selectedCareer = career;
         this.selectedAssignment = null;
+        this.characterService.currentCareer.set(career.name);
 
         // Register Career-Specific Events in Engine
-        const { createEventRollEvent, createMishapRollEvent } = await import('../../../../data/events/shared/career-events');
-        
         const termEvent = createEventRollEvent(career.name, career.eventTable);
         this.eventEngine.registerEvent(termEvent);
 
@@ -298,11 +306,21 @@ export class CareerComponent implements OnInit {
         if (char.forcedCareer && char.forcedCareer !== career.name) return true;
 
         // 3. Attribute Requirements
-        if (career.minAttributes) {
-            for (const [stat, min] of Object.entries(career.minAttributes)) {
+        const minAttributes = career.minAttributes;
+        if (minAttributes) {
+            for (const [stat, min] of Object.entries(minAttributes)) {
+                // Handle complex keys like "dex or int"
+                if (stat.includes(' or ')) {
+                    const stats = stat.split(' or ').map(s => s.trim().toLowerCase());
+                    const values = stats.map(s => (char.characteristics as any)[s]?.value || 0);
+                    if (values.every(v => v < min)) return true;
+                    continue;
+                }
+
                 const charStat = (char.characteristics as any)[stat.toLowerCase()];
                 if (charStat && charStat.value < min) return true;
-                // Special case for DEX or INT (Entertainer)
+                
+                // Legacy special case (normalized now but keeping for safety)
                 if (stat.includes('dex or int')) {
                     if (char.characteristics.dex.value < 5 && char.characteristics.int.value < 5) return true;
                 }
@@ -331,8 +349,16 @@ export class CareerComponent implements OnInit {
             return `SERVICE_OBLIGATION: Academy graduate must serve in ${char.forcedCareer}.`;
         }
 
-        if (career.minAttributes) {
-            for (const [stat, min] of Object.entries(career.minAttributes)) {
+        const minAttributes = career.minAttributes;
+        if (minAttributes) {
+            for (const [stat, min] of Object.entries(minAttributes)) {
+                if (stat.includes(' or ')) {
+                    const stats = stat.split(' or ').map(s => s.trim().toLowerCase());
+                    const values = stats.map(s => (char.characteristics as any)[s]?.value || 0);
+                    if (values.every(v => v < min)) return `Requires ${stat.toUpperCase()} ${min}`;
+                    continue;
+                }
+
                 const charStat = (char.characteristics as any)[stat.toLowerCase()];
                 if (charStat && charStat.value < min) return `Requires ${stat.toUpperCase()} ${min}`;
                 if (stat.includes('dex or int')) {
@@ -525,7 +551,7 @@ export class CareerComponent implements OnInit {
 
     async chooseDrifter() {
         this.characterService.log('Choosing Drifter path...');
-        const drifter = this.careers.find(c => c.name === 'Drifter');
+        const drifter = this.careers().find(c => c.name === 'Drifter');
         if (drifter) {
             this.selectedCareer = drifter;
             this.selectedAssignment = drifter.assignments[0];
@@ -743,10 +769,10 @@ export class CareerComponent implements OnInit {
         else if (roll <= 5) draftedCareerName = 'Marine';
         else draftedCareerName = 'Navy';
 
-        let draftTarget = this.careers.find(c => c.name.includes(draftedCareerName));
+        let draftTarget = this.careers().find((c: CareerDefinition) => c.name.includes(draftedCareerName));
         // Fallback for Marine vs Marines naming discrepancy
         if (!draftTarget && draftedCareerName === 'Marine') {
-            draftTarget = this.careers.find(c => c.name === 'Marines');
+            draftTarget = this.careers().find((c: CareerDefinition) => c.name === 'Marines');
         }
 
         if (draftTarget) {
@@ -759,7 +785,7 @@ export class CareerComponent implements OnInit {
             this.currentState.set('BASIC_TRAINING');
         } else {
             this.log('Draft failed. You are a Drifter.');
-            const drifter = this.careers.find(c => c.name === 'Drifter');
+            const drifter = this.careers().find((c: CareerDefinition) => c.name === 'Drifter');
             if (drifter) {
                 this.characterService.log(`**Draft Fallback**: Assigned to ${drifter.name}`);
                 this.selectedCareer = drifter;
@@ -861,32 +887,36 @@ export class CareerComponent implements OnInit {
             await this.handleSkillReward(reward, 1);
         }
 
-        // Handle Flow
-        // If it was a bonus roll (from Advancement or Commission)
-        if (this.bonusSkillRolls() > 0) {
-            this.bonusSkillRolls.update(v => v - 1);
-            const remaining = this.bonusSkillRolls();
-            this.log(`Bonus Roll Used. ${remaining} remaining.`);
-            
-            if (remaining > 0) return; // Stay for more rolls?
+        // Flow Control
+        const state = this.currentState();
+        const bonus = this.bonusSkillRolls();
 
-            if ((this.currentState() === 'POST_TERM_SKILL_TRAINING' || this.currentEventText)) {
-                // We are in the post-Advancement phase. 
-                // All bonus rolls used. Logic dictates we end the term.
-                this.transitionToEndOfTerm();
-                return;
-            }
+        if (bonus > 0) {
+             this.bonusSkillRolls.update(v => v - 1);
+             const remaining = this.bonusSkillRolls();
+             this.log(`Bonus Roll Used. Remaining: ${remaining}`);
+             
+             // Advancement Bonus Sequence Check
+             if (state === 'POST_TERM_SKILL_TRAINING' && remaining === 0) {
+                 await this.transitionToEndOfTerm();
+                 return;
+             }
+             
+             // Commission/Other Bonus Check: Stay in current state logic
+             // (If SKILL_TRAINING, we stay for standard roll)
+             // (If POST_TERM but remaining > 0, we stay for next bonus)
+             return;
         }
 
-        // Standard Flow
-        if (this.currentTerm() === 1 && this.currentState() === 'BASIC_TRAINING') {
-            this.currentState.set('SURVIVAL');
-        } else if (this.currentState() === 'SKILL_TRAINING') {
-             // Standard pre-survival skill roll
+        // Standard Flow (No Bonus Remaining)
+        if (state === 'POST_TERM_SKILL_TRAINING') {
+             // Fallback: If we have 0 bonuses (e.g. somehow skipped), we end term
+             await this.transitionToEndOfTerm();
+        } else if (state === 'SKILL_TRAINING' || (state === 'BASIC_TRAINING' && this.currentTerm() === 1)) {
+             // Standard pre-survival skill roll completes the training phase
              this.currentState.set('SURVIVAL');
-        } else if (this.currentState() === 'POST_TERM_SKILL_TRAINING') {
-             // Just finished bonus roll sequence
-             this.transitionToEndOfTerm();
+        } else {
+             this.log(`Warning: rollSkill flow triggered in state: ${state}`);
         }
     }
 
@@ -1108,7 +1138,7 @@ export class CareerComponent implements OnInit {
 
             if (!isDrifter && careerName !== 'Spaceborne') {
                 this.forcedOut = true;
-                this.characterService.ejectFromCareer(careerName);
+                this.characterService.ejectCareer(careerName);
             }
 
             this.currentState.set('MISHAP');
@@ -1452,6 +1482,11 @@ export class CareerComponent implements OnInit {
         const nextAdvDm = char.nextAdvancementDm || 0;
         if (nextAdvDm !== 0) modifiers.push({ label: 'Bonus DMs', value: nextAdvDm });
 
+        // Neural Jack Bonus (+1)
+        if (char.equipment.some(e => e.includes('Neural Jack'))) {
+            modifiers.push({ label: 'Neural Jack', value: 1 });
+        }
+
         const rollResult = await this.diceDisplay.roll(
             this.selectedCareer.name === 'Prisoner' ? 'Release Check' : 'Advancement Check',
             2, statMod + paroleDm + nextAdvDm, target, stat.toUpperCase(), undefined, modifiers
@@ -1489,9 +1524,7 @@ export class CareerComponent implements OnInit {
 
             if (!isPrisoner) {
                 this.bonusSkillRolls.update(v => v + 1);
-                this.characterService.log(`Advancement grants **1 Extra Skill Roll**`);
-                this.log('Gain 1 Bonus Skill Roll. You must take this now.');
-                this.log('Gain 1 Bonus Skill Roll. You must take this now.');
+                this.addToEventLog('Gain 1 Bonus Skill Roll. You must take this now.');
                 this.currentState.set('POST_TERM_SKILL_TRAINING');
             }
         } else {
@@ -1519,6 +1552,28 @@ export class CareerComponent implements OnInit {
 
     // Centralized Post-Term Checks
     async checkPostTermFlow() {
+        const char = this.characterService.character();
+        const nation = NATIONALITIES.find(n => n.name === char.nationality);
+        const tier = nation?.tier || 3;
+        
+        // 2300AD: Neural Jack Opportunity
+        // - Term 3 or less
+        // - Military Career (Navy, Marine, Scout?? Rule says Naval/Marine. Keeping strict to Navy/Marine per audit, but Scout often included in logic. Audit verified Navy/Marine. I'll stick to that + Scout if it was in the event logic originally. The event file had Scout. I will include Scout for consistency with the defined event data.)
+        // - Tier 3 Nation or better (Tier <= 3)
+        // - Not already installed
+        const eligibleCareers = ['Navy', 'Marine', 'Scout'];
+        const isEligibleCareer = this.selectedCareer && eligibleCareers.includes(this.selectedCareer.name);
+        
+        if (this.currentTerm() <= 3 && isEligibleCareer && tier <= 3 && !char.equipment.some(e => e.includes('Neural Jack'))) {
+             this.log('Neural Jack installation opportunity available.');
+             this.currentState.set('NEURAL_JACK_EVENT');
+             
+             // Register and Trigger
+             this.eventEngine.registerEvent(NEURAL_JACK_INSTALL_EVENT);
+             this.eventEngine.triggerEvent(NEURAL_JACK_INSTALL_EVENT.id);
+             return; // Stop flow, resume in onEventFlowComplete
+        }
+
         const age = this.currentAge();
         await this.checkAging(age);
     }
@@ -1558,22 +1613,22 @@ export class CareerComponent implements OnInit {
             effectDesc = 'AGING_EFFECT: Significant degradation in STR and DEX (-2 each).';
             this.increaseStat('STR', -2); this.increaseStat('DEX', -2);
             this.characterService.log('**Aging Effect**: STR -2, DEX -2.');
-            this.currentState.set('EVENT');
+            this.rollLeavingHome();
         } else if (total === 3) {
             effectDesc = 'AGING_EFFECT: Moderate degradation in STR (-2).';
             this.increaseStat('STR', -2);
             this.characterService.log('**Aging Effect**: STR -2.');
-            this.currentState.set('EVENT');
+            this.rollLeavingHome();
         } else if (total === 4) {
             effectDesc = 'AGING_EFFECT: Minor degradation in STR and DEX (-1 each).';
             this.increaseStat('STR', -1); this.increaseStat('DEX', -1);
             this.characterService.log('**Aging Effect**: STR -1, DEX -1.');
-            this.currentState.set('EVENT');
+            this.rollLeavingHome();
         } else if (total === 5) {
             effectDesc = 'AGING_EFFECT: Slight degradation in STR (-1).';
             this.increaseStat('STR', -1);
             this.characterService.log('**Aging Effect**: STR -1.');
-            this.currentState.set('EVENT');
+            this.rollLeavingHome();
         } else {
             this.log('No aging effects detected.');
             await this.rollLeavingHome();
@@ -1623,9 +1678,9 @@ export class CareerComponent implements OnInit {
             modifiers.push({ label: 'Scout Career (+2/term)', value: terms * 2 });
         }
 
-        const rollResult = await this.diceDisplay.roll('Leaving Home Check', 2, bonuses, 8, '', undefined, modifiers);
+        const rollResult = await this.diceDisplay.roll('Leaving Home Check', 2, bonuses, 8, '', (res) => res + bonuses >= 8 ? 'SUCCESS' : 'NO MOTION', modifiers);
         const total = rollResult + bonuses;
-        this.log(`Leaving Home Check: ${total} vs 8`);
+        this.addToEventLog(`LEAVING_HOME: ${total >= 8 ? 'Success' : 'No Motion'} (Roll ${rollResult} + Mod ${bonuses} = ${total} vs 8)`);
 
         if (total >= 8) {
             this.leavingHomeSuccess = true;
@@ -1659,13 +1714,16 @@ export class CareerComponent implements OnInit {
         const target = this.selectedCareer?.qualificationTarget || 7;
         const charStat = (char.characteristics as any)[stat];
         const statMod = this.diceService.getModifier(charStat.value + charStat.modifier);
+        const dm = 0; // No DM for assignment change qualification by default
+        const modifiers: { label: string, value: number }[] = []; // No modifiers for assignment change qualification by default
 
-        const roll = await this.diceDisplay.roll(
-            `Qualify: ${newAssign.name}`, 2, statMod, target, stat.toUpperCase()
-        );
-        const total = roll + statMod;
+        const rollValue = await this.diceDisplay.roll(`Qualify: ${newAssign.name}`, 2, statMod, dm, stat.toUpperCase(), (res) => res + statMod + dm >= target ? 'PASS' : 'FAIL', modifiers);
+        const total = rollValue + statMod + dm;
+        const passed = total >= target;
 
-        if (total >= target) {
+        this.addToEventLog(`ASSIGNMENT_CHANGE: ${passed ? 'Success' : 'Failure'} (Roll ${rollValue} + Mod ${statMod + dm} = ${total} vs ${target})`);
+
+        if (passed) {
             this.log('Assignment change successful!');
             this.nextAssignment = newAssign;
             this.finishTerm('CONTINUE');
@@ -1720,14 +1778,20 @@ export class CareerComponent implements OnInit {
         // Track benefit roll for the term
         this.characterService.addBenefitRoll(currentCareerName, 1);
 
+        const careerId = this.selectedCareer?.id || currentCareerName.toLowerCase();
+
         this.characterService.updateCharacter({
             age: newAge,
             careerHistory: [
                 ...char.careerHistory,
                 {
                     termNumber: this.currentTerm(),
-                    careerName: currentCareerName,
+                    careerName: careerId,
+                    careerLabel: currentCareerName,
                     rank: currentRank,
+                    rankTitle: this.getRankTitle(),
+                    assignment: this.selectedAssignment?.name,
+                    assignmentLabel: this.selectedAssignment?.name,
                     events: [...this.termEventLog()],
                     benefits: [],
                     ageStart: char.age,
@@ -1767,7 +1831,10 @@ export class CareerComponent implements OnInit {
 
             this.selectedCareer = null;
             this.selectedAssignment = null;
+            this.characterService.currentCareer.set(null);
             this.currentState.set('CHOOSE_CAREER');
+            // Ensure any lingering events are cleared so overlays don't block the selection screen
+            this.eventEngine.currentEvent.set(null); 
             this.forcedOut = false;
             this.characterService.log(`**Mustered Out** of ${currentCareerName}`);
             this.log('Mustered out of career. You may choose a new career or Finalize.');
@@ -1781,6 +1848,7 @@ export class CareerComponent implements OnInit {
                 this.nextAssignment = null;
             }
             this.currentState.set('SKILL_TRAINING');
+            this.characterService.currentCareer.set(this.selectedCareer?.name || null);
             this.termEventLog.set([]); // Reset log for next term
         }
         this.mandatoryContinue = false;

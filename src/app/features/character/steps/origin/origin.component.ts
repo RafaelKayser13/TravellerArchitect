@@ -34,6 +34,7 @@ export class OriginComponent {
   selectedNationality: Nationality | null = null;
   selectedOriginType: 'Core' | 'Frontier' | 'Spacer' | null = null;
   selectedWorld: World | null = null;
+  selectedPath: 'Hard' | 'Soft' = 'Soft';
 
   // Background Skills
   showSkillsSelection = false;
@@ -43,15 +44,15 @@ export class OriginComponent {
 
   coreSkills = [
     'Admin', 'Art', 'Athletics', 'Carouse', 'Drive', 'Electronics', 'Flyer',
-    'Language', 'Mechanics', 'Medic', 'Profession', 'Science', 'Streetwise'
+    'Language', 'Mechanic', 'Medic', 'Profession', 'Science', 'Streetwise'
   ];
   frontierSkills = [
-    'Admin', 'Animals', 'Art', 'Athletics', 'Carouse', 'Drive', 'Gun Combat', 'Mechanics',
+    'Admin', 'Animals', 'Art', 'Athletics', 'Carouse', 'Drive', 'Gun Combat', 'Mechanic',
     'Medic', 'Seafarer', 'Steward', 'Survival', 'Vacc Suit'
   ];
   spacerSkills = [
     'Admin', 'Art', 'Athletics', 'Carouse', 'Electronics', 'Engineer',
-    'Mechanics', 'Medic', 'Pilot', 'Steward', 'Survival', 'Vacc Suit'
+    'Mechanic', 'Medic', 'Pilot', 'Steward', 'Survival', 'Vacc Suit'
   ];
 
   get availableSkills() {
@@ -96,6 +97,11 @@ export class OriginComponent {
     } else {
       this.selectedOriginType = null;
     }
+
+    if (char.isSoftPath !== undefined) {
+        this.selectedPath = char.isSoftPath ? 'Soft' : 'Hard';
+    }
+
 
     // Update worlds list based on restored selection
     this.updateWorlds();
@@ -310,7 +316,16 @@ export class OriginComponent {
   }
 
   onWorldChange() {
+    if (this.selectedWorld) {
+        // Default to world's path, but allow override
+        this.selectedPath = (this.selectedWorld.path as 'Hard' | 'Soft') || 'Soft';
+    }
     this.save();
+  }
+
+  setPath(path: 'Hard' | 'Soft') {
+      this.selectedPath = path;
+      this.save();
   }
 
   isGravityExtreme(world: World): boolean {
@@ -380,7 +395,7 @@ export class OriginComponent {
         nationality: this.selectedNationality.name,
         originType: this.selectedOriginType,
         homeworld: this.selectedWorld,
-        isSoftPath: this.selectedWorld?.path === 'Soft'
+        isSoftPath: this.selectedPath === 'Soft'
       };
 
       // 4. Update Character State first

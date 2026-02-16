@@ -86,6 +86,7 @@ export interface Assignment {
 }
 
 export interface CareerDefinition {
+    id: string;
     name: string;
     description: string;
     qualificationStat: string;
@@ -103,6 +104,27 @@ export interface CareerDefinition {
     musteringOutCash: number[];
     musteringOutBenefits: string[];
     traits?: string[]; // New: Career-specific traits (e.g. 0-G DNAM for Spaceborne)
+    academy?: {
+        admission: {
+            stat: string;
+            target: number;
+            requirements?: { [stat: string]: number };
+        };
+        skills: string[];
+        honors?: {
+            rank: number;
+            title: string;
+        };
+    };
+    medical?: {
+        plan: string;
+        coverage: {
+            below4: number;
+            range4to7: number;
+            range8to11: number;
+            above12: number;
+        };
+    };
 }
 
 // --- Life Events & Injury Models ---

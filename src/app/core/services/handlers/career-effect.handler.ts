@@ -22,11 +22,10 @@ export class CareerEffectHandler implements EffectHandler {
                 break;
             case 'EJECT_CAREER':
                  if (effect.value) {
-                     ctx.characterService.ejectFromCareer(effect.value);
+                     ctx.characterService.ejectCareer(effect.value);
                  } else {
-                     const char = ctx.characterService.character();
-                     const current = char.careerHistory.length > 0 ? char.careerHistory[char.careerHistory.length-1].careerName : '';
-                     if (current) ctx.characterService.ejectFromCareer(current);
+                     const current = ctx.characterService.currentCareer();
+                     if (current) ctx.characterService.ejectCareer(current);
                  }
                  break;
             case 'PROMOTION':
