@@ -254,23 +254,28 @@
     </div>
 
     <!-- EVENT ROLL SCREEN -->
-    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'EventRoll'">
+    <div class="roll-phase-screen hud-module event-phase fade-in" *ngIf="educationStep === 'EventRoll'">
       <div class="corner-detail tl"></div>
       <div class="corner-detail tr"></div>
       <div class="corner-detail bl"></div>
       <div class="corner-detail br"></div>
 
-      <div class="hud-box-header">
+      <div class="hud-box-header event-header">
         <span class="index">EVT_01</span>
         <h3>EDUCATION_EVENT_TRIGGER</h3>
+        <div class="status-light pulse"></div>
       </div>
 
-      <div class="hud-content">
-        <p class="instruction">Something significant happens during your academic studies. Rolling the Education Events table...</p>
+      <div class="hud-content event-content">
+        <div class="event-briefing">
+          <p class="briefing-icon">⚡</p>
+          <p class="instruction">Something significant happens during your academic studies.</p>
+          <p class="sub-text">Rolling the Education Events table...</p>
+        </div>
       </div>
 
-      <div class="hud-footer tactical">
-        <button class="btn-action elite" (click)="executeEventRoll()">
+      <div class="hud-footer tactical event-footer">
+        <button class="btn-action elite modern event-roll" (click)="executeEventRoll()">
           <span class="primary">ROLL_EVENT</span>
           <span class="secondary">2D6 EVENT_SIMULATION</span>
         </button>
@@ -278,28 +283,37 @@
     </div>
 
     <!-- EVENT RESULT SCREEN -->
-    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'EventResult'">
+    <div class="roll-phase-screen hud-module event-phase fade-in" *ngIf="educationStep === 'EventResult'">
       <div class="corner-detail tl"></div>
       <div class="corner-detail tr"></div>
       <div class="corner-detail bl"></div>
       <div class="corner-detail br"></div>
 
-      <div class="hud-box-header">
+      <div class="hud-box-header event-header result">
         <span class="index">EVT_02</span>
         <h3>EVENT_OUTCOME</h3>
+        <div class="status-light active"></div>
       </div>
 
-      <div class="hud-content">
+      <div class="hud-content event-content result">
         <div class="event-display" *ngIf="currentEvent">
-          <p class="roll-number">Roll: {{ currentEvent.roll }}</p>
-          <h4>{{ currentEvent.desc }}</h4>
+          <div class="roll-display">
+            <span class="roll-label">RESULT</span>
+            <span class="roll-number">{{ currentEvent.roll }}</span>
+          </div>
+          <div class="event-title-box">
+            <h4>{{ currentEvent.desc }}</h4>
+          </div>
+          <div class="event-narrative">
+            <p>{{ currentEvent.desc }}</p>
+          </div>
         </div>
       </div>
 
-      <div class="hud-footer tactical">
-        <button class="btn-action elite" (click)="proceedFromEventResult()" [disabled]="showHobbySelection || showTutorSelection || showWarOptions">
+      <div class="hud-footer tactical event-footer">
+        <button class="btn-action elite modern event-proceed" (click)="proceedFromEventResult()" [disabled]="showHobbySelection || showTutorSelection || showWarOptions">
           <span class="primary">CONTINUE_TO_GRADUATION</span>
-          <span class="secondary">PROCEED</span>
+          <span class="secondary">PROCEED_NEXT_PHASE</span>
         </button>
       </div>
     </div>
