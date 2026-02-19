@@ -1169,6 +1169,7 @@
         text-align: left;
         justify-content: flex-start;
         padding: 1.2rem;
+        transition: all 0.2s ease;
 
         .primary {
             display: block;
@@ -1183,14 +1184,43 @@
             font-family: var(--font-mono);
         }
 
-        &.risk {
-            border-color: var(--cyber-yellow);
-            color: var(--cyber-yellow);
+        // Cyan (default/safe)
+        &:not(.warn):not(.risk) {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
 
-            &:hover {
-                background: var(--cyber-yellow);
-                color: #000;
+            &:hover:not(:disabled) {
+                background: rgba(0, 243, 255, 0.1);
+                box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
             }
+        }
+
+        // Red (warning/risky)
+        &.warn {
+            border-color: var(--power-red);
+            color: var(--power-red);
+
+            &:hover:not(:disabled) {
+                background: rgba(255, 0, 60, 0.1);
+                box-shadow: 0 0 15px rgba(255, 0, 60, 0.3);
+                border-color: #ff5c7c;
+            }
+        }
+
+        // Yellow (danger/flee)
+        &.risk {
+            border-color: var(--neon-yellow);
+            color: var(--neon-yellow);
+
+            &:hover:not(:disabled) {
+                background: rgba(255, 240, 31, 0.1);
+                box-shadow: 0 0 15px rgba(255, 240, 31, 0.2);
+            }
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
     }
 }
@@ -1663,12 +1693,46 @@
     }
 }
 
-// War modal — red toned
+// War modal — red toned with enhanced cyberpunk styling
 .war-modal {
-    border-color: rgba(255, 40, 40, 0.6) !important;
-    box-shadow: 0 0 60px rgba(255, 0, 0, 0.2), inset 0 0 40px rgba(255, 0, 0, 0.04) !important;
+    max-width: 700px;
+    border-color: rgba(255, 0, 60, 0.5) !important;
+    box-shadow: 0 0 80px rgba(255, 0, 60, 0.25), inset 0 0 50px rgba(255, 0, 60, 0.08) !important;
+    background: linear-gradient(135deg, rgba(16, 16, 16, 0.95) 0%, rgba(20, 5, 5, 0.92) 100%);
 
-    .modal-corner { border-color: var(--power-red); }
+    .modal-corner {
+        border-color: var(--power-red);
+    }
+
+    .modal-scan-line {
+        background: linear-gradient(90deg, transparent, rgba(255, 0, 60, 0.3), transparent);
+    }
+
+    .modal-header {
+        border-bottom-color: rgba(255, 0, 60, 0.3);
+
+        h3 {
+            color: var(--power-red);
+            text-shadow: 0 0 20px rgba(255, 0, 60, 0.5);
+            letter-spacing: 3px;
+        }
+
+        .modal-status {
+            background: rgba(255, 0, 60, 0.1);
+            border-color: var(--power-red);
+            color: var(--power-red);
+        }
+    }
+
+    .modal-body {
+        p {
+            color: var(--text-main);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-family: var(--font-body);
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+    }
 }
 
 .war-header {
