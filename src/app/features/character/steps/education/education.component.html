@@ -7,11 +7,18 @@
     <!-- University -->
     <div class="education-card" [class.selected]="educationType === 'University'"
       (click)="educationType = 'University'">
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <div class="card-scan-line"></div>
+      <span class="card-type-tag">ACADEMIC</span>
       <div class="card-layout">
         <div class="info-column">
           <div class="card-header">
             <span class="index">01</span>
             <h3>University</h3>
+            <span class="card-status-dot" [class.active]="educationType === 'University'"></span>
           </div>
           <div class="details">
             <p><span class="label">REQUIREMENT:</span> <span class="highlight">EDU 7+</span></p>
@@ -47,7 +54,7 @@
           </div>
 
           <button class="btn-action" (click)="apply()"
-            [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'">
+            [disabled]="$any(admissionStatus) !== 'NotApplied'">
             INIT_APPLICATION
           </button>
         </div>
@@ -55,12 +62,19 @@
     </div>
 
     <!-- Academy -->
-    <div class="education-card" [class.selected]="educationType === 'Academy'" (click)="educationType = 'Academy'">
+    <div class="education-card military-card" [class.selected]="educationType === 'Academy'" (click)="educationType = 'Academy'">
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <div class="card-scan-line"></div>
+      <span class="card-type-tag military">MILITARY</span>
       <div class="card-layout">
         <div class="info-column">
           <div class="card-header">
             <span class="index">02</span>
             <h3>Military Academy</h3>
+            <span class="card-status-dot" [class.active]="educationType === 'Academy'"></span>
           </div>
           <div class="details">
             <p><span class="label">REQUIREMENT:</span> <span class="highlight">ATTR 8+</span></p>
@@ -117,7 +131,7 @@
           </div>
 
           <button class="btn-action" (click)="apply()"
-            [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected' || !getAcademyValidation(academyType).available">
+            [disabled]="$any(admissionStatus) !== 'NotApplied' || !getAcademyValidation(academyType).available">
             INIT_MIL_APPLICATION
           </button>
         </div>
@@ -126,11 +140,17 @@
 
     <!-- Skip Education -->
     <div class="education-card draft-card" [class.selected]="educationType === 'None'" (click)="educationType = 'None'">
+      <div class="card-corner tl"></div>
+      <div class="card-corner tr"></div>
+      <div class="card-corner bl"></div>
+      <div class="card-corner br"></div>
+      <span class="card-type-tag draft">DIRECT</span>
       <div class="card-layout">
         <div class="info-column">
           <div class="card-header">
             <span class="index">03</span>
             <h3>Direct Career Entry</h3>
+            <span class="card-status-dot" [class.active]="educationType === 'None'"></span>
           </div>
           <div class="details">
             <p><span class="label">STATUS:</span> <span class="highlight">IMMEDIATE_ENLISTMENT</span></p>
@@ -151,12 +171,178 @@
 
   <!-- Results -->
   <div class="results" *ngIf="$any(admissionStatus) !== 'NotApplied'" #resultsSection>
-    <div class="status-box" [ngClass]="admissionStatus.toLowerCase()" *ngIf="$any(admissionStatus) === 'Rejected'">
-      <h3>APPLICATION_REJECTED</h3>
-      <p>The academic selection board has reviewed your profile and declined admission at this time.</p>
-      <div class="hud-footer" style="margin-top: 2rem; gap: 1rem; flex-direction: row;">
-        <button class="btn-action secondary" (click)="resetAdmission()">RETRY / CHANGE_PATH</button>
-        <button class="btn-action" (click)="finishStep()">START_A_CAREER</button>
+    <!-- ADMISSION ROLL SCREEN -->
+    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'AdmissionRoll'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+
+      <div class="hud-box-header">
+        <span class="index">ADM_01</span>
+        <h3>ADMISSION_ROLL_PREPARATION</h3>
+      </div>
+
+      <div class="hud-content">
+        <p class="instruction">You are about to roll for admission to {{ educationType === 'University' ? 'University' : academyType + ' Academy' }}.</p>
+
+        <!-- Modifiers Table -->
+        <div class="modifiers-table">
+          <div class="mod-row header">
+            <span class="mod-label">MODIFIER</span>
+            <span class="mod-value">VALUE</span>
+          </div>
+          <div class="mod-row">
+            <span class="mod-label">Target Number:</span>
+            <span class="mod-value">{{ admissionTarget }}</span>
+          </div>
+          <div class="mod-row" *ngFor="let mod of admissionModifiers">
+            <span class="mod-label">{{ mod.label }}:</span>
+            <span class="mod-value" [class.positive]="mod.value > 0" [class.negative]="mod.value < 0">
+              {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-footer tactical">
+        <button class="btn-action elite" (click)="executeAdmissionRoll()">
+          <span class="primary">EXECUTE_ROLL</span>
+          <span class="secondary">2D6 DICE_SIMULATION</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ADMISSION RESULT SCREEN -->
+    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'AdmissionResult'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+
+      <div class="hud-box-header" [class.success]="admissionStatus === 'Admitted'" [class.failure]="admissionStatus === 'Rejected'">
+        <span class="index">ADM_02</span>
+        <h3>ADMISSION_RESULT</h3>
+      </div>
+
+      <div class="hud-content">
+        <div class="result-display" [class.admitted]="admissionStatus === 'Admitted'" [class.rejected]="admissionStatus === 'Rejected'">
+          <h4>{{ admissionStatus === 'Admitted' ? 'ADMISSION APPROVED' : 'ADMISSION DENIED' }}</h4>
+          <p>Roll: {{ admissionRollTotal }} vs {{ admissionTarget }}</p>
+        </div>
+
+        <div class="result-details" *ngIf="admissionStatus === 'Admitted'">
+          <h5>GAINS:</h5>
+          <ul>
+            <li *ngIf="educationType === 'University'">EDU +1</li>
+            <li *ngIf="educationType === 'University'">Select Major (Level 1) and Minor (Level 0)</li>
+            <li *ngIf="educationType === 'Academy'">{{ academyType }} Academy - Basic Training granted</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="hud-footer tactical">
+        <button *ngIf="admissionStatus === 'Admitted'" class="btn-action elite" (click)="proceedFromAdmissionResult()">
+          <span class="primary">CONTINUE</span>
+          <span class="secondary">PROCEED_TO_NEXT_PHASE</span>
+        </button>
+        <div class="button-group" *ngIf="admissionStatus === 'Rejected'" style="display: flex; gap: 1rem;">
+          <button class="btn-action secondary" (click)="resetAdmission()">RETRY / CHANGE_PATH</button>
+          <button class="btn-action" (click)="finishStep()">START_A_CAREER</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENT ROLL SCREEN -->
+    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'EventRoll'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+
+      <div class="hud-box-header">
+        <span class="index">EVT_01</span>
+        <h3>EDUCATION_EVENT_TRIGGER</h3>
+      </div>
+
+      <div class="hud-content">
+        <p class="instruction">Something significant happens during your academic studies. Rolling the Education Events table...</p>
+      </div>
+
+      <div class="hud-footer tactical">
+        <button class="btn-action elite" (click)="executeEventRoll()">
+          <span class="primary">ROLL_EVENT</span>
+          <span class="secondary">2D6 EVENT_SIMULATION</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- EVENT RESULT SCREEN -->
+    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'EventResult'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+
+      <div class="hud-box-header">
+        <span class="index">EVT_02</span>
+        <h3>EVENT_OUTCOME</h3>
+      </div>
+
+      <div class="hud-content">
+        <div class="event-display" *ngIf="currentEvent">
+          <p class="roll-number">Roll: {{ currentEvent.roll }}</p>
+          <h4>{{ currentEvent.desc }}</h4>
+        </div>
+      </div>
+
+      <div class="hud-footer tactical">
+        <button class="btn-action elite" (click)="proceedFromEventResult()" [disabled]="showHobbySelection || showTutorSelection || showWarOptions">
+          <span class="primary">CONTINUE_TO_GRADUATION</span>
+          <span class="secondary">PROCEED</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- GRADUATION ROLL SCREEN -->
+    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'GraduationRoll'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+
+      <div class="hud-box-header">
+        <span class="index">GRAD_01</span>
+        <h3>GRADUATION_ROLL_PREPARATION</h3>
+      </div>
+
+      <div class="hud-content">
+        <p class="instruction">Final assessment. Rolling for graduation from your {{ educationType }}...</p>
+
+        <!-- Modifiers Table -->
+        <div class="modifiers-table">
+          <div class="mod-row header">
+            <span class="mod-label">MODIFIER</span>
+            <span class="mod-value">VALUE</span>
+          </div>
+          <div class="mod-row">
+            <span class="mod-label">Target Number:</span>
+            <span class="mod-value">{{ graduationTarget }}</span>
+          </div>
+          <div class="mod-row" *ngFor="let mod of graduationModifiers">
+            <span class="mod-label">{{ mod.label }}:</span>
+            <span class="mod-value" [class.positive]="mod.value > 0" [class.negative]="mod.value < 0">
+              {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-footer tactical">
+        <button class="btn-action elite" (click)="executeGraduationRoll()">
+          <span class="primary">EXECUTE_GRADUATION_ROLL</span>
+          <span class="secondary">2D6 FINAL_ASSESSMENT</span>
+        </button>
       </div>
     </div>
 
@@ -228,14 +414,6 @@
       </div>
     </div>
 
-    <!-- Studying State -->
-    <div *ngIf="educationStep === 'Studying'" style="text-align: center; padding: 3rem;">
-      <span class="hud-label" style="font-size: 1.2rem; margin-bottom: 2rem; display: block; color: var(--neon-cyan);">[
-        ACADEMIC_TERM_IN_PROGRESS ]</span>
-      <p style="font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 2rem;">PROCESSING 4-YEAR
-        EDUCATIONAL DATA...</p>
-      <button class="btn-cyber" (click)="graduate()">EXECUTE_GRADUATION_ROLL</button>
-    </div>
 
     <!-- Academy Graduation Skill Selection -->
     <div class="skill-selection-module academy-polish hud-module info fade-in" *ngIf="educationStep === 'AcademySkillSelect'">
@@ -319,10 +497,16 @@
 
   <!-- War Protocol Modal -->
   <div class="overlay" *ngIf="showWarOptions">
-    <div class="modal-card">
-      <div class="modal-header">
+    <div class="modal-card war-modal">
+      <div class="modal-corner tl"></div>
+      <div class="modal-corner tr"></div>
+      <div class="modal-corner bl"></div>
+      <div class="modal-corner br"></div>
+      <div class="modal-scan-line"></div>
+      <div class="modal-header war-header">
         <span class="index">!!</span>
         <h3>WAR_PROTOCOL</h3>
+        <span class="modal-status blink">CRITICAL</span>
       </div>
       <div class="modal-body">
         <p>A national conflict has errupted. Mandatory conscription is in effect for all academic personnel.</p>
@@ -346,17 +530,26 @@
 
   <!-- Hobby Selection Modal -->
   <div class="overlay" *ngIf="showHobbySelection">
-    <div class="modal-card wide">
-      <div class="modal-header">
+    <div class="modal-card hobby-modal">
+      <div class="modal-corner tl"></div>
+      <div class="modal-corner tr"></div>
+      <div class="modal-corner bl"></div>
+      <div class="modal-corner br"></div>
+      <div class="modal-scan-line"></div>
+
+      <div class="modal-header hobby-header">
         <span class="index">09</span>
         <h3>HOBBY_ACQUISITION</h3>
+        <span class="modal-status optional">OPTIONAL</span>
       </div>
+
       <div class="modal-body">
-        <p>SELECT ONE SCHEMATIC TO ADOPT AS A RECREATIONAL SPECIALIZATION (LEVEL 0):</p>
-        <div class="skill-scroll-grid">
-          <div class="skill-opt mini" *ngFor="let s of hobbySkillOptions" (click)="selectHobbySkill(s)">
-            {{ s }}
-          </div>
+        <p class="hobby-instruction">SELECT ONE SCHEMATIC TO ADOPT AS A RECREATIONAL SPECIALIZATION (LEVEL 0):</p>
+        <div class="hobby-chip-grid">
+          <button class="hobby-chip" *ngFor="let s of hobbySkillOptions" (click)="selectHobbySkill(s)">
+            <span class="chip-led"></span>
+            <span class="chip-name">{{ s }}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -364,10 +557,15 @@
 
   <!-- Tutor Selection Modal -->
   <div class="overlay" *ngIf="showTutorSelection">
-    <div class="modal-card">
+    <div class="modal-card mentor-modal">
+      <div class="modal-corner tl"></div>
+      <div class="modal-corner tr"></div>
+      <div class="modal-corner bl"></div>
+      <div class="modal-corner br"></div>
       <div class="modal-header">
         <span class="index">10</span>
         <h3>TUTOR_SPECIALIZATION</h3>
+        <span class="modal-status mentor">MENTOR</span>
       </div>
       <div class="modal-body">
         <p>AN ACADEMIC MENTOR HAS OFFERED INTENSIVE STUDY SESSIONS. SELECT A FOCUS AREA (9+ TO GAIN +1 LEVEL):</p>
