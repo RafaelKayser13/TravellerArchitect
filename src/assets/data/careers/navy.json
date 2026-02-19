@@ -63,8 +63,8 @@
     { "level": 2, "title": "Sub-Lieutenant", "bonus": { "skill": "Leadership", "value": 1 } },
     { "level": 3, "title": "Lieutenant" },
     { "level": 4, "title": "Commander", "bonus": { "skill": "Tactics (naval)", "value": 1 } },
-    { "level": 5, "title": "Captain", "bonus": { "stat": "SOC", "value": "10_or_plus1" } },
-    { "level": 6, "title": "Admiral", "bonus": { "stat": "SOC", "value": "12_or_plus1" } }
+    { "level": 5, "title": "Captain", "bonus": { "stat": "SOC", "value": 10, "bonusModifier": 1 } },
+    { "level": 6, "title": "Admiral", "bonus": { "stat": "SOC", "value": 12, "bonusModifier": 1 } }
   ],
   "eventTable": [
     {
