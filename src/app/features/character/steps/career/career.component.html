@@ -10,6 +10,7 @@
         *ngIf="activeEvent"
         [title]="activeEvent.ui.title"
         [isOpen]="true"
+        [hasFooter]="true"
         width="700px"
         [readoutTL]="'EVENT_LOG: ' + (activeEvent.id | uppercase)"
         readoutTR="SOURCE: CAREER_MTX">
