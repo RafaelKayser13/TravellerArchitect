@@ -2,6 +2,7 @@
     *ngIf="request()"
     title="PERSONNEL DOSSIER"
     [isOpen]="true"
+    [hasFooter]="true"
     width="800px"
     readoutTL="BIO_SCAN: ACTIVE"
     [readoutTR]="'DB_REF: ' + (tempNpc.id?.substring(0, 8) || 'N/A')"
