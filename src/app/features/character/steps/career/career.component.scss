@@ -62,23 +62,7 @@
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    
-    .btn-confirm {
-        // Inherit or override explicit styles if needed
-        background: var(--neon-cyan);
-        color: #000;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-family: var(--font-accent);
-        font-weight: bold;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: all 0.3s ease;
-
-        &:hover {
-            box-shadow: 0 0 15px var(--neon-cyan-glow);
-        }
-    }
+    /* Button styling handled by hud-window.component.scss */
 }
 
 .career-header {
