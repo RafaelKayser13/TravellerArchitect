@@ -557,21 +557,31 @@
 
   <!-- Tutor Selection Modal -->
   <div class="overlay" *ngIf="showTutorSelection">
-    <div class="modal-card mentor-modal">
+    <div class="modal-card mentor-modal tutor-modal">
       <div class="modal-corner tl"></div>
       <div class="modal-corner tr"></div>
       <div class="modal-corner bl"></div>
       <div class="modal-corner br"></div>
-      <div class="modal-header">
+      <div class="modal-scan-line"></div>
+
+      <div class="modal-header tutor-header">
         <span class="index">10</span>
         <h3>TUTOR_SPECIALIZATION</h3>
         <span class="modal-status mentor">MENTOR</span>
       </div>
+
       <div class="modal-body">
-        <p>AN ACADEMIC MENTOR HAS OFFERED INTENSIVE STUDY SESSIONS. SELECT A FOCUS AREA (9+ TO GAIN +1 LEVEL):</p>
-        <div class="action-grid">
-          <button class="btn-cyber" *ngFor="let s of tutorSkillOptions" (click)="selectTutorSkill(s)">
-            {{ s }}
+        <p class="tutor-instruction">AN ACADEMIC MENTOR HAS OFFERED INTENSIVE STUDY SESSIONS. SELECT A FOCUS AREA:</p>
+        <div class="tutor-option-list">
+          <button class="tutor-option" *ngFor="let s of tutorSkillOptions" (click)="selectTutorSkill(s)">
+            <div class="tutor-option-inner">
+              <span class="tutor-led"></span>
+              <span class="tutor-skill-name">{{ s }}</span>
+              <div class="tutor-meta">
+                <span class="tutor-roll-req">ROLL 9+</span>
+                <span class="tutor-effect">+1 LEVEL</span>
+              </div>
+            </div>
           </button>
         </div>
       </div>
