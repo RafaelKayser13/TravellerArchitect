@@ -146,10 +146,10 @@
         "ui": {
           "title": "Popular Work",
           "description": "One of your works becomes a major hit.",
-          "options": [{ "label": "Accept Profit", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [{ "label": "Accept Profit", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 6,
@@ -165,12 +165,12 @@
             "label": "Accept Support",
             "effects": [
               { "type": "ADD_NPC", "value": { "type": "ally", "note": "Wealthy Patron" } },
-              { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+              { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
             ]
           }]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "advancement-dm", "value": 2 }]
+      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "advancementModifier", "value": 2 }]
     },
     {
       "roll": 7,
@@ -408,13 +408,13 @@
           "options": [{
             "label": "Leave Quietly",
             "effects": [
-              { "type": "RESOURCE_MOD", "target": "next_qualification_dm", "value": 2 },
+              { "type": "RESOURCE_MOD", "target": "nextQualificationModifier", "value": 2 },
               { "type": "EJECT_CAREER", "note": "Censored" }
             ]
           }]
         }
       },
-      "effects": [{ "type": "qualification-dm", "value": 2 }]
+      "effects": [{ "type": "qualificationModifier", "value": 2 }]
     }
   ],
   "musteringOut": {

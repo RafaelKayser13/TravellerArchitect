@@ -156,10 +156,10 @@
         "ui": {
           "title": "Exemplary Service",
           "description": "Your service is noted as exemplary by your superiors. Gain DM+1 to any one Benefit roll.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_dm", "value": 1 }] }]
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 6,
@@ -225,7 +225,7 @@
               "label": "Accept Reward",
               "effects": [
                 { "type": "ADD_NPC", "value": { "type": "ally", "note": "Imperial Intelligence Contact" } },
-                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
               ]
             }]
           }
@@ -271,7 +271,7 @@
               "label": "Accept Reward",
               "effects": [
                 { "type": "ADD_NPC", "value": { "type": "contact", "note": "Disaster Survivor" } },
-                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
               ]
             }]
           }
@@ -347,7 +347,7 @@
           "description": "You serve as the courier for an important message from the Imperium. Choose your reward.",
           "options": [
             { "label": "Diplomat 1", "effects": [{ "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }] },
-            { "label": "DM+4 to next Advancement roll", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            { "label": "DM+4 to next Advancement roll", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }] }
           ]
         }
       },

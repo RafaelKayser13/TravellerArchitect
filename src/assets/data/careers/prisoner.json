@@ -119,7 +119,7 @@
           "ui": {
             "title": "Caught Escaping",
             "description": "You are caught. Your Parole Threshold increases by 2.",
-            "options": [{ "label": "Accept Punishment", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 2 }] }]
+            "options": [{ "label": "Accept Punishment", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 2 }] }]
           }
         }
       ],
@@ -150,9 +150,9 @@
             "title": "Labour Endured",
             "description": "You impress your overseers. Parole -1. Choose a skill.",
             "options": [
-              { "label": "Athletics 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -1 }, { "type": "SKILL_MOD", "target": "Athletics (any)", "value": 1 }] },
-              { "label": "Mechanic 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -1 }, { "type": "SKILL_MOD", "target": "Mechanic", "value": 1 }] },
-              { "label": "Melee (unarmed) 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -1 }, { "type": "SKILL_MOD", "target": "Melee (unarmed)", "value": 1 }] }
+              { "label": "Athletics 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -1 }, { "type": "SKILL_MOD", "target": "Athletics (any)", "value": 1 }] },
+              { "label": "Mechanic 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -1 }, { "type": "SKILL_MOD", "target": "Mechanic", "value": 1 }] },
+              { "label": "Melee (unarmed) 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -1 }, { "type": "SKILL_MOD", "target": "Melee (unarmed)", "value": 1 }] }
             ]
           }
         },
@@ -163,7 +163,7 @@
           "ui": {
             "title": "Collapsed",
             "description": "You cannot keep up. Parole Threshold +1.",
-            "options": [{ "label": "Recover", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }] }]
+            "options": [{ "label": "Recover", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }] }]
           }
         }
       ],
@@ -204,10 +204,10 @@
             "title": "Gang Member",
             "description": "You are accepted. Parole Threshold +1. Choose a skill.",
             "options": [
-              { "label": "Deception 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
-              { "label": "Persuade 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] },
-              { "label": "Melee (unarmed) 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Melee (unarmed)", "value": 1 }] },
-              { "label": "Stealth 1", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Stealth", "value": 1 }] }
+              { "label": "Deception 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
+              { "label": "Persuade 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] },
+              { "label": "Melee (unarmed) 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Melee (unarmed)", "value": 1 }] },
+              { "label": "Stealth 1", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }, { "type": "SKILL_MOD", "target": "Stealth", "value": 1 }] }
             ]
           }
         },
@@ -293,7 +293,7 @@
             },
             {
               "label": "5 — Good Behaviour",
-              "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -2 }]
+              "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -2 }]
             },
             {
               "label": "6 — Attacked",
@@ -346,7 +346,7 @@
           "ui": {
             "title": "Fought Back",
             "description": "You drive off your attacker. Reduce Parole Threshold by 1.",
-            "options": [{ "label": "Accept", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -1 }] }]
+            "options": [{ "label": "Accept", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -1 }] }]
           }
         },
         {
@@ -392,7 +392,7 @@
           "ui": {
             "title": "Case Reviewed",
             "description": "Your lawyer makes headway. Reduce Parole Threshold by 1D.",
-            "options": [{ "label": "Accept Result", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -3 }] }]
+            "options": [{ "label": "Accept Result", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -3 }] }]
           }
         },
         {
@@ -438,10 +438,10 @@
         "ui": {
           "title": "Warden's Interest",
           "description": "The warden reviews your case and is impressed by your conduct.",
-          "options": [{ "label": "Accept Mod", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -2 }] }]
+          "options": [{ "label": "Accept Mod", "effects": [{ "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -2 }] }]
         }
       },
-      "effects": [{ "type": "parole-mod", "value": -2 }]
+      "effects": [{ "type": "paroleModifier", "value": -2 }]
     },
     {
       "roll": 11,
@@ -471,7 +471,7 @@
               "label": "Accept Reward",
               "effects": [
                 { "type": "ADD_NPC", "value": { "type": "ally", "note": "Grateful Guard/Officer" } },
-                { "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -2 }
+                { "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -2 }
               ]
             }]
           }
@@ -502,12 +502,12 @@
           "options": [{
             "label": "Accept",
             "effects": [
-              { "type": "RESOURCE_MOD", "target": "parole_threshold", "value": -3 }
+              { "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": -3 }
             ]
           }]
         }
       },
-      "effects": [{ "type": "parole-mod", "value": -3 }]
+      "effects": [{ "type": "paroleModifier", "value": -3 }]
     }
   ],
   "mishapTable": [
@@ -539,12 +539,12 @@
           "options": [{
             "label": "Endure",
             "effects": [
-              { "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 2 }
+              { "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 2 }
             ]
           }]
         }
       },
-      "effects": [{ "type": "parole-mod", "value": 2 }]
+      "effects": [{ "type": "paroleModifier", "value": 2 }]
     },
     {
       "roll": 3,
@@ -580,7 +580,7 @@
               "label": "Accept Result",
               "effects": [
                 { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Prison Gang" } },
-                { "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }
+                { "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }
               ]
             }]
           }
@@ -618,12 +618,12 @@
             "label": "Endure",
             "effects": [
               { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Hostile Guard" } },
-              { "type": "RESOURCE_MOD", "target": "parole_threshold", "value": 1 }
+              { "type": "RESOURCE_MOD", "target": "paroleThreshold", "value": 1 }
             ]
           }]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "parole-mod", "value": 1 }]
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "paroleModifier", "value": 1 }]
     },
     {
       "roll": 5,

@@ -155,13 +155,13 @@
           "options": [{
             "label": "Collect Reward",
             "effects": [
-              { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 2 },
+              { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 2 },
               { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Victim of your crime" } }
             ]
           }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 2 }, { "type": "npc", "npcType": "enemy" }]
+      "effects": [{ "type": "benefitModifier", "value": 2 }, { "type": "npc", "npcType": "enemy" }]
     },
     {
       "roll": 6,
@@ -176,7 +176,7 @@
           "options": [
             {
               "label": "Backstab (DM+4 Advancement)",
-              "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }]
+              "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }]
             },
             {
               "label": "Refuse (Gain Ally)",
@@ -246,7 +246,7 @@
           "ui": {
             "title": "Rivalry Resolved",
             "description": "You come out on top. Gain an extra Benefit roll.",
-            "options": [{ "label": "Claim Victory", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+            "options": [{ "label": "Claim Victory", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
           }
         },
         {
@@ -295,7 +295,7 @@
           "ui": {
             "title": "Lucky Night",
             "description": "You win at the table. Gain a Benefit roll.",
-            "options": [{ "label": "Collect Winnings", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+            "options": [{ "label": "Collect Winnings", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
           }
         },
         {
@@ -323,7 +323,7 @@
           "description": "A powerful crime lord sees potential in you and offers mentorship.",
           "options": [
             { "label": "Tactics (military) 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (military)", "value": 1 }] },
-            { "label": "DM+4 to Advancement", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            { "label": "DM+4 to Advancement", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }] }
           ]
         }
       },

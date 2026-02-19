@@ -160,10 +160,10 @@
         "ui": {
           "title": "Special Assignment",
           "description": "You are given a special assignment or duty on board ship. Gain DM+1 to any one Benefit roll.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_dm", "value": 1 }] }]
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 5,
@@ -271,12 +271,12 @@
             "label": "Accept Consequences",
             "effects": [
               { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Criminal/Conspirator" } },
-              { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+              { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
             ]
           }]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "advancement-dm", "value": 2 }]
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "advancementModifier", "value": 2 }]
     },
     {
       "roll": 10,
@@ -290,7 +290,7 @@
           "description": "You have the opportunity to abuse your position for profit.",
           "options": [
             { "label": "Accept (gain extra Benefit roll)", "effects": [{ "type": "BENEFIT_ROLL", "value": 1 }] },
-            { "label": "Refuse (DM+2 next Advancement)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }
+            { "label": "Refuse (DM+2 next Advancement)", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }] }
           ]
         }
       },
@@ -308,7 +308,7 @@
           "description": "Your commanding officer takes an interest in your career.",
           "options": [
             { "label": "Tactics (naval) 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (naval)", "value": 1 }] },
-            { "label": "DM+4 to next Advancement roll", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            { "label": "DM+4 to next Advancement roll", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }] }
           ]
         }
       },

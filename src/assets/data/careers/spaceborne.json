@@ -85,10 +85,10 @@
         "ui": {
           "title": "Salvage Operation",
           "description": "You find a derelict ship or station.",
-          "options": [{ "label": "Accept Salvage", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [{ "label": "Accept Salvage", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 4,
@@ -196,7 +196,7 @@
           "ui": {
             "title": "EVA Successful",
             "description": "You earn the respect of your peers.",
-            "options": [{ "label": "Gain Respect", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+            "options": [{ "label": "Gain Respect", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }] }]
           }
         },
         {
@@ -210,7 +210,7 @@
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Vacc Suit"], "onSuccess": [{ "type": "advancement-dm", "value": 2 }], "onFailure": [{ "type": "injury" }] }]
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Vacc Suit"], "onSuccess": [{ "type": "advancementModifier", "value": 2 }], "onFailure": [{ "type": "injury" }] }]
     },
     {
       "roll": 9,
@@ -226,7 +226,7 @@
             {
               "label": "Deal (Benefit DM+2)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 2 },
+                { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 2 },
                 { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Authority" } }
               ]
             },

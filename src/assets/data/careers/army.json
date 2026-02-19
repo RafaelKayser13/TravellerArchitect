@@ -134,10 +134,10 @@
         "ui": {
           "title": "Special Assignment",
           "description": "You are given a special assignment.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-mod", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 6,
@@ -253,10 +253,10 @@
         "ui": {
           "title": "Surrounded",
           "description": "You are surrounded and outnumbered but hold out until relief arrives.",
-          "options": [{ "label": "Accept Commendation", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+          "options": [{ "label": "Accept Commendation", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }] }]
         }
       },
-      "effects": [{ "type": "advancement-dm", "value": 2 }]
+      "effects": [{ "type": "advancementModifier", "value": 2 }]
     },
     {
       "roll": 10,
@@ -290,7 +290,7 @@
           "description": "Your Commanding Officer takes an interest in your career.",
           "options": [
             { "label": "Learn Tactics (Military)", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (Military)", "value": 1 }] },
-            { "label": "Career Advice (Advancement DM+4)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            { "label": "Career Advice (Advancement DM+4)", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }] }
           ]
         }
       },

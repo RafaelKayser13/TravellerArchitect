@@ -178,10 +178,10 @@
         "ui": {
           "title": "Inheritance",
           "description": "You inherit a gift from a rich relative. Gain DM+1 to any one Benefit roll.",
-          "options": [{ "label": "Accept Gift", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_dm", "value": 1 }] }]
+          "options": [{ "label": "Accept Gift", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 6,
@@ -287,12 +287,12 @@
             "label": "Accept",
             "effects": [
               { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Jealous Relative or Unhappy Subject" } },
-              { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+              { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
             ]
           }]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "advancement-dm", "value": 2 }]
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "advancementModifier", "value": 2 }]
     },
     {
       "roll": 10,
@@ -336,7 +336,7 @@
               "label": "DM+4 to next Advancement roll",
               "effects": [
                 { "type": "ADD_NPC", "value": { "type": "ally", "note": "Powerful Noble" } },
-                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }
+                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }
               ]
             }
           ]

@@ -88,7 +88,7 @@
             {
               "label": "Accept (DM+4 next qualification, owe favour)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "next_qualification_dm", "value": 4 },
+                { "type": "RESOURCE_MOD", "target": "nextQualificationModifier", "value": 4 },
                 { "type": "ADD_NPC", "value": { "type": "contact", "note": "Patron (you owe them a favour)" } }
               ]
             },
@@ -128,10 +128,10 @@
         "ui": {
           "title": "Scavenge",
           "description": "You find something valuable while scavenging. Gain DM+1 to any one Benefit roll.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_dm", "value": 1 }] }]
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 6,
@@ -253,7 +253,7 @@
               },
               {
                 "label": "5-6 — Success! DM+4 to one Benefit roll",
-                "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_dm", "value": 4 }]
+                "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 4 }]
               }
             ]
           }

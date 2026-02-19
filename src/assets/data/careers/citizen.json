@@ -102,7 +102,7 @@
           "ui": {
             "title": "Political Success",
             "description": "You navigate the turmoil successfully and gain influence.",
-            "options": [{ "label": "Gain DM+2 Advancement", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+            "options": [{ "label": "Gain DM+2 Advancement", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }] }]
           }
         },
         {
@@ -112,7 +112,7 @@
           "ui": {
             "title": "Political Failure",
             "description": "You are on the losing side of the upheaval and face harder times ahead.",
-            "options": [{ "label": "Accept Setback", "effects": [{ "type": "RESOURCE_MOD", "target": "next_survival_dm", "value": -2 }] }]
+            "options": [{ "label": "Accept Setback", "effects": [{ "type": "RESOURCE_MOD", "target": "nextSurvivalModifier", "value": -2 }] }]
           }
         }
       ],
@@ -149,10 +149,10 @@
         "ui": {
           "title": "Business Expands",
           "description": "Your business ventures are successful.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
         }
       },
-      "effects": [{ "type": "benefit-mod", "value": 1 }]
+      "effects": [{ "type": "benefitModifier", "value": 1 }]
     },
     {
       "roll": 6,
@@ -223,21 +223,21 @@
             {
               "label": "Use it (Streetwise 1 + DM+1 Benefit)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 },
+                { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 },
                 { "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }
               ]
             },
             {
               "label": "Use it (Deception 1 + DM+1 Benefit)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 },
+                { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 },
                 { "type": "SKILL_MOD", "target": "Deception", "value": 1 }
               ]
             },
             {
               "label": "Use it (criminal Contact + DM+1 Benefit)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 },
+                { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 },
                 { "type": "ADD_NPC", "value": { "type": "contact", "note": "Criminal Contact" } }
               ]
             },
@@ -260,10 +260,10 @@
         "ui": {
           "title": "Diligence Rewarded",
           "description": "Your hard work is noticed by your superiors.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }] }]
         }
       },
-      "effects": [{ "type": "advancement-dm", "value": 2 }]
+      "effects": [{ "type": "advancementModifier", "value": 2 }]
     },
     {
       "roll": 10,
@@ -305,7 +305,7 @@
               "label": "Career Advice (Advancement DM+4)",
               "effects": [
                 { "type": "ADD_NPC", "value": { "type": "ally", "note": "Superior" } },
-                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }
+                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }
               ]
             }
           ]
@@ -401,7 +401,7 @@
             {
               "label": "Co-operate (DM+2 next qualification)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "next_qualification_dm", "value": 2 },
+                { "type": "RESOURCE_MOD", "target": "nextQualificationModifier", "value": 2 },
                 { "type": "EJECT_CAREER", "note": "Business Shut Down" }
               ]
             },
