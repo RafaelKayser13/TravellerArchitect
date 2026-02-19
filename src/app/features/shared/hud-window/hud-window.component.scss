@@ -129,6 +129,63 @@
         gap: 1rem;
         justify-content: center;
     }
+
+    .btn-cancel {
+        padding: 0.6rem 1.5rem;
+        background: transparent;
+        border: 1.5px solid var(--power-red);
+        color: var(--power-red);
+        font-family: var(--font-header);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+
+        &:hover {
+            background: rgba(255, 0, 60, 0.12);
+            box-shadow: 0 0 15px rgba(255, 0, 60, 0.3);
+            border-color: #ff5c7c;
+        }
+
+        &:active {
+            background: rgba(255, 0, 60, 0.2);
+        }
+    }
+
+    .btn-confirm {
+        padding: 0.6rem 2rem;
+        background: rgba(0, 243, 255, 0.1);
+        border: 1.5px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        font-family: var(--font-header);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+
+        &:hover:not(:disabled) {
+            background: rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        &:active:not(:disabled) {
+            background: rgba(0, 243, 255, 0.15);
+        }
+
+        &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: rgba(0, 243, 255, 0.1);
+        }
+    }
 }
 
 @keyframes fadeIn {
