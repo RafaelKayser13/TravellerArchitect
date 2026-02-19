@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(node -e:*)",
+      "Read(//tmp/claude//**)",
+      "Bash(cmd /c:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx ng build:*)",
+      "Bash(npx ng lint:*)"
+    ]
+  }
+}

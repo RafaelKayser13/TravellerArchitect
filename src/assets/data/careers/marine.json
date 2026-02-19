@@ -30,14 +30,14 @@
       "name": "Marine Support",
       "survival": { "stat": "END", "target": 5 },
       "advancement": { "stat": "EDU", "target": 7 },
-      "skills": ["Electronics (any)", "Mechanic", "Medic", "Admin", "Diplomat", "Heavy Weapons (any)"],
+      "skills": ["Electronics (any)", "Mechanic", "Drive (any)", "Medic", "Heavy Weapons (any)", "Gun Combat (any)"],
       "ranks": [
-        { "level": 0, "title": "Marine" },
+        { "level": 0, "title": "Marine", "bonus": { "chooseSkill": ["Gun Combat (any)", "Melee (blade)"], "value": 1 } },
         { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
         { "level": 2, "title": "Corporal" },
         { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
         { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "skill": "END", "value": "+1" } },
+        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "END", "value": 1 } },
         { "level": 6, "title": "Sergeant Major" }
       ]
     },
@@ -47,12 +47,12 @@
       "advancement": { "stat": "EDU", "target": 6 },
       "skills": ["Vacc Suit", "Athletics (any)", "Gunner (any)", "Melee (blade)", "Electronics (any)", "Gun Combat (any)"],
       "ranks": [
-        { "level": 0, "title": "Marine", "bonus": { "skill": "Vacc Suit", "value": 1 } },
+        { "level": 0, "title": "Marine", "bonus": { "chooseSkill": ["Gun Combat (any)", "Melee (blade)"], "value": 1 } },
         { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
         { "level": 2, "title": "Corporal" },
         { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
         { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "skill": "END", "value": "+1" } },
+        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "END", "value": 1 } },
         { "level": 6, "title": "Sergeant Major" }
       ]
     },
@@ -62,12 +62,12 @@
       "advancement": { "stat": "EDU", "target": 5 },
       "skills": ["Vacc Suit", "Heavy Weapons (any)", "Recon", "Melee (blade)", "Tactics (military)", "Gun Combat (any)"],
       "ranks": [
-        { "level": 0, "title": "Marine", "bonus": { "skill": "Vacc Suit", "value": 1 } },
+        { "level": 0, "title": "Marine", "bonus": { "chooseSkill": ["Gun Combat (any)", "Melee (blade)"], "value": 1 } },
         { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
         { "level": 2, "title": "Corporal" },
         { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
         { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "skill": "END", "value": "+1" } },
+        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "END", "value": 1 } },
         { "level": 6, "title": "Sergeant Major" }
       ]
     }
@@ -271,17 +271,16 @@
                     "description": "Your Commanding Officer makes a critical tactical error. Do you report it or cover for them?",
                     "options": [
                         {
-                            "label": "Report Officer",
+                            "label": "Report Officer (DM+2 advancement, gain Enemy)",
                             "effects": [
                                 { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 },
-                                { "type": "ADD_NPC", "value": { "type": "enemy", "name": "Disgraced Officer" } }
+                                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Disgraced Officer" } }
                             ]
                         },
                         {
-                            "label": "Protect Officer",
+                            "label": "Protect Officer (gain Ally)",
                             "effects": [
-                                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": -2 },
-                                { "type": "ADD_NPC", "value": { "type": "ally", "name": "Grateful Officer" } }
+                                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Grateful Officer" } }
                             ]
                         }
                     ]
@@ -344,18 +343,18 @@
   "mishapTable": [
         {
             "roll": 1,
-            "description": "Severely injured in action. Roll on the Injury table.",
+            "description": "Severely injured in action. Roll twice on the Injury table and take the lower result.",
             "gameEvent": {
                 "id": "marine_mishap_1",
                 "type": "MISHAP",
                 "trigger": "MISHAP",
                 "ui": {
                     "title": "Severely Injured",
-                    "description": "You are severely injured in combat. You must be ejected from the Marines.",
-                    "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+                    "description": "You are severely injured in combat. Roll twice on the Injury table and take the lower result.",
+                    "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll_worst_of_2" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
                 }
             },
-            "effects": [{ "type": "injury" }]
+            "effects": [{ "type": "injury-worst-of-2" }]
         },
         {
             "roll": 2,
@@ -401,32 +400,31 @@
         },
         {
             "roll": 4,
-            "description": "Black Ops Conflict. Moral choice.",
+            "description": "You are ordered to take part in a black ops mission that goes against your conscience. Refuse: ejected from service. Accept: may stay with the marines but gain the lone survivor as an Enemy.",
             "gameEvent": {
                 "id": "marine_mishap_4",
                 "type": "CHOICE",
                 "trigger": "MISHAP",
                 "ui": {
                     "title": "Black Ops Conflict",
-                    "description": "You are ordered to take part in a black ops mission that goes against your conscience.",
+                    "description": "You are ordered to take part in a black ops mission that goes against your conscience. If you refuse you are ejected from the service. If you accept you may stay with the marines but gain the lone survivor as an Enemy.",
                     "options": [
                         {
-                            "label": "Refuse Order",
+                            "label": "Refuse Order (ejected from service)",
                             "effects": [
-                                { "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }
+                                { "type": "EJECT_CAREER", "note": "Refused Orders" }
                             ]
                         },
                         {
-                            "label": "Accept Order",
+                            "label": "Accept Order (stay in Marines, gain Enemy)",
                             "effects": [
-                                { "type": "EJECT_CAREER", "note": "Ejected after verify mission" },
-                                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "War Crimes Investigator or Witness" } }
+                                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Lone Survivor / Witness" } }
                             ]
                         }
                     ]
                 }
             },
-            "effects": [{ "type": "choice", "note": "Black Ops Conflict", "skills": ["Recuse", "Accept"] }]
+            "effects": [{ "type": "choice", "note": "Black Ops Conflict" }]
         },
         {
             "roll": 5,
@@ -466,7 +464,15 @@
         }
   ],
   "musteringOut": {
-    "cash": [0, 2000, 5000, 10000, 20000, 30000, 40000],
-    "benefits": ["Armour", "INT +1", "EDU +1", "Weapon", "Ship Share", "Armour", "SOC +1"]
+    "cash": [2000, 5000, 5000, 10000, 20000, 30000, 40000],
+    "benefits": [
+      "Armour",
+      "INT +1",
+      "EDU +1",
+      "Weapon",
+      "TAS Membership",
+      { "choose": 1, "options": ["Armour", "END +1"] },
+      "SOC +2"
+    ]
   }
 }

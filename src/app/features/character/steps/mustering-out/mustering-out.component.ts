@@ -30,8 +30,8 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     character = this.characterService.character;
 
     ngOnInit(): void {
-        this.wizardFlow.registerValidator(6, () => this.canProceedToNext());
-        this.wizardFlow.registerFinishAction(6, () => this.finish());
+        this.wizardFlow.registerValidator(7, () => this.canProceedToNext());
+        this.wizardFlow.registerFinishAction(7, () => this.finish());
         // Auto-select first career with rolls
         const pools = this.careerPools();
         if (pools.length > 0) {
@@ -40,7 +40,7 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.wizardFlow.unregisterStep(6);
+        this.wizardFlow.unregisterStep(7);
     }
 
     // Logic state

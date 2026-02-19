@@ -66,15 +66,16 @@
       @if (!isResetting()) {
         <div class="wizard-content">
           @switch (wizardFlow.currentStepIndex()) {
-            @case (1) { <app-identity></app-identity> }
-            @case (2) { <app-attributes></app-attributes> }
-            @case (3) { <app-origin></app-origin> }
-            @case (4) { <app-education></app-education> }
-            @case (5) { <app-career></app-career> }
-            @case (6) { <app-mustering-out></app-mustering-out> }
-            @case (7) { <app-npc-management></app-npc-management> }
-            @case (8) { <app-skill-package></app-skill-package> }
-            @case (9) { <app-character-sheet></app-character-sheet> }
+            @case (1)  { <app-identity></app-identity> }
+            @case (2)  { <app-species></app-species> }
+            @case (3)  { <app-attributes></app-attributes> }
+            @case (4)  { <app-origin></app-origin> }
+            @case (5)  { <app-education></app-education> }
+            @case (6)  { <app-career></app-career> }
+            @case (7)  { <app-mustering-out></app-mustering-out> }
+            @case (8)  { <app-npc-management></app-npc-management> }
+            @case (9)  { <app-skill-package></app-skill-package> }
+            @case (10) { <app-character-sheet></app-character-sheet> }
           }
         </div>
       }

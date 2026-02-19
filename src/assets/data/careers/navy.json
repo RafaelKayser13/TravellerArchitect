@@ -4,58 +4,57 @@
   "description": "Interstellar navy crew, engineers, and pilots.",
   "qualification": {
     "stat": "INT",
-    "target": 6,
-    "minAttributes": { "str": 5, "dex": 5, "end": 5 }
+    "target": 6
   },
   "skills": {
     "personal": ["STR +1", "DEX +1", "END +1", "INT +1", "EDU +1", "SOC +1"],
     "service": ["Pilot (any)", "Vacc Suit", "Athletics (any)", "Gunner (any)", "Mechanic", "Gun Combat (any)"],
-    "advanced": ["Electronics (any)", "Engineer (any)", "Astrogation", "Pilot (any)", "Admin", "Tactics (Naval)"]
+    "advanced": ["Electronics (any)", "Astrogation", "Engineer (any)", "Flyer (any)", "Medic", "Admin"]
   },
   "assignments": [
     {
       "name": "Line/Crew",
       "survival": { "stat": "INT", "target": 5 },
       "advancement": { "stat": "EDU", "target": 7 },
-      "skills": ["Electronics (any)", "Mechanic", "Gun Combat (any)", "Vacc Suit", "Athletics (any)", "Gunner (any)"],
+      "skills": ["Electronics (any)", "Mechanic", "Gun Combat (any)", "Flyer (any)", "Melee (any)", "Vacc Suit"],
       "ranks": [
         { "level": 0, "title": "Crewman" },
-        { "level": 1, "title": "Able Crewman", "bonus": { "skill": "Mechanic", "value": 1 } },
-        { "level": 2, "title": "Petty Officer 3rd Class" },
-        { "level": 3, "title": "Petty Officer 2nd Class", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 4, "title": "Petty Officer 1st Class" },
-        { "level": 5, "title": "Chief Petty Officer", "bonus": { "skill": "Admin", "value": 1 } },
-        { "level": 6, "title": "Senior Chief Petty Officer" }
+        { "level": 1, "title": "Able Spacehand", "bonus": { "skill": "Mechanic", "value": 1 } },
+        { "level": 2, "title": "Petty Officer, 3rd Class" },
+        { "level": 3, "title": "Petty Officer, 2nd Class", "bonus": { "skill": "Vacc Suit", "value": 1 } },
+        { "level": 4, "title": "Petty Officer, 1st Class", "bonus": { "stat": "END", "value": 1 } },
+        { "level": 5, "title": "Chief Petty Officer" },
+        { "level": 6, "title": "Master Chief" }
       ]
     },
     {
       "name": "Engineer/Gunner",
       "survival": { "stat": "INT", "target": 6 },
       "advancement": { "stat": "EDU", "target": 6 },
-      "skills": ["Engineer (any)", "Gunner (any)", "Electronics (any)", "Mechanic", "Vacc Suit", "Athletics (any)"],
+      "skills": ["Engineer (any)", "Mechanic", "Electronics (any)", "Engineer (any)", "Gunner (any)", "Flyer (any)"],
       "ranks": [
         { "level": 0, "title": "Crewman" },
-        { "level": 1, "title": "Able Crewman", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Petty Officer 3rd Class" },
-        { "level": 3, "title": "Petty Officer 2nd Class", "bonus": { "skill": "Engineer (any)", "value": 1 } },
-        { "level": 4, "title": "Petty Officer 1st Class" },
-        { "level": 5, "title": "Chief Petty Officer", "bonus": { "skill": "Gunner (any)", "value": 1 } },
-        { "level": 6, "title": "Senior Chief Petty Officer" }
+        { "level": 1, "title": "Able Spacehand", "bonus": { "skill": "Mechanic", "value": 1 } },
+        { "level": 2, "title": "Petty Officer, 3rd Class" },
+        { "level": 3, "title": "Petty Officer, 2nd Class", "bonus": { "skill": "Vacc Suit", "value": 1 } },
+        { "level": 4, "title": "Petty Officer, 1st Class", "bonus": { "stat": "END", "value": 1 } },
+        { "level": 5, "title": "Chief Petty Officer" },
+        { "level": 6, "title": "Master Chief" }
       ]
     },
     {
       "name": "Flight",
       "survival": { "stat": "DEX", "target": 7 },
       "advancement": { "stat": "EDU", "target": 5 },
-      "skills": ["Pilot (any)", "Astrogation", "Electronics (sensors)", "Gunner (any)", "Vacc Suit", "Athletics (any)"],
+      "skills": ["Pilot (any)", "Flyer (any)", "Gunner (any)", "Pilot (small craft)", "Astrogation", "Electronics (any)"],
       "ranks": [
         { "level": 0, "title": "Crewman" },
-        { "level": 1, "title": "Able Crewman", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Petty Officer 3rd Class" },
-        { "level": 3, "title": "Petty Officer 2nd Class", "bonus": { "skill": "Pilot (small craft)", "value": 1 } },
-        { "level": 4, "title": "Petty Officer 1st Class" },
-        { "level": 5, "title": "Chief Petty Officer", "bonus": { "skill": "Tactics (Naval)", "value": 1 } },
-        { "level": 6, "title": "Senior Chief Petty Officer" }
+        { "level": 1, "title": "Able Spacehand", "bonus": { "skill": "Mechanic", "value": 1 } },
+        { "level": 2, "title": "Petty Officer, 3rd Class" },
+        { "level": 3, "title": "Petty Officer, 2nd Class", "bonus": { "skill": "Vacc Suit", "value": 1 } },
+        { "level": 4, "title": "Petty Officer, 1st Class", "bonus": { "stat": "END", "value": 1 } },
+        { "level": 5, "title": "Chief Petty Officer" },
+        { "level": 6, "title": "Master Chief" }
       ]
     }
   ],
@@ -63,9 +62,9 @@
     { "level": 1, "title": "Ensign", "bonus": { "skill": "Melee (blade)", "value": 1 } },
     { "level": 2, "title": "Sub-Lieutenant", "bonus": { "skill": "Leadership", "value": 1 } },
     { "level": 3, "title": "Lieutenant" },
-    { "level": 4, "title": "Commander", "bonus": { "skill": "Tactics (Naval)", "value": 1 } },
-    { "level": 5, "title": "Captain", "bonus": { "stat": "SOC", "value": 1 } },
-    { "level": 6, "title": "Admiral", "bonus": { "stat": "SOC", "value": 1 } }
+    { "level": 4, "title": "Commander", "bonus": { "skill": "Tactics (naval)", "value": 1 } },
+    { "level": 5, "title": "Captain", "bonus": { "stat": "SOC", "value": "10_or_plus1" } },
+    { "level": 6, "title": "Admiral", "bonus": { "stat": "SOC", "value": "12_or_plus1" } }
   ],
   "eventTable": [
     {
@@ -85,72 +84,97 @@
     },
     {
       "roll": 3,
-      "description": "Gambling Circle.",
+      "description": "You join a gambling circle on board. Gain Gambler 1 or Deception 1. Optionally bet: roll Gambler 8+; succeed=extra Benefit roll, fail=lose one Benefit roll.",
       "gameEvent": {
         "id": "navy_event_3",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Gambling Circle",
-          "description": "You are invited to join a gambling circle.",
+          "description": "You join a gambling circle on board. Gain Gambler 1 or Deception 1. If you wish, roll Gambler 8+: on success gain an extra Benefit roll; on failure lose one Benefit roll.",
           "options": [
             {
-              "label": "Join (INT 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "navy_event_3_pass", "onFail": "navy_event_3_fail" }]
+              "label": "Gain Gambler 1 (and optionally gamble)",
+              "effects": [
+                { "type": "SKILL_MOD", "target": "Gambler", "value": 1 },
+                { "type": "TRIGGER_SUBVENT", "value": "navy_event_3_gamble_choice" }
+              ]
             },
-            { "label": "Refuse", "effects": [] }
+            {
+              "label": "Gain Deception 1 (and optionally gamble)",
+              "effects": [
+                { "type": "SKILL_MOD", "target": "Deception", "value": 1 },
+                { "type": "TRIGGER_SUBVENT", "value": "navy_event_3_gamble_choice" }
+              ]
+            }
           ]
         }
       },
       "subEvents": [
         {
+          "id": "navy_event_3_gamble_choice",
+          "type": "CHOICE",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Want to Gamble?",
+            "description": "Do you want to gamble? Roll Gambler 8+: success = extra Benefit roll, failure = lose one Benefit roll.",
+            "options": [
+              {
+                "label": "Gamble (Gambler 8+)",
+                "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "navy_event_3_pass", "onFail": "navy_event_3_fail" }]
+              },
+              { "label": "Don't Gamble", "effects": [] }
+            ]
+          }
+        },
+        {
           "id": "navy_event_3_pass",
           "type": "REWARD",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Winnings",
-            "description": "You win big!",
-            "options": [{ "label": "Collect Winnings", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+            "title": "Won!",
+            "description": "You win big! Gain an extra Benefit roll.",
+            "options": [{ "label": "Collect Winnings", "effects": [{ "type": "BENEFIT_ROLL", "value": 1 }] }]
           }
         },
         {
           "id": "navy_event_3_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Losses",
-            "description": "You lose money.",
+            "title": "Lost",
+            "description": "You lose your stake. Lose one Benefit roll.",
             "options": [{ "label": "Pay Losses", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }] }]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Gambling Circle" }]
+      "effects": [{ "type": "skill-choice", "skills": ["Gambler", "Deception"] }, { "type": "choice", "note": "Optional Gambling" }]
     },
     {
       "roll": 4,
-      "description": "Special Assignment.",
+      "description": "Special Assignment. Gain DM+1 to any one Benefit roll.",
       "gameEvent": {
         "id": "navy_event_4",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Special Assignment",
-          "description": "You are given a special assignment.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "description": "You are given a special assignment or duty on board ship. Gain DM+1 to any one Benefit roll.",
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_dm", "value": 1 }] }]
         }
       },
       "effects": [{ "type": "benefit-dm", "value": 1 }]
     },
     {
       "roll": 5,
-      "description": "Advanced Training. Roll EDU 8+. Success: Increase any known skill by +1 level.",
+      "description": "Advanced Training. Roll EDU 8+. Success: gain one level in any skill you already have.",
       "gameEvent": {
         "id": "navy_event_5",
         "type": "CHECK",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Advanced Training",
-          "description": "You have the opportunity for advanced training.",
+          "description": "You are given advanced training in a specialist field. Roll EDU 8+ to gain one level in any skill you already have.",
           "options": [{ "label": "Attempt Training (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "navy_event_5_pass", "onFail": "navy_event_5_fail" }] }]
         }
       },
@@ -161,8 +185,8 @@
           "trigger": "DURING_CAREER_TERM",
           "ui": {
             "title": "Training Successful",
-            "description": "You excel in your training.",
-            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+            "description": "You excel in your training. Increase any skill you already have by one level.",
+            "options": [{ "label": "Improve Existing Skill", "effects": [{ "type": "CUSTOM", "customId": "EXISTING_SKILL_UP" }] }]
           }
         },
         {
@@ -176,18 +200,18 @@
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "existing-skill-up" }] }]
     },
     {
       "roll": 6,
-      "description": "Notable Engagement.",
+      "description": "Notable Military Engagement. Gain one of Electronics 1, Engineer 1, Gunner 1 or Pilot 1.",
       "gameEvent": {
         "id": "navy_event_6",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Notable Engagement",
-          "description": "Your vessel is involved in a notable engagement.",
+          "description": "Your vessel participates in a notable military engagement.",
           "options": [
             { "label": "Electronics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (any)", "value": 1 }] },
             { "label": "Engineer (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (any)", "value": 1 }] },
@@ -215,14 +239,14 @@
     },
     {
       "roll": 8,
-      "description": "Diplomatic Mission.",
+      "description": "Diplomatic Mission. Gain one of Recon 1, Diplomat 1, Steward 1 or a Contact.",
       "gameEvent": {
         "id": "navy_event_8",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Diplomatic Mission",
-          "description": "You are assigned to a diplomatic mission.",
+          "description": "Your vessel participates in a diplomatic mission.",
           "options": [
             { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }] },
             { "label": "Diplomat 1", "effects": [{ "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }] },
@@ -231,22 +255,22 @@
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Diplomatic Mission", "skills": ["Recon", "Diplomat", "Steward", "Contact"] }]
+      "effects": [{ "type": "choice", "note": "Diplomatic Mission" }]
     },
     {
       "roll": 9,
-      "description": "Foil Crime.",
+      "description": "You foil an attempted crime on board (mutiny, sabotage, smuggling or conspiracy). Gain an Enemy but also DM+2 to your next Advancement roll.",
       "gameEvent": {
         "id": "navy_event_9",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Foil Crime",
-          "description": "You foil an attempted crime on board, but the perpetrator has powerful friends.",
+          "description": "You foil an attempted crime on board, such as mutiny, sabotage, smuggling or conspiracy. Gain an Enemy but also DM+2 to your next advancement roll in the Navy.",
           "options": [{
             "label": "Accept Consequences",
             "effects": [
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Criminal Gang" } },
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Criminal/Conspirator" } },
               { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
             ]
           }]
@@ -256,17 +280,17 @@
     },
     {
       "roll": 10,
-      "description": "Abuse Position.",
+      "description": "You have the opportunity to abuse your position for profit. Accept: gain an extra Benefit roll. Refuse: gain DM+2 to your next Advancement roll.",
       "gameEvent": {
         "id": "navy_event_10",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Abuse Position",
-          "description": "You have the chance to abuse your position for personal gain.",
+          "description": "You have the opportunity to abuse your position for profit.",
           "options": [
-            { "label": "Accept (SOC +1)", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }] },
-            { "label": "Refuse (Advancement DM+2)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }
+            { "label": "Accept (gain extra Benefit roll)", "effects": [{ "type": "BENEFIT_ROLL", "value": 1 }] },
+            { "label": "Refuse (DM+2 next Advancement)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }
           ]
         }
       },
@@ -274,17 +298,17 @@
     },
     {
       "roll": 11,
-      "description": "Commanding Officer Interest.",
+      "description": "Your commanding officer takes an interest in your career. Either gain Tactics (naval) 1 or DM+4 to your next Advancement roll.",
       "gameEvent": {
         "id": "navy_event_11",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Command Interest",
-          "description": "Your Commanding Officer takes an interest in your career.",
+          "description": "Your commanding officer takes an interest in your career.",
           "options": [
-            { "label": "Learn Tactics (Naval)", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (Naval)", "value": 1 }] },
-            { "label": "Career Advice (Advancement DM+4)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            { "label": "Tactics (naval) 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (naval)", "value": 1 }] },
+            { "label": "DM+4 to next Advancement roll", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
           ]
         }
       },
@@ -292,15 +316,15 @@
     },
     {
       "roll": 12,
-      "description": "Heroism In Battle. Automatic Promotion.",
+      "description": "You display heroism in battle, saving the whole ship. You automatically pass your next promotion or commission roll.",
       "gameEvent": {
         "id": "navy_event_12",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Heroism",
-          "description": "You display exceptional heroism.",
-          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Heroism In Battle" }] }]
+          "description": "You display heroism in battle, saving the whole ship. You automatically pass your next promotion or commission roll.",
+          "options": [{ "label": "Accept Commendation", "effects": [{ "type": "CUSTOM", "customId": "AUTO_PASS_NEXT_PROMOTION" }] }]
         }
       },
       "effects": [{ "type": "auto-promotion" }]
@@ -309,65 +333,64 @@
   "mishapTable": [
     {
       "roll": 1,
-      "description": "Severely injured. Roll on the Injury table.",
+      "description": "Severely injured in action. Roll twice on the Injury table and take the lower result.",
       "gameEvent": {
         "id": "navy_mishap_1",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Severely Injured",
-          "description": "You are severely injured in the line of duty.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "description": "You are severely injured in action. Roll twice on the Injury table and take the lower result.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll_worst_of_2" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [{ "type": "injury-worst-of-2" }]
     },
     {
       "roll": 2,
-      "description": "Frozen Watch Error. Reduce STR, DEX, or END by 1.",
+      "description": "Placed in the frozen watch and revived improperly. Reduce STR, DEX or END by 1 due to muscle wastage. You are NOT ejected from this career.",
       "gameEvent": {
         "id": "navy_mishap_2",
-        "type": "MISHAP",
+        "type": "CHOICE",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Cryoburn",
-          "description": "You suffer from complications from a frozen watch deployment error.",
-          "options": [{
-            "label": "Accept Injury",
-            "effects": [
-              { "type": "STAT_MOD", "target": "STR", "value": -1 }, 
-              { "type": "EJECT_CAREER", "note": "Medical Discharge (Cryoburn)" }
-            ]
-          }]
+          "title": "Cryogenic Mishap",
+          "description": "You are placed in the frozen watch (cryogenically stored on board ship) and revived improperly. Reduce STR, DEX or END by 1 due to muscle wastage. You remain in service.",
+          "options": [
+            { "label": "STR -1", "effects": [{ "type": "STAT_MOD", "target": "STR", "value": -1 }] },
+            { "label": "DEX -1", "effects": [{ "type": "STAT_MOD", "target": "DEX", "value": -1 }] },
+            { "label": "END -1", "effects": [{ "type": "STAT_MOD", "target": "END", "value": -1 }] }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "STR", "value": -1 }, { "type": "forced-out" }]
+      "effects": [{ "type": "stat-choice-reduce", "stats": ["STR", "DEX", "END"], "value": -1 }]
     },
     {
       "roll": 3,
-      "description": "Battle Responsibility.",
+      "description": "During a battle, defeat or victory depends on your actions. Roll a skill based on your branch: Electronics (sensors)/Gunner for crew; Mechanic/Vacc Suit for engineer/gunner; Pilot/Tactics (naval) for flight. Fail=court-martialled and discharged. Success=honourably discharged, keep Benefit roll.",
       "gameEvent": {
         "id": "navy_mishap_3",
-        "type": "CHECK",
+        "type": "CHOICE",
         "trigger": "MISHAP",
         "ui": {
           "title": "Battle Responsibility",
-          "description": "During a battle, you must take command at a critical moment.",
+          "description": "During a battle, defeat or victory depends on your actions. Roll the appropriate skill for your branch at 8+.",
           "options": [
-            { "label": "Tactics (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "navy_mishap_3_pass", "onFail": "navy_mishap_3_fail" }] },
-            { "label": "Leadership (SOC 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "SOC", "checkTarget": 8, "onPass": "navy_mishap_3_pass", "onFail": "navy_mishap_3_fail" }] }
+            { "label": "Electronics (sensors) / Gunner 8+ (Line/Crew)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "navy_mishap_3_pass", "onFail": "navy_mishap_3_fail" }] },
+            { "label": "Mechanic / Vacc Suit 8+ (Engineer/Gunner)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "navy_mishap_3_pass", "onFail": "navy_mishap_3_fail" }] },
+            { "label": "Pilot / Tactics (naval) 8+ (Flight)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "navy_mishap_3_pass", "onFail": "navy_mishap_3_fail" }] }
           ]
         }
       },
       "subEvents": [
         {
           "id": "navy_mishap_3_pass",
-          "type": "REWARD",
+          "type": "INFO",
           "trigger": "MISHAP",
           "ui": {
-            "title": "Battle Hero",
-            "description": "You win the day!",
-            "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Battle Responsibility" }] }] 
+            "title": "Honourable Discharge",
+            "description": "Your efforts ensure an honourable discharge. You still leave the career but may keep your Benefit roll from this term.",
+            "options": [{ "label": "Accept Discharge", "effects": [{ "type": "EJECT_CAREER", "note": "Honourable Discharge" }] }]
           }
         },
         {
@@ -375,9 +398,9 @@
           "type": "MISHAP",
           "trigger": "MISHAP",
           "ui": {
-            "title": "Defeat",
-            "description": "You fail to command effectively.",
-            "options": [{ "label": "Court Martial", "effects": [{ "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }, { "type": "LOSE_BENEFIT", "value": 100 }] }]
+            "title": "Court-Martialled",
+            "description": "You are blamed for the disaster. You are court-martialled and dishonourably discharged.",
+            "options": [{ "label": "Accept Court Martial", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }, { "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }] }]
           }
         }
       ],
@@ -385,62 +408,49 @@
     },
     {
       "roll": 4,
-      "description": "Blamed for Accident.",
+      "description": "Blamed for an accident causing deaths of several crew. If responsible: free skill roll before ejection. If not: gain the officer as Enemy but keep Benefit roll.",
       "gameEvent": {
         "id": "navy_mishap_4",
         "type": "CHOICE",
         "trigger": "MISHAP",
         "ui": {
           "title": "Blamed for Accident",
-          "description": "You are blamed for an accident.",
+          "description": "You are blamed for an accident that causes the death of several crew members.",
           "options": [
-            { "label": "Accept Blame", "effects": [{ "type": "EJECT_CAREER", "note": "Dismissed" }] },
             {
-              "label": "Deny Charges (Advocate 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "navy_mishap_4_pass", "onFail": "navy_mishap_4_fail" }]
+              "label": "I Was Responsible (gain free skill roll, then ejected)",
+              "effects": [
+                { "type": "CUSTOM", "customId": "ANY_SKILL_UP" },
+                { "type": "EJECT_CAREER", "note": "Discharged — Responsible" }
+              ]
+            },
+            {
+              "label": "I Was Not Responsible (gain Enemy, keep Benefit roll, then ejected)",
+              "effects": [
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Officer who blamed you" } },
+                { "type": "EJECT_CAREER", "note": "Discharged — Blamed Unfairly" }
+              ]
             }
           ]
         }
       },
-      "subEvents": [
-        {
-          "id": "navy_mishap_4_pass",
-          "type": "INFO",
-          "trigger": "MISHAP",
-          "ui": {
-            "title": "Charges Dropped",
-            "description": "You successfully defend yourself.",
-            "options": [{ "label": "Continue Career", "effects": [] }]
-          }
-        },
-        {
-          "id": "navy_mishap_4_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
-          "ui": {
-            "title": "Guilty",
-            "description": "Your defense fails.",
-            "options": [{ "label": "Leave Navy", "effects": [{ "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }, { "type": "LOSE_BENEFIT", "value": 1 }] }]
-          }
-        }
-      ],
       "effects": [{ "type": "choice", "note": "Blamed for Accident" }]
     },
     {
       "roll": 5,
-      "description": "Quarrel. Rival officer.",
+      "description": "Tormented by or quarrel with an officer or fellow crewman. Gain them as a Rival, forced out of the Navy.",
       "gameEvent": {
         "id": "navy_mishap_5",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Quarrel",
-          "description": "You have a major quarrel with a superior officer.",
+          "description": "You are tormented by or quarrel with an officer or fellow crewman. Gain that character as a Rival, as they force you out of the Navy.",
           "options": [{
             "label": "Leave Navy",
             "effects": [
-              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Officer" } },
-              { "type": "EJECT_CAREER", "note": "Quarrel with Officer" }
+              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Officer or Crewman" } },
+              { "type": "EJECT_CAREER", "note": "Quarrel" }
             ]
           }]
         }
@@ -465,7 +475,15 @@
   ],
   "musteringOut": {
     "cash": [1000, 5000, 5000, 10000, 20000, 50000, 50000],
-    "benefits": ["INT +1", "EDU +1", "Weapon", "SOC +1", "Weapon", "Ship Share", "Two Ship Shares"]
+    "benefits": [
+      { "choose": 1, "options": ["Personal Vehicle", "Ship Share"] },
+      "INT +1",
+      { "choose": 1, "options": ["EDU +1", "Two Ship Shares"] },
+      "Weapon",
+      "TAS Membership",
+      { "choose": 1, "options": ["Ship's Boat", "Two Ship Shares"] },
+      "SOC +2"
+    ]
   },
   "medical": {
     "plan": "military",

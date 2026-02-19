@@ -21,12 +21,12 @@ export class SkillPackageComponent implements OnInit, OnDestroy {
   selectedSkills = signal<string[]>([]);
 
   ngOnInit(): void {
-    this.wizardFlow.registerValidator(8, () => !!this.selectedPackage() && this.selectedSkills().length > 0);
-    this.wizardFlow.registerFinishAction(8, () => this.finish());
+    this.wizardFlow.registerValidator(9, () => !!this.selectedPackage() && this.selectedSkills().length > 0);
+    this.wizardFlow.registerFinishAction(9, () => this.finish());
   }
 
   ngOnDestroy(): void {
-    this.wizardFlow.unregisterStep(8);
+    this.wizardFlow.unregisterStep(9);
   }
 
   selectPackage(pkg: SkillPackage) {

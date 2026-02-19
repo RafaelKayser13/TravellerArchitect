@@ -829,33 +829,49 @@
     "unusualEventTable": [
         {
             "roll": 1,
-            "description": "Psionic Latency",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Psionic potential discovered." }]
+            "description": "Psionics",
+            "effects": [
+                { "type": "CUSTOM", "customId": "PSIONIC_CONTACT" },
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Você encontrou um instituto de treinamento psiônico. Potencial psiônico latente descoberto." }
+            ]
         },
         {
             "roll": 2,
-            "description": "Ancient Technology",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Encountered ancient tech." }]
+            "description": "Aliens",
+            "effects": [
+                { "type": "SKILL_MOD", "target": "Science", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Alien Contact (espécie não-humana)" } },
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Você passou um período entre uma espécie alienígena. Ganha Science 1 e um Contact alienígena." }
+            ]
         },
         {
             "roll": 3,
-            "description": "Alien Encounter",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: First contact situation." }]
+            "description": "Alien Artefact",
+            "effects": [
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Você encontrou um artefato estranho de uma cultura alienígena, não disponível normalmente no mercado." }
+            ]
         },
         {
             "roll": 4,
-            "description": "Time Loss",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Missing time." }]
+            "description": "Amnesia",
+            "effects": [
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Algo aconteceu, mas você não sabe o quê. Há uma lacuna em sua memória." }
+            ]
         },
         {
             "roll": 5,
-            "description": "Secret Society",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Approached by a secret society." }]
+            "description": "Contact with Government",
+            "effects": [
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Contato Imperial de alto escalão (Arquiduque, Imperador ou Inteligência Imperial)" } },
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Breve contato com os mais altos escalões do governo. Ganha um Contact imperial." }
+            ]
         },
         {
             "roll": 6,
-            "description": "Prophecy",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Named in a prophecy." }]
+            "description": "Ancient Technology",
+            "effects": [
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Você encontrou algo mais antigo que o Império ou a própria humanidade." }
+            ]
         }
     ],
     "medicalBills": [

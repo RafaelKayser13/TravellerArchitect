@@ -151,6 +151,400 @@
     width: 100%;
 }
 
+// ─────────────────────────────────────────────────────────────
+// CAREER ROSTER — compact terminal-style selection list
+// ─────────────────────────────────────────────────────────────
+.career-roster {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: 1px solid rgba(0, 243, 255, 0.12);
+    background: rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+
+    // CRT grid overlay
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(rgba(0, 243, 255, 0.018) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 243, 255, 0.018) 1px, transparent 1px);
+        background-size: 40px 7px;
+        pointer-events: none;
+        z-index: 0;
+    }
+}
+
+// Table header row
+.roster-header {
+    display: grid;
+    grid-template-columns: 38px 12px 1fr 110px 120px;
+    gap: 0;
+    padding: 0.3rem 1rem 0.3rem 0.8rem;
+    background: rgba(0, 243, 255, 0.04);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+    font-family: var(--font-mono);
+    font-size: 0.45rem;
+    letter-spacing: 3px;
+    color: var(--neon-cyan);
+    opacity: 0.5;
+    position: relative;
+    z-index: 1;
+    text-transform: uppercase;
+}
+
+// ── Individual row ──────────────────────────────────────────
+.roster-row {
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.07);
+    cursor: pointer;
+    transition: background 0.2s;
+
+    // Left accent bar — appears on hover/select
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--neon-cyan);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    &:hover:not(.row-disabled) {
+        background: rgba(0, 243, 255, 0.03);
+
+        &::before { opacity: 0.5; }
+        .rs-name  { color: #fff; }
+        .rs-chevron { opacity: 0.8; }
+    }
+
+    &.row-selected {
+        background: linear-gradient(90deg, rgba(255, 238, 0, 0.05) 0%, rgba(0, 0, 0, 0) 60%);
+
+        &::before {
+            background: var(--cyber-yellow);
+            opacity: 1;
+        }
+    }
+
+    &.row-disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+        filter: grayscale(0.6);
+    }
+}
+
+// ── Strip (collapsed view) ──────────────────────────────────
+.row-strip {
+    display: grid;
+    grid-template-columns: 38px 12px 1fr 110px 120px 20px;
+    gap: 0;
+    align-items: center;
+    padding: 0.55rem 1rem 0.55rem 0.8rem;
+    min-height: 42px;
+}
+
+.rs-id {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(0, 243, 255, 0.35);
+    letter-spacing: 1px;
+}
+
+.rs-led {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: all 0.3s;
+    flex-shrink: 0;
+
+    &.led-active {
+        background: var(--cyber-yellow);
+        border-color: var(--cyber-yellow);
+        box-shadow: 0 0 6px var(--cyber-yellow), 0 0 14px rgba(255, 238, 0, 0.4);
+    }
+
+    &.led-locked {
+        background: rgba(100, 30, 30, 0.6);
+        border-color: rgba(180, 40, 40, 0.4);
+    }
+}
+
+.rs-name {
+    font-family: var(--font-header);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding-left: 0.8rem;
+    transition: color 0.2s;
+
+    .row-selected & {
+        color: #fff;
+        text-shadow: 0 0 12px rgba(255, 238, 0, 0.25);
+    }
+}
+
+.rs-qual {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    font-family: var(--font-mono);
+
+    .qs-stat {
+        font-size: 0.65rem;
+        color: var(--text-dim);
+        opacity: 0.6;
+        text-transform: uppercase;
+    }
+
+    .qs-sep {
+        font-size: 0.5rem;
+        color: rgba(255,255,255,0.2);
+    }
+
+    .qs-tgt {
+        font-size: 0.75rem;
+        color: var(--neon-cyan);
+        font-weight: 700;
+    }
+}
+
+.rs-status {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(0, 243, 255, 0.4);
+    text-align: right;
+    padding-right: 0.8rem;
+    white-space: nowrap;
+
+    &.st-selected {
+        color: var(--cyber-yellow);
+    }
+
+    &.st-locked {
+        color: rgba(200, 60, 60, 0.6);
+    }
+}
+
+.rs-chevron {
+    font-size: 0.7rem;
+    color: rgba(0, 243, 255, 0.3);
+    transition: all 0.25s;
+    text-align: right;
+    opacity: 0.4;
+
+    &.open {
+        transform: rotate(90deg);
+        color: var(--cyber-yellow);
+        opacity: 1;
+    }
+}
+
+// ── Expand panel ────────────────────────────────────────────
+.row-expand {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 0;
+    border-top: 1px solid rgba(255, 238, 0, 0.12);
+    background: linear-gradient(90deg, rgba(255, 238, 0, 0.02) 0%, rgba(0, 243, 255, 0.02) 100%);
+    animation: expand-in 0.2s ease-out;
+    overflow: hidden;
+
+    @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+@keyframes expand-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.expand-info {
+    padding: 1rem 1.2rem 1rem 1rem;
+    border-right: 1px solid rgba(0, 243, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    .expand-desc {
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        line-height: 1.55;
+        color: var(--text-dim);
+        opacity: 0.75;
+        margin: 0;
+    }
+
+    .disabled-reason {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.7rem;
+        background: rgba(255, 0, 0, 0.08);
+        border: 1px solid rgba(255, 0, 0, 0.2);
+        border-left: 2px solid var(--power-red);
+        font-family: var(--font-mono);
+        font-size: 0.62rem;
+        color: var(--power-red);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+        .icon { font-size: 0.75rem; }
+    }
+}
+
+.expand-config {
+    padding: 1rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    background: rgba(0, 0, 0, 0.2);
+
+    .hud-label {
+        font-family: var(--font-mono);
+        font-size: 0.42rem;
+        color: var(--vivid-orange);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+}
+
+// Assignment chips grid
+.assign-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.assign-chip {
+    cursor: pointer;
+    flex: 1;
+    min-width: 130px;
+
+    input { display: none; }
+
+    .chip-face {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 0.8rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+        transition: all 0.2s;
+        position: relative;
+        overflow: hidden;
+
+        // Hover shimmer
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
+            transition: left 0.35s;
+            pointer-events: none;
+        }
+
+        .chip-led {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .chip-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+
+            .chip-name {
+                font-family: var(--font-header);
+                font-size: 0.75rem;
+                color: rgba(255,255,255,0.65);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1;
+            }
+
+            .chip-stat {
+                font-family: var(--font-mono);
+                font-size: 0.55rem;
+                color: var(--neon-cyan);
+                opacity: 0.6;
+            }
+        }
+
+        // Bottom-right clipped corner accent
+        .chip-corner {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background: rgba(0, 243, 255, 0.1);
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        }
+    }
+
+    &:hover .chip-face {
+        border-color: rgba(0, 243, 255, 0.35);
+        background: rgba(0, 243, 255, 0.05);
+
+        &::before { left: 140%; }
+        .chip-name { color: #fff; }
+    }
+
+    input:checked ~ .chip-face {
+        background: rgba(255, 140, 0, 0.1);
+        border-color: var(--vivid-orange);
+        box-shadow: 0 0 10px rgba(255, 140, 0, 0.1), inset 0 0 8px rgba(255, 140, 0, 0.04);
+
+        .chip-led {
+            background: var(--vivid-orange);
+            border-color: var(--vivid-orange);
+            box-shadow: 0 0 6px var(--vivid-orange);
+        }
+
+        .chip-name { color: #fff; }
+        .chip-stat { opacity: 1; color: var(--vivid-orange); }
+        .chip-corner { background: rgba(255, 140, 0, 0.3); }
+    }
+}
+
+.expand-actions {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+
+    .btn-action.enroll {
+        padding: 0.65rem 2rem;
+        font-size: 0.72rem;
+        letter-spacing: 2px;
+        clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    }
+}
+
+// ─────────────────────────────────────────────────────────────
+// CAREER CARD — used in CHANGE_ASSIGNMENT state
+// ─────────────────────────────────────────────────────────────
 .career-card {
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(0, 243, 255, 0.1);

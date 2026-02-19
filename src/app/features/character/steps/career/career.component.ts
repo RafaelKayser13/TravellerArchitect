@@ -154,7 +154,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.wizardFlow.unregisterStep(5);
+        this.wizardFlow.unregisterStep(6);
     }
 
     async onEventFlowComplete() {
@@ -181,8 +181,8 @@ export class CareerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         // Self-register with WizardFlowService
-        this.wizardFlow.registerValidator(5, () => this.canProceedToNext());
-        this.wizardFlow.registerFinishAction(5, () => this.startMusteringOut());
+        this.wizardFlow.registerValidator(6, () => this.canProceedToNext());
+        this.wizardFlow.registerFinishAction(6, () => this.startMusteringOut());
 
         // Register Custom Handlers
         this.eventEngine.registerCustomHandler('ADVANCE_STATE', (state) => {

@@ -254,7 +254,7 @@ export class CareerTermService {
     const nation = NATIONALITIES.find(n => n.name === char.nationality);
     const tier = nation?.tier ?? 3;
 
-    const eligibleCareers = ['Navy', 'Marine', 'Scout'];
+    const eligibleCareers = ['Navy', 'Marine'];
     return termNumber <= 3 && eligibleCareers.includes(careerName) && tier <= 3;
   }
 

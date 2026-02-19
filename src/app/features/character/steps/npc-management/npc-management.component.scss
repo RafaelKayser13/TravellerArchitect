@@ -5,148 +5,177 @@
     animation: fadeIn 0.5s ease-out;
 }
 
-.npc-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 2rem;
+// Old grid hidden — replaced by contact-roster
+.npc-grid  { display: none; }
+.npc-card   { display: none; }
+.card-header  { display: none; }
+.card-content { display: none; }
+.card-footer  { display: none; }
+.btn-mini     { display: none; }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONTACT ROSTER — terminal-style NPC list
+// ─────────────────────────────────────────────────────────────────────────────
+.contact-roster {
+    width: 100%;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(0, 243, 255, 0.12);
+    background: rgba(0, 0, 0, 0.45);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+            linear-gradient(rgba(0, 243, 255, 0.015) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 243, 255, 0.015) 1px, transparent 1px);
+        background-size: 40px 7px;
+        pointer-events: none;
+    }
 }
 
-.npc-card {
-    position: relative;
-    background: rgba(var(--neon-blue-rgb), 0.05);
-    border: 1px solid rgba(var(--neon-blue-rgb), 0.2);
-    padding: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    transition: all 0.3s ease;
+.cr-header {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 1.5fr 120px;
+    padding: 0.3rem 1rem;
+    background: rgba(0, 243, 255, 0.04);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+    font-family: var(--font-mono);
+    font-size: 0.42rem;
+    letter-spacing: 3px;
+    color: var(--neon-cyan);
+    opacity: 0.5;
+    text-transform: uppercase;
+    position: relative; z-index: 1;
+}
 
-    &.ally {
-        background: rgba(var(--neon-cyan-rgb), 0.05);
-        border-color: rgba(var(--neon-cyan-rgb), 0.3);
-        .type-tag { color: var(--neon-cyan); background: rgba(var(--neon-cyan-rgb), 0.1); }
-    }
-    &.rival {
-        background: rgba(255, 165, 0, 0.05);
-        border-color: rgba(255, 165, 0, 0.3);
-        .type-tag { color: #ffa500; background: rgba(255, 165, 0, 0.1); }
-    }
-    &.enemy {
-        background: rgba(var(--neon-red-rgb), 0.05);
-        border-color: rgba(var(--neon-red-rgb), 0.3);
-        .type-tag { color: var(--neon-red); background: rgba(var(--neon-red-rgb), 0.1); }
-    }
+.cr-row {
+    position: relative; z-index: 1;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.07);
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s;
+
+    &.cr-ally  { border-left-color: var(--neon-cyan); }
+    &.cr-rival { border-left-color: var(--vivid-orange); }
+    &.cr-enemy { border-left-color: var(--power-red); }
+}
+
+.cr-strip {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 1.5fr 120px;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    min-height: 48px;
+}
+
+.cr-type-cell {
+    display: flex; align-items: center; gap: 0.6rem;
+}
+
+.cr-led {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    .cr-ally  & { background: var(--neon-cyan); box-shadow: 0 0 6px var(--neon-cyan); }
+    .cr-rival & { background: var(--vivid-orange); box-shadow: 0 0 6px var(--vivid-orange); }
+    .cr-enemy & { background: var(--power-red); box-shadow: 0 0 6px var(--power-red); }
+
+    // fallback inside cr-type-cell when parent class not on cr-row
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+}
+
+.cr-type-tag {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+
+    .cr-ally  & { color: var(--neon-cyan); background: rgba(0,243,255,0.06); }
+    .cr-rival & { color: var(--vivid-orange); background: rgba(255,120,0,0.06); }
+    .cr-enemy & { color: var(--power-red); background: rgba(255,30,30,0.06); }
+}
+
+.cr-name {
+    font-family: var(--font-header);
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cr-origin {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+}
+
+.cr-notes-clip {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 0.5rem;
+}
+
+.cr-actions {
+    display: flex; gap: 0.4rem; justify-content: flex-end;
+}
+
+.cr-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.45);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 3px 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.18s;
 
     &:hover {
-        background: rgba(var(--neon-blue-rgb), 0.08);
-        border-color: rgba(var(--neon-blue-rgb), 0.5);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+        background: rgba(0,243,255,0.05);
     }
 
-    &.editing {
-        background: rgba(var(--neon-blue-rgb), 0.1);
-        border-color: var(--neon-blue);
-        box-shadow: 0 0 20px rgba(var(--neon-blue-rgb), 0.2);
+    &.danger:hover {
+        border-color: var(--power-red);
+        color: var(--power-red);
+        background: rgba(255,30,30,0.06);
     }
 }
 
-.card-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+.cr-empty {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 4rem 2rem;
+    position: relative; z-index: 1;
 
-    .type-tag {
+    .cr-empty-icon {
+        font-size: 1.5rem;
+        color: var(--neon-cyan);
+        opacity: 0.3;
+        margin-bottom: 0.8rem;
+    }
+
+    .cr-empty-text {
+        font-family: var(--font-header);
+        font-size: 0.85rem;
+        color: rgba(255,255,255,0.35);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 0.4rem;
+    }
+
+    .cr-empty-sub {
         font-family: var(--font-mono);
         font-size: 0.65rem;
-        padding: 0.2rem 0.5rem;
-        width: fit-content;
-        letter-spacing: 1px;
-        border: 1px solid currentColor;
-    }
-
-    h3 {
-        margin: 0;
-        font-size: 1.25rem;
-        color: var(--text-bright);
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-}
-
-.card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    flex-grow: 1;
-
-    .origin-readout {
-        display: flex;
-        gap: 0.5rem;
-        align-items: baseline;
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        
-        .label { color: var(--text-dim); }
-        .val { color: var(--neon-blue); }
-    }
-
-    .notes-section {
-        .label {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            margin-bottom: 0.25rem;
-        }
-        .notes-text {
-            color: var(--text-base);
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin: 0;
-            font-style: italic;
-        }
-    }
-}
-
-.card-footer {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid rgba(var(--text-dim-rgb), 0.1);
-
-    .actions {
-        display: flex;
-        gap: 0.75rem;
-    }
-}
-
-.btn-mini {
-    background: transparent;
-    border: 1px solid rgba(var(--text-dim-rgb), 0.3);
-    color: var(--text-dim);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    padding: 0.25rem 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s;
-
-    &:hover {
-        background: rgba(var(--text-dim-rgb), 0.1);
-        color: var(--text-bright);
-        border-color: var(--text-bright);
-    }
-
-    &.risk:hover {
-        background: rgba(var(--neon-red-rgb), 0.1);
-        color: var(--neon-red);
-        border-color: var(--neon-red);
-    }
-
-    &.success:hover {
-        background: rgba(var(--neon-cyan-rgb), 0.1);
-        color: var(--neon-cyan);
-        border-color: var(--neon-cyan);
+        color: var(--text-dim);
+        opacity: 0.6;
     }
 }
 

@@ -8,19 +8,36 @@
         subtitle="ENFORCING_SOCIO-POLITICAL_TERRITORIAL_DATA... [ OK ]">
     </app-step-header>
     <section>
-        <h2 class="step-title">Select Nationality</h2>
-        <div class="card-grid">
-            <div class="selection-card" *ngFor="let nat of nationalities; let i = index"
-                [class.selected]="selectedNationality?.name === nat.name" 
-                [class.disabled]="!isNationalityAvailable(nat)"
+        <div class="section-header">
+            <span class="sh-idx">01</span>
+            <h2 class="sh-title">NATIONALITY_SELECTION</h2>
+        </div>
+        <div class="data-roster">
+            <div class="dr-thead">
+                <span class="drh-id">ID</span>
+                <span class="drh-name">NATION_DESIGNATION</span>
+                <span class="drh-col">CLASS</span>
+                <span class="drh-status">STATUS</span>
+            </div>
+            <div class="dr-row" *ngFor="let nat of nationalities; let i = index"
+                [class.dr-sel]="selectedNationality?.name === nat.name"
+                [class.dr-lock]="!isNationalityAvailable(nat)"
                 (click)="isNationalityAvailable(nat) && selectNationality(nat)">
-                <span class="hud-label">[ NAT_{{i+1}} ]</span>
-                <h3>{{ nat.name }}</h3>
-                <p class="tier">{{ nat.tier === 1 ? 'Superpower' : 'Tier ' + nat.tier }}</p>
-                <div class="description">{{ nat.description }}</div>
-                <div class="compatibility-warning" *ngIf="!isNationalityAvailable(nat)">
-                    <span class="warning-icon">!</span>
-                    {{ getIncompatibilityReason('Nationality', nat) }}
+                <div class="dr-strip">
+                    <span class="dr-id">{{ (i+1) | number:'2.0-0' }}</span>
+                    <span class="dr-led" [class.led-on]="selectedNationality?.name === nat.name" [class.led-lock]="!isNationalityAvailable(nat)"></span>
+                    <span class="dr-name">{{ nat.name }}</span>
+                    <span class="dr-col">{{ nat.tier === 1 ? 'SUPERPOWER' : 'TIER_' + nat.tier }}</span>
+                    <span class="dr-status" [class.st-sel]="selectedNationality?.name === nat.name" [class.st-lock]="!isNationalityAvailable(nat)">
+                        {{ !isNationalityAvailable(nat) ? 'RESTRICTED' : (selectedNationality?.name === nat.name ? 'SELECTED' : 'AVAILABLE') }}
+                    </span>
+                    <span class="dr-chev" [class.open]="selectedNationality?.name === nat.name">&#9656;</span>
+                </div>
+                <div class="dr-expand" *ngIf="selectedNationality?.name === nat.name">
+                    <p class="expand-desc">{{ nat.description }}</p>
+                    <div *ngIf="!isNationalityAvailable(nat)" class="expand-warning">
+                        <span>⚠</span> {{ getIncompatibilityReason('Nationality', nat) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -60,53 +77,80 @@
     </section>
 
     <section *ngIf="selectedNationality && availableWorlds.length > 0" class="homeworld-section" #homeworldSection>
-        <h2 class="step-title">Select Homeworld</h2>
-        <div class="card-grid">
-            <div class="selection-card" *ngFor="let world of availableWorlds; let i = index"
-                [class.selected]="selectedWorld?.name === world.name" (click)="selectWorld(world)">
-                <span class="hud-label">[ WORLD_{{i+1}} ]</span>
-                <h3>{{ world.name }}</h3>
-                <div class="world-meta">
-                    <span class="badge"
-                        [class.warning]="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
-                        {{ world.gravity }}G ({{ world.gravityCode }})
+        <div class="section-header">
+            <span class="sh-idx">03</span>
+            <h2 class="sh-title">HOMEWORLD_SELECTION</h2>
+        </div>
+        <div class="data-roster">
+            <div class="dr-thead">
+                <span class="drh-id">ID</span>
+                <span class="drh-name">WORLD</span>
+                <span class="drh-col">GRAVITY</span>
+                <span class="drh-col">SRV_DM</span>
+                <span class="drh-status">STATUS</span>
+            </div>
+            <div class="dr-row" *ngFor="let world of availableWorlds; let i = index"
+                [class.dr-sel]="selectedWorld?.name === world.name"
+                (click)="selectWorld(world)">
+                <div class="dr-strip">
+                    <span class="dr-id">{{ (i+1) | number:'2.0-0' }}</span>
+                    <span class="dr-led" [class.led-on]="selectedWorld?.name === world.name"></span>
+                    <span class="dr-name">{{ world.name }}</span>
+                    <span class="dr-col" [class.dr-danger]="world.gravityCode === 'High' || world.gravityCode === 'Extreme'" [class.dr-dim]="world.gravityCode === 'Low'">
+                        {{ world.gravity }}G &middot; {{ world.gravityCode | uppercase }}
                     </span>
-                    <span class="badge">{{ world.system }}</span>
-                    <span class="badge">{{ world.path || 'Soft' }} Path</span>
-                    <span class="badge highlight" *ngIf="world.techLevel">TL {{ world.techLevel }}</span>
+                    <span class="dr-col" [class.dr-pos]="world.survivalDm > 0" [class.dr-neg]="world.survivalDm < 0">
+                        {{ world.survivalDm >= 0 ? '+' : '' }}{{ world.survivalDm }}
+                    </span>
+                    <span class="dr-status" [class.st-sel]="selectedWorld?.name === world.name">
+                        {{ selectedWorld?.name === world.name ? 'SELECTED' : 'AVAILABLE' }}
+                    </span>
+                    <span class="dr-chev" [class.open]="selectedWorld?.name === world.name">&#9656;</span>
                 </div>
-                <div class="uwp">SURVIVAL_DM: {{ world.survivalDm >= 0 ? '+' : ''}}{{ world.survivalDm }}</div>
-
-                <div class="gravity-mods" *ngIf="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
-                    <p class="warning">HIGH_GRAVITY_DETECTED</p>
-                </div>
-                <div class="gravity-mods" *ngIf="world.gravityCode === 'Low'">
-                    <p class="info">LOW_G_ENVIRONMENT</p>
+                <div class="dr-expand world-expand" *ngIf="selectedWorld?.name === world.name">
+                    <div class="we-tags">
+                        <span class="we-tag">{{ world.system }}</span>
+                        <span class="we-tag" [class.tag-warn]="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">{{ world.gravity }}G</span>
+                        <span class="we-tag">{{ world.path || 'Soft' }} PATH</span>
+                        <span class="we-tag tag-cyan" *ngIf="world.techLevel">TL {{ world.techLevel }}</span>
+                    </div>
+                    <p class="we-warning" *ngIf="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">⚠ HIGH_GRAVITY_ENVIRONMENT DETECTED</p>
+                    <p class="we-info" *ngIf="world.gravityCode === 'Low'">&gt;&gt; LOW_G_ENVIRONMENT</p>
                 </div>
             </div>
         </div>
     </section>
 
     <section *ngIf="selectedWorld" class="philosophy-section">
-        <h2 class="step-title">Colonial Philosophy</h2>
-        <div class="path-selector">
-            <div class="path-option" [class.selected]="selectedPath === 'Hard'" (click)="setPath('Hard')">
-                <h3>HARD PATH</h3>
-                <p>Technological adaptation. Machinery and habitats.</p>
-                <div class="bonus">benefit_roll_dm: +1</div>
+        <div class="section-header">
+            <span class="sh-idx">04</span>
+            <h2 class="sh-title">COLONIAL_PHILOSOPHY</h2>
+        </div>
+        <div class="choice-chips">
+            <div class="choice-chip" [class.chip-sel]="selectedPath === 'Hard'" (click)="setPath('Hard')">
+                <span class="cc-led" [class.on]="selectedPath === 'Hard'"></span>
+                <div class="cc-body">
+                    <span class="cc-name">HARD_PATH</span>
+                    <span class="cc-desc">Technological adaptation — Machinery and habitats. DM: +1 benefit</span>
+                </div>
             </div>
-            <div class="path-option" [class.selected]="selectedPath === 'Soft'" (click)="setPath('Soft')">
-                <h3>SOFT PATH</h3>
-                <p>Biological adaptation. DNA mods and symbionts.</p>
-                <div class="bonus">benefit_roll_dm: -1</div>
+            <div class="choice-chip" [class.chip-sel]="selectedPath === 'Soft'" (click)="setPath('Soft')">
+                <span class="cc-led" [class.on]="selectedPath === 'Soft'"></span>
+                <div class="cc-body">
+                    <span class="cc-name">SOFT_PATH</span>
+                    <span class="cc-desc">Biological adaptation — DNA mods and symbionts. DM: -1 benefit</span>
+                </div>
             </div>
         </div>
     </section>
 
     <section *ngIf="selectedWorld && showSkillsSelection" class="skills-section" #skillsSection>
-        <h2 class="step-title">Background Skills</h2>
-        <p class="instruction">ALLOCATED {{ selectedBackgroundSkills.length }} of {{ backgroundSkillsCount }} SKILLS
-            FROM ORIGIN DATA</p>
+        <div class="section-header">
+            <span class="sh-idx">05</span>
+            <h2 class="sh-title">BACKGROUND_SKILLS</h2>
+            <span class="sh-badge">{{ selectedBackgroundSkills.length }}/{{ backgroundSkillsCount }}</span>
+        </div>
+        <p class="instruction">SELECT {{ backgroundSkillsCount }} BACKGROUND SKILL VECTORS FROM ORIGIN DATA</p>
 
         <div class="skills-grid">
             <div class="skill-chip" *ngFor="let skill of availableSkills"

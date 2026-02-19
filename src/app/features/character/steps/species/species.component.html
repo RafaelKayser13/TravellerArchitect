@@ -8,37 +8,50 @@
         subtitle="SELECT_SPECIES_OR_GENETIC_VARIANT">
     </app-step-header>
 
-    <div class="species-grid">
-        <div *ngFor="let option of speciesOptions" 
-             class="species-card" 
-             [class.selected]="selectedId === option.id"
+    <div class="species-roster">
+        <div class="sp-thead">
+            <span>_#_</span>
+            <span></span>
+            <span>SPECIES_DESIGNATION</span>
+            <span>PHENOTYPE_TAGS</span>
+            <span class="th-r">STATUS</span>
+            <span></span>
+        </div>
+
+        <div class="sp-row"
+             *ngFor="let option of speciesOptions; let i = index"
+             [class.sp-sel]="selectedId === option.id"
              (click)="select(option)">
-            
-            <div class="card-header">
-                <h3>{{ option.name }}</h3>
-                <div class="selection-box"></div>
+
+            <div class="sp-strip">
+                <span class="sp-id">{{ i + 1 < 10 ? '0' + (i + 1) : (i + 1) }}</span>
+                <span class="sp-led" [class.on]="selectedId === option.id"></span>
+                <span class="sp-name">{{ option.name }}</span>
+                <div class="sp-tags">
+                    <span class="sp-tag" *ngFor="let t of option.traits">{{ t }}</span>
+                </div>
+                <span class="sp-status" [class.st-sel]="selectedId === option.id">
+                    {{ selectedId === option.id ? 'SELECTED' : 'AVAILABLE' }}
+                </span>
+                <span class="sp-chev" [class.open]="selectedId === option.id">›</span>
             </div>
 
-            <p class="description">{{ option.description }}</p>
-
-            <div class="traits-section">
-                <div class="trait-group bonus" *ngIf="option.bonuses.length">
-                    <label>ADVANTAGES</label>
-                    <ul>
-                        <li *ngFor="let bonus of option.bonuses">{{ bonus }}</li>
-                    </ul>
+            <div class="sp-expand" *ngIf="selectedId === option.id">
+                <p class="sp-desc">{{ option.description }}</p>
+                <div class="sp-traits-grid">
+                    <div class="sp-trait-col bonus" *ngIf="option.bonuses.length">
+                        <span class="stc-label">// ADVANTAGES</span>
+                        <ul>
+                            <li *ngFor="let b of option.bonuses">{{ b }}</li>
+                        </ul>
+                    </div>
+                    <div class="sp-trait-col penalty" *ngIf="option.penalties.length">
+                        <span class="stc-label">// PENALTIES</span>
+                        <ul>
+                            <li *ngFor="let p of option.penalties">{{ p }}</li>
+                        </ul>
+                    </div>
                 </div>
-
-                <div class="trait-group penalty" *ngIf="option.penalties.length">
-                    <label>PENALTIES</label>
-                    <ul>
-                        <li *ngFor="let penalty of option.penalties">{{ penalty }}</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="tags">
-                <span *ngFor="let trait of option.traits" class="tag">{{ trait }}</span>
             </div>
         </div>
     </div>

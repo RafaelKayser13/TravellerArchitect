@@ -7,6 +7,18 @@
     box-sizing: border-box;
     overflow: hidden;
     min-height: min-content;
+
+    // Visible CRT scanline grid
+    &::after {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+            linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 243, 255, 0.025) 1px, transparent 1px);
+        background-size: 100% 6px, 50px 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
 }
 
 .cards-circle {
@@ -15,6 +27,12 @@
     gap: 0.8rem;
     width: 100%;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    padding: 1.2rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    border-top: 2px solid rgba(0, 243, 255, 0.3);
 
     @media (min-width: 600px) {
         grid-template-columns: repeat(3, 1fr);
@@ -27,8 +45,9 @@
 }
 
 .stat-card {
-    background: rgba(0, 20, 30, 0.6);
-    border: 1px solid rgba(0, 243, 255, 0.2);
+    background: rgba(0, 20, 30, 0.75);
+    border: 1px solid rgba(0, 243, 255, 0.22);
+    border-top: 2px solid rgba(0, 243, 255, 0.5);
     padding: 1rem 0.8rem;
     position: relative;
     transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
@@ -41,6 +60,13 @@
     min-height: 200px;
     overflow: hidden;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+    z-index: 1;
+
+    &:hover { border-top-color: var(--neon-cyan); }
+    &.selected {
+        border-top-color: var(--cyber-yellow);
+        border-color: rgba(255, 238, 0, 0.35);
+    }
 
     &::before {
         content: "";
@@ -316,6 +342,21 @@
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
+    padding: 1.8rem 2rem;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(0, 243, 255, 0.12);
+    border-top: 2px solid rgba(0, 243, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(rgba(0, 243, 255, 0.025) 1px, transparent 1px);
+        background-size: 100% 5px;
+        pointer-events: none;
+        z-index: 0;
+    }
 
     .btn-roll-center {
         background: transparent;
@@ -331,6 +372,7 @@
         cursor: pointer;
         transition: all 0.3s;
         clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+        z-index: 1;
 
         &:hover:not(:disabled) {
             background: var(--neon-cyan);

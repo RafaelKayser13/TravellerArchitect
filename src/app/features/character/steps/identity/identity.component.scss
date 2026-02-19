@@ -7,11 +7,42 @@
     height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
+    position: relative;
+
+    // Visible CRT scanline grid
+    &::before {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+            linear-gradient(rgba(0, 243, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+        background-size: 100% 6px, 40px 100%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    // Moving horizontal sweep
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0;
+        top: -40px;
+        height: 40px;
+        background: linear-gradient(180deg, transparent, rgba(0, 243, 255, 0.04) 50%, transparent);
+        pointer-events: none;
+        z-index: 0;
+        animation: id-sweep 8s linear infinite;
+    }
+}
+
+@keyframes id-sweep {
+    from { top: -40px; }
+    to   { top: 100%; }
 }
 
 .step-header {
     margin-bottom: 2rem;
-    
+
     .hud-box-header {
         border-left: 3px solid var(--neon-cyan);
         padding-left: 1rem;
@@ -56,17 +87,30 @@
 }
 
 .hud-module {
-    background: rgba(10, 15, 20, 0.95);
-    border: 1px solid rgba(0, 243, 255, 0.15);
+    background: rgba(5, 10, 18, 0.97);
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    border-top: 2px solid var(--neon-cyan);
     position: relative;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 243, 255, 0.04) inset;
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+    z-index: 1;
+
+    // Scanline inner glow
+    &::after {
+        content: "";
+        position: absolute; inset: 0;
+        background:
+            linear-gradient(rgba(0, 243, 255, 0.025) 1px, transparent 1px);
+        background-size: 100% 4px;
+        pointer-events: none;
+        opacity: 0.6;
+    }
     
     .hud-box-header.mini {
         padding: 0.8rem 1.2rem;
-        background: rgba(255, 255, 255, 0.03);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(0, 243, 255, 0.04);
+        border-bottom: 1px solid rgba(0, 243, 255, 0.15);
         display: flex;
         align-items: center;
         gap: 0.8rem;
@@ -74,20 +118,24 @@
         h3 {
             font-size: 0.85rem;
             font-family: var(--font-accent);
-            letter-spacing: 2px;
-            color: var(--neon-cyan);
+            letter-spacing: 3px;
+            color: #fff;
             margin: 0;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
         }
 
         .index {
             font-size: 0.6rem;
             opacity: 0.5;
             font-family: var(--font-mono);
+            color: var(--neon-cyan);
         }
     }
 
     .hud-content {
         padding: 2rem;
+        position: relative;
+        z-index: 1;
     }
 }
 
@@ -98,37 +146,42 @@
     label {
         display: block;
         font-family: var(--font-mono);
-        font-size: 0.7rem;
-        color: var(--text-dim);
+        font-size: 0.65rem;
+        color: rgba(0, 243, 255, 0.65);
         margin-bottom: 0.6rem;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
         text-transform: uppercase;
+        padding-left: 0.6rem;
+        border-left: 2px solid rgba(0, 243, 255, 0.3);
     }
 
     input[type="text"],
     input[type="number"],
     textarea {
         width: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(0, 243, 255, 0.15);
+        background: rgba(0, 0, 0, 0.55);
+        border: 1px solid rgba(0, 243, 255, 0.18);
+        border-left: 2px solid rgba(0, 243, 255, 0.35);
         padding: 0.9rem;
         color: #fff;
         font-family: var(--font-body);
         font-size: 0.9rem;
-        transition: all 0.3s ease;
+        transition: all 0.25s ease;
         border-radius: 0;
         box-sizing: border-box;
-        height: 44px; // Consistent height for all inputs
+        height: 44px;
+        clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
 
         &:focus {
             outline: none;
             border-color: var(--neon-cyan);
-            background: rgba(0, 243, 255, 0.08);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+            border-left-color: var(--cyber-yellow);
+            background: rgba(0, 243, 255, 0.07);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.15);
         }
 
         &::placeholder {
-            color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.12);
             font-family: var(--font-mono);
             font-size: 0.7rem;
         }

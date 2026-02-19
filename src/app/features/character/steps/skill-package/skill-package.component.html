@@ -22,64 +22,63 @@
         </div>
     </div>
 
-    <div class="package-grid">
-        <div *ngFor="let pkg of packages" class="package-card"
-            [class.selected]="selectedPackage() === pkg"
+    <div class="pkg-roster">
+        <div class="pkg-thead">
+            <span class="pkh-id">ID</span>
+            <span class="pkh-name">PROFILE_DESIGNATION</span>
+            <span class="pkh-count">SKILLS</span>
+            <span class="pkh-status">STATUS</span>
+        </div>
+        <div class="pkg-row" *ngFor="let pkg of packages; let i = index"
+            [class.pkg-sel]="selectedPackage() === pkg"
             (click)="selectPackage(pkg)">
-            <div class="corner-detail tl"></div>
-            <div class="corner-detail tr"></div>
-            
-            <div class="card-header">
-                <span class="pkg-marker">PROFILE</span>
-                <h3>{{ pkg.name }}</h3>
+            <div class="pkg-strip">
+                <span class="pk-id">{{ (i+1) | number:'2.0-0' }}</span>
+                <span class="pk-led" [class.on]="selectedPackage() === pkg"></span>
+                <span class="pk-name">{{ pkg.name }}</span>
+                <span class="pk-count">{{ pkg.skills.length }}</span>
+                <span class="pk-status" [class.st-sel]="selectedPackage() === pkg">
+                    {{ selectedPackage() === pkg ? 'ACTIVE_PROTOCOL' : 'SELECT_PROFILE' }}
+                </span>
+                <span class="pk-chev" [class.open]="selectedPackage() === pkg">&#9656;</span>
             </div>
-            
-            <div class="card-content">
-                <p class="pkg-desc">{{ pkg.description }}</p>
-                
-                <div class="skills-preview">
-                    <span class="hud-label-tiny">COMPONENT_SKILLS</span>
-                    <div class="skills-list">
-                        <span *ngFor="let skill of pkg.skills" class="skill-tag">
-                            {{ skill }}
-                        </span>
-                    </div>
+            <div class="pkg-expand" *ngIf="selectedPackage() === pkg">
+                <p class="pk-desc">{{ pkg.description }}</p>
+                <div class="pk-pill-group">
+                    <span *ngFor="let skill of pkg.skills" class="pk-pill">{{ skill }}</span>
                 </div>
-            </div>
-
-            <div class="selection-indicator">
-                <span class="status">{{ selectedPackage() === pkg ? 'ACTIVE_PROTOCOL' : 'SELECT_PROFILE' }}</span>
-                <span class="icon">{{ selectedPackage() === pkg ? '◢' : '□' }}</span>
             </div>
         </div>
     </div>
 
-    <div class="selection-view" *ngIf="selectedPackage()">
+    <div class="skill-select-panel" *ngIf="selectedPackage()">
         <div class="hud-box-header">
             <span class="index">SL_01</span>
-            <h3>SKILL_SELECTION (SOLO_PROTOCOL)</h3>
+            <h3>SKILL_SELECTION_PROTOCOL</h3>
+            <div class="load-bar-inline">
+                <div class="lbi-fill" [style.width.%]="(selectedSkills().length / 4) * 100"></div>
+            </div>
+            <span class="load-label">{{ selectedSkills().length }}/4</span>
         </div>
-        
-        <div class="selection-content">
-            <p class="hint">Select exactly 4 skills from the chosen package to add to your character dossiers.</p>
-            
-            <div class="selection-grid">
-                <div class="skill-selectable" *ngFor="let skill of selectedPackage()?.skills"
-                     [class.selected]="selectedSkills().includes(skill)"
-                     [class.disabled]="selectedSkills().length >= 4 && !selectedSkills().includes(skill)"
-                     (click)="toggleSkill(skill)">
-                    <div class="status-box">
-                        <span class="check" *ngIf="selectedSkills().includes(skill)">✓</span>
-                    </div>
-                    <span class="skill-name">{{ skill }}</span>
-                </div>
+        <p class="hint">Select exactly 4 skills from the chosen package to add to your character dossier.</p>
+        <div class="skill-chip-grid">
+            <div class="sk-chip" *ngFor="let skill of selectedPackage()?.skills"
+                 [class.sk-on]="selectedSkills().includes(skill)"
+                 [class.sk-dim]="selectedSkills().length >= 4 && !selectedSkills().includes(skill)"
+                 (click)="toggleSkill(skill)">
+                <span class="sk-led"></span>
+                <span class="sk-name">{{ skill }}</span>
+                <span class="sk-check" *ngIf="selectedSkills().includes(skill)">✓</span>
             </div>
-
-            <div class="selection-status">
-                <span class="count">{{ selectedSkills().length }} / 4</span>
-                <span class="msg" *ngIf="selectedSkills().length < 4">UNITS_REMAINING</span>
-                <span class="msg success" *ngIf="selectedSkills().length === 4">PROTOCOL_READY</span>
+        </div>
+        <div class="sk-status-bar">
+            <span class="ssb-label">PROTOCOL_LOAD</span>
+            <div class="ssb-bar">
+                <div class="ssb-fill" [style.width.%]="(selectedSkills().length / 4) * 100"></div>
             </div>
+            <span class="ssb-msg" [class.ready]="selectedSkills().length === 4">
+                {{ selectedSkills().length < 4 ? (4 - selectedSkills().length) + ' UNITS_REMAINING' : '▶ PROTOCOL_READY' }}
+            </span>
         </div>
     </div>
 

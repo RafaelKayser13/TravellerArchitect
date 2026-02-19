@@ -33,7 +33,7 @@
         { "level": 2, "title": "Corporal" },
         { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
         { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "STR", "value": 1 } },
+        { "level": 5, "title": "Gunnery Sergeant" },
         { "level": 6, "title": "Sergeant Major" }
       ]
     },
@@ -48,7 +48,7 @@
         { "level": 2, "title": "Corporal" },
         { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
         { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "STR", "value": 1 } },
+        { "level": 5, "title": "Gunnery Sergeant" },
         { "level": 6, "title": "Sergeant Major" }
       ]
     },
@@ -63,7 +63,7 @@
         { "level": 2, "title": "Corporal" },
         { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
         { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "STR", "value": 1 } },
+        { "level": 5, "title": "Gunnery Sergeant" },
         { "level": 6, "title": "Sergeant Major" }
       ]
     }
@@ -86,28 +86,23 @@
     },
     {
       "roll": 3,
-      "description": "Neural Jack opportunity. (Term 1-3 only).",
+      "description": "You are assigned to a planet with a hostile or wild environment. Gain one of Vacc Suit 1, Engineer 1, Animals (riding or training) 1 or Recon 1.",
       "gameEvent": {
         "id": "army_event_3",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
-        "conditions": { "term": 3 },
         "ui": {
-          "title": "Neural Jack Opportunity",
-          "description": "You are offered the chance to have a Neural Jack installed.",
+          "title": "Hostile Environment",
+          "description": "You are assigned to a planet with a hostile or wild environment. Gain experience from surviving.",
           "options": [
-            {
-              "label": "Consider Neural Jack",
-              "effects": [{ "type": "TRIGGER_EVENT", "value": "neural_jack_install" }]
-            },
-            {
-              "label": "Decline",
-              "effects": []
-            }
+            { "label": "Vacc Suit 1", "effects": [{ "type": "SKILL_MOD", "target": "Vacc Suit", "value": 1 }] },
+            { "label": "Engineer (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (any)", "value": 1 }] },
+            { "label": "Animals (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Animals (any)", "value": 1 }] },
+            { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }] }
           ]
         }
       },
-      "effects": [{ "type": "neural-jack" }]
+      "effects": [{ "type": "skill-choice", "skills": ["Vacc Suit", "Engineer (any)", "Animals (any)", "Recon"] }]
     },
     {
       "roll": 4,
@@ -320,75 +315,100 @@
   "mishapTable": [
     {
       "roll": 1,
-      "description": "Severely injured in action. Roll on the Injury table.",
+      "description": "Severely injured in action. Roll twice on the Injury table and take the lower result.",
       "gameEvent": {
         "id": "army_mishap_1",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Severely Injured",
-          "description": "You are severely injured in the line of duty. You must be ejected from the Army.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "description": "You are severely injured in the line of duty. Roll twice on the Injury table and take the lower result.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll_worst_of_2" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [{ "type": "injury-worst-of-2" }]
     },
     {
       "roll": 2,
-      "description": "You are psychologically damaged by your time in the service. Reduce END by 1 and gain PTSD trait.",
+      "description": "Your unit is slaughtered in a disastrous battle, for which you blame your commander. Gain them as an Enemy as they have you removed from the service.",
       "gameEvent": {
         "id": "army_mishap_2",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Psychological Trauma",
-          "description": "You are psychologically damaged by your time in the service. You are discharged.",
+          "title": "Unit Slaughtered",
+          "description": "Your unit is slaughtered in a disastrous battle, for which you blame your commander. Gain them as an Enemy as they have you removed from the service.",
+          "options": [{
+            "label": "Accept Discharge",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Commander who got your unit killed" } },
+              { "type": "EJECT_CAREER", "note": "Removed by Commander" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 3,
+      "description": "You are sent to a very unpleasant region to battle guerilla fighters. Discharged due to stress/injury. Gain Recon or Survival 1, but also gain the rebels as an Enemy.",
+      "gameEvent": {
+        "id": "army_mishap_3",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Unpleasant Region",
+          "description": "You are sent to a very unpleasant region (jungle, swamp, desert, icecap, urban) to battle against guerilla fighters. You are discharged because of stress, injury or because the government wishes to bury the whole incident. Gain a skill but also gain the rebels as an Enemy.",
           "options": [
             {
-              "label": "Accept Discharge",
+              "label": "Recon 1",
               "effects": [
-                { "type": "STAT_MOD", "target": "END", "value": -1 },
-                { "type": "TRAIT_GAIN", "note": "Survivor (PTSD)" },
-                { "type": "EJECT_CAREER", "note": "Medical Discharge (Psychological)" }
+                { "type": "SKILL_MOD", "target": "Recon", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Rebel/Guerilla Force" } },
+                { "type": "EJECT_CAREER", "note": "Discharged" }
+              ]
+            },
+            {
+              "label": "Survival 1",
+              "effects": [
+                { "type": "SKILL_MOD", "target": "Survival", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Rebel/Guerilla Force" } },
+                { "type": "EJECT_CAREER", "note": "Discharged" }
               ]
             }
           ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }, { "type": "trait-gain", "note": "Survivor (PTSD)" }]
-    },
-    {
-      "roll": 3,
-      "description": "Your unit is slaughtered in a disastrous battle. Gain Survival 1 or Recon 1.",
-      "gameEvent": {
-        "id": "army_mishap_3",
-        "type": "MISHAP",
-        "trigger": "MISHAP",
-        "ui": {
-          "title": "Unit Slaughtered",
-          "description": "Your unit is slaughtered in a disastrous battle. You are one of the few survivors.",
-          "options": [
-            { "label": "Survival 1", "effects": [{ "type": "SKILL_MOD", "target": "Survival", "value": 1 }, { "type": "EJECT_CAREER", "note": "Unit Destroyed" }] },
-            { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }, { "type": "EJECT_CAREER", "note": "Unit Destroyed" }] }
-          ]
-        }
-      },
-      "effects": [{ "type": "skill-choice", "skills": ["Survival", "Recon"] }]
+      "effects": [{ "type": "skill-choice", "skills": ["Recon", "Survival"] }, { "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
     },
     {
       "roll": 4,
-      "description": "Scandal. You are discharged. Lose SOC 1.",
+      "description": "You discover your commanding officer is engaged in illegal activity (weapon smuggling etc). Join their ring (gain Ally, get discharged) or co-operate with MPs (keep Benefit roll, get discharged anyway).",
       "gameEvent": {
         "id": "army_mishap_4",
-        "type": "MISHAP",
+        "type": "CHOICE",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Scandal",
-          "description": "You are involved in a scandal and discharged from the service.",
-          "options": [{ "label": "Accept Discharge", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }, { "type": "LOSE_BENEFIT", "value": 100 }] }]
+          "title": "Illegal Activity Discovered",
+          "description": "You discover that your commanding officer is engaged in some illegal activity, such as weapon smuggling. Join their ring and gain them as an Ally before the inevitable investigation gets you discharged, or co-operate with the military police — the official whitewash gets you discharged anyway but you may keep your Benefit roll.",
+          "options": [
+            {
+              "label": "Join Their Ring (gain Ally, get discharged)",
+              "effects": [
+                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Corrupt Commanding Officer" } },
+                { "type": "EJECT_CAREER", "note": "Discharged after investigation" }
+              ]
+            },
+            {
+              "label": "Co-operate with MPs (keep Benefit roll, get discharged)",
+              "effects": [
+                { "type": "EJECT_CAREER", "note": "Discharged — official whitewash" }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }]
+      "effects": [{ "type": "choice", "note": "Illegal CO Activity" }, { "type": "forced-out" }]
     },
     {
       "roll": 5,
@@ -423,7 +443,15 @@
   ],
   "musteringOut": {
     "cash": [2000, 5000, 10000, 10000, 10000, 20000, 30000],
-    "benefits": ["Combat Implant", "INT +1", "EDU +1", "Weapon", "Armour", "SOC +1", "Ship Share"]
+    "benefits": [
+      "Cybernetic Implant",
+      "INT +1",
+      "EDU +1",
+      "Weapon",
+      "Armour",
+      { "choose": 1, "options": ["END +1", "Cybernetic Implant"] },
+      "SOC +1"
+    ]
   },
   "academy": {
     "admission": {

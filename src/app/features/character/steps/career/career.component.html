@@ -46,55 +46,84 @@
             <h3>CAREER_SELECTION_PROTOCOL</h3>
         </div>
 
-        <div class="career-list">
-            <div *ngFor="let career of careers(); let i = index" class="career-card"
-                [class.selected]="selectedCareer === career" 
-                [class.disabled]="isCareerDisabled(career)"
+        <div class="career-roster">
+
+            <!-- Header row -->
+            <div class="roster-header">
+                <span class="rh-id">ID</span>
+                <span class="rh-name">DESIGNATION</span>
+                <span class="rh-qual">QUAL_REQ</span>
+                <span class="rh-status">STATUS</span>
+            </div>
+
+            <div *ngFor="let career of careers(); let i = index"
+                class="roster-row"
+                [class.row-selected]="selectedCareer === career"
+                [class.row-disabled]="isCareerDisabled(career)"
                 (click)="selectCareer(career)">
 
-                <div class="card-layout">
-                    <!-- Info Column -->
-                    <div class="info-column">
-                        <div class="card-header">
-                            <span class="index">0{{i+1}}</span>
-                            <h3>{{ career.name }}</h3>
-                        </div>
-                        <div class="details">
-                            <p><span class="label">QUALIFICATION:</span> <span class="highlight">{{
-                                    career.qualificationStat
-                                    }} {{ career.qualificationTarget }}+</span></p>
-                            <div class="description-text">{{ career.description }}</div>
-                            
-                            <!-- New: Disabled Reason -->
-                            <div *ngIf="isCareerDisabled(career)" class="disabled-reason">
-                                <span class="icon">⚠</span> {{ getDisabledReason(career) }}
-                            </div>
+                <!-- ── Compact strip (always visible) ── -->
+                <div class="row-strip">
+                    <span class="rs-id">{{ i + 1 | number:'2.0-0' }}</span>
+
+                    <div class="rs-led"
+                        [class.led-active]="selectedCareer === career"
+                        [class.led-locked]="isCareerDisabled(career)">
+                    </div>
+
+                    <span class="rs-name">{{ career.name }}</span>
+
+                    <span class="rs-qual">
+                        <span class="qs-stat">{{ career.qualificationStat }}</span>
+                        <span class="qs-sep">/</span>
+                        <span class="qs-tgt">{{ career.qualificationTarget }}+</span>
+                    </span>
+
+                    <span class="rs-status"
+                        [class.st-selected]="selectedCareer === career"
+                        [class.st-locked]="isCareerDisabled(career)">
+                        {{ isCareerDisabled(career) ? 'LOCKED' : (selectedCareer === career ? 'SELECTED' : 'AVAILABLE') }}
+                    </span>
+
+                    <span class="rs-chevron" [class.open]="selectedCareer === career">&#9656;</span>
+                </div>
+
+                <!-- ── Expand panel (only when selected) ── -->
+                <div class="row-expand" *ngIf="selectedCareer === career" (click)="$event.stopPropagation()">
+
+                    <div class="expand-info">
+                        <p class="expand-desc">{{ career.description }}</p>
+                        <div *ngIf="isCareerDisabled(career)" class="disabled-reason">
+                            <span class="icon">⚠</span> {{ getDisabledReason(career) }}
                         </div>
                     </div>
 
-                    <!-- Config Column (Active only when selected) -->
-                    <div class="config-column" *ngIf="selectedCareer === career" (click)="$event.stopPropagation()">
-                        <div class="assignment-selector">
-                            <span class="hud-label">[ SELECT_ASSIGNMENT_SPECIALIZATION ]</span>
-                            <div class="radio-tab-group">
-                                <label class="radio-tab" *ngFor="let assign of career.assignments">
-                                    <input type="radio" name="assignment" [value]="assign"
-                                        [checked]="selectedAssignment === assign" (change)="selectAssignment(assign)" />
-                                    <div class="tab-content">
-                                        <span class="primary">{{ assign.name }}</span>
-                                        <span class="secondary">SRV: {{ assign.survivalStat }} {{ assign.survivalTarget
-                                            }}+</span>
+                    <div class="expand-config">
+                        <span class="hud-label">[ SELECT_ASSIGNMENT_SPECIALIZATION ]</span>
+
+                        <div class="assign-chips">
+                            <label class="assign-chip" *ngFor="let assign of career.assignments">
+                                <input type="radio" name="assignment" [value]="assign"
+                                    [checked]="selectedAssignment === assign"
+                                    (change)="selectAssignment(assign)" />
+                                <div class="chip-face">
+                                    <span class="chip-led"></span>
+                                    <div class="chip-text">
+                                        <span class="chip-name">{{ assign.name }}</span>
+                                        <span class="chip-stat">SRV {{ assign.survivalStat }} {{ assign.survivalTarget }}+</span>
                                     </div>
-                                </label>
-                            </div>
+                                    <div class="chip-corner"></div>
+                                </div>
+                            </label>
                         </div>
 
-                        <div class="card-footer-actions">
-                            <button class="btn-action" [disabled]="!selectedAssignment" (click)="qualify()">
+                        <div class="expand-actions">
+                            <button class="btn-action enroll" [disabled]="!selectedAssignment" (click)="qualify()">
                                 {{ characterService.character().forcedCareer === selectedCareer.name ? 'CONFIRM_ENROLLMENT' : 'ATTEMPT_QUALIFICATION' }}
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

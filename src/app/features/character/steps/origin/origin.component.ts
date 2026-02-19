@@ -29,12 +29,12 @@ export class OriginComponent implements OnInit, OnDestroy {
   private wizardFlow = inject(WizardFlowService);
 
   ngOnInit(): void {
-    this.wizardFlow.registerValidator(3, () => this.canProceed());
-    this.wizardFlow.registerFinishAction(3, () => this.finish());
+    this.wizardFlow.registerValidator(4, () => this.canProceed());
+    this.wizardFlow.registerFinishAction(4, () => this.finish());
   }
 
   ngOnDestroy(): void {
-    this.wizardFlow.unregisterStep(3);
+    this.wizardFlow.unregisterStep(4);
   }
 
   nationalities = NATIONALITIES;
