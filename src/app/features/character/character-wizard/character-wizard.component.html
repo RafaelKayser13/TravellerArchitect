@@ -45,90 +45,60 @@
     </div>
 
     <div class="wizard-frame">
-      <!-- Step Progress -->
+      <!-- Step Progress — driven by WIZARD_STEPS constant, no hard-coded labels -->
       <div class="step-progress">
-        <div class="step" [class.active]="currentStep >= 1" [class.current]="currentStep === 1" (click)="goToStep(1)">
-          <div class="circle">01</div>
-          <span class="label">IDENTITY</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 1"></div>
-
-        <div class="step" [class.active]="currentStep >= 2" [class.current]="currentStep === 2" (click)="goToStep(2)">
-          <div class="circle">02</div>
-          <span class="label">BIOMETRICS</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 2"></div>
-
-        <div class="step" [class.active]="currentStep >= 3" [class.current]="currentStep === 3" (click)="goToStep(3)">
-          <div class="circle">03</div>
-          <span class="label">ORIGIN</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 3"></div>
-
-        <div class="step" [class.active]="currentStep >= 4" [class.current]="currentStep === 4" (click)="goToStep(4)">
-          <div class="circle">04</div>
-          <span class="label">EDUCATION</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 4"></div>
-
-        <div class="step" [class.active]="currentStep >= 5" [class.current]="currentStep === 5" (click)="goToStep(5)">
-          <div class="circle">05</div>
-          <span class="label">CAREER</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 5"></div>
-
-        <div class="step" [class.active]="currentStep >= 6" [class.current]="currentStep === 6" (click)="goToStep(6)">
-          <div class="circle">06</div>
-          <span class="label">MUSTER</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 6"></div>
-
-        <div class="step" [class.active]="currentStep >= 7" [class.current]="currentStep === 7" (click)="goToStep(7)">
-          <div class="circle">07</div>
-          <span class="label">NETWORK</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 7"></div>
-
-        <div class="step" [class.active]="currentStep >= 8" [class.current]="currentStep === 8" (click)="goToStep(8)">
-          <div class="circle">08</div>
-          <span class="label">PACKAGE</span>
-        </div>
-        <div class="line" [class.active]="currentStep > 8"></div>
-
-        <div class="step" [class.active]="currentStep >= 9" [class.current]="currentStep === 9" (click)="goToStep(9)">
-          <div class="circle">09</div>
-          <span class="label">FINALIZE</span>
-        </div>
+        @for (step of steps; track step.index) {
+          <div
+            class="step"
+            [class.active]="wizardFlow.currentStepIndex() >= step.index"
+            [class.current]="wizardFlow.currentStepIndex() === step.index"
+            (click)="wizardFlow.goTo(step.index)">
+            <div class="circle">{{ step.index < 10 ? '0' + step.index : step.index }}</div>
+            <span class="label">{{ step.label }}</span>
+          </div>
+          @if (!$last) {
+            <div class="line" [class.active]="wizardFlow.currentStepIndex() > step.index"></div>
+          }
+        }
       </div>
 
       <!-- Content Area -->
-      <div class="wizard-content" *ngIf="!isResetting">
-        <app-identity *ngIf="currentStep === 1" (complete)="nextStep()"></app-identity>
-        <app-attributes *ngIf="currentStep === 2" (stateChange)="cdr.detectChanges()" (complete)="nextStep()"></app-attributes>
-        <app-origin *ngIf="currentStep === 3" (complete)="nextStep()"></app-origin>
-        <app-education *ngIf="currentStep === 4" (complete)="nextStep()"></app-education>
-        <app-career *ngIf="currentStep === 5" (onComplete)="onCareerComplete()" (complete)="onCareerComplete()"></app-career>
-        <app-mustering-out *ngIf="currentStep === 6" (complete)="onMusteringOutComplete()"></app-mustering-out>
-        <app-npc-management *ngIf="currentStep === 7" (complete)="onNpcManagementComplete()"></app-npc-management>
-        <app-skill-package *ngIf="currentStep === 8" (complete)="onSkillPackageComplete()"></app-skill-package>
-        <app-character-sheet *ngIf="currentStep === 9"></app-character-sheet>
-      </div>
+      @if (!isResetting()) {
+        <div class="wizard-content">
+          @switch (wizardFlow.currentStepIndex()) {
+            @case (1) { <app-identity></app-identity> }
+            @case (2) { <app-attributes></app-attributes> }
+            @case (3) { <app-origin></app-origin> }
+            @case (4) { <app-education></app-education> }
+            @case (5) { <app-career></app-career> }
+            @case (6) { <app-mustering-out></app-mustering-out> }
+            @case (7) { <app-npc-management></app-npc-management> }
+            @case (8) { <app-skill-package></app-skill-package> }
+            @case (9) { <app-character-sheet></app-character-sheet> }
+          }
+        </div>
+      }
 
       <!-- Unified Sticky Action Bar -->
-      <footer class="wizard-action-bar" *ngIf="showActionBar">
-        <div class="action-divider"></div>
-        <div class="action-content">
-          <button class="btn-reset-footer" (click)="initiateReset()" title="Reset Character Data">
-            <span class="icon">↺</span>
-            <span class="label">RESET</span>
-          </button>
-          
-          <button class="btn-wizard-next" [disabled]="!actionEnabled" (click)="onActionClick()">
-            <span class="btn-index">SYS::CMD</span>
-            <span class="btn-label">{{ actionLabel }} ▸</span>
-          </button>
-        </div>
-      </footer>
+      @if (wizardFlow.showActionBar()) {
+        <footer class="wizard-action-bar">
+          <div class="action-divider"></div>
+          <div class="action-content">
+            <button class="btn-reset-footer" (click)="initiateReset()" title="Reset Character Data">
+              <span class="icon">↺</span>
+              <span class="label">RESET</span>
+            </button>
+
+            <button
+              class="btn-wizard-next"
+              [disabled]="!wizardFlow.canProceed()"
+              (click)="wizardFlow.executeFinish()">
+              <span class="btn-index">SYS::CMD</span>
+              <span class="btn-label">{{ wizardFlow.actionLabel() }} ▸</span>
+            </button>
+          </div>
+        </footer>
+      }
     </div>
 
     <div class="hw-bezel-detail bottom">
@@ -139,7 +109,7 @@
 </div>
 
 <!-- Reset Dialog -->
-<app-confirmation-dialog [isOpen]="showResetDialog" title="RESET DATA"
+<app-confirmation-dialog [isOpen]="showResetDialog()" title="RESET DATA"
   message="Are you sure you want to delete this character and start over? This action cannot be undone."
   (confirm)="confirmReset()" (cancel)="cancelReset()">
 </app-confirmation-dialog>

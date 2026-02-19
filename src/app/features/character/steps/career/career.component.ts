@@ -1,4 +1,4 @@
-import { Component, inject, computed, signal, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
@@ -8,12 +8,16 @@ import { CareerDefinition, Assignment } from '../../../../core/models/career.mod
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { NATIONALITIES } from '../../../../data/nationalities';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
+import { CareerTermService } from '../../../../core/services/career-term.service';
 import { createSurvivalCheckEvent, createMishapRollEvent, createEventRollEvent } from '../../../../data/events/shared/career-events';
 import { createLifeEventRollEvent, createInjuryEvent, createInjuryRollEvent } from '../../../../data/events/shared/life-events';
 import { NEURAL_JACK_INSTALL_EVENT } from '../../../../data/events/shared/neural-jack-install.event';
 import { effect } from '@angular/core';
 
+/** Careers that count as "military" for medical and other rule checks. */
 const MILITARY_CAREERS = ['Army', 'Navy', 'Marine'];
+/** @deprecated Use CareerTermService.calculateMedicalCoverage instead */
 const MEDICAL_MILITARY_BUCKET = ['Army', 'Navy', 'Marine'];
 
 type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'POST_TERM_SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT' | 'NEURAL_JACK_EVENT';
@@ -28,12 +32,15 @@ import { HudWindowComponent } from '../../../shared/hud-window/hud-window.compon
     templateUrl: './career.component.html',
     styleUrls: ['./career.component.scss']
 })
-export class CareerComponent implements OnInit {
+export class CareerComponent implements OnInit, OnDestroy {
     public characterService = inject(CharacterService);
     public diceService = inject(DiceService);
     public diceDisplay = inject(DiceDisplayService);
     public eventEngine = inject(EventEngineService);
     private careerService = inject(CareerService);
+    private wizardFlow = inject(WizardFlowService);
+    /** Handles per-term game mechanics (aging, leaving home, medical, etc.) */
+    public careerTermService = inject(CareerTermService);
 
     careers = computed(() => this.careerService.getAllCareers());
 
@@ -146,6 +153,10 @@ export class CareerComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        this.wizardFlow.unregisterStep(5);
+    }
+
     async onEventFlowComplete() {
         // If we were in SURVIVAL mode and the event chain (Survival -> Event) completed
         if (this.currentState() === 'SURVIVAL') {
@@ -169,6 +180,10 @@ export class CareerComponent implements OnInit {
     }
 
     async ngOnInit() {
+        // Self-register with WizardFlowService
+        this.wizardFlow.registerValidator(5, () => this.canProceedToNext());
+        this.wizardFlow.registerFinishAction(5, () => this.startMusteringOut());
+
         // Register Custom Handlers
         this.eventEngine.registerCustomHandler('ADVANCE_STATE', (state) => {
             this.currentState.set(state);
@@ -486,8 +501,20 @@ export class CareerComponent implements OnInit {
             }
         }
 
+        const fallbackText = this.currentTerm() === 1
+            ? 'Failed Qualification. You are subject to the Draft — a random military career will be assigned.'
+            : 'Failed Qualification. You have no choice but to become a Drifter this term.';
+
         const rollResult = await this.diceDisplay.roll(
-            `Qualification: ${career.name}`, 2, statMod + dm + universityMod + nextQualDm + (this.isForeignLegionActive ? 1 : 0), target, charStatKey.toUpperCase(), undefined, modifiers
+            `Qualification: ${career.name}`, 2,
+            statMod + dm + universityMod + nextQualDm + (this.isForeignLegionActive ? 1 : 0),
+            target, charStatKey.toUpperCase(), undefined, modifiers, undefined,
+            {
+                phase: `QUALIFICATION · ${career.name.toUpperCase()}`,
+                announcement: `You are applying to join the ${career.name} (${this.selectedAssignment?.name}). Roll ${charStatKey.toUpperCase()} ${target}+ on 2D6 to be accepted into service.`,
+                successContext: `Qualified! You are accepted into the ${career.name} and will begin Basic Training.`,
+                failureContext: fallbackText
+            }
         );
 
         const total = rollResult + statMod + dm + universityMod + nextQualDm + (this.isForeignLegionActive ? 1 : 0);
@@ -694,7 +721,13 @@ export class CareerComponent implements OnInit {
 
         const rollLabels = academyBonus > 0 ? 'Commission Check (+2 Academy)' : 'Commission Check';
         const roll = await this.diceDisplay.roll(
-            rollLabels, 2, statMod + academyBonus, target, stat.toUpperCase(), undefined, modifiers
+            rollLabels, 2, statMod + academyBonus, target, stat.toUpperCase(), undefined, modifiers, undefined,
+            {
+                phase: `COMMISSION · ${this.selectedCareer?.name.toUpperCase()}`,
+                announcement: `You are applying for an Officer's Commission in the ${this.selectedCareer?.name}. Roll ${stat.toUpperCase()} ${target}+ to be promoted to Officer Rank 1.`,
+                successContext: `Commission granted! You are now an Officer Rank 1 and gain 1 extra Skill Roll this term.`,
+                failureContext: `Commission denied. You continue as Enlisted personnel and proceed to Skill Training.`
+            }
         );
 
         const total = roll + statMod + academyBonus;
@@ -761,7 +794,15 @@ export class CareerComponent implements OnInit {
             { roll: 5, career: 'Marine' }, { roll: 6, career: 'Navy' }
         ];
 
-        const rollSource = await this.diceDisplay.roll('Draft', 1, 0, 0, '', undefined, [], draftTable);
+        const rollSource = await this.diceDisplay.roll(
+            'Draft Table', 1, 0, 0, '', undefined, [], draftTable,
+            {
+                phase: 'MILITARY DRAFT · TERM 1',
+                announcement: `You failed to qualify for your chosen career. The Draft assigns you to a random military branch based on a 1D6 roll: 1–3 = Army, 4–5 = Marine, 6 = Navy.`,
+                successContext: `Welcome to the ranks. Your assigned branch begins Basic Training immediately.`,
+                failureContext: ``
+            }
+        );
         const roll = rollSource;
 
         let draftedCareerName = '';
@@ -870,7 +911,13 @@ export class CareerComponent implements OnInit {
 
         const roll = await this.diceDisplay.roll(
             `${tableType} Skill`, 1, 0, 0, '',
-            (res) => { const idx = res - 1; return table[idx] || 'Unknown'; }, [], table
+            (res) => { const idx = res - 1; return table[idx] || 'Unknown'; }, [], table,
+            {
+                phase: `SKILL TRAINING · ${tableType.toUpperCase()} TABLE`,
+                announcement: `Roll 1D6 on the ${tableType} Skill Table to see which skill or characteristic bonus you develop this term.`,
+                successContext: `You gain the listed skill or characteristic improvement. Apply it to your character sheet.`,
+                failureContext: ``
+            }
         );
 
         const reward = table[roll - 1];
@@ -1329,7 +1376,12 @@ export class CareerComponent implements OnInit {
         this.selectedInjuryStat = stat;
 
         if (this.injuryMajorLoss === 100) {
-             const loss = await this.diceDisplay.roll('Injury Severity', 1);
+             const loss = await this.diceDisplay.roll('Injury Severity', 1, 0, 0, '', undefined, [], undefined, {
+                 phase: `INJURY SEVERITY \u00b7 ${stat.toUpperCase()}`,
+                 announcement: `You suffered a serious injury to your ${stat}. Roll 1D6 to determine the permanent characteristic loss from this wound.`,
+                 successContext: `Wound assessment complete. Characteristic reduced accordingly.`,
+                 failureContext: ``
+             });
              this.injuryMajorLoss = loss;
              this.characterService.log(`**Injury Severity Roll**: Rolled ${loss} for stat reduction.`);
         }
@@ -1339,48 +1391,27 @@ export class CareerComponent implements OnInit {
         this.isInjuryDecisionActive = true;
     }
 
+    /**
+     * Delegates medical cost (coverage + debt) calculation to CareerTermService.
+     * Sets medicalCoverage (as fraction 0–1), medicalRestorationCost, and medicalDebtCalculated.
+     */
     async calculateMedicalCosts() {
-        const char = this.characterService.character();
-        const career = this.selectedCareer?.name || '';
+        const careerName = this.selectedCareer?.name || '';
         const rank = this.getRank();
 
-        // 1. Coverage - 2300AD Rules
-        const roll = await this.diceDisplay.roll('Medical Coverage Check', 2, rank, 0);
-        const total = roll + rank;
+        // Coverage fraction (0–1) via service
+        const coverageFraction = await this.careerTermService.calculateMedicalCoverage(careerName, rank);
+        this.medicalCoverage = coverageFraction;
 
-        let coveragePercent = 0;
-        if (['Army', 'Navy', 'Marines', 'Marine', 'Agent'].includes(career)) {
-            if (total >= 8) coveragePercent = 1.0;
-            else if (total >= 4) coveragePercent = 0.75;
-            else coveragePercent = 0;
-        } else if (['Scout', 'Rogue', 'Drifter'].includes(career)) {
-            if (total >= 12) coveragePercent = 0.75;
-            else if (total >= 8) coveragePercent = 0.50;
-            else coveragePercent = 0;
-        } else {
-            // Others (Citizen, Merchant, etc.)
-            if (total >= 12) coveragePercent = 1.0;
-            else if (total >= 8) coveragePercent = 0.75;
-            else if (total >= 4) coveragePercent = 0.50;
-            else coveragePercent = 0;
-        }
+        // Restoration cost and net debt via service (pure calculation, no dice)
+        const result = this.careerTermService.calculateMedicalDebt(
+            this.injuryRoll,
+            this.injuryMajorLoss,
+            coverageFraction
+        );
 
-        this.medicalCoverage = coveragePercent;
-        this.characterService.log(`**Medical Coverage**: Organization covered ${coveragePercent * 100}% of treatment costs.`);
-        this.log(`Medical Coverage: ${coveragePercent * 100}%`);
-
-        // 2. Cost (Lv 5,000 per point)
-        let totalPoints = this.injuryMajorLoss;
-        if (this.injuryRoll === 1) totalPoints += 4; // Nearly killed has +2 to other two stats (2+2=4)
-
-        // Special Rule: Missing Eye/Limb (Result 3) costs Lv 10,000 to restore
-        if (this.injuryRoll === 3) {
-            this.medicalRestorationCost = 10000;
-        } else {
-            this.medicalRestorationCost = totalPoints * 5000;
-        }
-
-        this.medicalDebtCalculated = this.medicalRestorationCost * (1 - this.medicalCoverage);
+        this.medicalRestorationCost = result.restorationCost;
+        this.medicalDebtCalculated = result.debtAmount;
     }
 
     async resolveInjury(acceptAugment: boolean) {
@@ -1487,17 +1518,35 @@ export class CareerComponent implements OnInit {
             modifiers.push({ label: 'Neural Jack', value: 1 });
         }
 
+        const isPrisoner = this.selectedCareer.name === 'Prisoner';
+        const advLabel = isPrisoner ? 'Release Check' : 'Advancement Check';
+        const advAnnouncement = isPrisoner
+            ? `Your parole board reviews your record. Roll ${stat.toUpperCase()} ${target}+ on 2D6 to be released from prison this term.`
+            : `Your service record this term is being evaluated for promotion. Roll ${stat.toUpperCase()} ${target}+ on 2D6 to advance in rank.`;
+        const advSuccess = isPrisoner
+            ? `Released! You are free and will Muster Out immediately.`
+            : `Promoted! Your rank increases and you gain 1 bonus Skill Roll. A Natural 12 obligates you to continue one more term.`;
+        const advFailure = isPrisoner
+            ? `Parole denied. You remain in prison. If the result is ≤ terms served, you lose a stat point.`
+            : `No promotion this term. If the result is ≤ terms served, you will be forced out of service.`;
+
         const rollResult = await this.diceDisplay.roll(
-            this.selectedCareer.name === 'Prisoner' ? 'Release Check' : 'Advancement Check',
-            2, statMod + paroleDm + nextAdvDm, target, stat.toUpperCase(), undefined, modifiers
+            advLabel,
+            2, statMod + paroleDm + nextAdvDm, target, stat.toUpperCase(), undefined, modifiers, undefined,
+            {
+                phase: isPrisoner
+                    ? 'PAROLE REVIEW · TERM ' + this.currentTerm()
+                    : `ADVANCEMENT EVALUATION · TERM ${this.currentTerm()}`,
+                announcement: advAnnouncement,
+                successContext: advSuccess,
+                failureContext: advFailure
+            }
         );
 
         const total = rollResult + statMod + paroleDm + nextAdvDm;
 
         // Clear used bonuses
         this.characterService.updateCharacter({ nextAdvancementDm: 0 });
-
-        const isPrisoner = this.selectedCareer.name === 'Prisoner';
 
         if (total >= target || (isPrisoner && rollResult >= 12)) {
             this.success = true;
@@ -1556,15 +1605,11 @@ export class CareerComponent implements OnInit {
         const nation = NATIONALITIES.find(n => n.name === char.nationality);
         const tier = nation?.tier || 3;
         
-        // 2300AD: Neural Jack Opportunity
-        // - Term 3 or less
-        // - Military Career (Navy, Marine, Scout?? Rule says Naval/Marine. Keeping strict to Navy/Marine per audit, but Scout often included in logic. Audit verified Navy/Marine. I'll stick to that + Scout if it was in the event logic originally. The event file had Scout. I will include Scout for consistency with the defined event data.)
-        // - Tier 3 Nation or better (Tier <= 3)
-        // - Not already installed
-        const eligibleCareers = ['Navy', 'Marine', 'Scout'];
-        const isEligibleCareer = this.selectedCareer && eligibleCareers.includes(this.selectedCareer.name);
-        
-        if (this.currentTerm() <= 3 && isEligibleCareer && tier <= 3 && !char.equipment.some(e => e.includes('Neural Jack'))) {
+        // 2300AD: Neural Jack Opportunity — delegates eligibility check to CareerTermService
+        const careerName = this.selectedCareer?.name || '';
+        const isEligibleForJack = this.careerTermService.isNeuralJackEligible(careerName, this.currentTerm());
+
+        if (isEligibleForJack && !char.equipment.some(e => e.includes('Neural Jack'))) {
              this.log('Neural Jack installation opportunity available.');
              this.currentState.set('NEURAL_JACK_EVENT');
              
@@ -1580,115 +1625,63 @@ export class CareerComponent implements OnInit {
 
     // --- 5. AGING & LEAVING HOME ---
 
+    /**
+     * Delegates aging check to CareerTermService.
+     * If no aging event applies, falls through to rollLeavingHome.
+     */
     async checkAging(age: number) {
         const terms = this.currentTerm();
-        // 2300AD: Aging begins at Age 50 AND after fulfilling at least 8 terms (or equivalent years)
-        // Book 1, pg. 10: "Aging does not begin until age 50".
-        if (age < 50 || terms < 8) {
+        const result = await this.careerTermService.checkAging(age, terms);
+
+        if (!result) {
+            // No aging check required — proceed to leaving home
             await this.rollLeavingHome();
             return;
         }
 
-        this.log(`Critical Aging Threshold Reached (Age ${age}, Term ${terms}).`);
-        const rollResult = await this.diceDisplay.roll('Aging Check', 2, -1 * terms, 0, '', undefined, [{ label: 'Terms Served', value: -1 * terms }]);
-        const total = rollResult - terms;
-        this.log(`Aging Check Result: ${total}`);
-        this.addToEventLog(`AGING_CHECK: Roll ${rollResult} - ${terms} Terms = ${total}`);
+        this.log(`Aging Check Result: ${result.total} (${result.description})`);
+        this.addToEventLog(`AGING_CHECK: Roll ${result.roll} - ${terms} Terms = ${result.total}`);
+        this.currentEventText = result.description;
 
-        let effectDesc = '';
-
-        if (total <= 0) {
-            effectDesc = 'AGING_CRISIS: Significant physical and mental decline detected.';
-            this.log('Aging Crisis! Significant physical and mental decline.');
-            this.increaseStat('STR', -2); this.increaseStat('DEX', -2); this.increaseStat('END', -2);
-            this.increaseStat('INT', -1);
-            this.characterService.log('**Aging Crisis**: STR -2, DEX -2, END -2, INT -1.');
-            this.currentState.set('MISHAP'); // Crisis usually ends career
-        } else if (total === 1) {
-            effectDesc = 'AGING_EFFECT: Critical degradation in STR, DEX, and END (-2 each).';
-            this.increaseStat('STR', -2); this.increaseStat('DEX', -2); this.increaseStat('END', -2);
-            this.characterService.log('**Aging Effect**: STR -2, DEX -2, END -2.');
+        if (result.endCareer) {
+            this.currentState.set('MISHAP');
+        } else if (result.total === 1) {
             this.currentState.set('EVENT');
-        } else if (total === 2) {
-            effectDesc = 'AGING_EFFECT: Significant degradation in STR and DEX (-2 each).';
-            this.increaseStat('STR', -2); this.increaseStat('DEX', -2);
-            this.characterService.log('**Aging Effect**: STR -2, DEX -2.');
-            this.rollLeavingHome();
-        } else if (total === 3) {
-            effectDesc = 'AGING_EFFECT: Moderate degradation in STR (-2).';
-            this.increaseStat('STR', -2);
-            this.characterService.log('**Aging Effect**: STR -2.');
-            this.rollLeavingHome();
-        } else if (total === 4) {
-            effectDesc = 'AGING_EFFECT: Minor degradation in STR and DEX (-1 each).';
-            this.increaseStat('STR', -1); this.increaseStat('DEX', -1);
-            this.characterService.log('**Aging Effect**: STR -1, DEX -1.');
-            this.rollLeavingHome();
-        } else if (total === 5) {
-            effectDesc = 'AGING_EFFECT: Slight degradation in STR (-1).';
-            this.increaseStat('STR', -1);
-            this.characterService.log('**Aging Effect**: STR -1.');
-            this.rollLeavingHome();
         } else {
-            this.log('No aging effects detected.');
             await this.rollLeavingHome();
-            return;
         }
 
-        this.currentEventText = effectDesc;
-        
-        // Ensure reporting view is visible
         setTimeout(() => {
             const content = document.querySelector('.wizard-content');
             if (content) content.scrollTop = content.scrollHeight;
         }, 100);
     }
 
+    /**
+     * Delegates leaving-home roll to CareerTermService.
+     */
     async rollLeavingHome() {
         const char = this.characterService.character();
         if (char.hasLeftHome) {
             this.leavingHomeSuccess = true;
-            // Only set to TERM_END if we aren't already in a mandatory state (like MISHAP)
             if (this.currentState() === 'LEAVING_HOME') {
                 this.currentState.set('TERM_END');
             }
             return;
         }
 
-        const terms = this.currentTerm();
-        const modifiers: { label: string, value: number }[] = [];
-        let bonuses = 0;
-
-        // Origin Modifier (Spacer +2)
-        if (char.originType === 'Spacer') { 
-            bonuses += 2; 
-            modifiers.push({ label: 'Spacer Origin', value: 2 }); 
-        }
-
-        // Career Modifier (Rule 320)
-        // Navy, Marine, Merchant: +1 per term served
         const careerName = this.selectedCareer?.name || '';
-        if (['Navy', 'Marine', 'Merchant'].includes(careerName)) {
-            bonuses += terms;
-            modifiers.push({ label: `${careerName} Career (+1/term)`, value: terms });
-        }
-        // Scout: +2 per term served
-        if (careerName === 'Scout') {
-            bonuses += (terms * 2);
-            modifiers.push({ label: 'Scout Career (+2/term)', value: terms * 2 });
-        }
+        const terms = this.currentTerm();
+        const result = await this.careerTermService.rollLeavingHome(careerName, terms);
 
-        const rollResult = await this.diceDisplay.roll('Leaving Home Check', 2, bonuses, 8, '', (res) => res + bonuses >= 8 ? 'SUCCESS' : 'NO MOTION', modifiers);
-        const total = rollResult + bonuses;
-        this.addToEventLog(`LEAVING_HOME: ${total >= 8 ? 'Success' : 'No Motion'} (Roll ${rollResult} + Mod ${bonuses} = ${total} vs 8)`);
-
-        if (total >= 8) {
-            this.leavingHomeSuccess = true;
-            this.characterService.updateCharacter({ hasLeftHome: true });
-            this.log('You successfully left home!');
-        } else {
-            this.leavingHomeSuccess = false;
-            this.log('Still tied to homeworld.');
+        if (result) {
+            this.leavingHomeSuccess = result.success;
+            this.addToEventLog(`LEAVING_HOME: ${result.success ? 'Success' : 'No Motion'} (Roll ${result.roll} + Mod ${result.bonus} = ${result.total} vs 8)`);
+            if (result.success) {
+                this.log('You successfully left home!');
+            } else {
+                this.log('Still tied to homeworld.');
+            }
         }
 
         if (this.currentState() === 'LEAVING_HOME' || this.currentState() === 'ADVANCEMENT' || this.currentState() === 'SKILL_TRAINING') {
@@ -1717,7 +1710,12 @@ export class CareerComponent implements OnInit {
         const dm = 0; // No DM for assignment change qualification by default
         const modifiers: { label: string, value: number }[] = []; // No modifiers for assignment change qualification by default
 
-        const rollValue = await this.diceDisplay.roll(`Qualify: ${newAssign.name}`, 2, statMod, dm, stat.toUpperCase(), (res) => res + statMod + dm >= target ? 'PASS' : 'FAIL', modifiers);
+        const rollValue = await this.diceDisplay.roll(`Qualify: ${newAssign.name}`, 2, statMod, dm, stat.toUpperCase(), (res) => res + statMod + dm >= target ? 'PASS' : 'FAIL', modifiers, undefined, {
+            phase: `ASSIGNMENT CHANGE · ${newAssign.name.toUpperCase()}`,
+            announcement: `You are requesting a transfer to the ${newAssign.name} assignment. Roll ${stat.toUpperCase()} ${target}+ on 2D6 to gain approval.`,
+            successContext: `Transfer approved! You will serve in the ${newAssign.name} specialization starting next term.`,
+            failureContext: `Transfer denied. You continue in your current assignment.`
+        });
         const total = rollValue + statMod + dm;
         const passed = total >= target;
 
@@ -1758,16 +1756,12 @@ export class CareerComponent implements OnInit {
         // 2300AD: French Foreign Legion Bonus
         // Citizenship and Language (French) 0 after 1 term
         if (this.isForeignLegionActive) {
-            this.characterService.ensureSkillLevel('Language (French)', 0);
-            this.characterService.updateCharacter({ nationality: 'French Empire' }); // Granted French Citizenship
-            this.characterService.log('**Foreign Legion Completion**: Granted French Citizenship and Language (French) 0.');
-            this.log('Term in FFL completed. You are now a citizen of the French Empire.');
+            this.careerTermService.applyForeignLegionBenefits();
         }
 
-        // 2300AD: Social Standing Rule - +1 kLv per term if SOC 10+
+        // 2300AD: Social Standing Rule - +1 SOC per term if SOC 10+
         if (char.characteristics.soc.value >= 10) {
-            this.increaseStat('SOC', 1);
-            this.characterService.log('**Elite Status**: SOC increased by 1 (SOC 10+ bonus).');
+            this.careerTermService.applyEliteSocBonus();
         }
 
         const newAge = char.age + 4;
@@ -1818,16 +1812,8 @@ export class CareerComponent implements OnInit {
         this.isForeignLegionActive = false; // Ensure FFL is reset
 
         if (destination === 'MUSTER' || isMishap || this.forcedOut) {
-            // Apply Rank Bonus Rolls at MUSTER
-            let bonusRolls = 0;
-            if (currentRank >= 5) bonusRolls = 3;
-            else if (currentRank >= 3) bonusRolls = 2;
-            else if (currentRank >= 1) bonusRolls = 1;
-
-            if (bonusRolls > 0) {
-                this.characterService.addBenefitRoll(currentCareerName, bonusRolls);
-                this.characterService.log(`**Rank Bonus Benefits**: Gained +${bonusRolls} rolls for Rank ${currentRank}.`);
-            }
+            // Apply Rank Bonus Rolls at MUSTER via CareerTermService
+            this.careerTermService.applyRankBonusRolls(currentCareerName, currentRank);
 
             this.selectedCareer = null;
             this.selectedAssignment = null;
@@ -1901,37 +1887,18 @@ export class CareerComponent implements OnInit {
 
 
 
+    /**
+     * Delegates medical coverage calculation to CareerTermService.
+     * Returns coverage as a fraction 0–1 (e.g. 0.75 = 75%).
+     */
     async calculateMedicalCoverage() {
-        const char = this.characterService.character();
         const rank = this.getRank();
-        const roll = await this.diceDisplay.roll('Medical Coverage Check', 2, rank, 0);
-        const total = roll + rank;
-
-        let percentage = 0;
-        const cName = this.selectedCareer?.name || '';
-
-        if (MEDICAL_MILITARY_BUCKET.includes(cName)) {
-            if (total >= 12) percentage = 100;
-            else if (total >= 8) percentage = 100;
-            else if (total >= 4) percentage = 75;
-            else percentage = 0;
-        } else if (['Scout', 'Rogue', 'Drifter', 'Spaceborne'].includes(cName)) {
-            if (total >= 12) percentage = 75;
-            else if (total >= 8) percentage = 50;
-            else percentage = 0;
-        } else {
-            // Others (Citizen, Merchant, etc.)
-            if (total >= 12) percentage = 100;
-            else if (total >= 8) percentage = 75;
-            else if (total >= 4) percentage = 50;
-            else percentage = 0;
-        }
-
-        this.medicalCoverage = percentage;
-        this.characterService.log(`**Medical Coverage**: Organization covered ${percentage}% of treatment costs.`);
-        this.log(`Medical Coverage: ${percentage}%`);
-        
-        return percentage;
+        const careerName = this.selectedCareer?.name || '';
+        const coverageFraction = await this.careerTermService.calculateMedicalCoverage(careerName, rank);
+        // Store as percentage for backward compatibility with template
+        this.medicalCoverage = coverageFraction * 100;
+        this.log(`Medical Coverage: ${this.medicalCoverage}%`);
+        return this.medicalCoverage;
     }
 
     continueCareer() {
@@ -1954,8 +1921,7 @@ export class CareerComponent implements OnInit {
 
     startMusteringOut() {
         this.log('Finalizing Career Phase...');
-        // Emit complete to Wizard to move to Step 5 (Mustering Out Component)
-        this.complete.emit();
+        this.wizardFlow.advance();
     }
 
     // --- HELPER METHODS ---
@@ -1980,6 +1946,4 @@ export class CareerComponent implements OnInit {
     get hasAdvancedEducation(): boolean {
         return !!this.selectedCareer?.advancedEducation && this.selectedCareer.advancedEducation.length > 0;
     }
-
-    @Output() complete = new EventEmitter<void>();
 }

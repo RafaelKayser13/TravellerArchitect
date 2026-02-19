@@ -1,10 +1,10 @@
-import { Component, inject, ChangeDetectorRef, OnInit, Output, EventEmitter, NgZone } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DieComponent } from '../../../../features/shared/die/die.component';
-
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
@@ -14,15 +14,12 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
   templateUrl: './attributes.component.html',
   styleUrls: ['./attributes.component.scss']
 })
-export class AttributesComponent implements OnInit {
-  @Output() complete = new EventEmitter<void>();
-  @Output() stateChange = new EventEmitter<void>();
-
+export class AttributesComponent implements OnInit, OnDestroy {
   protected diceService = inject(DiceService);
   protected characterService = inject(CharacterService);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
-
+  private wizardFlow = inject(WizardFlowService);
   characteristicsList = ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC'];
 
   // Data State
@@ -42,7 +39,13 @@ export class AttributesComponent implements OnInit {
     this.initializeState();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.wizardFlow.registerValidator(2, () => this.isComplete);
+    this.wizardFlow.registerFinishAction(2, () => this.finish());
+  }
+
+  ngOnDestroy(): void {
+    this.wizardFlow.unregisterStep(2);
   }
 
   initializeState() {
@@ -103,7 +106,7 @@ export class AttributesComponent implements OnInit {
             this.isComplete = true;
             this.save();
             this.cdr.detectChanges(); // Final update for local views
-            this.stateChange.emit(); // Notify wizard to refresh its disabled state
+            // Validator is now a closure — no need to emit stateChange
           });
         })
       ).subscribe();
@@ -111,7 +114,9 @@ export class AttributesComponent implements OnInit {
   }
 
   finish() {
-    this.complete.emit();
+    if (this.isComplete) {
+      this.wizardFlow.advance();
+    }
   }
 
   selectCard(char: string) {

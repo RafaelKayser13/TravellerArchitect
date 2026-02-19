@@ -34,7 +34,15 @@ export class RollEffectHandler implements EffectHandler {
                     }
 
                     const effectDm = effect.dm || 0;
-                    const total = await ctx.diceDisplay.roll(diceTitle, 2, diceMod + effectDm);
+                    const rollContext = {
+                        phase: effect.phase,
+                        announcement: effect.announcement,
+                        successContext: effect.successContext,
+                        failureContext: effect.failureContext
+                    };
+                    const total = await ctx.diceDisplay.roll(
+                        diceTitle, 2, diceMod + effectDm, effect.checkTarget, undefined, undefined, [], undefined, rollContext
+                    );
                     
                     if (total >= effect.checkTarget) {
                         if (effect.isSurvivalCheck && total === effect.checkTarget) {

@@ -1,4 +1,4 @@
-import { Component, inject, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
@@ -6,6 +6,7 @@ import { DiceService } from '../../../../core/services/dice.service';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { NATIONALITIES } from '../../../../data/nationalities';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { createEducationEvent } from '../../../../data/events/shared/education-events';
 
 // Event Interface
@@ -25,14 +26,23 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
     templateUrl: './education.component.html',
     styleUrls: ['./education.component.scss']
 })
-
-
-export class EducationComponent {
+export class EducationComponent implements OnInit, OnDestroy {
     @ViewChild('resultsSection') resultsSection!: ElementRef;
     @ViewChild('skillsSection') skillsSection!: ElementRef;
-    @Output() complete = new EventEmitter<void>();
     protected characterService = inject(CharacterService);
     protected diceService = inject(DiceService);
+    private wizardFlow = inject(WizardFlowService);
+
+    ngOnInit(): void {
+        this.wizardFlow.registerValidator(4, () => this.canProceedToNext() || this.admissionStatus === 'Rejected');
+        this.wizardFlow.registerFinishAction(4, () => this.finishStep());
+        // Ensure DMs are calculated when component loads and data is ready
+        setTimeout(() => this.calculateAdmissionDMs(), 100);
+    }
+
+    ngOnDestroy(): void {
+        this.wizardFlow.unregisterStep(4);
+    }
 
     educationType: 'University' | 'Academy' | 'None' = 'None';
     academyType: 'Army' | 'Navy' | 'Marines' | 'Scouts' | 'Spaceborne' = 'Army';
@@ -145,11 +155,6 @@ export class EducationComponent {
             }
             this.scrollToTop();
         }
-    }
-
-    ngOnInit() {
-        // Ensure DMs are calculated when component loads and data is ready
-        setTimeout(() => this.calculateAdmissionDMs(), 100);
     }
 
     resetAdmission() {
@@ -851,7 +856,7 @@ export class EducationComponent {
     }
 
     finishStep() {
-        this.complete.emit();
+        this.wizardFlow.advance();
     }
 
     // NPC Confirmation

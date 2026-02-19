@@ -52,6 +52,12 @@ export interface EventEffect {
     onPass?: string;
     onFail?: string;
     isSurvivalCheck?: boolean; // Rule 245: Exact success on survival allows prosthetic choice
+
+    // Optional briefing/feedback context passed through to DiceDisplayService
+    phase?: string;           // e.g. "SURVIVAL • TERM 3"
+    announcement?: string;    // Pre-roll briefing paragraph
+    successContext?: string;   // Post-roll success narrative
+    failureContext?: string;   // Post-roll failure narrative
     
     // For ROLL_TABLE
     table?: any[];

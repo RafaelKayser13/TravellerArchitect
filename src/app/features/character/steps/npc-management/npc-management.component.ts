@@ -1,9 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
 import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
 import { NPC } from '../../../../core/models/career.model';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
@@ -13,11 +14,21 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
   templateUrl: './npc-management.component.html',
   styleUrls: ['./npc-management.component.scss']
 })
-export class NpcManagementComponent {
+export class NpcManagementComponent implements OnInit, OnDestroy {
   protected characterService = inject(CharacterService);
   protected npcService = inject(NpcInteractionService);
+  private wizardFlow = inject(WizardFlowService);
   
   characters = this.characterService.character;
+
+  ngOnInit(): void {
+    this.wizardFlow.registerValidator(7, () => this.isValid());
+    this.wizardFlow.registerFinishAction(7, () => this.finish());
+  }
+
+  ngOnDestroy(): void {
+    this.wizardFlow.unregisterStep(7);
+  }
   
   async editNpc(npc: NPC) {
     const updatedNpc = await this.npcService.promptForNpc(npc);
@@ -40,6 +51,6 @@ export class NpcManagementComponent {
   }
 
   finish() {
-    // No specific logic needed, wizard will advance
+    this.wizardFlow.advance();
   }
 }

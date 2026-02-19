@@ -1,19 +1,28 @@
-import { Component, inject, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
   selector: 'app-identity',
   standalone: true,
-  imports: [CommonModule, FormsModule, StepHeaderComponent],
+  imports: [FormsModule, StepHeaderComponent],
   templateUrl: './identity.component.html',
   styleUrls: ['./identity.component.scss']
 })
-export class IdentityComponent {
-  @Output() complete = new EventEmitter<void>();
+export class IdentityComponent implements OnInit, OnDestroy {
   protected characterService = inject(CharacterService);
+  private wizardFlow = inject(WizardFlowService);
+
+  ngOnInit(): void {
+    this.wizardFlow.registerValidator(1, () => this.isValid());
+    this.wizardFlow.registerFinishAction(1, () => this.finish());
+  }
+
+  ngOnDestroy(): void {
+    this.wizardFlow.unregisterStep(1);
+  }
 
   charName = '';
   playerName = '';
@@ -113,7 +122,7 @@ export class IdentityComponent {
   finish() {
     if (this.isValid()) {
       this.save();
-      this.complete.emit();
+      this.wizardFlow.advance();
     }
   }
 }

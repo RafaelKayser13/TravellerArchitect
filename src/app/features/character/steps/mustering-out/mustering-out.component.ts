@@ -1,15 +1,14 @@
-import { Component, inject, computed, signal, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
 import { CareerService } from '../../../../core/services/career.service';
-
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
-
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 import { FormsModule } from '@angular/forms';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
 import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { getBenefitEffects } from '../../../../data/events/shared/mustering-out';
 
 @Component({
@@ -19,15 +18,30 @@ import { getBenefitEffects } from '../../../../data/events/shared/mustering-out'
     templateUrl: './mustering-out.component.html',
     styleUrls: ['./mustering-out.component.scss']
 })
-export class MusteringOutComponent {
+export class MusteringOutComponent implements OnInit, OnDestroy {
     protected characterService = inject(CharacterService);
     protected diceService = inject(DiceService);
     protected diceDisplay = inject(DiceDisplayService);
     protected eventEngine = inject(EventEngineService);
     protected npcInteractionService = inject(NpcInteractionService);
     protected careerService = inject(CareerService);
+    private wizardFlow = inject(WizardFlowService);
 
     character = this.characterService.character;
+
+    ngOnInit(): void {
+        this.wizardFlow.registerValidator(6, () => this.canProceedToNext());
+        this.wizardFlow.registerFinishAction(6, () => this.finish());
+        // Auto-select first career with rolls
+        const pools = this.careerPools();
+        if (pools.length > 0) {
+            this.selectedCareerName.set(pools[0].name);
+        }
+    }
+
+    ngOnDestroy(): void {
+        this.wizardFlow.unregisterStep(6);
+    }
 
     // Logic state
     totalRolls = computed(() => {
@@ -63,8 +77,6 @@ export class MusteringOutComponent {
             }));
     });
 
-    @Output() complete = new EventEmitter<void>();
-
     // Pension Logic derived from CharacterService
     pension = this.characterService.pension;
 
@@ -73,14 +85,6 @@ export class MusteringOutComponent {
         if (!name) return null;
         return this.careerService.getCareer(name) || null;
     });
-
-    ngOnInit() {
-        // Auto-select first career with rolls
-        const pools = this.careerPools();
-        if (pools.length > 0) {
-            this.selectedCareerName.set(pools[0].name);
-        }
-    }
 
     selectCareer(name: string) {
         this.selectedCareerName.set(name);
@@ -338,6 +342,6 @@ export class MusteringOutComponent {
             equipment: newEquipment
         });
 
-        this.complete.emit();
+        this.wizardFlow.advance();
     }
 }

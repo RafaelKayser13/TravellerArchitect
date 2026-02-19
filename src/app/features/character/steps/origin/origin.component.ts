@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
@@ -6,9 +6,9 @@ import { NATIONALITIES } from '../../../../data/nationalities';
 import { WORLDS, getWorldsByNation } from '../../../../data/worlds';
 import { Nationality } from '../../../../core/models/nationality.model';
 import { World } from '../../../../core/models/character.model';
-
 import { DiceService } from '../../../../core/services/dice.service';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
@@ -18,15 +18,24 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
   templateUrl: './origin.component.html',
   styleUrls: ['./origin.component.scss']
 })
-export class OriginComponent {
+export class OriginComponent implements OnInit, OnDestroy {
   @ViewChild('originTypeSection') originTypeSection!: ElementRef;
   @ViewChild('homeworldSection') homeworldSection!: ElementRef;
   @ViewChild('skillsSection') skillsSection!: ElementRef;
 
-  @Output() complete = new EventEmitter<void>();
   protected characterService = inject(CharacterService);
   protected diceService = inject(DiceService);
   protected eventEngine = inject(EventEngineService);
+  private wizardFlow = inject(WizardFlowService);
+
+  ngOnInit(): void {
+    this.wizardFlow.registerValidator(3, () => this.canProceed());
+    this.wizardFlow.registerFinishAction(3, () => this.finish());
+  }
+
+  ngOnDestroy(): void {
+    this.wizardFlow.unregisterStep(3);
+  }
 
   nationalities = NATIONALITIES;
   availableWorlds: World[] = [];
@@ -586,7 +595,7 @@ export class OriginComponent {
   }
 
   finish() {
-    this.complete.emit();
+    this.wizardFlow.advance();
   }
 
 }

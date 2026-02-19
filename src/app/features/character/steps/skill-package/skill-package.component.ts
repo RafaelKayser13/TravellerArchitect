@@ -1,7 +1,8 @@
-import { Component, inject, signal, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../../../core/services/character.service';
 import { SKILL_PACKAGES, SkillPackage } from '../../../../data/skill-packages';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
@@ -11,14 +12,22 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
   templateUrl: './skill-package.component.html',
   styleUrls: ['./skill-package.component.scss']
 })
-export class SkillPackageComponent {
+export class SkillPackageComponent implements OnInit, OnDestroy {
   private characterService = inject(CharacterService);
+  private wizardFlow = inject(WizardFlowService);
   
   packages = SKILL_PACKAGES;
   selectedPackage = signal<SkillPackage | null>(null);
   selectedSkills = signal<string[]>([]);
 
-  @Output() complete = new EventEmitter<void>();
+  ngOnInit(): void {
+    this.wizardFlow.registerValidator(8, () => !!this.selectedPackage() && this.selectedSkills().length > 0);
+    this.wizardFlow.registerFinishAction(8, () => this.finish());
+  }
+
+  ngOnDestroy(): void {
+    this.wizardFlow.unregisterStep(8);
+  }
 
   selectPackage(pkg: SkillPackage) {
     this.selectedPackage.set(pkg);
@@ -64,6 +73,6 @@ export class SkillPackageComponent {
     });
 
     this.characterService.finalizeCharacter();
-    this.complete.emit();
+    this.wizardFlow.advance();
   }
 }

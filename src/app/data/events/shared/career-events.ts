@@ -8,7 +8,7 @@ export function createSurvivalCheckEvent(careerName: string, stat: string, targe
         trigger: 'DURING_CAREER_TERM',
         ui: {
             title: `Survival Check: ${careerName}`,
-            description: `You must make a ${stat} check (${target}+) to survive this term.`,
+            description: `You must make a ${stat} check (${target}+) to survive this term. Roll the dice to continue.`,
             options: [
                 {
                     label: `Roll ${stat} ${target}+`,
@@ -19,7 +19,12 @@ export function createSurvivalCheckEvent(careerName: string, stat: string, targe
                             checkTarget: target,
                             isSurvivalCheck: true, // Rule 245
                             onPass: 'term_event_roll',
-                            onFail: 'mishap_roll'
+                            onFail: 'mishap_roll',
+                            // Briefing context shown in dice roller
+                            phase: `SURVIVAL CHECK · ${careerName.toUpperCase()}`,
+                            announcement: `This term as a ${careerName} puts your life at risk. You must roll ${stat} ${target}+ (2D6 + ${stat} modifier) to come through unscathed.`,
+                            successContext: `You survive the term. A Life Event occurred during your service — roll the Event table next.`,
+                            failureContext: `Mishap! You suffered an accident or injury. You must consult the Mishap table and may be forced out of the service.`
                         }
                     ]
                 }
