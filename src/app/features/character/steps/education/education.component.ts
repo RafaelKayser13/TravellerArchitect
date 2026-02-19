@@ -53,20 +53,43 @@ export class EducationComponent implements OnInit, OnDestroy {
     canChooseOffWorld = true;
 
     // Data Lists
-    // 2300AD University Curriculum List (Comprehensive)
+    // 2300AD University Curriculum List - Academic specializations only
+    // Covers advanced academic and scientific disciplines suitable for higher education
     universitySkillList = [
         'Admin',
         'Advocate',
-        'Animals (Handling)', 'Animals (Training)', 'Animals (Veterinary)',
-        'Art (Holography)', 'Art (Instrument)', 'Art (Performer)', 'Art (Visual Media)', 'Art (Write)',
+        'Art (Holography)',
+        'Art (Write)',
         'Astrogation',
-        'Electronics (Comms)', 'Electronics (Computers)', 'Electronics (Remote Ops)', 'Electronics (Sensors)',
-        'Engineer (Life Support)', 'Engineer (Power)', 'Engineer (Stutterwarp)',
-        'Language (French)', 'Language (German)', 'Language (Spanish)', 'Language (Pentapod)', 'Language (Zhargon)',
+        'Broker',
+        'Diplomat',
+        'Electronics (Computers)',
+        'Electronics (Remote Ops)',
+        'Electronics (Sensors)',
+        'Engineer (Life Support)',
+        'Engineer (Power)',
+        'Engineer (Stutterwarp)',
+        'Language (Any)',
+        'Leadership',
         'Medic',
         'Navigation',
-        'Profession (Belter)', 'Profession (Biologicals)', 'Profession (Civil Engineering)', 'Profession (Construction)', 'Profession (Hydroponics)', 'Profession (Polymers)',
-        'Science (Archaeology)', 'Science (Astronomy)', 'Science (Biology)', 'Science (Chemistry)', 'Science (Cosmology)', 'Science (Cybernetics)', 'Science (Economics)', 'Science (Genetics)', 'Science (History)', 'Science (Linguistics)', 'Science (Philosophy)', 'Science (Physics)', 'Science (Planetology)', 'Science (Psionicology)', 'Science (Psychology)', 'Science (Robotics)', 'Science (Sophontology)', 'Science (Xenology)'
+        'Persuade',
+        'Science (Archaeology)',
+        'Science (Astronomy)',
+        'Science (Biology)',
+        'Science (Chemistry)',
+        'Science (Cosmology)',
+        'Science (Cybernetics)',
+        'Science (Economics)',
+        'Science (Genetics)',
+        'Science (History)',
+        'Science (Linguistics)',
+        'Science (Philosophy)',
+        'Science (Physics)',
+        'Science (Planetology)',
+        'Science (Psychology)',
+        'Science (Sophontology)',
+        'Science (Xenology)'
     ];
 
     // Legacy/Default major just for selection initialization if needed.
@@ -797,8 +820,24 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.characterService.setNextCareer('Drifter');
             this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log('**Fleeing**: Resigned from education to avoid draft. Next Career: Drifter.');
+            // Terminate education immediately
+            this.educationStep = 'Finished';
+            this.scrollToTop();
         } else {
-            const roll = Math.floor(Math.random() * 6) + 1;
+            // Draft: Roll for career assignment
+            const roll = await this.diceDisplay.roll(
+                'Military Draft Assignment',
+                1,
+                0,
+                0,
+                '',
+                (result) => {
+                    if (result <= 3) return 'ARMY (1-3)';
+                    else if (result <= 5) return 'MARINE (4-5)';
+                    else return 'NAVY (6)';
+                }
+            );
+
             if (roll <= 3) this.warNextCareer = 'Army';
             else if (roll <= 5) this.warNextCareer = 'Marine';
             else this.warNextCareer = 'Navy';
@@ -806,11 +845,11 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.characterService.setNextCareer(this.warNextCareer);
             this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log(`**Drafted**: Education terminated by national service. Drafted into ${this.warNextCareer}.`);
-        }
 
-        // Terminate education immediately
-        this.educationStep = 'Finished';
-        this.scrollToTop();
+            // Terminate education after roll
+            this.educationStep = 'Finished';
+            this.scrollToTop();
+        }
     }
 
     openHobbySelection() {

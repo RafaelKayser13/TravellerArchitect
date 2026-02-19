@@ -354,62 +354,60 @@
       <div class="corner-detail br"></div>
 
       <div class="hud-box-header schematic-spec">
-        <div class="header-line"></div>
         <span class="index">UNI_SCHEM_V04</span>
         <h3>ADMISSION_CONFIRMED</h3>
-        <div class="status-badge pulse">AWAITING_VECTOR_DEFINITION</div>
+        <div class="status-badge pulse">VECTOR_DEFINITION_REQUIRED</div>
       </div>
 
-      <div class="hud-content">
-        <div class="vector-schematic-overlay"></div>
-        <p class="instruction">DEFINE PRIMARY AND SECONDARY SPECIALIZATION VECTORS:</p>
+      <div class="hud-content compact">
+        <p class="instruction">SELECT PRIMARY AND SECONDARY ACADEMIC SPECIALIZATIONS:</p>
 
-        <div class="vector-dropdown-group">
+        <div class="vector-grid compact">
           <!-- Major Vector -->
-          <div class="vector-field">
-            <span class="hud-label">[ PRI_VECTOR_01 ]</span>
-            <label>MAJOR_VECTOR_DEFINITION (LVL 1)</label>
-            <div class="select-wrapper">
-              <select [(ngModel)]="selectedMajorSkill" class="cyber-select" title="Major Vector Schematic Selector">
-                <option value="" disabled>SELECT_SCHEMATIC_VECTOR</option>
-                <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
-              </select>
-              <div class="select-indicator"></div>
-            </div>
+          <div class="vector-field compact">
+            <label class="field-label">
+              <span class="field-tag">PRIMARY</span>
+              MAJOR_VECTOR (LVL 1)
+            </label>
+            <select [(ngModel)]="selectedMajorSkill" class="cyber-select modern" title="Primary Specialization">
+              <option value="" disabled selected>SELECT_SPECIALIZATION</option>
+              <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
+            </select>
           </div>
 
           <!-- Minor Vector -->
-          <div class="vector-field">
-            <span class="hud-label">[ SEC_VECTOR_02 ]</span>
-            <label>MINOR_VECTOR_DEFINITION (LVL 0)</label>
-            <div class="select-wrapper">
-              <select [(ngModel)]="selectedMinorSkill" class="cyber-select" title="Minor Vector Schematic Selector">
-                <option value="" disabled>SELECT_SCHEMATIC_VECTOR</option>
-                <option *ngFor="let s of universitySkillList" [value]="s" [disabled]="s === selectedMajorSkill">
-                  {{ s }}
-                </option>
-              </select>
-              <div class="select-indicator"></div>
-            </div>
+          <div class="vector-field compact">
+            <label class="field-label">
+              <span class="field-tag">SECONDARY</span>
+              MINOR_VECTOR (LVL 0)
+            </label>
+            <select [(ngModel)]="selectedMinorSkill" class="cyber-select modern" title="Secondary Specialization">
+              <option value="" disabled selected>SELECT_SPECIALIZATION</option>
+              <option *ngFor="let s of universitySkillList" [value]="s" [disabled]="s === selectedMajorSkill">
+                {{ s }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Selection Summary -->
+        <div class="selection-summary" *ngIf="selectedMajorSkill || selectedMinorSkill">
+          <div class="summary-entry" [class.filled]="selectedMajorSkill">
+            <span class="summary-label">MAJ</span>
+            <span class="summary-value">{{ selectedMajorSkill || '---' }}</span>
+          </div>
+          <div class="summary-entry" [class.filled]="selectedMinorSkill">
+            <span class="summary-label">MIN</span>
+            <span class="summary-value">{{ selectedMinorSkill || '---' }}</span>
           </div>
         </div>
       </div>
 
-      <div class="hud-footer tactical">
-        <div class="readout-group">
-          <div class="data-readout">
-            <span class="label">MAJOR:</span>
-            <span class="val">{{ selectedMajorSkill || 'N/A' }}</span>
-          </div>
-          <div class="data-readout">
-            <span class="label">MINOR:</span>
-            <span class="val">{{ selectedMinorSkill || 'N/A' }}</span>
-          </div>
-        </div>
-        <button class="btn-action elite" [disabled]="!selectedMajorSkill || !selectedMinorSkill"
+      <div class="hud-footer tactical compact">
+        <button class="btn-action elite modern" [disabled]="!selectedMajorSkill || !selectedMinorSkill"
           (click)="confirmUniversitySkills()">
-          <span class="primary">EXEC_ENROLLMENT</span>
-          <span class="secondary">INITIALIZE_ACADEMIC_PROTOCOL</span>
+          <span class="primary">FINALIZE_ENROLLMENT</span>
+          <span class="secondary">CONFIRM_VECTORS</span>
         </button>
       </div>
     </div>
