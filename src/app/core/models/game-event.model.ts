@@ -36,6 +36,7 @@ export interface EventOption {
     nextEventId?: string; // Chain to next event ID
     replaceNext?: boolean; // If true, the new event replaces the current one on the stack
     effects?: EventEffect[];
+    color?: 'cyan' | 'red' | 'yellow' | 'green' | 'orange'; // Visual semantic coloring for options
 }
 
 export interface EventEffect {

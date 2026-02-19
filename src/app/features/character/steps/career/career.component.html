@@ -32,7 +32,8 @@
         <ng-container footer>
             <div class="event-actions">
                 <button *ngFor="let opt of activeEvent.ui.options; let i = index"
-                        class="btn-confirm"
+                        class="btn-option"
+                        [class]="'btn-option-' + (opt.color || 'cyan')"
                         (click)="eventEngine.selectOption(i)">
                     [ {{ opt.label }} ]
                 </button>
