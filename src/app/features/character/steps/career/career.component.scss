@@ -1329,6 +1329,162 @@
     }
 }
 
+// ─────────────────────────────────────────────────────────────
+// ASSIGNMENT RECONFIGURATION SCREEN
+// ─────────────────────────────────────────────────────────────
+
+.assignment-instruction {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+    line-height: 1.5;
+}
+
+.assignment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.assignment-card {
+    cursor: pointer;
+    background: rgba(0, 243, 255, 0.04);
+    border: 2px solid rgba(0, 243, 255, 0.12);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .assignment-inner {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .assignment-header {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.5rem;
+
+        .assignment-name {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: var(--font-header);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 8px rgba(0, 243, 255, 0.2);
+        }
+    }
+
+    .assignment-detail {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.8rem 1rem;
+        background: rgba(0, 0, 0, 0.3);
+        border-left: 2px solid rgba(0, 243, 255, 0.15);
+        border-radius: 2px;
+
+        .qual-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            opacity: 0.6;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .qual-value {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--neon-cyan);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+    }
+
+    .btn-select-assignment {
+        margin-top: 0.5rem;
+        align-self: flex-end;
+        padding: 0.6rem 1.5rem;
+        font-size: 0.68rem;
+    }
+
+    &:hover:not(:disabled) {
+        border-color: var(--neon-cyan);
+        background: rgba(0, 243, 255, 0.1);
+        box-shadow:
+            0 0 30px rgba(0, 243, 255, 0.3),
+            0 0 60px rgba(0, 243, 255, 0.15),
+            inset 0 0 20px rgba(0, 243, 255, 0.05);
+        transform: translateY(-3px);
+
+        &::before {
+            left: 100%;
+        }
+
+        .assignment-name {
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        .assignment-detail {
+            border-left-color: rgba(0, 243, 255, 0.4);
+            background: rgba(0, 243, 255, 0.08);
+
+            .qual-value {
+                text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+                color: #fff;
+            }
+        }
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(-1px);
+        background: rgba(0, 243, 255, 0.15);
+        box-shadow: 0 0 40px rgba(0, 243, 255, 0.4), inset 0 0 25px rgba(0, 243, 255, 0.1);
+    }
+}
+
+.assignment-footer {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid rgba(0, 243, 255, 0.1);
+    margin-top: 1.5rem;
+
+    button {
+        min-width: 200px;
+    }
+}
+
 /* Event Logs */
 .event-log-box {
     padding: 1.5rem;

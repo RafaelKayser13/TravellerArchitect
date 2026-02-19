@@ -381,32 +381,25 @@
             <span class="index">SEC_04G</span>
             <h3>ASSIGNMENT_RECONFIGURATION</h3>
         </div>
-        <p class="status-msg" style="text-align: center;">Select new operational specialization. Qualification required.
-        </p>
+        <p class="assignment-instruction">Select new operational specialization. Qualification required.</p>
 
-        <div class="career-list">
-            <div *ngFor="let assign of selectedCareer?.assignments" class="career-card"
+        <div class="assignment-grid">
+            <div *ngFor="let assign of selectedCareer?.assignments" class="assignment-card"
                 (click)="verifyAssignmentChange(assign)">
-                <div class="card-layout">
-                    <div class="info-column">
-                        <div class="card-header">
-                            <h3>{{ assign.name }}</h3>
-                        </div>
-                        <div class="details">
-                            <p><span class="label">QUALIFICATION:</span> <span class="highlight">{{
-                                    selectedCareer?.qualificationStat }} {{ selectedCareer?.qualificationTarget
-                                    }}+</span>
-                            </p>
-                        </div>
+                <div class="assignment-inner">
+                    <div class="assignment-header">
+                        <h3 class="assignment-name">{{ assign.name }}</h3>
                     </div>
-                    <div class="config-column action-centered">
-                        <button class="btn-action">SELECT_ASSIGNMENT</button>
+                    <div class="assignment-detail">
+                        <span class="qual-label">QUALIFICATION:</span>
+                        <span class="qual-value">{{ selectedCareer?.qualificationStat }} {{ selectedCareer?.qualificationTarget }}+</span>
                     </div>
+                    <button class="btn-action btn-select-assignment">SELECT_ASSIGNMENT</button>
                 </div>
             </div>
         </div>
 
-        <div class="hud-footer">
+        <div class="assignment-footer">
             <button class="btn-secondary" (click)="finishTerm('CONTINUE')">ABORT_CHANGE & STAY_CURRENT</button>
         </div>
     </div>
