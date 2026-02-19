@@ -778,6 +778,9 @@ export class EducationComponent implements OnInit, OnDestroy {
     avoidWar() {
         this.showWarOptions = false;
         this.characterService.log('Used social standing to avoid the draft.');
+        // Continue normally to graduation
+        this.educationStep = 'Finished';
+        this.scrollToTop();
     }
 
     async joinWar(method: 'Flee' | 'Draft') {
@@ -796,11 +799,15 @@ export class EducationComponent implements OnInit, OnDestroy {
             if (roll <= 3) this.warNextCareer = 'Army';
             else if (roll <= 5) this.warNextCareer = 'Marine';
             else this.warNextCareer = 'Navy';
-            
+
             this.characterService.setNextCareer(this.warNextCareer);
             this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log(`**Drafted**: Education terminated by national service. Drafted into ${this.warNextCareer}.`);
         }
+
+        // Terminate education immediately
+        this.educationStep = 'Finished';
+        this.scrollToTop();
     }
 
     openHobbySelection() {
