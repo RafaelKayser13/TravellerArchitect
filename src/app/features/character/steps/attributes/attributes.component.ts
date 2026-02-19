@@ -2,6 +2,7 @@ import { Component, inject, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
+import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DieComponent } from '../../../../features/shared/die/die.component';
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
@@ -16,6 +17,7 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
 })
 export class AttributesComponent implements OnInit, OnDestroy {
   protected diceService = inject(DiceService);
+  protected diceDisplay = inject(DiceDisplayService);
   protected characterService = inject(CharacterService);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
@@ -40,12 +42,12 @@ export class AttributesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.wizardFlow.registerValidator(2, () => this.isComplete);
-    this.wizardFlow.registerFinishAction(2, () => this.finish());
+    this.wizardFlow.registerValidator(3, () => this.isComplete);
+    this.wizardFlow.registerFinishAction(3, () => this.finish());
   }
 
   ngOnDestroy(): void {
-    this.wizardFlow.unregisterStep(2);
+    this.wizardFlow.unregisterStep(3);
   }
 
   initializeState() {
@@ -84,8 +86,10 @@ export class AttributesComponent implements OnInit, OnDestroy {
       from(this.characteristicsList).pipe(
         concatMap(char => of(char).pipe(delay(800))),
         tap(char => {
-          const d1 = Math.floor(Math.random() * 6) + 1;
-          const d2 = Math.floor(Math.random() * 6) + 1;
+          // Check if debug mode is enabled and return 12 (6+6) for all rolls
+          const isDebugMode = this.diceDisplay.debugMode();
+          const d1 = isDebugMode ? 6 : Math.floor(Math.random() * 6) + 1;
+          const d2 = isDebugMode ? 6 : Math.floor(Math.random() * 6) + 1;
 
           this.diceValues[char] = [d1, d2];
           this.scores[char] = d1 + d2;

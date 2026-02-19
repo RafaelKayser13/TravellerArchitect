@@ -1,7 +1,8 @@
-import { Component, inject, Output, EventEmitter } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
+import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 
 interface SpeciesOption {
   id: string;
@@ -26,10 +27,19 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
   templateUrl: './species.component.html',
   styleUrls: ['./species.component.scss']
 })
-export class SpeciesComponent {
-  @Output() complete = new EventEmitter<void>();
+export class SpeciesComponent implements OnInit, OnDestroy {
   protected characterService = inject(CharacterService);
   protected diceService = inject(DiceService);
+  private wizardFlow = inject(WizardFlowService);
+
+  ngOnInit(): void {
+    this.wizardFlow.registerValidator(2, () => this.selectedId !== null);
+    this.wizardFlow.registerFinishAction(2, () => this.finish());
+  }
+
+  ngOnDestroy(): void {
+    this.wizardFlow.unregisterStep(2);
+  }
 
   speciesOptions: SpeciesOption[] = [
     {
@@ -143,7 +153,7 @@ export class SpeciesComponent {
   finish() {
     if (this.selectedId) {
       this.save();
-      this.complete.emit();
+      this.wizardFlow.advance();
     }
   }
 }
