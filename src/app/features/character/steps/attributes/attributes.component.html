@@ -1,59 +1,93 @@
 <div class="attributes-layout">
-    
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="03" 
+        superLabel="CHARACTER_BIOMETRICS_V2.0"
+        topLabel="ATTRIBUTE_READOUT"
+        title="BIOMETRIC_SEQUENCING" 
+        subtitle="INITIALIZING_CHARACTER_DATA_OUTPUT... [ STANDBY ]">
+    </app-step-header>
+
     <!-- Cards Grid -->
     <div class="cards-circle">
-        <div class="stat-card" 
-             *ngFor="let char of characteristicsList; let i = index"
-             [class.selected]="selectedStat === char"
-             [class.rolling]="rollingState[char]"
-             (click)="selectCard(char)">
-            
+        <div class="stat-card" *ngFor="let char of characteristicsList; let i = index"
+            [class.selected]="selectedStat === char" 
+            [class.rolling]="rollingState[char]" 
+            [class.glitch]="glitchState[char]"
+            (click)="selectCard(char)">
+
+            <!-- Foreground Overlays -->
+            <div class="scanning-line" *ngIf="rollingState[char]"></div>
+            <div class="glitch-overlay" *ngIf="glitchState[char]"></div>
+            <div class="hud-label top-right">[ 0{{i+1}} ]</div>
+
             <div class="card-header">
+                <div class="telemetry">STABILITY: 0.98</div>
                 <h3>{{ char }}</h3>
-                <span class="mod-badge" 
-                      [class.positive]="getModifier(char) > 0"
-                      [class.negative]="getModifier(char) < 0"
-                      *ngIf="getScore(char) > 0">
-                    {{ getModifier(char) >= 0 ? '+' : '' }}{{ getModifier(char) }}
-                </span>
+                <div class="mod-container">
+                    <span class="mod-badge" [class.visible]="getScore(char) > 0"
+                        [class.positive]="getModifier(char) > 0" [class.negative]="getModifier(char) < 0">
+                        MOD: {{ getModifier(char) >= 0 ? '+' : '' }}{{ getModifier(char) }}
+                    </span>
+                </div>
             </div>
 
             <div class="card-body">
                 <!-- Visual Dice -->
-                <div class="dice-pair">
+                <div class="dice-pair" [class.hide-dice]="isComplete && !rollingState[char] && !glitchState[char]">
                     <app-die [value]="getDieValue(char, 1)" [rolling]="rollingState[char]"></app-die>
                     <app-die [value]="getDieValue(char, 2)" [rolling]="rollingState[char]"></app-die>
+                </div>
+
+                <!-- Loading Bar Visualizer -->
+                <div class="stat-visualizer" *ngIf="isComplete || rollingState[char]">
+                    <div class="bar-container">
+                        <div class="bar-fill" [style.width.%]="getStatPercentage(char)"></div>
+                        <div class="bar-ghost" *ngIf="rollingState[char]"></div>
+                    </div>
+                    <div class="bar-labels">
+                        <span>MIN</span>
+                        <span>MAX</span>
+                    </div>
                 </div>
 
                 <!-- Numerical Value & Edit -->
                 <div class="value-display">
                     <span class="value" *ngIf="!editingState[char]">{{ getScore(char) }}</span>
-                    
-                    <input type="number" 
-                           *ngIf="editingState[char]" 
-                           [ngModel]="getScore(char)" 
-                           (ngModelChange)="updateScore(char, $event)"
-                           (blur)="stopEditing(char)"
-                           class="edit-input"
-                           autoFocus>
-                           
-                    <button class="btn-icon edit-btn" (click)="startEditing(char, $event)" *ngIf="!editingState[char] && isComplete" title="Edit Score">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18px" height="18px">
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                    <span class="value-label" *ngIf="!editingState[char]">RAW_OUTPUT</span>
+
+                    <div class="edit-input-container">
+                        <input type="number" *ngIf="editingState[char]" [ngModel]="getScore(char)"
+                            (ngModelChange)="updateScore(char, $event)" (blur)="stopEditing(char)"
+                            (keyup.enter)="stopEditing(char)" (click)="$event.stopPropagation()" class="edit-input"
+                            [attr.aria-label]="char + ' Score'" autoFocus>
+                    </div>
+
+                    <div class="edit-tab" [class.visible]="!editingState[char] && isComplete"
+                        (click)="startEditing(char, $event)" title="Edit Score">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" class="edit-icon">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                         </svg>
-                    </button>
+                    </div>
                 </div>
             </div>
+
+            <div class="hud-label bottom-left">READOUT_ACTIVE // {{ char }}_BUFFER</div>
         </div>
     </div>
 
     <!-- Controls (Moved to Bottom) -->
     <div class="central-control">
-        <button class="btn-roll-center" (click)="rollSequence()" [disabled]="isRolling">
-            <div class="dice-icon">🎲</div>
-            <span>{{ isRolling ? 'ROLLING...' : 'ROLL ATTRIBUTES' }}</span>
+        <button class="btn-roll-center" (click)="rollSequence()" [disabled]="isRolling" *ngIf="!isComplete">
+            <span>{{ isRolling ? 'SEQUENCING...' : 'INITIALIZE ROLL' }}</span>
         </button>
-        <p class="instruction" *ngIf="!isComplete">Click to generate your characteristics</p>
-        <p class="instruction" *ngIf="isComplete">Click two cards to swap values, or click pencil to edit.</p>
+
+        <div class="instruction-group" *ngIf="isComplete">
+            <p class="instruction">> STATUS: SEQUENCE_COMPLETE // SWAP_ENABLED</p>
+            <p class="instruction secondary">CLICK_TWO_CARDS_TO_SWAP_ALLOCATION</p>
+        </div>
+        <p class="instruction" *ngIf="!isComplete && !isRolling">> STANDBY: CHARACTER_DATA_MISSING</p>
     </div>
 </div>

@@ -1,0 +1,530 @@
+{
+  "id": "agent",
+  "name": "Agent",
+  "description": "Law enforcement agencies, intelligence operatives, and corporate spies.",
+  "qualification": {
+    "stat": "INT",
+    "target": 6,
+    "minAttributes": { "int": 6 }
+  },
+  "skills": {
+    "personal": ["Gun Combat (any)", "DEX +1", "END +1", "Melee (any)", "INT +1", "Athletics (any)"],
+    "service": ["Streetwise", "Drive (any)", "Investigate", "Flyer (any)", "Recon", "Gun Combat (any)"],
+    "advanced": ["Advocate", "Language (any)", "Explosives", "Medic", "Vacc Suit", "Electronics (any)"]
+  },
+  "assignments": [
+    {
+      "name": "Law Enforcement",
+      "survival": { "stat": "END", "target": 6 },
+      "advancement": { "stat": "INT", "target": 6 },
+      "skills": ["Investigate", "Recon", "Streetwise", "Stealth", "Melee (any)", "Advocate"],
+      "ranks": [
+        { "level": 0, "title": "Rookie" },
+        { "level": 1, "title": "Corporal", "bonus": { "skill": "Streetwise", "value": 1 } },
+        { "level": 2, "title": "Sergeant" },
+        { "level": 3, "title": "Detective", "bonus": { "skill": "Investigate", "value": 1 } },
+        { "level": 4, "title": "Lieutenant", "bonus": { "skill": "Admin", "value": 1 } },
+        { "level": 5, "title": "Chief", "bonus": { "stat": "SOC", "value": 1 } },
+        { "level": 6, "title": "Commissioner" }
+      ]
+    },
+    {
+      "name": "Intelligence",
+      "survival": { "stat": "INT", "target": 7 },
+      "advancement": { "stat": "INT", "target": 5 },
+      "skills": ["Investigate", "Recon", "Electronics (comms)", "Stealth", "Persuade", "Deception"],
+      "ranks": [
+        { "level": 0, "title": "Agent", "bonus": { "skill": "Deception", "value": 1 } },
+        { "level": 1, "title": "Field Agent", "bonus": { "skill": "Investigate", "value": 1 } },
+        { "level": 2, "title": "Field Agent" },
+        { "level": 3, "title": "Special Agent", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
+        { "level": 4, "title": "Assistant Director" },
+        { "level": 5, "title": "Director" }
+      ]
+    },
+    {
+      "name": "Corporate",
+      "survival": { "stat": "INT", "target": 5 },
+      "advancement": { "stat": "DEX", "target": 7 },
+      "skills": ["Investigate", "Electronics (computers)", "Stealth", "Carouse", "Deception", "Streetwise"],
+      "ranks": [
+        { "level": 0, "title": "Agent", "bonus": { "skill": "Deception", "value": 1 } },
+        { "level": 1, "title": "Field Agent", "bonus": { "skill": "Investigate", "value": 1 } },
+        { "level": 2, "title": "Field Agent" },
+        { "level": 3, "title": "Special Agent", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
+        { "level": 4, "title": "Assistant Director" },
+        { "level": 5, "title": "Director" }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Roll on the Mishap table, but you are not ejected from this career.",
+      "gameEvent": {
+        "id": "agent_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
+          "options": [
+            { "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "An investigation takes a dangerous turn.",
+      "gameEvent": {
+        "id": "agent_event_3",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Dangerous Investigation",
+          "description": "An investigation takes a dangerous turn. You must rely on your skills to survive.",
+          "options": [
+            {
+              "label": "Use Investigate (8+)",
+              "effects": [{
+                "type": "ROLL_CHECK",
+                "stat": "INT",
+                "checkTarget": 8,
+                "onPass": "agent_event_3_pass",
+                "onFail": "agent_event_3_fail"
+              }]
+            },
+            {
+              "label": "Use Streetwise (8+)",
+              "effects": [{
+                "type": "ROLL_CHECK",
+                "stat": "INT",
+                "checkTarget": 8,
+                "onPass": "agent_event_3_pass",
+                "onFail": "agent_event_3_fail"
+              }]
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "agent_event_3_pass",
+          "type": "CHOICE",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Investigation Successful",
+            "description": "You successfully navigate the danger and learn from the experience.",
+            "options": [
+              { "label": "Deception 1", "effects": [{ "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
+              { "label": "Jack-of-all-Trades 1", "effects": [{ "type": "SKILL_MOD", "target": "Jack-of-all-Trades", "value": 1 }] },
+              { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] },
+              { "label": "Tactics 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics", "value": 1 }] }
+            ]
+          }
+        },
+        {
+          "id": "agent_event_3_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Investigation Failed",
+            "description": "The situation spirals out of control.",
+            "options": [{ "label": "Accept Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Investigate", "Streetwise"], "onSuccess": [{ "type": "skill-choice", "skills": ["Deception", "Jack-of-all-Trades", "Persuade", "Tactics"] }], "onFailure": [{ "type": "mishap" }] }]
+    },
+    {
+      "roll": 4,
+      "description": "Mission rewarded. Gain DM+1 to any one Benefit roll.",
+      "gameEvent": {
+        "id": "agent_event_4",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Mission Rewarded",
+          "description": "You complete a mission with distinction. Your efforts are recognized.",
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1, "note": "Gain DM+1 to a Benefit roll" }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-mod", "value": 1 }]
+    },
+    {
+      "roll": 5,
+      "description": "You establish a network of contacts. Gain 1D3 Contacts.",
+      "gameEvent": {
+        "id": "agent_event_5",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Network Established",
+          "description": "You establish a network of contacts.",
+          "options": [{ "label": "Gain Contacts", "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "count": "1d3" } }] }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "contact", "npcCountDice": "1d3" }]
+    },
+    {
+      "roll": 6,
+      "description": "Advanced Training. Roll EDU 8+. Success: increase any known skill by +1 level.",
+      "gameEvent": {
+        "id": "agent_event_6",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Advanced Training",
+          "description": "You have the opportunity for advanced training.",
+          "options": [{
+            "label": "Attempt Training (EDU 8+)",
+            "effects": [{
+              "type": "ROLL_CHECK",
+              "stat": "EDU",
+              "checkTarget": 8,
+              "onPass": "agent_event_6_pass",
+              "onFail": "agent_event_6_fail"
+            }]
+          }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "agent_event_6_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Successful",
+            "description": "You excel in your training.",
+            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+          }
+        },
+        {
+          "id": "agent_event_6_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "You fail to qualify for the advanced training.",
+            "options": [{ "label": "Continue", "effects": [] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }], "onFailure": [] }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "agent_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "Undercover mission. Roll Deception 8+.",
+      "gameEvent": {
+        "id": "agent_event_8",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Undercover Mission",
+          "description": "You go deep undercover.",
+          "options": [{
+            "label": "Use Deception (8+)",
+            "effects": [{
+              "type": "ROLL_CHECK",
+              "stat": "INT",
+              "checkTarget": 8,
+              "onPass": "agent_event_8_pass",
+              "onFail": "agent_event_8_fail"
+            }]
+          }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "agent_event_8_pass",
+          "type": "CHOICE",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Mission Successful",
+            "description": "You successfully complete the undercover mission. Choose which cover identity benefits you most.",
+            "options": [
+              { "label": "Rogue Cover", "effects": [{ "type": "TRIGGER_EVENT", "value": "rogue_event_roll_check", "note": "Should implement mechanic to roll on Rogue event table and gain skill +1" }] },
+              { "label": "Citizen Cover", "effects": [{ "type": "TRIGGER_EVENT", "value": "citizen_event_roll_check" }] }
+            ]
+          }
+        },
+        {
+          "id": "agent_event_8_fail",
+          "type": "CHOICE",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Cover Blown",
+            "description": "Your cover is blown! Disaster strikes.",
+            "options": [
+              { "label": "Rogue Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "rogue_mishap_roll" }] },
+              { "label": "Citizen Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "citizen_mishap_roll" }] }
+            ]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Deception"], "onSuccess": [{ "type": "choice", "note": "Undercover: Choice between Rogue or Citizen" }], "onFailure": [{ "type": "choice", "note": "Undercover Blown: Choice between Rogue or Citizen mishap" }] }]
+    },
+    {
+      "roll": 9,
+      "description": "Above and beyond. Gain DM+2 to your next Advancement roll.",
+      "gameEvent": {
+        "id": "agent_event_9",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Above and Beyond",
+          "description": "You go above and beyond the call of duty.",
+          "options": [{ "label": "Accept Commendation", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+        }
+      },
+      "effects": [{ "type": "advancement-dm", "value": 2 }]
+    },
+    {
+      "roll": 10,
+      "description": "Specialist vehicle training. Gain Drive 1, Flyer 1, Pilot 1, or Gunner 1.",
+      "gameEvent": {
+        "id": "agent_event_10",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Specialist Training",
+          "description": "You receive specialist vehicle training. Choose a skill to improve:",
+          "options": [
+            { "label": "Drive 1", "effects": [{ "type": "SKILL_MOD", "target": "Drive", "value": 1 }] },
+            { "label": "Flyer 1", "effects": [{ "type": "SKILL_MOD", "target": "Flyer", "value": 1 }] },
+            { "label": "Pilot 1", "effects": [{ "type": "SKILL_MOD", "target": "Pilot", "value": 1 }] },
+            { "label": "Gunner 1", "effects": [{ "type": "SKILL_MOD", "target": "Gunner", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Drive", "Flyer", "Pilot", "Gunner"] }]
+    },
+    {
+      "roll": 11,
+      "description": "A senior agent mentors you. Gain Investigate 1 or DM+4 to an Advancement roll.",
+      "gameEvent": {
+        "id": "agent_event_11",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Mentorship",
+          "description": "A senior agent takes an interest in your career.",
+          "options": [
+            { "label": "Learn Investigation", "effects": [{ "type": "SKILL_MOD", "target": "Investigate", "value": 1 }] },
+            { "label": "Career Advice (Advancement DM+4)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Mentor: Investigate 1 OR DM+4 Advancement" }]
+    },
+    {
+      "roll": 12,
+      "description": "You uncover a major conspiracy. You are automatically promoted.",
+      "gameEvent": {
+        "id": "agent_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Conspiracy Uncovered",
+          "description": "You uncover a major conspiracy against the organization.",
+          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Conspiracy Uncovered" }] }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured in action. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "agent_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "You are severely injured in the line of duty. You must be ejected from this career.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    },
+    {
+      "roll": 2,
+      "description": "Bribe offer. Accept (Ejected) or Refuse (Injury, Enemy, Ejected).",
+      "gameEvent": {
+        "id": "agent_mishap_2",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Bribe Offer",
+          "description": "A criminal organization offers you a bribe to drop a sensitive investigation. Will you accept their \"gift\"?",
+          "options": [
+            {
+              "label": "Accept Bribe",
+              "effects": [
+                { "type": "EJECT_CAREER", "note": "Accepted Bribe (Dishonorable)" },
+                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1, "note": "Bonus for bribe" }
+              ]
+            },
+            {
+              "label": "Refuse Bribe",
+              "effects": [{ "type": "TRIGGER_EVENT", "value": "agent_mishap_2_refuse" }]
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "agent_mishap_2_refuse",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Retribution",
+            "description": "You refused the bribe, but the criminals strike back. You are attacked and forced out of the agency.",
+            "options": [
+              {
+                "label": "Resolve Consequences",
+                "effects": [
+                  { "type": "TRIGGER_EVENT", "value": "injury_roll" },
+                  { "type": "ADD_NPC", "value": { "type": "enemy", "count": 1, "note": "Criminal Syndicate" } },
+                  { "type": "EJECT_CAREER", "note": "Ejected after investigation" }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [{ "type": "choice", "note": "Bribery: Accept vs Refuse" }]
+    },
+    {
+      "roll": 3,
+      "description": "Investigation Blown. Advocate 8+ to clear name. Failure to clear name might lead to Prison.",
+      "gameEvent": {
+        "id": "agent_mishap_3",
+        "type": "CHECK",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Investigation Blown",
+          "description": "Your investigation is compromised and you are framed or blamed.",
+          "options": [{
+            "label": "Defend Yourself (Advocate 8+)",
+            "effects": [{
+              "type": "ROLL_CHECK",
+              "stat": "EDU",
+              "checkTarget": 8,
+              "onPass": "agent_mishap_3_pass",
+              "onFail": "agent_mishap_3_fail"
+            }]
+          }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "agent_mishap_3_pass",
+          "type": "INFO",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Name Cleared",
+            "description": "You manage to clear your name through legal channels. You are still ejected from the career, but you retain your benefits.",
+            "options": [{ "label": "Leave Career", "effects": [{ "type": "EJECT_CAREER", "note": "Honorable Discharge" }] }]
+          }
+        },
+        {
+          "id": "agent_mishap_3_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Convicted",
+            "description": "You fail to clear your name. You inevitably end up in prison.",
+            "options": [{ "label": "Go to Prison", "effects": [{ "type": "FORCE_CAREER", "value": "Prisoner" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Advocate"], "onSuccess": [{ "type": "narrative", "note": "Name cleared. Ejected but keep benefits." }], "onFailure": [{ "type": "career-force", "skill": "Prisoner", "note": "Investigation Blown" }] }]
+    },
+    {
+      "roll": 4,
+      "description": "Hunted. Gain an Enemy and Deception 1.",
+      "gameEvent": {
+        "id": "agent_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Hunted",
+          "description": "You learn too much and must flee. You gain an Enemy and learn Deception to survive.",
+          "options": [{
+            "label": "Flee",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "count": 1, "note": "Hunter" } },
+              { "type": "SKILL_MOD", "target": "Deception", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Hunted out of career" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy", "note": "Hunter" }, { "type": "skill-gain", "skill": "Deception", "value": 1 }]
+    },
+    {
+      "roll": 5,
+      "description": "Work Comes Home. An NPC is marked or you are injured.",
+      "gameEvent": {
+        "id": "agent_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Work Comes Home",
+          "description": "Your work follows you home. A contact, ally, or family member is injured/killed, or you are injured protecting them.",
+          "options": [{
+            "label": "Accept Tragedy",
+            "effects": [
+              { "type": "TRIGGER_EVENT", "value": "injury_roll" },
+              { "type": "EJECT_CAREER", "note": "Tragedy at home" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc-note", "note": "Injured due to my work" }]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "agent_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured in the line of duty. Roll on the Injury table.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [1000, 2000, 5000, 7500, 10000, 25000, 50000],
+    "benefits": ["Scientific Equipment", "INT +1", "Ship Share", "Weapon", "Combat Implant", "SOC +1", "Ship Share"]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": { "below4": 0, "range4to7": 50, "range8to11": 75, "above12": 100 }
+  }
+}

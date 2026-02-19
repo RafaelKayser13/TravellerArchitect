@@ -9,10 +9,6 @@ import { DiceService } from '../../../core/services/dice.service';
   imports: [CommonModule],
   template: `
     <div class="debug-container">
-      <button class="debug-fab" (click)="toggleDebug()">
-        🐞
-      </button>
-
       <div *ngIf="isOpen()" class="debug-overlay fade-in">
         <div class="debug-header">
            <h3>Debug Console</h3>

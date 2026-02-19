@@ -1,0 +1,451 @@
+{
+  "id": "rogue",
+  "name": "Rogue",
+  "description": "Those who live by their wits on the wrong side of the law.",
+  "qualification": {
+    "stat": "DEX",
+    "target": 6,
+    "minAttributes": { "dex": 5 }
+  },
+  "skills": {
+    "personal": ["STR +1", "DEX +1", "INT +1", "SOC +1", "Deception", "Stealth"],
+    "service": ["Deception", "Flash (any)", "Gambler", "Gun Combat (any)", "Melee (any)", "Stealth"],
+    "advanced": ["Electronics (any)", "Navigation", "Pilot (any)", "Streetwise", "Broker", "Advocate"]
+  },
+  "assignments": [
+    {
+      "name": "Enforcer",
+      "survival": { "stat": "STR", "target": 6 },
+      "advancement": { "stat": "INT", "target": 6 },
+      "skills": ["Gun Combat (any)", "Melee (any)", "Streetwise", "Athletics (any)", "Deception", "Recon"],
+      "ranks": [
+        { "level": 0, "title": "Muscle" },
+        { "level": 1, "title": "Muscle", "bonus": { "skill": "Melee (bludgeon)", "value": 1 } },
+        { "level": 2, "title": "Muscle" },
+        { "level": 3, "title": "Muscle", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
+        { "level": 4, "title": "Enforcer" },
+        { "level": 5, "title": "Enforcer", "bonus": { "skill": "Streetwise", "value": 1 } },
+        { "level": 6, "title": "Lieutenant" }
+      ]
+    },
+    {
+      "name": "Pirate",
+      "survival": { "stat": "DEX", "target": 6 },
+      "advancement": { "stat": "INT", "target": 6 },
+      "skills": ["Pilot (any)", "Astrogation", "Electronics (any)", "Gunner (any)", "Gun Combat (any)", "Melee (any)"],
+      "ranks": [
+        { "level": 0, "title": "Lackey" },
+        { "level": 1, "title": "Lackey", "bonus": { "skill": "Pilot (any)", "value": 1 } },
+        { "level": 2, "title": "Pirate" },
+        { "level": 3, "title": "Pirate", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
+        { "level": 4, "title": "Pirate" },
+        { "level": 5, "title": "Corsair", "bonus": { "skill": "Leadership", "value": 1 } },
+        { "level": 6, "title": "Captain" }
+      ]
+    },
+    {
+      "name": "Thief",
+      "survival": { "stat": "INT", "target": 6 },
+      "advancement": { "stat": "DEX", "target": 6 },
+      "skills": ["Stealth", "Electronics (any)", "Deception", "Streetwise", "Athletics (any)", "Mechanic"],
+      "ranks": [
+        { "level": 0, "title": "Lookout" },
+        { "level": 1, "title": "Lookout", "bonus": { "skill": "Stealth", "value": 1 } },
+        { "level": 2, "title": "Thief" },
+        { "level": 3, "title": "Thief", "bonus": { "skill": "Electronics (comps)", "value": 1 } },
+        { "level": 4, "title": "Thief" },
+        { "level": 5, "title": "Master Thief", "bonus": { "skill": "Deception", "value": 1 } },
+        { "level": 6, "title": "Thief" }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Roll Mishap but not ejected.",
+      "gameEvent": {
+        "id": "rogue_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "A job goes horribly wrong.",
+          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "Arrested.",
+      "gameEvent": {
+        "id": "rogue_event_3",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Arrested",
+          "description": "You are caught by the authorities.",
+          "options": [
+            {
+              "label": "Hire Lawyer (EDU 8+)",
+              "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "rogue_event_3_pass", "onFail": "rogue_event_3_fail" }]
+            },
+            {
+              "label": "Accept Sentence",
+              "effects": [{ "type": "TRIGGER_EVENT", "value": "prison_term" }, { "type": "EJECT_CAREER", "note": "Convicted" }]
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "rogue_event_3_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Acquitted",
+            "description": "Your lawyer gets you off on a technicality.",
+            "options": [{ "label": "Back to the Streets", "effects": [] }]
+          }
+        },
+        {
+          "id": "rogue_event_3_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Convicted",
+            "description": "The charges stick.",
+            "options": [{ "label": "Go to Prison", "effects": [{ "type": "TRIGGER_EVENT", "value": "prison_term" }, { "type": "EJECT_CAREER", "note": "Convicted" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "choice", "note": "Arrested" }]
+    },
+    {
+      "roll": 4,
+      "description": "The Job goes right. Gain DM+2 to any Benefit roll.",
+      "gameEvent": {
+        "id": "rogue_event_4",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "The Perfect Job",
+          "description": "Everything goes exactly according to plan.",
+          "options": [{ "label": "Collect Booty", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 2 }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-dm", "value": 2 }]
+    },
+    {
+      "roll": 5,
+      "description": "Network of Contacts. Gain two Contacts.",
+      "gameEvent": {
+        "id": "rogue_event_5",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Criminal Network",
+          "description": "You spend time cultivating your relationships in the underworld.",
+          "options": [{
+            "label": "Gain Contacts",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "contact", "note": "Underworld Contact 1" } },
+              { "type": "ADD_NPC", "value": { "type": "contact", "note": "Underworld Contact 2" } }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "contact" }, { "type": "npc", "npcType": "contact", "note": "Gain 2 Contacts" }]
+    },
+    {
+      "roll": 6,
+      "description": "Advanced Training. Roll EDU 8+. Success: Increase any known skill by +1 level.",
+      "gameEvent": {
+        "id": "rogue_event_6",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Professional Expansion",
+          "description": "You have the opportunity to refine your skills.",
+          "options": [{
+            "label": "Attempt Training (EDU 8+)",
+            "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "rogue_event_6_pass", "onFail": "rogue_event_6_fail" }]
+          }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "rogue_event_6_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Skill Refinement",
+            "description": "You master a new technique.",
+            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+          }
+        },
+        {
+          "id": "rogue_event_6_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "You fail to grasp the nuances of the new skill.",
+            "options": [{ "label": "Continue", "effects": [] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "rogue_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "High-risk Crime. Stealth 8+ or Deception 8+. Pass: Gain DM+4 to Advancement. Fail: Mishap.",
+      "gameEvent": {
+        "id": "rogue_event_8",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "High-risk Heist",
+          "description": "You are involved in a daring heist.",
+          "options": [
+            { "label": "Stealth (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "rogue_event_8_pass", "onFail": "rogue_event_8_fail" }] },
+            { "label": "Deception (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "rogue_event_8_pass", "onFail": "rogue_event_8_fail" }] }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "rogue_event_8_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Clean Getaway",
+            "description": "The job is a success. Your reputation grows.",
+            "options": [{ "label": "Accept Recognition", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }]
+          }
+        },
+        {
+          "id": "rogue_event_8_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Botched Job",
+            "description": "The alarms go off!",
+            "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "choice", "note": "High-risk Heist" }]
+    },
+    {
+      "roll": 9,
+      "description": "Legendary Score. Gain DM+4 to your next Advancement roll.",
+      "gameEvent": {
+        "id": "rogue_event_9",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Legendary Score",
+          "description": "You pull off a job that will be talked about for years.",
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }]
+        }
+      },
+      "effects": [{ "type": "advancement-dm", "value": 4 }]
+    },
+    {
+      "roll": 10,
+      "description": "Street Smarts.",
+      "gameEvent": {
+        "id": "rogue_event_10",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Street Smarts",
+          "description": "You spend time learning the ways of the street.",
+          "options": [
+            { "label": "Streetwise 1", "effects": [{ "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] },
+            { "label": "Deception 1", "effects": [{ "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
+            { "label": "Stealth 1", "effects": [{ "type": "SKILL_MOD", "target": "Stealth", "value": 1 }] },
+            { "label": "Gun Combat 1", "effects": [{ "type": "SKILL_MOD", "target": "Gun Combat (Slug)", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Streetwise", "Deception", "Stealth", "Gun Combat"] }]
+    },
+    {
+      "roll": 11,
+      "description": "New Patron. Gain an Ally and DM+2 to Advancement.",
+      "gameEvent": {
+        "id": "rogue_event_11",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "New Patron",
+          "description": "A powerful mastermind takes you under their wing.",
+          "options": [{
+            "label": "Accept Support",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "ally", "note": "Criminal Patron" } },
+              { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "advancement-dm", "value": 2 }]
+    },
+    {
+      "roll": 12,
+      "description": "Gang Leader. Automatic Promotion.",
+      "gameEvent": {
+        "id": "rogue_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Gang Leader",
+          "description": "You rise to the top of your gang or organization.",
+          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Criminal Recognition" }] }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "rogue_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "A job goes violently wrong.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    },
+    {
+      "roll": 2,
+      "description": "Caught! Must take Prisoner career next term.",
+      "gameEvent": {
+        "id": "rogue_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Caught!",
+          "description": "The authorities catch you. You are sentenced to prison.",
+          "options": [{ "label": "Go to Prison", "effects": [{ "type": "FORCE_CAREER", "value": "Prisoner" }, { "type": "EJECT_CAREER", "note": "Sent to Prison" }] }]
+        }
+      },
+      "effects": [{ "type": "career-force", "note": "Prisoner" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 3,
+      "description": "Partner Betrayal. Gain an Enemy.",
+      "gameEvent": {
+        "id": "rogue_mishap_3",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Partner Betrayal",
+          "description": "A partner in crime betrays you.",
+          "options": [{
+            "label": "Flee",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Betrayer" } },
+              { "type": "LOSE_BENEFIT", "value": 1 },
+              { "type": "EJECT_CAREER", "note": "Betrayed" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "lose-benefit" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 4,
+      "description": "Job gone wrong. Gain an Enemy.",
+      "gameEvent": {
+        "id": "rogue_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Job Gone Wrong",
+          "description": "Your botched heist offends someone powerful.",
+          "options": [{
+            "label": "Disappear",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Aggrieved Party" } },
+              { "type": "EJECT_CAREER", "note": "Botched Job" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 5,
+      "description": "Framed. Gain a Rival.",
+      "gameEvent": {
+        "id": "rogue_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Framed",
+          "description": "You are framed for a crime.",
+          "options": [{
+            "label": "Go Underground",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Person who framed you" } },
+              { "type": "EJECT_CAREER", "note": "Framed" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "rival" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "rogue_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured during your activities.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [0, 0, 10000, 10000, 50000, 50000, 100000],
+    "benefits": ["Contact", "INT +1", "Weapon", "Weapon", "Armor", "Ship Share", "Two Ship Shares"]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 50,
+      "range8to11": 75,
+      "above12": 100
+    }
+  }
+}

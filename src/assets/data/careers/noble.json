@@ -1,0 +1,403 @@
+{
+  "id": "noble",
+  "name": "Noble",
+  "description": "Upper class elite, diplomats, and administrators.",
+  "qualification": {
+    "stat": "SOC",
+    "target": 10,
+    "minAttributes": { "soc": 6 }
+  },
+  "skills": {
+    "personal": ["STR +1", "DEX +1", "END +1", "INT +1", "EDU +1", "SOC +1"],
+    "service": ["Admin", "Advocate", "Carouse", "Diplomat", "Electronics (any)", "Persuade"],
+    "advanced": ["Admin", "Advocate", "Language (any)", "Leadership", "Diplomat", "Art (any)"]
+  },
+  "assignments": [
+    {
+      "name": "Administrator",
+      "survival": { "stat": "INT", "target": 4 },
+      "advancement": { "stat": "EDU", "target": 6 },
+      "skills": ["Admin", "Advocate", "Broker", "Diplomat", "Leadership", "Persuade"],
+      "ranks": [
+        { "level": 0, "title": "Assistant" },
+        { "level": 1, "title": "Clerk" },
+        { "level": 2, "title": "Administrator", "bonus": { "skill": "Admin", "value": 1 } },
+        { "level": 3, "title": "Administrator" },
+        { "level": 4, "title": "Manager", "bonus": { "skill": "Advocate", "value": 1 } },
+        { "level": 5, "title": "Senior Manager" },
+        { "level": 6, "title": "Director", "bonus": { "skill": "Leadership", "value": 1 } }
+      ]
+    },
+    {
+      "name": "Diplomat",
+      "survival": { "stat": "INT", "target": 5 },
+      "advancement": { "stat": "SOC", "target": 7 },
+      "skills": ["Advocate", "Carouse", "Diplomat", "Language (any)", "Persuade", "Streetwise"],
+      "ranks": [
+        { "level": 0, "title": "Intern" },
+        { "level": 1, "title": "Third Secretary" },
+        { "level": 2, "title": "Second Secretary", "bonus": { "skill": "Diplomat", "value": 1 } },
+        { "level": 3, "title": "First Secretary" },
+        { "level": 4, "title": "Counselor", "bonus": { "skill": "Carouse", "value": 1 } },
+        { "level": 5, "title": "Minister" },
+        { "level": 6, "title": "Ambassador", "bonus": { "skill": "Persuade", "value": 1 } }
+      ]
+    },
+    {
+      "name": "Dilettante",
+      "survival": { "stat": "SOC", "target": 3 },
+      "advancement": { "stat": "INT", "target": 8 },
+      "skills": ["Carouse", "Deception", "Flyer (any)", "Gambler", "Jack-of-all-Trades", "Melee (any)"],
+      "ranks": [
+        { "level": 0, "title": "Wastrel" },
+        { "level": 1, "title": "Wastrel", "bonus": { "skill": "Carouse", "value": 1 } },
+        { "level": 2, "title": "Socialite" },
+        { "level": 3, "title": "Socialite", "bonus": { "skill": "Persuade", "value": 1 } },
+        { "level": 4, "title": "Socialite" },
+        { "level": 5, "title": "Expatriate", "bonus": { "skill": "Jack-of-all-Trades", "value": 1 } },
+        { "level": 6, "title": "Expatriate" }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Roll Mishap but not ejected.",
+      "gameEvent": {
+        "id": "noble_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "A scandal or family tragedy strikes.",
+          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "Challenged to Duel.",
+      "gameEvent": {
+        "id": "noble_event_3",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Challenged to Duel",
+          "description": "You are challenged to a duel of honor.",
+          "options": [
+            { "label": "Fight (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "noble_event_3_pass", "onFail": "noble_event_3_fail" }] },
+            { "label": "Negotiate (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "noble_event_3_pass", "onFail": "noble_event_3_fail" }] },
+            { "label": "Refuse (SOC -1)", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }] }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "noble_event_3_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Victory",
+            "description": "You win the duel or outmaneuver your opponent.",
+            "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+          }
+        },
+        {
+          "id": "noble_event_3_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Defeat",
+            "description": "You are wounded and humiliated.",
+            "options": [{ "label": "Recover", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "choice", "note": "Challenged to Duel" }]
+    },
+    {
+      "roll": 4,
+      "description": "Conspiracy revealed.",
+      "gameEvent": {
+        "id": "noble_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Conspiracy Revealed",
+          "description": "You uncover a conspiracy within the court or government.",
+          "options": [
+            { "label": "Investigate 1", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Conspirator" } }, { "type": "SKILL_MOD", "target": "Investigate", "value": 1 }] },
+            { "label": "Streetwise 1", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Conspirator" } }, { "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "skill-choice", "skills": ["Investigate", "Streetwise"] }]
+    },
+    {
+      "roll": 5,
+      "description": "Political Faction.",
+      "gameEvent": {
+        "id": "noble_event_5",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Political Faction",
+          "description": "You align yourself with a powerful political faction.",
+          "options": [
+            { "label": "Advocate 1", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Faction Leader" } }, { "type": "SKILL_MOD", "target": "Advocate", "value": 1 }] },
+            { "label": "Diplomat 1", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Faction Leader" } }, { "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "skill-choice", "skills": ["Advocate", "Diplomat"] }]
+    },
+    {
+      "roll": 6,
+      "description": "Good Deal. Gain DM+1 to any Benefit roll.",
+      "gameEvent": {
+        "id": "noble_event_6",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Lucrative Deal",
+          "description": "One of your investments or properties yields a high return.",
+          "options": [{ "label": "Accept Profit", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-dm", "value": 1 }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "noble_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "Socialite. Gain Carouse 1 or Persuade 1.",
+      "gameEvent": {
+        "id": "noble_event_8",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Socialite",
+          "description": "You spend your time at the most exclusive parties and gatherings.",
+          "options": [
+            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] },
+            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Carouse", "Persuade"] }]
+    },
+    {
+      "roll": 9,
+      "description": "Standing rises. Gain DM+2 to your next Advancement roll.",
+      "gameEvent": {
+        "id": "noble_event_9",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Standing Rises",
+          "description": "Your family reputation or personal influence increases.",
+          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+        }
+      },
+      "effects": [{ "type": "advancement-dm", "value": 2 }]
+    },
+    {
+      "roll": 10,
+      "description": "Specialist Training. Roll EDU 8+. Success: Increase any known skill by +1 level.",
+      "gameEvent": {
+        "id": "noble_event_10",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Specialist Training",
+          "description": "You have the opportunity for specialist training.",
+          "options": [{ "label": "Attempt Training (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "noble_event_10_pass", "onFail": "noble_event_10_fail" }] }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "noble_event_10_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Successful",
+            "description": "You excel in your training.",
+            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+          }
+        },
+        {
+          "id": "noble_event_10_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "You fail to qualify for the specialist training.",
+            "options": [{ "label": "Continue", "effects": [] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
+    },
+    {
+      "roll": 11,
+      "description": "Patron Support. Gain an Ally and DM+4 to Advancement.",
+      "gameEvent": {
+        "id": "noble_event_11",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Patron Support",
+          "description": "A higher-ranking noble or government official supports your ambitions.",
+          "options": [{
+            "label": "Accept Support",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "ally", "note": "Higher-ranking Noble" } },
+              { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "advancement-dm", "value": 4 }]
+    },
+    {
+      "roll": 12,
+      "description": "High Reputation. Automatic Promotion.",
+      "gameEvent": {
+        "id": "noble_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "High Reputation",
+          "description": "Your excellence is recognized by your peers and superiors.",
+          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "High Reputation" }] }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "noble_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "A serious accident or attack leaves you severely injured.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    },
+    {
+      "roll": 2,
+      "description": "Political Scandal. Lose SOC 1.",
+      "gameEvent": {
+        "id": "noble_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Political Scandal",
+          "description": "You are involved in a political scandal that damages your reputation.",
+          "options": [{ "label": "Accept Exile", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "EJECT_CAREER", "note": "Political Scandal" }] }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 3,
+      "description": "Family Feud. Gain a Rival.",
+      "gameEvent": {
+        "id": "noble_mishap_3",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Family Feud",
+          "description": "A feud within your family or house forcing you into exile.",
+          "options": [{
+            "label": "Leave House",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Family Member" } },
+              { "type": "EJECT_CAREER", "note": "Family Feud" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "rival" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 4,
+      "description": "Crime Implication. Lose one Benefit roll.",
+      "gameEvent": {
+        "id": "noble_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Crime Implication",
+          "description": "You are implicated in a crime and must pay a heavy price.",
+          "options": [{ "label": "Pay Fine", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }, { "type": "EJECT_CAREER", "note": "Crime Implication" }] }]
+        }
+      },
+      "effects": [{ "type": "lose-benefit" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 5,
+      "description": "Reputation Destroyed. Reduce SOC 1.",
+      "gameEvent": {
+        "id": "noble_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Reputation Destroyed",
+          "description": "Your reputation is systematically destroyed by your enemies.",
+          "options": [{ "label": "Accept Humiliation", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "EJECT_CAREER", "note": "Reputation Destroyed" }] }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "noble_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured in an accident.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [5000, 10000, 40000, 40000, 80000, 80000, 100000],
+    "benefits": ["Ship Share", "INT +1", "EDU +1", "Weapon", "Weapon", "Yacht", "Two Ship Shares"]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 50,
+      "range8to11": 75,
+      "above12": 100
+    }
+  }
+}

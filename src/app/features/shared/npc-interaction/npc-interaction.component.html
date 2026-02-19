@@ -1,0 +1,74 @@
+<app-hud-window
+    *ngIf="request()"
+    title="PERSONNEL DOSSIER"
+    [isOpen]="true"
+    width="800px"
+    readoutTL="BIO_SCAN: ACTIVE"
+    [readoutTR]="'DB_REF: ' + (tempNpc.id?.substring(0, 8) || 'N/A')"
+    [readoutBL]="'RELATION_TYPE: ' + (tempNpc.type?.toUpperCase() || 'UNKNOWN')"
+    readoutBR="THREAT_LVL: STABLE"
+    (close)="cancel()">
+
+    <!-- Content Area -->
+    <div class="hud-content-layout">
+        <div class="hud-column info-sec">
+            <div class="column-header">
+                <span class="prefix">>></span> REGISTRY_INPUT
+            </div>
+
+            <div class="input-group">
+                <label>CODENAME / NAME</label>
+                <div class="input-with-action">
+                    <input type="text" [(ngModel)]="tempNpc.name" placeholder="Enter name...">
+                    <button class="btn-icon" (click)="randomizeName()" title="Randomize Name">
+                        <span class="prefix">?</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>RELATIONSHIP TYPE</label>
+                <div class="static-val">{{ tempNpc.type | uppercase }}</div>
+            </div>
+
+            <div class="input-group">
+                <label>ORIGIN CONTEXT</label>
+                <div class="static-val">{{ tempNpc.origin }}</div>
+            </div>
+        </div>
+
+        <div class="hud-column detail-sec">
+            <div class="column-header">
+                <span class="prefix">>></span> PSYCH_PROFILE
+            </div>
+
+            <div class="profile-details">
+                <div class="detail-row">
+                    <span class="label">ROLE:</span>
+                    <span class="val">{{ tempNpc.role || 'Unspecified' }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">QUIRK:</span>
+                    <span class="val">{{ tempNpc.quirk || 'Unspecified' }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">NATURE:</span>
+                    <span class="val">{{ tempNpc.nature || 'Unspecified' }}</span>
+                </div>
+                <button class="btn-outline tiny" (click)="randomizeDetails()">GENERATE_PROFILE</button>
+            </div>
+
+            <div class="input-group notes-group">
+                <label>INTEL_NOTES</label>
+                <textarea [(ngModel)]="tempNpc.notes" placeholder="Add details about your interaction..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <ng-container footer>
+        <button class="btn-cancel" (click)="cancel()">ABORT</button>
+        <button class="btn-confirm" (click)="save()" [disabled]="!tempNpc.name">COMMIT_RECORD</button>
+    </ng-container>
+
+</app-hud-window>

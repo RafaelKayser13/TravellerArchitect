@@ -1,85 +1,115 @@
-<div class="wizard-frame">
-  <!-- Step Progress -->
-  <div class="step-progress">
-    <div class="step" [class.active]="currentStep >= 1" [class.current]="currentStep === 1">
-      <div class="circle">1</div>
-      <span class="label">Attributes</span>
-    </div>
-    <div class="line" [class.active]="currentStep > 1"></div>
+<div class="tablet-container">
+  <div class="tablet-hardware">
+    <!-- Screen Glare Overlay -->
+    <div class="screen-glare"></div>
     
-    <div class="step" [class.active]="currentStep >= 2" [class.current]="currentStep === 2">
-      <div class="circle">2</div>
-      <span class="label">Origin</span>
-    </div>
-    <div class="line" [class.active]="currentStep > 2"></div>
-    
-    <div class="step" [class.active]="currentStep >= 3" [class.current]="currentStep === 3">
-      <div class="circle">3</div>
-      <span class="label">Education</span>
-    </div>
-    <div class="line" [class.active]="currentStep > 3"></div>
-    
-    <div class="step" [class.active]="currentStep >= 4" [class.current]="currentStep === 4">
-      <div class="circle">4</div>
-      <span class="label">Career</span>
-    </div>
-    <div class="line" [class.active]="currentStep > 4"></div>
-    
-    <div class="step" [class.active]="currentStep >= 5" [class.current]="currentStep === 5">
-      <div class="circle">5</div>
-      <span class="label">Muster</span>
-    </div>
-    <div class="line" [class.active]="currentStep > 5"></div>
+    <!-- Circuitry Overlays -->
+    <div class="hw-circuits top"></div>
+    <div class="hw-circuits bottom"></div>
 
-    <div class="step" [class.active]="currentStep >= 6" [class.current]="currentStep === 6">
-      <div class="circle">6</div>
-      <span class="label">Finish</span>
+    <!-- Physical Hardware Details -->
+    <div class="hw-bezel-detail top">
+      <div class="sensor-eye"></div>
+      <div class="branding">TACTICAL_INTERFACE_v4.2</div>
+      <div class="status-leds">
+        <div class="led power-on"></div>
+        <div class="led data-link pulse"></div>
+        <div class="led sync-blink"></div>
+      </div>
+      <div class="battery-meter">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar dim"></div>
+      </div>
+    </div>
+
+    <!-- Corner Reinforcements -->
+    <div class="hw-corner top-left"></div>
+    <div class="hw-corner top-right"></div>
+    <div class="hw-corner bottom-left"></div>
+    <div class="hw-corner bottom-right"></div>
+    
+    <div class="hw-bezel-detail left">
+      <div class="grip-strip"></div>
+      <div class="vent-grill"></div>
+      <div class="comm-link"></div>
+    </div>
+    
+    <div class="hw-bezel-detail right">
+      <div class="fingerprint-sensor"></div>
+      <div class="vent-grill"></div>
+      <div class="hw-button"></div>
+      <div class="hw-button long"></div>
+      <div class="hw-button"></div>
+    </div>
+
+    <div class="wizard-frame">
+      <!-- Step Progress — driven by WIZARD_STEPS constant, no hard-coded labels -->
+      <div class="step-progress">
+        @for (step of steps; track step.index) {
+          <div
+            class="step"
+            [class.active]="wizardFlow.currentStepIndex() >= step.index"
+            [class.current]="wizardFlow.currentStepIndex() === step.index"
+            (click)="wizardFlow.goTo(step.index)">
+            <div class="circle">{{ step.index < 10 ? '0' + step.index : step.index }}</div>
+            <span class="label">{{ step.label }}</span>
+          </div>
+          @if (!$last) {
+            <div class="line" [class.active]="wizardFlow.currentStepIndex() > step.index"></div>
+          }
+        }
+      </div>
+
+      <!-- Content Area -->
+      @if (!isResetting()) {
+        <div class="wizard-content">
+          @switch (wizardFlow.currentStepIndex()) {
+            @case (1) { <app-identity></app-identity> }
+            @case (2) { <app-attributes></app-attributes> }
+            @case (3) { <app-origin></app-origin> }
+            @case (4) { <app-education></app-education> }
+            @case (5) { <app-career></app-career> }
+            @case (6) { <app-mustering-out></app-mustering-out> }
+            @case (7) { <app-npc-management></app-npc-management> }
+            @case (8) { <app-skill-package></app-skill-package> }
+            @case (9) { <app-character-sheet></app-character-sheet> }
+          }
+        </div>
+      }
+
+      <!-- Unified Sticky Action Bar -->
+      @if (wizardFlow.showActionBar()) {
+        <footer class="wizard-action-bar">
+          <div class="action-divider"></div>
+          <div class="action-content">
+            <button class="btn-reset-footer" (click)="initiateReset()" title="Reset Character Data">
+              <span class="icon">↺</span>
+              <span class="label">RESET</span>
+            </button>
+
+            <button
+              class="btn-wizard-next"
+              [disabled]="!wizardFlow.canProceed()"
+              (click)="wizardFlow.executeFinish()">
+              <span class="btn-index">SYS::CMD</span>
+              <span class="btn-label">{{ wizardFlow.actionLabel() }} ▸</span>
+            </button>
+          </div>
+        </footer>
+      }
+    </div>
+
+    <div class="hw-bezel-detail bottom">
+      <div class="io-port"></div>
+      <div class="speaker-slits"></div>
     </div>
   </div>
-
-  <!-- Content Area -->
-  <div class="wizard-content" *ngIf="!isResetting">
-    <app-attributes *ngIf="currentStep === 1"></app-attributes>
-    <app-origin *ngIf="currentStep === 2"></app-origin>
-    <app-education *ngIf="currentStep === 3" (complete)="nextStep()"></app-education>
-    <app-career *ngIf="currentStep === 4" (complete)="onCareerComplete()"></app-career>
-    <app-mustering-out *ngIf="currentStep === 5" (complete)="onMusteringOutComplete()"></app-mustering-out>
-    <app-character-sheet *ngIf="currentStep === 6"></app-character-sheet>
-  </div>
-
-  <!-- Navigation Actions -->
-  <div class="wizard-actions">
-    <button class="btn-premium btn-reset" 
-            (click)="initiateReset()">
-      Reset
-    </button>
-
-    <div class="spacer"></div>
-
-    <button class="btn-premium btn-back" 
-            *ngIf="currentStep > 1" 
-            (click)="prevStep()">
-      Back
-    </button>
-    
-    <div class="spacer"></div>
-
-    <button class="btn-premium btn-next" 
-            *ngIf="currentStep < 4" 
-            (click)="nextStep()">
-      Next Step
-    </button>
-    
-    <!-- Step 4, 5 have their own complete buttons -->
-  </div>
-  
 </div>
 
 <!-- Reset Dialog -->
-<app-confirmation-dialog 
-    [isOpen]="showResetDialog"
-    title="RESET DATA"
-    message="Are you sure you want to delete this character and start over? This action cannot be undone."
-    (confirm)="confirmReset()"
-    (cancel)="cancelReset()">
+<app-confirmation-dialog [isOpen]="showResetDialog()" title="RESET DATA"
+  message="Are you sure you want to delete this character and start over? This action cannot be undone."
+  (confirm)="confirmReset()" (cancel)="cancelReset()">
 </app-confirmation-dialog>

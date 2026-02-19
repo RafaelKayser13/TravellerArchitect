@@ -1,207 +1,383 @@
 <div class="education-container">
-  <h2>Step 3: Education (Updated)</h2>
-  <p>Apply for further education or proceed to the Draft.</p>
+  <app-step-header stepSymbol="SEC" stepNumber="05" superLabel="ACADEMIC_RECORDS_SYSTEM" topLabel="ACADEMIC_HISTORY"
+    title="ACADEMIC_ENROLLMENT" subtitle="SUBMIT APPLICATION FOR HIGHER EDUCATION OR PROCEED DIRECTLY TO A CAREER">
+  </app-step-header>
 
-  <div class="options" *ngIf="$any(admissionStatus) === 'NotApplied'">
+  <div class="education-stack" *ngIf="$any(admissionStatus) === 'NotApplied'">
     <!-- University -->
-    <div
-      class="education-card"
-      [class.selected]="educationType === 'University'"
-      (click)="educationType = 'University'"
-    >
-      <h3>University</h3>
-      <p>Entry: <span class="highlight">EDU 7+</span></p>
-      <p>Gain: <span class="highlight">+1 EDU, +1 SOC</span></p>
-
-      <div
-        class="academy-selector"
-        *ngIf="educationType === 'University'"
-        (click)="$event.stopPropagation()"
-      >
-        <!-- Premature selection removed. Selection happens after admission. -->
-
-        <div class="admission-method">
-          <h4>Admission Method</h4>
-          <div class="radio-group">
-            <label>
-              <input type="radio" name="admMethod" value="Local" [(ngModel)]="admissionMethod" />
-              Local Education (DM {{ admissionDMs.local >= 0 ? '+' : '' }}{{ admissionDMs.local }})
-            </label>
-            <label>
-              <input type="radio" name="admMethod" value="OffWorld" [(ngModel)]="admissionMethod" />
-              Off-World Education (DM {{ admissionDMs.offWorld >= 0 ? '+' : ''
-              }}{{ admissionDMs.offWorld }})
-              <span class="bad-note" *ngIf="admissionMethod === 'OffWorld'"
-                >Applies financial debt.</span
-              >
-            </label>
+    <div class="education-card" [class.selected]="educationType === 'University'"
+      (click)="educationType = 'University'">
+      <div class="card-layout">
+        <div class="info-column">
+          <div class="card-header">
+            <span class="index">01</span>
+            <h3>University</h3>
+          </div>
+          <div class="details">
+            <p><span class="label">REQUIREMENT:</span> <span class="highlight">EDU 7+</span></p>
+            <p><span class="label">EXPECTED_GAIN:</span> <span class="highlight">+1 EDU, +1 SOC</span></p>
+            <div class="description-text">
+              Higher education focused on academic research and social advancement.
+              Essential for high-tech careers and political standing.
+            </div>
           </div>
         </div>
 
-        <button
-          class="btn-roll"
-          (click)="apply()"
-          [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'"
-        >
-          Apply for Admission
-        </button>
+        <div class="config-column" *ngIf="educationType === 'University'" (click)="$event.stopPropagation()">
+          <div class="admission-method">
+            <span class="hud-label">[ ADM_PROTOCOL_SELECTION ]</span>
+            <div class="radio-tab-group">
+              <label class="radio-tab">
+                <input type="radio" name="admMethod" value="Local" [(ngModel)]="admissionMethod" />
+                <div class="tab-content">
+                  <span class="primary">LOCAL_ADM</span>
+                  <span class="secondary">DM {{ admissionDMs.local >= 0 ? '+' : '' }}{{ admissionDMs.local }}</span>
+                </div>
+              </label>
+              <label class="radio-tab">
+                <input type="radio" name="admMethod" value="OffWorld" [(ngModel)]="admissionMethod" />
+                <div class="tab-content">
+                  <span class="primary">OFFWORLD_ADM</span>
+                  <span class="secondary">DM {{ admissionDMs.offWorld >= 0 ? '+' : '' }}{{ admissionDMs.offWorld
+                    }}</span>
+                  <span class="risk-tag" *ngIf="admissionMethod === 'OffWorld'">DEBT_RISK</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn-action" (click)="apply()"
+            [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'">
+            INIT_APPLICATION
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Academy -->
-    <div
-      class="education-card"
-      [class.selected]="educationType === 'Academy'"
-      (click)="educationType = 'Academy'"
-    >
-      <h3>Military Academy</h3>
-      <p>Entry: <span class="highlight">Attribute 8+</span></p>
-      <p>Gain: <span class="highlight">Commission</span></p>
-
-      <div
-        class="academy-selector"
-        *ngIf="educationType === 'Academy'"
-        (click)="$event.stopPropagation()"
-      >
-        <select [(ngModel)]="academyType">
-          <option value="Army">Army (END)</option>
-          <option value="Marines">Marines (END)</option>
-          <option value="Navy">Navy (INT)</option>
-          <option value="Scouts">Scouts (INT)</option>
-          <option value="Spaceborne">Spaceborne (INT)</option>
-        </select>
-
-        <div class="admission-method">
-          <h4>Admission Method</h4>
-          <div class="radio-group">
-            <label>
-              <input type="radio" name="admMethodAc" value="Local" [(ngModel)]="admissionMethod" />
-              Local (DM {{ admissionDMs.local >= 0 ? '+' : '' }}{{ admissionDMs.local }})
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="admMethodAc"
-                value="OffWorld"
-                [(ngModel)]="admissionMethod"
-              />
-              Off-World (DM {{ admissionDMs.offWorld >= 0 ? '+' : '' }}{{ admissionDMs.offWorld }})
-            </label>
+    <div class="education-card" [class.selected]="educationType === 'Academy'" (click)="educationType = 'Academy'">
+      <div class="card-layout">
+        <div class="info-column">
+          <div class="card-header">
+            <span class="index">02</span>
+            <h3>Military Academy</h3>
+          </div>
+          <div class="details">
+            <p><span class="label">REQUIREMENT:</span> <span class="highlight">ATTR 8+</span></p>
+            <p><span class="label">EXPECTED_GAIN:</span> <span class="highlight">OFFICER COMMISSION</span></p>
+            <div class="description-text">
+              Intensive military training providing immediate access to officer ranks.
+              Focuses on discipline, command, and specialized combat skills.
+            </div>
           </div>
         </div>
 
-        <button
-          class="btn-roll"
-          (click)="apply()"
-          [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected'"
-        >
-          Apply for Admission
+        <div class="config-column" *ngIf="educationType === 'Academy'" (click)="$event.stopPropagation()">
+          <div class="branch-selector">
+            <span class="hud-label">[ SELECT_MIL_BRANCH ]</span>
+            <select [(ngModel)]="academyType" class="cyber-select" [class.invalid]="!getAcademyValidation(academyType).available">
+              <option value="Army" [disabled]="!getAcademyValidation('Army').available">
+                ARMY {{ !getAcademyValidation('Army').available ? '(BLOCKED)' : '(END BRANCH)' }}
+              </option>
+              <option value="Marines" [disabled]="!getAcademyValidation('Marines').available">
+                MARINES {{ !getAcademyValidation('Marines').available ? '(BLOCKED)' : '(END BRANCH)' }}
+              </option>
+              <option value="Navy" [disabled]="!getAcademyValidation('Navy').available">
+                NAVY {{ !getAcademyValidation('Navy').available ? '(BLOCKED)' : '(INT BRANCH)' }}
+              </option>
+              <option value="Scouts" [disabled]="!getAcademyValidation('Scouts').available">
+                SCOUTS {{ !getAcademyValidation('Scouts').available ? '(BLOCKED)' : '(INT BRANCH)' }}
+              </option>
+
+            </select>
+            <div class="validation-reason" *ngIf="!getAcademyValidation(academyType).available">
+               <span class="warning-icon">⚠</span> {{ getAcademyValidation(academyType).reason }}
+            </div>
+          </div>
+
+          <div class="admission-method">
+            <span class="hud-label">[ MIL_ADM_PROTOCOL ]</span>
+            <div class="radio-tab-group">
+              <label class="radio-tab">
+                <input type="radio" name="admMethodAc" value="Local" [(ngModel)]="admissionMethod" />
+                <div class="tab-content">
+                  <span class="primary">LOCAL_ADM</span>
+                  <span class="secondary">DM {{ admissionDMs.local >= 0 ? '+' : '' }}{{ admissionDMs.local }}</span>
+                </div>
+              </label>
+              <label class="radio-tab">
+                <input type="radio" name="admMethodAc" value="OffWorld" [(ngModel)]="admissionMethod" />
+                <div class="tab-content">
+                  <span class="primary">OFFWORLD_ADM</span>
+                  <span class="secondary">DM {{ admissionDMs.offWorld >= 0 ? '+' : '' }}{{ admissionDMs.offWorld
+                    }}</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn-action" (click)="apply()"
+            [disabled]="$any(admissionStatus) === 'Admitted' || $any(admissionStatus) === 'Rejected' || !getAcademyValidation(academyType).available">
+            INIT_MIL_APPLICATION
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skip Education -->
+    <div class="education-card draft-card" [class.selected]="educationType === 'None'" (click)="educationType = 'None'">
+      <div class="card-layout">
+        <div class="info-column">
+          <div class="card-header">
+            <span class="index">03</span>
+            <h3>Direct Career Entry</h3>
+          </div>
+          <div class="details">
+            <p><span class="label">STATUS:</span> <span class="highlight">IMMEDIATE_ENLISTMENT</span></p>
+            <p><span class="label">ACTION:</span> <span class="highlight">SKIP HIGHER EDUCATION</span></p>
+          </div>
+        </div>
+
+        <div class="config-column" *ngIf="educationType === 'None'" (click)="$event.stopPropagation()">
+          <div class="draft-notice">
+            <p>Skip higher education and proceed directly to a Career at age 18.
+              This allows you to gain Basic Training and promotions four years earlier.</p>
+          </div>
+          <button class="btn-action warn" (click)="finishStep()">PROCEED_TO_CAREER</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="results" *ngIf="$any(admissionStatus) !== 'NotApplied'" #resultsSection>
+    <div class="status-box" [ngClass]="admissionStatus.toLowerCase()" *ngIf="$any(admissionStatus) === 'Rejected'">
+      <h3>APPLICATION_REJECTED</h3>
+      <p>The academic selection board has reviewed your profile and declined admission at this time.</p>
+      <div class="hud-footer" style="margin-top: 2rem; gap: 1rem; flex-direction: row;">
+        <button class="btn-action secondary" (click)="resetAdmission()">RETRY / CHANGE_PATH</button>
+        <button class="btn-action" (click)="finishStep()">START_A_CAREER</button>
+      </div>
+    </div>
+
+    <!-- University Skill Selection (Step 2) -->
+    <div class="skill-selection university-polish hud-module info fade-in" *ngIf="educationStep === 'UniversitySkillSelect'" #skillsSection>
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+
+      <div class="hud-box-header schematic-spec">
+        <div class="header-line"></div>
+        <span class="index">UNI_SCHEM_V04</span>
+        <h3>ADMISSION_CONFIRMED</h3>
+        <div class="status-badge pulse">AWAITING_VECTOR_DEFINITION</div>
+      </div>
+
+      <div class="hud-content">
+        <div class="vector-schematic-overlay"></div>
+        <p class="instruction">DEFINE PRIMARY AND SECONDARY SPECIALIZATION VECTORS:</p>
+
+        <div class="vector-dropdown-group">
+          <!-- Major Vector -->
+          <div class="vector-field">
+            <span class="hud-label">[ PRI_VECTOR_01 ]</span>
+            <label>MAJOR_VECTOR_DEFINITION (LVL 1)</label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="selectedMajorSkill" class="cyber-select" title="Major Vector Schematic Selector">
+                <option value="" disabled>SELECT_SCHEMATIC_VECTOR</option>
+                <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
+              </select>
+              <div class="select-indicator"></div>
+            </div>
+          </div>
+
+          <!-- Minor Vector -->
+          <div class="vector-field">
+            <span class="hud-label">[ SEC_VECTOR_02 ]</span>
+            <label>MINOR_VECTOR_DEFINITION (LVL 0)</label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="selectedMinorSkill" class="cyber-select" title="Minor Vector Schematic Selector">
+                <option value="" disabled>SELECT_SCHEMATIC_VECTOR</option>
+                <option *ngFor="let s of universitySkillList" [value]="s" [disabled]="s === selectedMajorSkill">
+                  {{ s }}
+                </option>
+              </select>
+              <div class="select-indicator"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-footer tactical">
+        <div class="readout-group">
+          <div class="data-readout">
+            <span class="label">MAJOR:</span>
+            <span class="val">{{ selectedMajorSkill || 'N/A' }}</span>
+          </div>
+          <div class="data-readout">
+            <span class="label">MINOR:</span>
+            <span class="val">{{ selectedMinorSkill || 'N/A' }}</span>
+          </div>
+        </div>
+        <button class="btn-action elite" [disabled]="!selectedMajorSkill || !selectedMinorSkill"
+          (click)="confirmUniversitySkills()">
+          <span class="primary">EXEC_ENROLLMENT</span>
+          <span class="secondary">INITIALIZE_ACADEMIC_PROTOCOL</span>
         </button>
       </div>
     </div>
 
-    <!-- Draft -->
-    <div
-      class="education-card"
-      [class.selected]="educationType === 'None'"
-      (click)="educationType = 'None'"
-    >
-      <h3>The Draft</h3>
-      <p>Skip Higher Education</p>
-      <p>Proceed directly to your first term.</p>
-    </div>
-  </div>
-
-  <!-- Actions -->
-  <div class="actions" *ngIf="$any(admissionStatus) === 'NotApplied' && educationType === 'None'">
-    <button class="btn-premium" (click)="finishStep()">Proceed to Draft</button>
-  </div>
-
-  <!-- Results -->
-  <div class="results" *ngIf="$any(admissionStatus) !== 'NotApplied'">
-    <div class="status-box" [ngClass]="admissionStatus.toLowerCase()" *ngIf="$any(admissionStatus) === 'Rejected'">
-      <h3>REJECTED</h3>
-    </div>
-
-    <!-- University Skill Selection (Step 2) -->
-    <div class="skill-selection" *ngIf="educationStep === 'UniversitySkillSelect'">
-      <h3>University Admission Successful</h3>
-      <p>You must choose two skills to focus on during your studies.</p>
-
-      <div class="selectors">
-        <div class="sel-group">
-          <label>Major (Level 1):</label>
-          <select [(ngModel)]="selectedMajorSkill">
-            <option value="" disabled>Select Skill</option>
-            <option *ngFor="let s of universitySkillList" [value]="s">{{ s }}</option>
-          </select>
-        </div>
-        <div class="sel-group">
-          <label>Minor (Level 0):</label>
-          <select [(ngModel)]="selectedMinorSkill">
-            <option value="" disabled>Select Skill</option>
-            <option
-              *ngFor="let s of universitySkillList"
-              [value]="s"
-              [disabled]="s === selectedMajorSkill"
-            >
-              {{ s }}
-            </option>
-          </select>
-        </div>
-      </div>
-
-      <button
-        class="btn-premium"
-        [disabled]="!selectedMajorSkill || !selectedMinorSkill"
-        (click)="confirmUniversitySkills()"
-      >
-        Confirm
-      </button>
-    </div>
-
     <!-- Studying State -->
-    <div *ngIf="educationStep === 'Studying'">
-      <p>You spend 4 years studying...</p>
-      <button class="btn-premium" (click)="graduate()">Roll for Graduation</button>
+    <div *ngIf="educationStep === 'Studying'" style="text-align: center; padding: 3rem;">
+      <span class="hud-label" style="font-size: 1.2rem; margin-bottom: 2rem; display: block; color: var(--neon-cyan);">[
+        ACADEMIC_TERM_IN_PROGRESS ]</span>
+      <p style="font-family: var(--font-mono); color: var(--text-dim); margin-bottom: 2rem;">PROCESSING 4-YEAR
+        EDUCATIONAL DATA...</p>
+      <button class="btn-cyber" (click)="graduate()">EXECUTE_GRADUATION_ROLL</button>
     </div>
 
     <!-- Academy Graduation Skill Selection -->
-    <div class="skill-selection" *ngIf="educationStep === 'AcademySkillSelect'">
-      <h3>Academy Graduation</h3>
-      <p>Select 3 skills to increase to Level 1.</p>
+    <div class="skill-selection-module academy-polish hud-module info fade-in" *ngIf="educationStep === 'AcademySkillSelect'">
+      <div class="corner-detail tl"></div>
+      <div class="corner-detail tr"></div>
+      <div class="corner-detail bl"></div>
+      <div class="corner-detail br"></div>
+      
+      <div class="hud-box-header military-spec">
+        <div class="scan-line"></div>
+        <span class="index">MIL_SPEC_802</span>
+        <h3>ACADEMY_HONORS_GRADUATION</h3>
+        <div class="status-badge pulse">AWAITING_SPECIALIZATION_INPUT</div>
+      </div>
 
-      <div class="skill-grid">
-        <div
-          class="skill-opt"
-          *ngFor="let skill of availableAcademySkills"
-          [class.selected]="
-            selectedAcademySkills[0] === skill ||
-            selectedAcademySkills[1] === skill ||
-            selectedAcademySkills[2] === skill
-          "
-          (click)="toggleAcademySkill(skill)"
-        >
-          {{ skill }}
+      <div class="hud-content">
+        <div class="schematic-overlay"></div>
+        <p class="instruction">IDENTIFIED CAPABILITIES DETECTED. ALLOCATE 3 TRACE_SKILLS TO ACTIVE PROTOCOL:</p>
+
+        <div class="skill-blueprint-grid">
+          <div class="skill-chip" *ngFor="let skill of availableAcademySkills" 
+            [class.selected]="isAcademySkillSelected(skill)" 
+            (click)="toggleAcademySkill(skill)">
+            <div class="chip-inner">
+              <div class="chip-socket"></div>
+              <span class="skill-name">{{ skill }}</span>
+              <div class="status-led"></div>
+            </div>
+            <div class="chip-highlight"></div>
+          </div>
         </div>
       </div>
 
-      <button
-        class="btn-premium"
-        [disabled]="(selectedAcademySkills | keyvalue).length !== 3"
-        (click)="confirmAcademyGraduation()"
-      >
-        Confirm Training
-      </button>
+      <div class="hud-footer tactical">
+        <div class="data-readout">
+          <span class="label">SYST_LOAD:</span>
+          <div class="load-bar">
+            <div class="fill" [style.width.%]="((selectedAcademySkills | keyvalue).length / 3) * 100"></div>
+          </div>
+          <span class="val">{{ (selectedAcademySkills | keyvalue).length }} / 3</span>
+        </div>
+        <button class="btn-action elite" [disabled]="(selectedAcademySkills | keyvalue).length !== 3"
+          (click)="confirmAcademyGraduation()">
+          <span class="primary">ENGAGE_PROTOCOL</span>
+          <span class="secondary">FINALIZE_GRADUATION_RECORD</span>
+        </button>
+      </div>
     </div>
 
-    <div
-      *ngIf="educationStep === 'Finished' && graduationStatus !== 'Pending'"
-      class="graduation-result"
-    >
-      <h3>{{ graduationStatus === 'Failed' ? 'FAILED TO GRADUATE' : 'GRADUATED' }}</h3>
-      <p *ngIf="graduationStatus === 'Honors'">WITH HONORS!</p>
-      <button class="btn-premium" (click)="finishStep()" style="margin-top: 2rem;">Continue to Career</button>
+    <div *ngIf="educationStep === 'Finished' && graduationStatus !== 'Pending'" class="graduation-result">
+      <div class="graduation-visual-overlay">
+        <div *ngIf="educationType === 'University' && graduationStatus !== 'Failed'" class="wireframe-container active">
+          <img src="assets/images/ui/wireframe_brain.png" alt="Brain Schematic" class="wireframe-asset brain">
+        </div>
+        <div *ngIf="educationType === 'Academy' && graduationStatus !== 'Failed'" class="wireframe-container active">
+          <img src="assets/images/ui/wireframe_star.png" alt="Star Schematic" class="wireframe-asset star">
+        </div>
+        <div *ngIf="graduationStatus === 'Honors'" class="wireframe-container active honors">
+          <img src="assets/images/ui/wireframe_medal.png" alt="Medal Schematic" class="wireframe-asset medal">
+        </div>
+      </div>
+
+      <div class="result-text-block">
+        <h3>{{ graduationStatus === 'Failed' ? 'GRADUATION_FAILED' : 'GRADUATION_CONFIRMED' }}</h3>
+        <p *ngIf="graduationStatus === 'Honors'" class="honors-text">[ HONORS_DISTINCTION_DETECTED ]</p>
+      </div>
+
+      <!-- Special Redirections -->
+      <div class="redirection-notice" *ngIf="expelledToPrison">
+        <span class="warning-tag">EXPULSION_ERROR</span>
+        <p>MANDATORY PROTOCOL: Proceed to [ PRISONER ] Career for next term.</p>
+      </div>
+      <div class="redirection-notice" *ngIf="warNextCareer">
+        <span class="war-tag">WAR_PROTOCOL_ACTIVE</span>
+        <p>SERVICE ASSIGNMENT: Proceed to [ {{ warNextCareer }} ] Career for next term.</p>
+      </div>
     </div>
   </div>
+
+  <!-- Interactive Overlays (Modals) -->
+
+  <!-- War Protocol Modal -->
+  <div class="overlay" *ngIf="showWarOptions">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="index">!!</span>
+        <h3>WAR_PROTOCOL</h3>
+      </div>
+      <div class="modal-body">
+        <p>A national conflict has errupted. Mandatory conscription is in effect for all academic personnel.</p>
+        <div class="action-grid">
+          <button class="btn-action" *ngIf="canAvoidWar" (click)="avoidWar()">
+            <span class="primary">AVOID_DRAFT</span>
+            <span class="secondary">USE SOCIAL STANDING (SOC 9+)</span>
+          </button>
+          <button class="btn-action warn" (click)="joinWar('Draft')">
+            <span class="primary">ACCEPT_DRAFT</span>
+            <span class="secondary">ASSIGNED BY COMMAND (1D6)</span>
+          </button>
+          <button class="btn-action risk" (click)="joinWar('Flee')">
+            <span class="primary">FLEE_PROTOCOL</span>
+            <span class="secondary">ABANDON STUDIES (DRIFTER)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hobby Selection Modal -->
+  <div class="overlay" *ngIf="showHobbySelection">
+    <div class="modal-card wide">
+      <div class="modal-header">
+        <span class="index">09</span>
+        <h3>HOBBY_ACQUISITION</h3>
+      </div>
+      <div class="modal-body">
+        <p>SELECT ONE SCHEMATIC TO ADOPT AS A RECREATIONAL SPECIALIZATION (LEVEL 0):</p>
+        <div class="skill-scroll-grid">
+          <div class="skill-opt mini" *ngFor="let s of hobbySkillOptions" (click)="selectHobbySkill(s)">
+            {{ s }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tutor Selection Modal -->
+  <div class="overlay" *ngIf="showTutorSelection">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="index">10</span>
+        <h3>TUTOR_SPECIALIZATION</h3>
+      </div>
+      <div class="modal-body">
+        <p>AN ACADEMIC MENTOR HAS OFFERED INTENSIVE STUDY SESSIONS. SELECT A FOCUS AREA (9+ TO GAIN +1 LEVEL):</p>
+        <div class="action-grid">
+          <button class="btn-cyber" *ngFor="let s of tutorSkillOptions" (click)="selectTutorSkill(s)">
+            {{ s }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

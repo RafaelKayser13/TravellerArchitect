@@ -1,0 +1,906 @@
+{
+    "injuryTable": [
+        {
+            "roll": 1,
+            "name": "Nearly Killed",
+            "statLossFormula": "1D6 from one physical stat + 2 from each of the other two physical stats",
+            "description": "Nearly Killed: Reduce one physical char by 1d6, others by 2.",
+            "gameEvent": {
+                "id": "injury_1",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Nearly Killed",
+                    "description": "You are nearly killed. You suffer permanent damage to your physical characteristics.",
+                    "options": [
+                        {
+                            "label": "Accept Fate",
+                            "effects": [
+                                {
+                                    "type": "CUSTOM",
+                                    "customId": "INJURY_PROCESS",
+                                    "payload": {
+                                        "severity": 1
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "CUSTOM",
+                    "customId": "INJURY_PROCESS",
+                    "payload": {
+                        "severity": 1
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 2,
+            "name": "Severely Injured",
+            "statLossFormula": "1D6 from one physical stat (player choice)",
+            "description": "Severely Injured: Reduce one physical char by 1d6.",
+            "gameEvent": {
+                "id": "injury_2",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Severely Injured",
+                    "description": "You are severely injured.",
+                    "options": [
+                        {
+                            "label": "Accept Fate",
+                            "effects": [
+                                {
+                                    "type": "CUSTOM",
+                                    "customId": "INJURY_PROCESS",
+                                    "payload": {
+                                        "severity": 2
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "CUSTOM",
+                    "customId": "INJURY_PROCESS",
+                    "payload": {
+                        "severity": 2
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 3,
+            "name": "Missing Eye or Limb",
+            "statLossFormula": "STR or DEX -2 (permanent)",
+            "description": "Missing Eye or Limb: Reduce STR or DEX by 2.",
+            "gameEvent": {
+                "id": "injury_3",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Missing Eye or Limb",
+                    "description": "You lose an eye or a limb.",
+                    "options": [
+                        {
+                            "label": "Reduce STR by 2",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "STR",
+                                    "value": -2
+                                },
+                                {
+                                    "type": "CUSTOM",
+                                    "customId": "INJURY_PROCESS",
+                                    "payload": {
+                                        "severity": 3,
+                                        "field": "STR"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Reduce DEX by 2",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "DEX",
+                                    "value": -2
+                                },
+                                {
+                                    "type": "CUSTOM",
+                                    "customId": "INJURY_PROCESS",
+                                    "payload": {
+                                        "severity": 3,
+                                        "field": "DEX"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "CUSTOM",
+                    "customId": "INJURY_PROCESS",
+                    "payload": {
+                        "severity": 3
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 4,
+            "name": "Scarred",
+            "statLossFormula": "Any one physical stat -2",
+            "description": "Scarred: Reduce any physical char by 2.",
+            "gameEvent": {
+                "id": "injury_4",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Scarred",
+                    "description": "You suffer a scarring injury.",
+                    "options": [
+                        {
+                            "label": "Reduce STR by 2",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "STR",
+                                    "value": -2
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Reduce DEX by 2",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "DEX",
+                                    "value": -2
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Reduce END by 2",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "END",
+                                    "value": -2
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "CUSTOM",
+                    "customId": "INJURY_PROCESS",
+                    "payload": {
+                        "severity": 4
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 5,
+            "name": "Injured",
+            "statLossFormula": "Any one physical stat -1",
+            "description": "Injured: Reduce any physical char by 1.",
+            "gameEvent": {
+                "id": "injury_5",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Injured",
+                    "description": "You are injured.",
+                    "options": [
+                        {
+                            "label": "Reduce STR by 1",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "STR",
+                                    "value": -1
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Reduce DEX by 1",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "DEX",
+                                    "value": -1
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Reduce END by 1",
+                            "effects": [
+                                {
+                                    "type": "STAT_MOD",
+                                    "target": "END",
+                                    "value": -1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "CUSTOM",
+                    "customId": "INJURY_PROCESS",
+                    "payload": {
+                        "severity": 5
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 6,
+            "name": "Lightly Injured",
+            "statLossFormula": "None",
+            "description": "Lightly Injured: No permanent effect.",
+            "gameEvent": {
+                "id": "injury_6",
+                "type": "INFO",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Lightly Injured",
+                    "description": "You sustain minor scrapes and bruises. No permanent damage is done.",
+                    "options": [
+                        {
+                            "label": "Full Recovery",
+                            "effects": [
+                                {
+                                    "type": "LOG_ENTRY",
+                                    "note": "Lightly Injured. Full recovery."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Lightly Injured. Full recovery."
+                }
+            ]
+        }
+    ],
+    "lifeEventTable": [
+        {
+            "roll": 2,
+            "name": "Sickness/Injury",
+            "description": "Sickness or Injury: You are struck by a sudden illness or accident.",
+            "gameEvent": {
+                "id": "life_2",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Sickness or Injury",
+                    "description": "You are struck by a sudden illness or accident.",
+                    "options": [
+                        {
+                            "label": "Check Severity",
+                            "effects": [
+                                {
+                                    "type": "TRIGGER_EVENT",
+                                    "value": "injury_roll"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "ROLL_TABLE",
+                    "dice": "1d6",
+                    "table": [],
+                    "note": "Rolling Injury Table..."
+                }
+            ]
+        },
+        {
+            "roll": 3,
+            "name": "Birth/Death",
+            "description": "Birth or Death: Someone close to you dies, or a new life enters your circle.",
+            "gameEvent": {
+                "id": "life_3",
+                "type": "INFO",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Birth or Death",
+                    "description": "A significant personal event involves a close relation.",
+                    "options": [
+                        {
+                            "label": "Accept Change",
+                            "effects": [
+                                {
+                                    "type": "LOG_ENTRY",
+                                    "note": "Life Event: Birth or Death involves a close relation."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Birth or Death involves a close relation."
+                }
+            ]
+        },
+        {
+            "roll": 4,
+            "name": "Ending of Relationship",
+            "description": "Ending of Relationship: A romantic relationship ends badly.",
+            "gameEvent": {
+                "id": "life_4",
+                "type": "INFO",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Ending of Relationship",
+                    "description": "A romantic relationship ends badly, leaving you with a new adversary.",
+                    "options": [
+                        {
+                            "label": "Accept Fallout",
+                            "effects": [
+                                {
+                                    "type": "ROLL_TABLE",
+                                    "dice": "1d2",
+                                    "table": [
+                                        {
+                                            "roll": 1,
+                                            "description": "Gained a Rival",
+                                            "effects": [
+                                                {
+                                                    "type": "ADD_NPC",
+                                                    "value": {
+                                                        "type": "Rival",
+                                                        "name": "Ex-Partner"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "roll": 2,
+                                            "description": "Gained an Enemy",
+                                            "effects": [
+                                                {
+                                                    "type": "ADD_NPC",
+                                                    "value": {
+                                                        "type": "Enemy",
+                                                        "name": "Ex-Partner"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Relationship ended badly."
+                },
+                {
+                    "type": "ROLL_TABLE",
+                    "dice": "1d2",
+                    "table": [
+                        {
+                            "roll": 1,
+                            "description": "Gained a Rival",
+                            "effects": [
+                                {
+                                    "type": "ADD_NPC",
+                                    "value": {
+                                        "type": "Rival",
+                                        "name": "Ex-Partner"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "roll": 2,
+                            "description": "Gained an Enemy",
+                            "effects": [
+                                {
+                                    "type": "ADD_NPC",
+                                    "value": {
+                                        "type": "Enemy",
+                                        "name": "Ex-Partner"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "roll": 5,
+            "name": "Improved Relationship",
+            "description": "Improved Relationship: A relationship deepens (Marriage, close bond).",
+            "gameEvent": {
+                "id": "life_5",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Improved Relationship",
+                    "description": "A relationship deepens, providing you with a reliable ally.",
+                    "options": [
+                        {
+                            "label": "Deepen Bond",
+                            "effects": [
+                                {
+                                    "type": "ADD_NPC",
+                                    "value": {
+                                        "type": "Ally",
+                                        "name": "Partner/Friend"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Relationship improved."
+                },
+                {
+                    "type": "ADD_NPC",
+                    "value": {
+                        "type": "Ally",
+                        "name": "Partner/Friend"
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 6,
+            "name": "New Relationship",
+            "description": "New Relationship: You become involved in a new romantic relationship.",
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: New romantic relationship."
+                },
+                {
+                    "type": "ADD_NPC",
+                    "value": {
+                        "type": "Ally",
+                        "name": "New Partner"
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 7,
+            "name": "New Contact",
+            "description": "New Contact: You gain a new contact outside of your career.",
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Gained a new contact."
+                },
+                {
+                    "type": "ADD_NPC",
+                    "value": {
+                        "type": "Contact",
+                        "name": "New Contact"
+                    }
+                }
+            ]
+        },
+        {
+            "roll": 8,
+            "name": "Betrayal",
+            "description": "Betrayal: You have been betrayed by a friend or colleague.",
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Betrayed by a contact/ally."
+                },
+                {
+                    "type": "CUSTOM",
+                    "customId": "BETRAYAL_LOGIC",
+                    "payload": {}
+                }
+            ]
+        },
+        {
+            "roll": 9,
+            "name": "Travel",
+            "description": "Travel: You move to another world.",
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Moved to a new world. (+2 to next Qualification)."
+                },
+                {
+                    "type": "RESOURCE_MOD",
+                    "target": "next_qualification_dm",
+                    "value": 2,
+                    "duration": "term"
+                }
+            ]
+        },
+        {
+            "roll": 10,
+            "name": "Good Fortune",
+            "description": "Good Fortune: Something good happens to you.",
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Good Fortune. (+2 to one Benefit Roll)."
+                },
+                {
+                    "type": "RESOURCE_MOD",
+                    "target": "next_benefit_dm",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "roll": 11,
+            "name": "Crime",
+            "description": "Crime: You are the victim of a crime or accused of one.",
+            "effects": [
+                {
+                    "type": "LOG_ENTRY",
+                    "note": "Life Event: Involved in a crime."
+                },
+                {
+                    "type": "ROLL_TABLE",
+                    "dice": "1d2",
+                    "table": [
+                        {
+                            "roll": 1,
+                            "description": "Lose 1 Benefit Roll",
+                            "effects": [
+                                {
+                                    "type": "RESOURCE_MOD",
+                                    "target": "benefit_rolls",
+                                    "value": -1
+                                }
+                            ]
+                        },
+                        {
+                            "roll": 2,
+                            "description": "Forced into Prisoner Career (Next Term)",
+                            "effects": [
+                                {
+                                    "type": "FORCE_CAREER",
+                                    "value": "Prisoner"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "roll": 12,
+            "name": "Unusual Event",
+            "description": "Unusual Event: Something strange happens.",
+            "effects": [
+                {
+                    "type": "ROLL_TABLE",
+                    "dice": "1d6",
+                    "table": []
+                }
+            ]
+        }
+    ],
+    "educationEventTable": [
+        {
+            "roll": 2,
+            "desc": "Psionic Contact. Potential for Psion career unlocked.",
+            "effectId": "PSIONIC_CONTACT"
+        },
+        {
+            "roll": 3,
+            "desc": "Tragedy. Graduation failed. Education terminated.",
+            "effectId": "TRAGEDY"
+        },
+        {
+            "roll": 4,
+            "desc": "Prank Gone Wrong. Success: Rival. Fail: Enemy. Fail Crítica (2): Expelled.",
+            "effectId": "PRANK"
+        },
+        {
+            "roll": 5,
+            "desc": "Partying. Gain Carouse (Level 1).",
+            "stat": "Carouse",
+            "value": 1
+        },
+        {
+            "roll": 6,
+            "desc": "Friends. Gain 1D3 Allies.",
+            "effectId": "FRIENDS"
+        },
+        {
+            "roll": 7,
+            "desc": "Life Event.",
+            "isLifeEvent": true
+        },
+        {
+            "roll": 8,
+            "desc": "Political Movement. Success: 1 Ally, 1 Enemy. Fail: No effect.",
+            "effectId": "POLITICS"
+        },
+        {
+            "roll": 9,
+            "desc": "Hobby. Gain any skill at Level 0 (except Jack-of-all-Trades).",
+            "effectId": "HOBBY"
+        },
+        {
+            "roll": 10,
+            "desc": "Interests from Tutor. Roll Skill 9+ for +1 Level and Rival.",
+            "effectId": "TUTOR"
+        },
+        {
+            "roll": 11,
+            "desc": "War/Draft. Participation required unless SOC 9+.",
+            "effectId": "WAR"
+        },
+        {
+            "roll": 12,
+            "desc": "Recognition. SOC +1.",
+            "stat": "SOC",
+            "value": 1
+        }
+    ],
+    "musteringOutBenefits": {
+        "INT +1": [
+            {
+                "type": "STAT_MOD",
+                "target": "INT",
+                "value": 1
+            }
+        ],
+        "EDU +1": [
+            {
+                "type": "STAT_MOD",
+                "target": "EDU",
+                "value": 1
+            }
+        ],
+        "SOC +1": [
+            {
+                "type": "STAT_MOD",
+                "target": "SOC",
+                "value": 1
+            }
+        ],
+        "DEX +1": [
+            {
+                "type": "STAT_MOD",
+                "target": "DEX",
+                "value": 1
+            }
+        ],
+        "STR +1": [
+            {
+                "type": "STAT_MOD",
+                "target": "STR",
+                "value": 1
+            }
+        ],
+        "END +1": [
+            {
+                "type": "STAT_MOD",
+                "target": "END",
+                "value": 1
+            }
+        ],
+        "Ship Share": [
+            {
+                "type": "RESOURCE_MOD",
+                "target": "shipShares",
+                "value": 1
+            }
+        ],
+        "Two Ship Shares": [
+            {
+                "type": "RESOURCE_MOD",
+                "target": "shipShares",
+                "value": 2
+            }
+        ],
+        "TAS Membership": [
+            {
+                "type": "RESOURCE_MOD",
+                "target": "shipShares",
+                "value": 1
+            },
+            {
+                "type": "LOG_ENTRY",
+                "note": "TAS Membership converted to +1 Ship Share (2300AD Rule)."
+            }
+        ],
+        "Weapon": [
+            {
+                "type": "CUSTOM",
+                "customId": "AWARD_WEAPON"
+            }
+        ],
+        "Armour": [
+            {
+                "type": "CUSTOM",
+                "customId": "AWARD_ARMOR"
+            }
+        ],
+        "Vehicle": [
+            {
+                "type": "CUSTOM",
+                "customId": "AWARD_VEHICLE"
+            }
+        ],
+        "Contact": [
+            {
+                "type": "CUSTOM",
+                "customId": "AWARD_NPC",
+                "payload": {
+                    "type": "Contact"
+                }
+            }
+        ],
+        "Ally": [
+            {
+                "type": "CUSTOM",
+                "customId": "AWARD_NPC",
+                "payload": {
+                    "type": "Ally"
+                }
+            }
+        ],
+        "Rival": [
+            {
+                "type": "CUSTOM",
+                "customId": "AWARD_NPC",
+                "payload": {
+                    "type": "Rival"
+                }
+            }
+        ],
+        "Combat Implant": [
+            {
+                "type": "ADD_ITEM",
+                "value": "Combat Implant (TL 12)"
+            }
+        ],
+        "Scientific Equipment": [
+            {
+                "type": "ADD_ITEM",
+                "value": "Scientific Equipment (TL 10+)"
+            }
+        ],
+        "Yacht": [
+            {
+                "type": "ADD_ITEM",
+                "value": "Yacht (Noble Benefit)",
+                "note": "A personal luxury starship is at your disposal."
+            }
+        ],
+        "Free Trader": [
+            {
+                "type": "RESOURCE_MOD",
+                "target": "shipShares",
+                "value": 2
+            },
+            {
+                "type": "LOG_ENTRY",
+                "note": "Free Trader benefit: Gained 2 Ship Shares."
+            }
+        ],
+        "Lab Ship": [
+            {
+                "type": "ADD_ITEM",
+                "value": "Lab Ship Voucher",
+                "note": "Provides access to a research vessel."
+            }
+        ]
+    },
+    "unusualEventTable": [
+        {
+            "roll": 1,
+            "description": "Psionic Latency",
+            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Psionic potential discovered." }]
+        },
+        {
+            "roll": 2,
+            "description": "Ancient Technology",
+            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Encountered ancient tech." }]
+        },
+        {
+            "roll": 3,
+            "description": "Alien Encounter",
+            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: First contact situation." }]
+        },
+        {
+            "roll": 4,
+            "description": "Time Loss",
+            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Missing time." }]
+        },
+        {
+            "roll": 5,
+            "description": "Secret Society",
+            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Approached by a secret society." }]
+        },
+        {
+            "roll": 6,
+            "description": "Prophecy",
+            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Named in a prophecy." }]
+        }
+    ],
+    "medicalBills": [
+        {
+            "category": "military",
+            "careers": [
+                "Army",
+                "Navy",
+                "Marine"
+            ],
+            "below4": 0,
+            "range4to7": 75,
+            "range8to11": 100,
+            "above12": 100
+        },
+        {
+            "category": "independent",
+            "careers": [
+                "Scout",
+                "Rogue",
+                "Drifter",
+                "Spaceborne"
+            ],
+            "below4": 0,
+            "range4to7": 0,
+            "range8to11": 50,
+            "above12": 75
+        },
+        {
+            "category": "other",
+            "careers": [
+                "Citizen",
+                "Merchant",
+                "Entertainer",
+                "Noble",
+                "Scholar",
+                "Agent"
+            ],
+            "below4": 0,
+            "range4to7": 50,
+            "range8to11": 75,
+            "above12": 100
+        }
+    ],
+    "medicalCosts": {
+        "RESTORE_PER_POINT": 5000
+    }
+}

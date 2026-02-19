@@ -1,0 +1,60 @@
+<div class="npc-container">
+    <app-step-header stepSymbol="BIO" stepNumber="07" superLabel="INTEL_NETWORK_V1.2" topLabel="SOCIAL_LINKS"
+        title="RELATIONSHIP_MANAGEMENT" subtitle="REVIEW_AND_IDENTIFY_CONTACTS_ALLIES_AND_ENEMIES">
+    </app-step-header>
+
+    <div class="hud-module info">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">INTEL_01</span>
+            <h3>OPERATIONAL_NETWORK_OVERVIEW</h3>
+        </div>
+        <div class="hud-content">
+            <p class="description">
+                Your career and life events have generated a network of contacts. 
+                Identify these individuals to ground your character in the 2300AD universe.
+            </p>
+        </div>
+    </div>
+
+    <div class="npc-grid">
+        <div *ngFor="let npc of characters().npcs" class="npc-card" [ngClass]="npc.type">
+            <div class="corner-detail tl"></div>
+            <div class="corner-detail tr"></div>
+
+            <div class="card-header">
+                <span class="type-tag">{{ npc.type.toUpperCase() }}</span>
+                <div class="header-main">
+                    <h3>{{ npc.name }}</h3>
+                </div>
+            </div>
+
+            <div class="card-content">
+                <div class="origin-readout">
+                    <span class="label">ORIGIN:</span>
+                    <span class="val">{{ npc.origin }}</span>
+                </div>
+
+                <div class="notes-section">
+                    <span class="label">INTEL_NOTES:</span>
+                    <p class="notes-text">{{ npc.notes || 'No data recorded.' }}</p>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="actions">
+                    <button class="btn-mini" (click)="editNpc(npc)">EDIT</button>
+                    <button class="btn-mini risk" (click)="removeNpc(npc.id)">DELETE</button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="characters().npcs.length === 0" class="no-npcs">
+            <p>[ NO_ACTIVE_RELATIONSHIPS_DETECTED ]</p>
+            <span class="subtext">Proceed to finalize character biometrics.</span>
+        </div>
+    </div>
+</div>

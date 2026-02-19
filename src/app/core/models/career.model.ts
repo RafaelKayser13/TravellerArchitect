@@ -1,21 +1,78 @@
 
+import { GameEvent } from './game-event.model';
+
 export interface CareerEvent {
     roll: number;
     description: string;
-    effect?: (char: any) => void; // Placeholder for effect logic
-    label?: string; // Short description/title
+    gameEvent?: GameEvent;
+    subEvents?: GameEvent[];
+    effect?: (char: any) => void;
+    label?: string;
+    effects?: CareerEventEffect[];
 }
 
 export interface CareerMishap {
     roll: number;
     description: string;
-    // Mishaps usually enforce forcing out of career
+    gameEvent?: GameEvent;
+    subEvents?: GameEvent[];
+    effects?: CareerEventEffect[];
+}
+
+// --- Typed Event Effect System ---
+
+export type NpcType = 'ally' | 'contact' | 'rival' | 'enemy' | 'patron';
+
+export interface CareerEventEffect {
+    type: 'life-event'       // Redirect to Life Events table
+    | 'mishap'           // Roll on Mishap table (but don't eject)
+    | 'skill-choice'     // Player chooses one skill from a list
+    | 'skill-gain'       // Grant a specific skill
+    | 'stat-bonus'       // Grant stat +1
+    | 'benefit-dm'       // DM bonus to a Benefit roll
+    | 'advancement-dm'   // DM bonus to next Advancement
+    | 'qualification-dm' // DM bonus to next Qualification
+    | 'auto-promotion'   // Automatic promotion (or commission for military)
+    | 'npc'              // Generate NPC relationship
+    | 'injury'           // Roll on Injury Table
+    | 'skill-check'      // Conditional on a skill check
+    | 'lose-benefit'     // Lose 1 Benefit roll
+    | 'any-skill-up'     // Increase any known skill +1
+    | 'extra-roll'       // Gain extra skill roll this term
+    | 'benefit-mod'      // DM+1 or DM+2 to a single Benefit Roll
+    | 'choice'           // Generic choice (narrative or mechanical)
+    | 'sub-roll'         // Triggers a 1D6/2D6 sub-table
+    | 'career-force'     // Force next career (e.g. 'Prisoner')
+    | 'forced-out'       // Ejected from career
+    | 'lose-cash-benefits'
+    | 'stat-reduction-choice'
+    | 'bet-benefit-rolls'
+    | 'parole-mod'
+    | 'trait-gain'       // Add permanent note/trait to history
+    | 'npc-note'         // Add status/note to an NPC
+    | 'narrative'        // Pure narrative event with history log
+    | 'neural-jack';     // 2300AD: Neural Jack opportunity
+    // Conditional fields based on type
+    skills?: string[];       // For 'skill-choice': list of options
+    skill?: string;          // For 'skill-gain': specific skill name
+    stat?: string;           // For 'stat-bonus': e.g. 'SOC'
+    value?: number;          // DM value for dm types, stat bonus amount, NPC count
+    npcType?: NpcType;       // For 'npc': type of NPC to generate
+    npcCount?: number;       // For 'npc': number of NPCs (default 1, or '1d3')
+    npcCountDice?: string;   // For 'npc': dice expression e.g. '1d3'
+    target?: number;         // For 'skill-check': target number
+    checkSkills?: string[];  // For 'skill-check': skills that can be used
+    onSuccess?: CareerEventEffect[];  // For 'skill-check': effects on success
+    onFailure?: CareerEventEffect[];  // For 'skill-check': effects on failure
+    note?: string;           // Descriptive note for the effect
 }
 
 export interface Rank {
     level: number;
     title: string;
-    bonus?: string; // Text description of bonus
+    bonus?: string;
+    bonusSkill?: string;
+    bonusValue?: number | string; // number for skill level, string like 'SOC +1' for stat bonuses
 }
 
 export interface Assignment {
@@ -24,11 +81,12 @@ export interface Assignment {
     survivalTarget: number;
     advancementStat: string;
     advancementTarget: number;
-    skillTable: string[]; // List of skills available
+    skillTable: string[];
     ranks: Rank[];
 }
 
 export interface CareerDefinition {
+    id: string;
     name: string;
     description: string;
     qualificationStat: string;
@@ -38,8 +96,76 @@ export interface CareerDefinition {
     assignments: Assignment[];
     personalSkills: string[];
     serviceSkills: string[];
-    advancedEducation: string[]; // Req EDU 8+
-    officerSkills?: string[]; // Only for commissioned
-    musteringOutCash: number[]; // d6 table
-    musteringOutBenefits: string[]; // d6 table
+    advancedEducation: string[];
+    advancedEducationMinEdu?: number; // Default 8, some careers require 10
+    officerSkills?: string[];
+    minAttributes?: { [stat: string]: number }; // New: Career requirement
+    officerRanks?: Rank[];
+    musteringOutCash: number[];
+    musteringOutBenefits: string[];
+    traits?: string[]; // New: Career-specific traits (e.g. 0-G DNAM for Spaceborne)
+    academy?: {
+        admission: {
+            stat: string;
+            target: number;
+            requirements?: { [stat: string]: number };
+        };
+        skills: string[];
+        honors?: {
+            rank: number;
+            title: string;
+        };
+    };
+    medical?: {
+        plan: string;
+        coverage: {
+            below4: number;
+            range4to7: number;
+            range8to11: number;
+            above12: number;
+        };
+    };
 }
+
+// --- Life Events & Injury Models ---
+
+export interface LifeEvent {
+    roll: number; // 2D6 result (2-12)
+    name?: string;
+    description: string;
+    gameEvent?: GameEvent;
+    effect?: string; // Structured effect description
+    effects?: CareerEventEffect[];
+}
+
+export interface InjuryResult {
+    roll: number; // 1D6 result (1-6)
+    name?: string;
+    description: string;
+    gameEvent?: GameEvent;
+    statLossFormula?: string; // e.g. '1D6 from one + 2 from others', 'STR or DEX -2', etc.
+    effects?: CareerEventEffect[];
+}
+
+export interface MedicalBillsEntry {
+    category: 'military' | 'independent' | 'other';
+    careers: string[];
+    below4: number;   // % coverage for 2D6+Rank < 4
+    range4to7: number; // % coverage for 2D6+Rank 4-7
+    range8to11: number; // % coverage for 2D6+Rank 8-11
+    above12: number;  // % coverage for 2D6+Rank 12+
+}
+
+// --- NPC Model ---
+
+export interface NPC {
+    id: string;
+    name: string;
+    type: NpcType;
+    origin: string;       // e.g. "Navy Term 2 Event"
+    notes: string;        // e.g. "Foiled their smuggling ring"
+    quirk?: string;       // From D66 quirk table
+    role?: string;        // From D66 role table
+    nature?: string;      // 2300AD: 1D6 nature table
+}
+

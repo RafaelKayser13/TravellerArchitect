@@ -1,14 +1,27 @@
 <div class="origin-container">
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="04" 
+        superLabel="PLANETARY_DATABASE_HUB"
+        topLabel="GEOGRAPHIC_ORIGIN"
+        title="NATIONALITY_ESTABLISHMENT" 
+        subtitle="ENFORCING_SOCIO-POLITICAL_TERRITORIAL_DATA... [ OK ]">
+    </app-step-header>
     <section>
         <h2 class="step-title">Select Nationality</h2>
         <div class="card-grid">
-            <div class="selection-card" 
-                 *ngFor="let nat of nationalities"
-                 [class.selected]="selectedNationality?.name === nat.name"
-                 (click)="selectNationality(nat)">
+            <div class="selection-card" *ngFor="let nat of nationalities; let i = index"
+                [class.selected]="selectedNationality?.name === nat.name" 
+                [class.disabled]="!isNationalityAvailable(nat)"
+                (click)="isNationalityAvailable(nat) && selectNationality(nat)">
+                <span class="hud-label">[ NAT_{{i+1}} ]</span>
                 <h3>{{ nat.name }}</h3>
                 <p class="tier">{{ nat.tier === 1 ? 'Superpower' : 'Tier ' + nat.tier }}</p>
                 <div class="description">{{ nat.description }}</div>
+                <div class="compatibility-warning" *ngIf="!isNationalityAvailable(nat)">
+                    <span class="warning-icon">!</span>
+                    {{ getIncompatibilityReason('Nationality', nat) }}
+                </div>
             </div>
         </div>
     </section>
@@ -16,73 +29,142 @@
     <section *ngIf="selectedNationality" class="origin-type-section" #originTypeSection>
         <h2 class="step-title">Origin Type</h2>
         <div class="origin-types">
-            <div class="type-card" 
-                 [class.selected]="selectedOriginType === 'Core'"
-                 (click)="setOriginType('Core')">
+            <div class="type-card" [class.selected]="selectedOriginType === 'Core'" 
+                [class.disabled]="!isOriginTypeAvailable('Core')"
+                (click)="isOriginTypeAvailable('Core') && setOriginType('Core')">
                 <h3>Core</h3>
                 <p>Earth & Tirane</p>
+                <div class="restriction-info" *ngIf="!isOriginTypeAvailable('Core')">
+                    {{ getIncompatibilityReason('OriginType', 'Core') }}
+                </div>
             </div>
-            <div class="type-card" 
-                 [class.selected]="selectedOriginType === 'Frontier'"
-                 (click)="setOriginType('Frontier')">
+            <div class="type-card" [class.selected]="selectedOriginType === 'Frontier'"
+                [class.disabled]="!isOriginTypeAvailable('Frontier')"
+                (click)="isOriginTypeAvailable('Frontier') && setOriginType('Frontier')">
                 <h3>Frontier</h3>
                 <p>Colonial Worlds</p>
+                <div class="restriction-info" *ngIf="!isOriginTypeAvailable('Frontier')">
+                    {{ getIncompatibilityReason('OriginType', 'Frontier') }}
+                </div>
             </div>
-            <div class="type-card" 
-                 [class.selected]="selectedOriginType === 'Spacer'"
-                 (click)="setOriginType('Spacer')">
+            <div class="type-card" [class.selected]="selectedOriginType === 'Spacer'" 
+                [class.disabled]="!isOriginTypeAvailable('Spacer')"
+                (click)="isOriginTypeAvailable('Spacer') && setOriginType('Spacer')">
                 <h3>Spacer</h3>
                 <p>Stations & Belts</p>
+                <div class="restriction-info" *ngIf="!isOriginTypeAvailable('Spacer')">
+                    {{ getIncompatibilityReason('OriginType', 'Spacer') }}
+                </div>
             </div>
         </div>
     </section>
 
-    <section *ngIf="selectedNationality && availableWorlds.length > 0">
+    <section *ngIf="selectedNationality && availableWorlds.length > 0" class="homeworld-section" #homeworldSection>
         <h2 class="step-title">Select Homeworld</h2>
         <div class="card-grid">
-            <div class="selection-card" 
-                 *ngFor="let world of availableWorlds"
-                 [class.selected]="selectedWorld?.name === world.name"
-                 (click)="selectWorld(world)">
+            <div class="selection-card" *ngFor="let world of availableWorlds; let i = index"
+                [class.selected]="selectedWorld?.name === world.name" (click)="selectWorld(world)">
+                <span class="hud-label">[ WORLD_{{i+1}} ]</span>
                 <h3>{{ world.name }}</h3>
                 <div class="world-meta">
-                    <span class="badge" [class.warning]="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
+                    <span class="badge"
+                        [class.warning]="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
                         {{ world.gravity }}G ({{ world.gravityCode }})
                     </span>
                     <span class="badge">{{ world.system }}</span>
                     <span class="badge">{{ world.path || 'Soft' }} Path</span>
                     <span class="badge highlight" *ngIf="world.techLevel">TL {{ world.techLevel }}</span>
                 </div>
-                <div class="uwp">DM: {{ world.survivalDm >= 0 ? '+' : ''}}{{ world.survivalDm }} Survival</div>
-                
+                <div class="uwp">SURVIVAL_DM: {{ world.survivalDm >= 0 ? '+' : ''}}{{ world.survivalDm }}</div>
+
                 <div class="gravity-mods" *ngIf="world.gravityCode === 'High' || world.gravityCode === 'Extreme'">
-                    <p class="warning">High Gravity World!</p>
+                    <p class="warning">HIGH_GRAVITY_DETECTED</p>
                 </div>
                 <div class="gravity-mods" *ngIf="world.gravityCode === 'Low'">
-                    <p class="info">Low Gravity World</p>
+                    <p class="info">LOW_G_ENVIRONMENT</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section *ngIf="selectedWorld && showSkillsSelection" class="skills-section">
+    <section *ngIf="selectedWorld" class="philosophy-section">
+        <h2 class="step-title">Colonial Philosophy</h2>
+        <div class="path-selector">
+            <div class="path-option" [class.selected]="selectedPath === 'Hard'" (click)="setPath('Hard')">
+                <h3>HARD PATH</h3>
+                <p>Technological adaptation. Machinery and habitats.</p>
+                <div class="bonus">benefit_roll_dm: +1</div>
+            </div>
+            <div class="path-option" [class.selected]="selectedPath === 'Soft'" (click)="setPath('Soft')">
+                <h3>SOFT PATH</h3>
+                <p>Biological adaptation. DNA mods and symbionts.</p>
+                <div class="bonus">benefit_roll_dm: -1</div>
+            </div>
+        </div>
+    </section>
+
+    <section *ngIf="selectedWorld && showSkillsSelection" class="skills-section" #skillsSection>
         <h2 class="step-title">Background Skills</h2>
-        <p class="instruction">Select {{ backgroundSkillsCount }} skills based on your Education and Origin.</p>
-        
+        <p class="instruction">ALLOCATED {{ selectedBackgroundSkills.length }} of {{ backgroundSkillsCount }} SKILLS
+            FROM ORIGIN DATA</p>
+
         <div class="skills-grid">
-            <div class="skill-chip" 
-                 *ngFor="let skill of availableSkills"
-                 [class.selected]="selectedBackgroundSkills.includes(skill)"
-                 [class.disabled]="!selectedBackgroundSkills.includes(skill) && selectedBackgroundSkills.length >= backgroundSkillsCount"
-                 (click)="toggleSkill(skill)">
+            <div class="skill-chip" *ngFor="let skill of availableSkills"
+                [class.selected]="selectedBackgroundSkills.includes(skill)"
+                [class.disabled]="!selectedBackgroundSkills.includes(skill) && selectedBackgroundSkills.length >= backgroundSkillsCount"
+                (click)="toggleSkill(skill)">
                 {{ skill }}
             </div>
         </div>
-        
+
         <div class="mod-summary" *ngIf="selectedWorld">
-             <h3>Biological Adjustments</h3>
-             <p *ngIf="selectedOriginType === 'Spacer'">Spacer: Zero-G Adaptation applied (Skills: Vacc Suit available).</p>
-             <p *ngIf="['King', 'Huntsland', 'New Columbia'].includes(selectedWorld.name)">Heavy Worlder: +STR, +END (Genetic Mod).</p>
+            <h3>BIO_REPORT</h3>
+            <p *ngIf="selectedOriginType === 'Spacer'">SPACER: Zero-G Adaptation applied (Vacc Suit enabled).</p>
+            <p *ngIf="selectedWorld.name.includes('King') || selectedWorld.name.includes('Huntsland') || selectedWorld.name.includes('New Columbia')">HEAVY_WORLDER: Genetic STR/END
+                modification detected.</p>
+        </div>
+
+    </section>
+
+    <section class="species-adaptation-report">
+        <div class="adaptation-banner">
+            <div class="banner-header">
+                <span class="scanline"></span>
+                <span class="hud-icon">🧬</span>
+                <span class="title">BIOLOGICAL_CONSISTENCY_CHECK</span>
+            </div>
+            <div class="banner-content">
+                <div class="species-info">
+                    <span class="label">CURRENT_SPECIES:</span>
+                    <span class="value">{{ characterService.character().species }}</span>
+                </div>
+                <div class="restriction-list">
+                    <div class="restriction-item" *ngIf="characterService.character().species === 'Human (Spacer)'">
+                        <span class="bullet">>></span> RESTRICTED_TO_ORBITAL_ENVIRONMENTS (ZERO-G_ADAPTATION_ACTIVE)
+                    </div>
+                    <div class="restriction-item" *ngIf="characterService.character().species === 'Human (Heavy-Worlder)'">
+                        <span class="bullet">>></span> RESTRICTED_TO_HIGH-G_COLONIES (USA, AUSTRALIA, MANCHURIA...)
+                    </div>
+                    <div class="restriction-item" *ngIf="['Human (Cold-Adapted)', 'Human (Dry-Worlder)'].includes(characterService.character().species)">
+                        <span class="bullet">>></span> COLONIAL_ENVIRONMENTAL_REQUIREMENTS_ENFORCED
+                    </div>
+                    <div class="restriction-item success" *ngIf="characterService.character().species === 'Human (Standard)'">
+                        <span class="bullet">>></span> NO_BIOLOGICAL_RESTRICTIONS_DETECTED
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- Japanese Nationality Choice -->
+    <div class="modal-overlay" *ngIf="isJapanBonusPrompt">
+        <div class="modal-card">
+            <h3>NATIONALITY_REWARD_DETECTION</h3>
+            <p>Japanese personnel are eligible for specialized training or social standing elevation via the Officer Corps.</p>
+            <div class="choice-buttons">
+                <button (click)="selectJapanBonus('EDU')">CORE_EDUCATION (+1 EDU)</button>
+                <button (click)="selectJapanBonus('Rank')">OFFICER_RECRUITMENT (+1 RANK)</button>
+            </div>
+        </div>
+    </div>
 </div>

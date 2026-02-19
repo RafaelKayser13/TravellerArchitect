@@ -1,0 +1,27 @@
+<app-hud-window
+    [isOpen]="isOpen"
+    [title]="title"
+    [type]="hudType"
+    width="500px"
+    readoutTL="SECURE_DIALOG"
+    [readoutTR]="'TYPE: ' + (type | uppercase)"
+    [hasFooter]="true"
+    (close)="onCancel()">
+
+    <div class="dialog-content">
+        <p>{{ message }}</p>
+        <div class="status-readout">> SYSTEM_WAITING_FOR_USER_INPUT...</div>
+    </div>
+
+    <div footer class="footer-container">
+        <div class="action-wrapper" [ngClass]="type">
+            <button class="btn-cancel" (click)="onCancel()">
+                [ ABORT ]
+            </button>
+            <button class="btn-confirm" (click)="onConfirm()">
+                [ {{ confirmLabel }} ]
+            </button>
+        </div>
+    </div>
+
+</app-hud-window>

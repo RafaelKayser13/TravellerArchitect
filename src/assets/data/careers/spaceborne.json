@@ -1,0 +1,393 @@
+{
+  "id": "spaceborne",
+  "name": "Spaceborne",
+  "description": "Born and raised in the habitats, spin stations, and asteroid belts of the frontier.",
+  "qualification": {
+    "stat": "INT",
+    "target": 0,
+    "note": "Automatic if Origin is Spacer"
+  },
+  "skills": {
+    "personal": ["STR +1", "END +1", "DEX +1", "Language (Zhargon)", "Profession (any)", "Jack-of-all-Trades"],
+    "service": ["Athletics (any)", "Melee (unarmed)", "Recon", "Streetwise", "Profession (any)", "Vacc Suit"],
+    "advanced": ["Pilot (any)", "Mechanic", "Astrogation", "Engineer (any)", "Electronics (any)", "Science (any)"]
+  },
+  "assignments": [
+    {
+      "name": "Belter",
+      "survival": { "stat": "DEX", "target": 8 },
+      "advancement": { "stat": "END", "target": 6 },
+      "skills": ["Pilot (small craft)", "Mechanic", "Astrogation", "Vacc Suit", "Profession (mining)", "Science (planetology)"],
+      "ranks": [
+        { "level": 0, "title": "Belly-dweller" },
+        { "level": 1, "title": "Belter", "bonus": { "skill": "Vacc Suit", "value": 1 } },
+        { "level": 2, "title": "Belter" },
+        { "level": 3, "title": "Rock-hound", "bonus": { "skill": "Profession (mining)", "value": 1 } },
+        { "level": 4, "title": "Rock-hound" },
+        { "level": 5, "title": "Asteroid Master", "bonus": { "stat": "END", "value": 1 } },
+        { "level": 6, "title": "Belter Lord" }
+      ]
+    },
+    {
+      "name": "Tinker",
+      "survival": { "stat": "END", "target": 7 },
+      "advancement": { "stat": "INT", "target": 7 },
+      "skills": ["Pilot (any)", "Profession (any)", "Mechanic", "Streetwise", "Engineer (any)", "Vacc Suit"],
+      "ranks": [
+        { "level": 0, "title": "Apprentice" },
+        { "level": 1, "title": "Tinker", "bonus": { "skill": "Profession (any)", "value": 1 } },
+        { "level": 2, "title": "Tinker" },
+        { "level": 3, "title": "Technician", "bonus": { "skill": "Mechanic", "value": 1 } },
+        { "level": 4, "title": "Technician" },
+        { "level": 5, "title": "Master Tinker", "bonus": { "stat": "INT", "value": 1 } },
+        { "level": 6, "title": "Chief Engineer" }
+      ]
+    },
+    {
+      "name": "Libertine",
+      "survival": { "stat": "DEX", "target": 7 },
+      "advancement": { "stat": "INT", "target": 7 },
+      "skills": ["Pilot (any)", "Vacc Suit", "Persuade", "Mechanic", "Engineer (any)", "Electronics (any)"],
+      "ranks": [
+        { "level": 0, "title": "Free Soul" },
+        { "level": 1, "title": "Libertine", "bonus": { "skill": "Persuade", "value": 1 } },
+        { "level": 2, "title": "Libertine" },
+        { "level": 3, "title": "Trader", "bonus": { "skill": "Broker", "value": 1 } },
+        { "level": 4, "title": "Trader" },
+        { "level": 5, "title": "Merchant Prince", "bonus": { "stat": "SOC", "value": 1 } },
+        { "level": 6, "title": "Libertine Elder" }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Mishap but stay in colony.",
+      "gameEvent": {
+        "id": "spaceborne_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "A habitat failure or mining accident occurs.",
+          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "Salvage operation.",
+      "gameEvent": {
+        "id": "spaceborne_event_3",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Salvage Operation",
+          "description": "You find a derelict ship or station.",
+          "options": [{ "label": "Accept Salvage", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-dm", "value": 1 }]
+    },
+    {
+      "roll": 4,
+      "description": "Zero-G Training.",
+      "gameEvent": {
+        "id": "spaceborne_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Zero-G Training",
+          "description": "You spend extra time practicing maneuvers.",
+          "options": [
+            { "label": "Vacc Suit 1", "effects": [{ "type": "SKILL_MOD", "target": "Vacc Suit", "value": 1 }] },
+            { "label": "Athletics (Dexterity) 1", "effects": [{ "type": "SKILL_MOD", "target": "Athletics (Dexterity)", "value": 1 }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "skill-choice", "skills": ["Vacc Suit", "Athletics (Dexterity)"] }]
+    },
+    {
+      "roll": 5,
+      "description": "Habitat Politics.",
+      "gameEvent": {
+        "id": "spaceborne_event_5",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Habitat Politics",
+          "description": "You get involved in station governance.",
+          "options": [{ "label": "Advocate (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "spaceborne_event_5_pass", "onFail": "spaceborne_event_5_fail" }] }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "spaceborne_event_5_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Political Success",
+            "description": "You gain influence in the habitat. Gain an Ally.",
+            "options": [{ "label": "Gain Ally", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Station Official" } }] }]
+          }
+        },
+        {
+          "id": "spaceborne_event_5_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Political Failure",
+            "description": "You make an enemy.",
+            "options": [{ "label": "Gain Enemy", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Official" } }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Advocate"], "onSuccess": [{ "type": "npc", "npcType": "ally" }], "onFailure": [{ "type": "npc", "npcType": "enemy" }] }]
+    },
+    {
+      "roll": 6,
+      "description": "Technical Breakthrough.",
+      "gameEvent": {
+        "id": "spaceborne_event_6",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Technical Breakthrough",
+          "description": "You find a better way to fix things.",
+          "options": [{ "label": "Increase Mechanic", "effects": [{ "type": "SKILL_MOD", "target": "Mechanic", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "skill-gain", "skill": "Mechanic" }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "spaceborne_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "Dangerous EVA.",
+      "gameEvent": {
+        "id": "spaceborne_event_8",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Dangerous EVA",
+          "description": "A high-risk spacewalk is required.",
+          "options": [{ "label": "Vacc Suit (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "spaceborne_event_8_pass", "onFail": "spaceborne_event_8_fail" }] }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "spaceborne_event_8_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "EVA Successful",
+            "description": "You earn the respect of your peers.",
+            "options": [{ "label": "Gain Respect", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+          }
+        },
+        {
+          "id": "spaceborne_event_8_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "EVA Failure",
+            "description": "You suffer an accident.",
+            "options": [{ "label": "Accept Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Vacc Suit"], "onSuccess": [{ "type": "advancement-dm", "value": 2 }], "onFailure": [{ "type": "injury" }] }]
+    },
+    {
+      "roll": 9,
+      "description": "Black Market.",
+      "gameEvent": {
+        "id": "spaceborne_event_9",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Black Market",
+          "description": "You have a chance to deal in contraband.",
+          "options": [
+            {
+              "label": "Deal (Benefit DM+2)",
+              "effects": [
+                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 2 },
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Authority" } }
+              ]
+            },
+            {
+              "label": "Refuse",
+              "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Principled Belter" } }]
+            }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Black Market" }]
+    },
+    {
+      "roll": 10,
+      "description": "Stutterwarp Specialist.",
+      "gameEvent": {
+        "id": "spaceborne_event_10",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Stutterwarp Specialist",
+          "description": "You show aptitude for drive systems.",
+          "options": [{ "label": "Gain Engineer (Drive) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (Drive)", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "skill-gain", "skill": "Engineer (Drive)" }]
+    },
+    {
+      "roll": 11,
+      "description": "Mentor.",
+      "gameEvent": {
+        "id": "spaceborne_event_11",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Mentor",
+          "description": "An elder spacer takes you under their wing.",
+          "options": [{ "label": "Increase Any Known Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+        }
+      },
+      "effects": [{ "type": "any-skill-up" }]
+    },
+    {
+      "roll": 12,
+      "description": "Hero of the Habitat. Automatic Promotion.",
+      "gameEvent": {
+        "id": "spaceborne_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Heroism",
+          "description": "You save the habitat from a disaster.",
+          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Hero of the Habitat" }] }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "spaceborne_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "A decompression incident leaves you severely injured.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    },
+    {
+      "roll": 2,
+      "description": "Habitat Evacuated.",
+      "gameEvent": {
+        "id": "spaceborne_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Habitat Evacuated",
+          "description": "Your habitat is abandoned due to failure or attack.",
+          "options": [{ "label": "Flee", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }, { "type": "EJECT_CAREER", "note": "Habitat Lost" }] }]
+        }
+      },
+      "effects": [{ "type": "lose-benefit" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 3,
+      "description": "Accused of Sabotage.",
+      "gameEvent": {
+        "id": "spaceborne_mishap_3",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Accused of Sabotage",
+          "description": "You are framed for a station failure.",
+          "options": [{ "label": "Exile", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Authority" } }, { "type": "EJECT_CAREER", "note": "Exiled" }] }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 4,
+      "description": "Resource Depletion.",
+      "gameEvent": {
+        "id": "spaceborne_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Resource Depletion",
+          "description": "The rocks go dry. Your colony can no longer support you.",
+          "options": [{ "label": "Leave Colony", "effects": [{ "type": "EJECT_CAREER", "note": "Economic Exile" }] }]
+        }
+      },
+      "effects": [{ "type": "forced-out" }]
+    },
+    {
+      "roll": 5,
+      "description": "Radiation Sickness.",
+      "gameEvent": {
+        "id": "spaceborne_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Radiation Sickness",
+          "description": "Exposure to solar flares causes chronic illness.",
+          "options": [{ "label": "Recover", "effects": [{ "type": "STAT_MOD", "target": "END", "value": -1 }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "spaceborne_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured in an industrial accident.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [0, 0, 1000, 2000, 3000, 5000, 10000],
+    "benefits": ["Contact", "Weapon", "Ally", "Ship Share", "INT +1", "Two Ship Shares", "Belter Ship"]
+  },
+  "medical": {
+    "plan": "independent",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 0,
+      "range8to11": 50,
+      "above12": 75
+    }
+  }
+}

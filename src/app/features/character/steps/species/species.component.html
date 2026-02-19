@@ -1,0 +1,47 @@
+<div class="species-container">
+    <app-step-header 
+        stepSymbol="SEC" 
+        stepNumber="02" 
+        superLabel="GENETIC_ARCHIVE_2300AD"
+        topLabel="BIOLOGICAL_DATA"
+        title="BIOLOGICAL_ARCHETYPE" 
+        subtitle="SELECT_SPECIES_OR_GENETIC_VARIANT">
+    </app-step-header>
+
+    <div class="species-grid">
+        <div *ngFor="let option of speciesOptions" 
+             class="species-card" 
+             [class.selected]="selectedId === option.id"
+             (click)="select(option)">
+            
+            <div class="card-header">
+                <h3>{{ option.name }}</h3>
+                <div class="selection-box"></div>
+            </div>
+
+            <p class="description">{{ option.description }}</p>
+
+            <div class="traits-section">
+                <div class="trait-group bonus" *ngIf="option.bonuses.length">
+                    <label>ADVANTAGES</label>
+                    <ul>
+                        <li *ngFor="let bonus of option.bonuses">{{ bonus }}</li>
+                    </ul>
+                </div>
+
+                <div class="trait-group penalty" *ngIf="option.penalties.length">
+                    <label>PENALTIES</label>
+                    <ul>
+                        <li *ngFor="let penalty of option.penalties">{{ penalty }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tags">
+                <span *ngFor="let trait of option.traits" class="tag">{{ trait }}</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+

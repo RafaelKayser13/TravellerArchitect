@@ -1,0 +1,182 @@
+// HUD Content Layout
+.hud-content-layout {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
+
+    .hud-column {
+        flex: 1;
+        background: rgba(0, 20, 40, 0.3);
+        border: 1px solid rgba(0, 243, 255, 0.1);
+        padding: 1.5rem;
+
+        .column-header {
+            font-family: var(--font-mono);
+            color: var(--neon-cyan);
+            border-bottom: 1px solid var(--neon-cyan-glow);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            
+            .prefix {
+                color: var(--vivid-orange);
+                margin-right: 0.5rem;
+            }
+        }
+    }
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+
+    label {
+        display: block;
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-bottom: 0.5rem;
+    }
+
+    input, textarea {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--text-dim);
+        color: var(--text-main);
+        font-family: var(--font-body);
+        padding: 0.8rem;
+        transition: all 0.3s ease;
+
+        &:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan-glow);
+        }
+    }
+
+    textarea {
+        height: 100px;
+        resize: vertical;
+    }
+
+    .static-val {
+        font-family: var(--font-accent);
+        color: var(--text-main);
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+}
+
+.input-with-action {
+    display: flex;
+    gap: 0.5rem;
+
+    input { flex: 1; }
+
+    .btn-icon {
+        width: 40px;
+        background: rgba(0, 243, 255, 0.1);
+        border: 1px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            background: rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 10px var(--neon-cyan-glow);
+        }
+    }
+}
+
+.profile-details {
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-family: var(--font-mono);
+
+        .label { color: var(--text-dim); }
+        .val { color: var(--text-main); }
+    }
+
+    .btn-outline {
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        background: transparent;
+        border: 1px dashed var(--text-dim);
+        color: var(--text-dim);
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            border-style: solid;
+            color: var(--neon-cyan);
+            background: rgba(0, 243, 255, 0.05);
+        }
+    }
+}
+
+.hud-main-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    .footer-decor {
+        flex: 1;
+        height: 1px;
+        background: var(--text-dim);
+        opacity: 0.3;
+    }
+
+    .footer-actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    button {
+        padding: 0.8rem 2rem;
+        font-family: var(--font-accent);
+        letter-spacing: 1px;
+        cursor: pointer;
+        border: none;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .btn-confirm {
+        background: var(--neon-cyan);
+        color: #000;
+        
+        &:hover {
+            box-shadow: 0 0 15px var(--neon-cyan-glow);
+            transform: translateY(-2px);
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    }
+
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid var(--vivid-orange);
+        color: var(--vivid-orange);
+
+        &:hover {
+            background: rgba(255, 140, 0, 0.1);
+            box-shadow: 0 0 10px var(--vivid-orange-glow);
+        }
+    }
+}

@@ -5,7 +5,25 @@ export interface Modifier {
   value: number;
 }
 
-export interface RollRequest {
+/**
+ * Optional context shown in the dice roller's briefing and result phases.
+ * Providing these fields enables the 3-phase announcement flow:
+ *   1. Briefing  — shows announcement, success/failure preview, then player clicks ROLL
+ *   2. Rolling   — 3D dice animation
+ *   3. Result    — shows success/failure with contextual narrative before PROCEED
+ */
+export interface RollContext {
+  /** Short label for the current phase, e.g. "SURVIVAL • TERM 3" */
+  phase?: string;
+  /** Paragraph explaining WHY this roll is happening. Shown BEFORE dice are thrown. */
+  announcement?: string;
+  /** What success means for the character in plain language. */
+  successContext?: string;
+  /** What failure means for the character in plain language. */
+  failureContext?: string;
+}
+
+export interface RollRequest extends RollContext {
   reason: string;
   diceCount: number;
   dm: number;
@@ -23,7 +41,13 @@ export interface RollRequest {
 })
 export class DiceDisplayService {
   request = signal<RollRequest | null>(null);
+  debugMode = signal<boolean>(false);
 
+  /**
+   * Show a dice roll overlay.
+   * If `context.announcement` is provided, the overlay first shows a briefing
+   * card asking the player to confirm before the dice animate.
+   */
   roll(
       reason: string, 
       diceCount: number = 2, 
@@ -32,7 +56,8 @@ export class DiceDisplayService {
       statName: string = '',
       getResultDescription?: (result: number) => string,
       modifiers: Modifier[] = [],
-      debugTableData?: any
+      debugTableData?: any,
+      context: RollContext = {}
   ): Promise<number> {
     return new Promise(resolve => {
       this.request.set({ 
@@ -44,7 +69,8 @@ export class DiceDisplayService {
         getResultDescription, 
         modifiers, 
         debugTableData,
-        resolve 
+        resolve,
+        ...context
       });
     });
   }

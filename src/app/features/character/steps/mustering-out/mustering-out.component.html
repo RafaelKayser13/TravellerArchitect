@@ -1,58 +1,169 @@
 <div class="mustering-container">
-    <h2>Mustering Out (Term {{ character().careerHistory.length }})</h2>
-    
-    <div class="stats-overview">
-        <div class="stat-card">
-            <span class="label">Total Terms</span>
-            <span class="value">{{ character().careerHistory.length }}</span>
+    <app-step-header stepSymbol="SEC" stepNumber="07" superLabel="SERVICE_LIQUIDATION_V3.0"
+        topLabel="TERMINATION_SUMMARY" title="SERVICE_TERMINATION_PROTOCOL"
+        subtitle="MUSTER_OUT_PROCEEDING // PENSION: Lv {{ pension() | number }}">
+    </app-step-header>
+
+    <div class="hud-module info">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">MT_01</span>
+            <h3>SERVICE_TERM_METRICS</h3>
         </div>
-        <div class="stat-card">
-            <span class="label">Pension</span>
-            <span class="value">{{ pension() > 0 ? 'Lv ' + pension() : 'None' }}</span>
-        </div>
-        <div class="stat-card highlight">
-            <span class="label">Rolls Available</span>
-            <div class="rolls-visual">
-                <div class="roll-token filled" *ngFor="let i of [].constructor(totalRolls() - rollsUsed())"></div>
-                <div class="roll-token empty" *ngFor="let i of [].constructor(rollsUsed())"></div>
+        <div class="hud-content">
+            <div class="tactical-row">
+                <div class="t-item">
+                    <span class="t-label">CAREER_DURATION</span>
+                    <span class="t-val">{{ character().careerHistory.length }} TERMS</span>
+                </div>
+                <div class="t-item">
+                    <span class="t-label">ANNUAL_PENSION</span>
+                    <span class="t-val" [class.highlight]="pension() > 0">{{ pension() > 0 ? 'Lv ' + (pension() |
+                        number) : 'NOT_ELIGIBLE' }}</span>
+                </div>
+                <div class="t-item">
+                    <span class="t-label">BENEFIT_VECTORS_AVAIL</span>
+                    <span class="t-val highlight">{{ totalRolls() }}</span>
+                </div>
+                <div class="t-item">
+                    <span class="t-label">LIQUID_CASH</span>
+                    <span class="t-val highlight">Lv {{ character().finances.cash | number }}</span>
+                </div>
+                <div class="t-item" *ngIf="character().finances.medicalDebt">
+                    <span class="t-label">MEDICAL_DEBT</span>
+                    <span class="t-val danger">Lv {{ character().finances.medicalDebt | number }}</span>
+                </div>
             </div>
-            <span class="sub-val">{{ totalRolls() - rollsUsed() }} remaining</span>
+
+            <div class="hud-alert info" *ngIf="totalRolls() > 0">
+                <span class="hud-label-vivid">[ PENDING_BENEFIT_DISTRIBUTION ]</span>
+                <p>Select source career and acquisition vector for assets or liquid equity.</p>
+            </div>
         </div>
     </div>
 
-    <div class="action-area" *ngIf="rollsUsed() < totalRolls()">
-        <p class="instruction">Choose your benefit table.</p>
-        
-        <div class="buttons">
-            <button class="btn-card cash" 
-                    (click)="rollBenefit('Cash')" 
-                    [disabled]="cashRolls() >= maxCashRolls">
-                <div class="icon">Credits</div>
-                <span class="btn-title">Cash Roll</span>
-                <span class="limit">Limit: {{ cashRolls() }}/3</span>
+    <!-- BENEFIT ROLLING PHASE -->
+    <div class="action-area" *ngIf="totalRolls() > 0">
+        <div class="career-selector-hud">
+            <span class="hud-label-tiny">SELECT_SOURCE_CAREER</span>
+            <div class="career-tabs">
+                <button *ngFor="let pool of careerPools()" class="career-tab"
+                    [class.active]="selectedCareerName() === pool.name" (click)="selectCareer(pool.name)">
+                    <span class="c-name">{{ pool.name }}</span>
+                    <span class="c-count">{{ pool.count }}</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="benefit-selector-grid" *ngIf="selectedCareerName()">
+            <button class="vector-btn cash" (click)="rollBenefit('Cash')" [disabled]="cashRolls() >= maxCashRolls">
+                <div class="corner-detail tl"></div>
+                <div class="corner-detail tr"></div>
+                <span class="v-label">EQUITY_LIQUIDATION</span>
+                <span class="v-desc">Cash via {{ selectedCareerName() }}. Limit: {{ cashRolls() }}/3</span>
+                <div class="benefit-preview" *ngIf="currentCareerDef()">
+                    <div class="benefit-item" *ngFor="let b of currentCareerDef()?.musteringOutCash; let i = index">
+                        <span class="num">{{i+1}}</span> {{b | number}}
+                    </div>
+                </div>
             </button>
-            
-            <button class="btn-card material" (click)="rollBenefit('Material')">
-                <div class="icon">Asset</div>
-                <span class="btn-title">Material Benefit</span>
-                <span class="limit">Equipment, Ship Shares, Stats</span>
+
+            <button class="vector-btn material" (click)="rollBenefit('Material')">
+                <div class="corner-detail tl"></div>
+                <div class="corner-detail tr"></div>
+                <span class="v-label">ASSET_REQUISITION</span>
+                <span class="v-desc">Assets from {{ selectedCareerName() }}.</span>
+                <div class="benefit-preview" *ngIf="currentCareerDef()">
+                    <div class="benefit-item" *ngFor="let b of currentCareerDef()?.musteringOutBenefits; let i = index">
+                        <span class="num">{{i+1}}</span> {{b}}
+                    </div>
+                </div>
             </button>
         </div>
     </div>
-    
-    <div class="benefits-summary">
-        <h3>Benefits Acquired</h3>
-        <div class="benefits-grid">
-            <div class="benefit-badge" *ngFor="let item of benefitsLog()">
-                {{ item }}
-            </div>
-            <div class="empty-state" *ngIf="benefitsLog().length === 0">
-                No benefits rolled yet.
+
+    <!-- BENEFIT LEDGER -->
+    <div class="hud-module status" [class.empty]="benefitsLog().length === 0">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">MT_02</span>
+            <h3>ACQUIRED_BENEFIT_LEDGER</h3>
+        </div>
+        <div class="hud-content">
+            <div class="benefits-log-terminal">
+                <div class="log-entry" *ngFor="let item of benefitsLog()">
+                    <span class="dot"></span>
+                    <span class="text">{{ item }}</span>
+                </div>
+                <div class="empty-state" *ngIf="benefitsLog().length === 0">
+                    [ NO_RECORDS_FOUND ]
+                </div>
             </div>
         </div>
     </div>
-    
-    <div class="finish-section" *ngIf="rollsUsed() >= totalRolls()">
-        <button class="btn-finish" (click)="finish()">FINALIZE CHARACTER</button>
+
+    <!-- MEDICAL DEBT REPAYMENT PHASE -->
+    <div class="hud-module debt-phase" *ngIf="totalRolls() === 0 && unpaidInjuries().length > 0">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">MT_03</span>
+            <h3>MEDICAL_DEBT_SETTLEMENT</h3>
+        </div>
+        <div class="hud-content">
+            <div class="hud-alert warning">
+                <span class="hud-label-vivid">[ OUTSTANDING_MEDICAL_OBLIGATIONS ]</span>
+                <p>You have unpaid medical debts. Pay now to restore reduced attributes, or begin the game with
+                    permanent stat penalties and outstanding debt.</p>
+                <p class="cash-display">AVAILABLE_CASH: <strong>Lv {{ character().finances.cash | number }}</strong></p>
+            </div>
+
+            <div class="debt-list">
+                <div class="debt-item" *ngFor="let injury of unpaidInjuries()">
+                    <div class="debt-info">
+                        <span class="d-name">{{ injury.name }}</span>
+                        <span class="d-stat">{{ injury.stat }} reduced by {{ injury.reduction }}</span>
+                        <span class="d-cost">Treatment: <strong>Lv {{ injury.cost | number }}</strong></span>
+                    </div>
+                    <button class="btn-pay" (click)="payDebt(injury.id)"
+                        [disabled]="character().finances.cash < injury.cost">
+                        {{ character().finances.cash >= injury.cost ? 'PAY_DEBT' : 'INSUFFICIENT_FUNDS' }}
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- PENSION SUMMARY (shown after all rolls) -->
+    <div class="hud-module pension-summary" *ngIf="totalRolls() === 0 && pension() > 0">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="hud-box-header">
+            <span class="index">MT_04</span>
+            <h3>PENSION_ENTITLEMENT</h3>
+        </div>
+        <div class="hud-content">
+            <div class="pension-display">
+                <span class="pension-amount">Lv {{ pension() | number }}</span>
+                <span class="pension-label">PER ANNUM</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINALIZE -->
+    <div class="global-actions" *ngIf="totalRolls() === 0">
+        <div class="divider"></div>
+        <button class="btn-action finalize" (click)="finish()">
+            FINALIZE_CHARACTER
+        </button>
+    </div>
+
 </div>

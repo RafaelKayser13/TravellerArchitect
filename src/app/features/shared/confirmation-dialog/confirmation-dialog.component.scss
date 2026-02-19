@@ -1,0 +1,88 @@
+.dialog-content {
+  padding: 0 1rem;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+
+  .status-readout {
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+}
+
+.action-wrapper {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  justify-content: center;
+
+  button {
+    padding: 0.7rem 1.5rem;
+    font-family: var(--font-accent);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid currentColor;
+    color: inherit; /* Ensure it inherits the wrapper color */
+    transition: all 0.2s;
+    text-transform: uppercase;
+
+    &.btn-cancel {
+      border-style: dashed;
+      opacity: 0.8;
+      &:hover {
+        opacity: 1;
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    &.btn-confirm {
+      background: rgba(0, 0, 0, 0.6);
+      &:hover {
+        color: #000;
+        /* Background and shadow handled by type variations below */
+      }
+    }
+  }
+
+  // Type variations for buttons must explicitly set COLOR for the wrapper to inherit
+  &.success {
+    color: #00ff9d;
+    .btn-confirm:hover {
+      background: #00ff9d;
+      box-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
+    }
+  }
+  &.warning {
+    color: var(--vivid-orange, #ff9d00);
+    .btn-confirm:hover {
+      background: var(--vivid-orange, #ff9d00);
+      box-shadow: 0 0 15px rgba(255, 157, 0, 0.4);
+    }
+  }
+  &.error {
+    color: var(--power-red, #ff3333);
+    .btn-confirm:hover {
+      background: var(--power-red, #ff3333);
+      box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
+    }
+  }
+  &.info {
+    color: var(--neon-cyan, #00ffff);
+    .btn-confirm:hover {
+      background: var(--neon-cyan, #00ffff);
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+    }
+  }
+}

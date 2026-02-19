@@ -1,0 +1,405 @@
+{
+  "id": "scholar",
+  "name": "Scholar",
+  "description": "Researchers, scientists, and academics.",
+  "qualification": {
+    "stat": "EDU",
+    "target": 6,
+    "minAttributes": { "edu": 6 }
+  },
+  "skills": {
+    "personal": ["INT +1", "EDU +1", "SOC +1", "Language (any)", "Electronics (any)", "Diplomat"],
+    "service": ["Science (any)", "Electronics (any)", "Medic", "Investigate", "Mind (any)", "Navigation"],
+    "advanced": ["Science (any)", "Electronics (any)", "Admin", "Advocate", "Language (any)", "Mind (any)"]
+  },
+  "advancedEducationMinEdu": 10,
+  "assignments": [
+    {
+      "name": "Field Researcher",
+      "survival": { "stat": "END", "target": 6 },
+      "advancement": { "stat": "INT", "target": 6 },
+      "skills": ["Electronics (any)", "Science (any)", "Survival", "Recon", "Investigate", "Medic"],
+      "ranks": [
+        { "level": 0, "title": "Field Researcher" },
+        { "level": 1, "title": "Field Researcher", "bonus": { "skill": "Science (any)", "value": 1 } },
+        { "level": 2, "title": "Field Researcher" },
+        { "level": 3, "title": "Science Officer", "bonus": { "skill": "Electronics (sensors)", "value": 1 } },
+        { "level": 4, "title": "Science Officer" },
+        { "level": 5, "title": "Lead Scientist", "bonus": { "stat": "INT", "value": 1 } },
+        { "level": 6, "title": "Scientist" }
+      ]
+    },
+    {
+      "name": "Scientist",
+      "survival": { "stat": "EDU", "target": 4 },
+      "advancement": { "stat": "EDU", "target": 8 },
+      "skills": ["Admin", "Electronics (any)", "Science (any)", "Science (any)", "Investigate", "Language (any)"],
+      "ranks": [
+        { "level": 0, "title": "Scientist" },
+        { "level": 1, "title": "Scientist", "bonus": { "skill": "Science (any)", "value": 1 } },
+        { "level": 2, "title": "Scientist" },
+        { "level": 3, "title": "Professor", "bonus": { "skill": "Investigate", "value": 1 } },
+        { "level": 4, "title": "Professor" },
+        { "level": 5, "title": "Research Lead", "bonus": { "stat": "EDU", "value": 1 } },
+        { "level": 6, "title": "Scientist" }
+      ]
+    },
+    {
+      "name": "Physician",
+      "survival": { "stat": "EDU", "target": 4 },
+      "advancement": { "stat": "EDU", "target": 8 },
+      "skills": ["Medic", "Electronics (any)", "Science (life)", "Investigate", "Admin", "Diplomat"],
+      "ranks": [
+        { "level": 0, "title": "Physician" },
+        { "level": 1, "title": "Physician", "bonus": { "skill": "Medic", "value": 1 } },
+        { "level": 2, "title": "Physician" },
+        { "level": 3, "title": "Doctor", "bonus": { "skill": "Science (life)", "value": 1 } },
+        { "level": 4, "title": "Doctor" },
+        { "level": 5, "title": "Senior Doctor", "bonus": { "stat": "EDU", "value": 1 } },
+        { "level": 6, "title": "Physician" }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Mishap but not ejected.",
+      "gameEvent": {
+        "id": "scholar_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "Something has gone terribly wrong in your research.",
+          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "mishap" }]
+    },
+    {
+      "roll": 3,
+      "description": "Scientific Breakthrough.",
+      "gameEvent": {
+        "id": "scholar_event_3",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Scientific Breakthrough",
+          "description": "You make a significant discovery in your field.",
+          "options": [{ "label": "Accept Recognition", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+        }
+      },
+      "effects": [{ "type": "advancement-dm", "value": 2 }]
+    },
+    {
+      "roll": 4,
+      "description": "Scientific Interference.",
+      "gameEvent": {
+        "id": "scholar_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Scientific Interference",
+          "description": "A corporation or government agency attempts to interfere.",
+          "options": [
+            {
+              "label": "Work with them",
+              "effects": [
+                { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Agency Liaison" } }
+              ]
+            },
+            {
+              "label": "Resist Interference",
+              "effects": [
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Spurned Agency" } },
+                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 1 }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Interference" }]
+    },
+    {
+      "roll": 5,
+      "description": "Advanced Training. Roll EDU 8+. Success: Increase any known skill by +1 level.",
+      "gameEvent": {
+        "id": "scholar_event_5",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Advanced Training",
+          "description": "You have the opportunity for advanced training.",
+          "options": [{ "label": "Attempt Training (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "scholar_event_5_pass", "onFail": "scholar_event_5_fail" }] }]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "scholar_event_5_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Successful",
+            "description": "You excel in your training.",
+            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+          }
+        },
+        {
+          "id": "scholar_event_5_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "You fail to qualify for the advanced training.",
+            "options": [{ "label": "Continue", "effects": [] }]
+          }
+        }
+      ],
+      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
+    },
+    {
+      "roll": 6,
+      "description": "Research Patron. Gain DM+1 to any Benefit roll.",
+      "gameEvent": {
+        "id": "scholar_event_6",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Research Patron",
+          "description": "You find a patron willing to fund your research.",
+          "options": [{ "label": "Accept Funding", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "benefit-dm", "value": 1 }]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "scholar_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+        }
+      },
+      "effects": [{ "type": "life-event" }]
+    },
+    {
+      "roll": 8,
+      "description": "Academic Dishonesty.",
+      "gameEvent": {
+        "id": "scholar_event_8",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Academic Dishonesty",
+          "description": "You have the opportunity to plagiarize or falsify data.",
+          "options": [
+            {
+              "label": "Cheat (Advancement DM+2)",
+              "effects": [
+                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 },
+                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Suspicious Colleague" } }
+              ]
+            },
+            {
+              "label": "Refuse (Benefit DM+1)",
+              "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }]
+            }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Academic Integrity" }]
+    },
+    {
+      "roll": 9,
+      "description": "Renowned Discovery. Automatic Promotion.",
+      "gameEvent": {
+        "id": "scholar_event_9",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Renowned Discovery",
+          "description": "You make a discovery that is recognized across the sector.",
+          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Renowned Discovery" }] }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }]
+    },
+    {
+      "roll": 10,
+      "description": "Valuable Partnership. Gain an Ally.",
+      "gameEvent": {
+        "id": "scholar_event_10",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Valuable Partnership",
+          "description": "You form a partnership with another researcher.",
+          "options": [{ "label": "Gain Ally", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Research Partner" } }] }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "ally" }]
+    },
+    {
+      "roll": 11,
+      "description": "Academic Prize. Gain +1 Social Standing.",
+      "gameEvent": {
+        "id": "scholar_event_11",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Academic Prize",
+          "description": "You win a prestigious award for your work.",
+          "options": [{ "label": "Accept Award", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }] }]
+        }
+      },
+      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": 1 }]
+    },
+    {
+      "roll": 12,
+      "description": "Paradigm Shift. Automatic Promotion and SOC+1.",
+      "gameEvent": {
+        "id": "scholar_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Paradigm Shift",
+          "description": "Your work changes the way your entire field is understood.",
+          "options": [{
+            "label": "Accept Accolades",
+            "effects": [
+              { "type": "PROMOTION", "note": "Paradigm Shift" },
+              { "type": "STAT_MOD", "target": "SOC", "value": 1 }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "auto-promotion" }, { "type": "stat-bonus", "stat": "SOC", "value": 1 }]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "scholar_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "A major laboratory or field accident leaves you severely injured.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    },
+    {
+      "roll": 2,
+      "description": "Lab Accident.",
+      "gameEvent": {
+        "id": "scholar_mishap_2",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Laboratory Accident",
+          "description": "An accident in the lab results in either physical injury or the destruction of research.",
+          "options": [
+            { "label": "Suffer Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] },
+            { "label": "Lose Research", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }, { "type": "EJECT_CAREER", "note": "Research Destroyed" }] }
+          ]
+        }
+      },
+      "effects": [{ "type": "choice", "note": "Accident" }]
+    },
+    {
+      "roll": 3,
+      "description": "Work Stolen. Gain a Rival.",
+      "gameEvent": {
+        "id": "scholar_mishap_3",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Work Stolen",
+          "description": "A colleague or superior steals your work.",
+          "options": [{
+            "label": "Leave Institution",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Plagiarist" } },
+              { "type": "EJECT_CAREER", "note": "Academic Plagiarism" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "rival" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 4,
+      "description": "Funding Crisis.",
+      "gameEvent": {
+        "id": "scholar_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Funding Crisis",
+          "description": "Your department loses its funding.",
+          "options": [{ "label": "Leave Scholarship", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }, { "type": "EJECT_CAREER", "note": "Budget Cuts" }] }]
+        }
+      },
+      "effects": [{ "type": "lose-benefit" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 5,
+      "description": "Betrayal. Gain an Enemy.",
+      "gameEvent": {
+        "id": "scholar_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Academic Betrayal",
+          "description": "A close associate betrays you.",
+          "options": [{
+            "label": "Defend Yourself",
+            "effects": [
+              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Former Colleague" } },
+              { "type": "EJECT_CAREER", "note": "Academic Betrayal" }
+            ]
+          }]
+        }
+      },
+      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "scholar_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured during your work.",
+          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+        }
+      },
+      "effects": [{ "type": "injury" }]
+    }
+  ],
+  "musteringOut": {
+    "cash": [5000, 10000, 20000, 30000, 40000, 60000, 100000],
+    "benefits": ["INT +1", "EDU +1", "Two Ship Shares", "SOC +1", "Scientific Equipment", "Ship Share", "Lab Ship"]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 50,
+      "range8to11": 75,
+      "above12": 100
+    }
+  }
+}
