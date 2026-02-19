@@ -777,7 +777,10 @@ export class EducationComponent implements OnInit, OnDestroy {
 
     avoidWar() {
         this.showWarOptions = false;
+        this.graduated = true;
+        this.graduationStatus = 'Passed';
         this.characterService.log('Used social standing to avoid the draft.');
+        this.characterService.log('**Education Completed**: Successfully graduated with honors (avoided draft).');
         // Continue normally to graduation
         this.educationStep = 'Finished';
         this.scrollToTop();
