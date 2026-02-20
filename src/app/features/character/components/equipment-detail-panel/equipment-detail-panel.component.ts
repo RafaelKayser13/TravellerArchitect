@@ -57,31 +57,31 @@ interface SpecItem {
             <h3>WEAPON SPECS</h3>
           </div>
           <div class="specs-grid">
-            <div class="spec-row" *ngIf="equipment['damage']">
+            <div class="spec-row" *ngIf="getProperty('damage')">
               <span class="spec-label">DAMAGE:</span>
-              <span class="spec-value">{{ equipment['damage'] }}</span>
+              <span class="spec-value">{{ getProperty('damage') }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['range']">
+            <div class="spec-row" *ngIf="getProperty('range')">
               <span class="spec-label">RANGE:</span>
-              <span class="spec-value">{{ equipment['range'] }}</span>
+              <span class="spec-value">{{ getProperty('range') }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['magazine']">
+            <div class="spec-row" *ngIf="getProperty('magazine')">
               <span class="spec-label">MAGAZINE:</span>
-              <span class="spec-value">{{ equipment['magazine'] }} rounds</span>
+              <span class="spec-value">{{ getProperty('magazine') }} rounds</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['rateOfFire']">
+            <div class="spec-row" *ngIf="getProperty('rateOfFire')">
               <span class="spec-label">RATE OF FIRE:</span>
-              <span class="spec-value">{{ equipment['rateOfFire'] }}</span>
+              <span class="spec-value">{{ getProperty('rateOfFire') }}</span>
             </div>
           </div>
 
           <!-- Traits -->
-          <div class="traits-section" *ngIf="equipment['traits'] && equipment['traits'].length > 0">
+          <div class="traits-section" *ngIf="getProperty('traits') && getProperty('traits').length > 0">
             <div class="traits-header">
               <h4>TRAITS</h4>
             </div>
             <div class="traits-list">
-              <span *ngFor="let trait of equipment['traits']" class="trait-badge">
+              <span *ngFor="let trait of getProperty('traits')" class="trait-badge">
                 {{ trait }}
               </span>
             </div>
@@ -94,25 +94,25 @@ interface SpecItem {
             <h3>ARMOR SPECS</h3>
           </div>
           <div class="specs-grid">
-            <div class="spec-row" *ngIf="equipment['protection']">
+            <div class="spec-row" *ngIf="getProperty('protection')">
               <span class="spec-label">PROTECTION:</span>
-              <span class="spec-value">+{{ equipment['protection'] }}</span>
+              <span class="spec-value">+{{ getProperty('protection') }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['armorType']">
+            <div class="spec-row" *ngIf="getProperty('armorType')">
               <span class="spec-label">TYPE:</span>
-              <span class="spec-value">{{ formatText(equipment['armorType']) }}</span>
+              <span class="spec-value">{{ formatText(getProperty('armorType')) }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['encumbrance']">
+            <div class="spec-row" *ngIf="getProperty('encumbrance')">
               <span class="spec-label">ENCUMBRANCE:</span>
-              <span class="spec-value">-{{ equipment['encumbrance'] }}</span>
+              <span class="spec-value">-{{ getProperty('encumbrance') }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['envRating']">
+            <div class="spec-row" *ngIf="getProperty('envRating')">
               <span class="spec-label">ENV RATING:</span>
-              <span class="spec-value">{{ equipment['envRating'] }}</span>
+              <span class="spec-value">{{ getProperty('envRating') }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['requiredSkill']">
+            <div class="spec-row" *ngIf="getProperty('requiredSkill')">
               <span class="spec-label">REQUIRED:</span>
-              <span class="spec-value">{{ equipment['requiredSkill'] }}</span>
+              <span class="spec-value">{{ getProperty('requiredSkill') }}</span>
             </div>
           </div>
         </div>
@@ -123,54 +123,54 @@ interface SpecItem {
             <h3>CYBERNETIC SPECS</h3>
           </div>
           <div class="specs-grid">
-            <div class="spec-row" *ngIf="equipment['implantType']">
+            <div class="spec-row" *ngIf="getProperty('implantType')">
               <span class="spec-label">TYPE:</span>
-              <span class="spec-value">{{ formatText(equipment['implantType']) }}</span>
+              <span class="spec-value">{{ formatText(getProperty('implantType')) }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['surgeryTime']">
+            <div class="spec-row" *ngIf="getProperty('surgeryTime')">
               <span class="spec-label">SURGERY TIME:</span>
-              <span class="spec-value">{{ equipment['surgeryTime'] }}h</span>
+              <span class="spec-value">{{ getProperty('surgeryTime') }}h</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['maintenanceCostPerMonth']">
+            <div class="spec-row" *ngIf="getProperty('maintenanceCostPerMonth')">
               <span class="spec-label">MAINTENANCE:</span>
-              <span class="spec-value">Lv{{ equipment['maintenanceCostPerMonth'] }}/mo</span>
+              <span class="spec-value">Lv{{ getProperty('maintenanceCostPerMonth') }}/mo</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['yearlyMaintenanceCost']">
+            <div class="spec-row" *ngIf="getProperty('yearlyMaintenanceCost')">
               <span class="spec-label">YEARLY COST:</span>
-              <span class="spec-value">Lv{{ equipment['yearlyMaintenanceCost'] | number }}</span>
+              <span class="spec-value">Lv{{ getProperty('yearlyMaintenanceCost') | number }}</span>
             </div>
-            <div class="spec-row" *ngIf="equipment['batteryLife']">
+            <div class="spec-row" *ngIf="getProperty('batteryLife')">
               <span class="spec-label">BATTERY:</span>
-              <span class="spec-value">{{ equipment['batteryLife'] }}</span>
+              <span class="spec-value">{{ getProperty('batteryLife') }}</span>
             </div>
           </div>
 
           <!-- Features -->
-          <div class="features-section" *ngIf="equipment['features'] && equipment['features'].length > 0">
+          <div class="features-section" *ngIf="getProperty('features') && getProperty('features').length > 0">
             <div class="features-header">
               <h4>FEATURES</h4>
             </div>
             <div class="features-list">
-              <div *ngFor="let feature of equipment['features']" class="feature-item">
+              <div *ngFor="let feature of getProperty('features')" class="feature-item">
                 {{ feature }}
               </div>
             </div>
           </div>
 
           <!-- Effects/Side Effects -->
-          <div class="effects-section" *ngIf="equipment['effects'] || equipment['sideEffects']">
-            <div *ngIf="equipment['effects']" class="effects-subsection">
+          <div class="effects-section" *ngIf="getProperty('effects') || getProperty('sideEffects')">
+            <div *ngIf="getProperty('effects')" class="effects-subsection">
               <h4>EFFECTS</h4>
               <div class="effect-list">
-                <div *ngFor="let effect of equipment['effects']" class="effect-item">
+                <div *ngFor="let effect of getProperty('effects')" class="effect-item">
                   {{ effect }}
                 </div>
               </div>
             </div>
-            <div *ngIf="equipment['sideEffects']" class="effects-subsection">
+            <div *ngIf="getProperty('sideEffects')" class="effects-subsection">
               <h4>SIDE EFFECTS</h4>
               <div class="effect-list">
-                <div *ngFor="let effect of equipment['sideEffects']" class="effect-item warning">
+                <div *ngFor="let effect of getProperty('sideEffects')" class="effect-item warning">
                   {{ effect }}
                 </div>
               </div>
@@ -595,6 +595,10 @@ export class EquipmentDetailPanelComponent {
 
   isCybernetic(): boolean {
     return this.equipment ? ('surgeryTime' in this.equipment) : false;
+  }
+
+  getProperty(prop: string): any {
+    return this.equipment ? (this.equipment as any)[prop] : null;
   }
 
   getCategoryDisplay(): string {

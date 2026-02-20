@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject, OnInitialized, afterNextRender, effect } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, AfterViewInit, afterNextRender, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EquipmentService, EquipmentFilter } from '../../../../core/services/equipment.service';
@@ -12,9 +12,9 @@ import { EquipmentDetailPanelComponent } from '../equipment-detail-panel/equipme
   imports: [CommonModule, FormsModule, EquipmentDetailPanelComponent],
   template: `
     <dialog #modal class="equipment-modal">
-      <div class="modal-overlay" @if="isOpen$()"></div>
+      <div class="modal-overlay" *ngIf="isOpen$()"></div>
 
-      <div class="modal-window" @if="isOpen$()"  (click)="$event.stopPropagation()">
+      <div class="modal-window" *ngIf="isOpen$()"  (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h2>{{ title$() }}</h2>
           <button class="close-btn" (click)="closeModal()">✕</button>
@@ -81,7 +81,7 @@ import { EquipmentDetailPanelComponent } from '../equipment-detail-panel/equipme
           }
         </div>
 
-        <div class="modal-footer" @if="!selectedEquipment">
+        <div class="modal-footer" *ngIf="!selectedEquipment">
           <button class="btn-cancel" (click)="closeModal()">CANCELAR</button>
           <button
             class="btn-select"
@@ -316,7 +316,7 @@ import { EquipmentDetailPanelComponent } from '../equipment-detail-panel/equipme
     }
   `],
 })
-export class EquipmentSelectorModalComponent implements OnInitialized {
+export class EquipmentSelectorModalComponent implements AfterViewInit {
   @ViewChild('modal') modal!: ElementRef<HTMLDialogElement>;
 
   private benefitChoiceService = inject(BenefitChoiceService);
