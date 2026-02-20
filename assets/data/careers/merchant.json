@@ -425,33 +425,37 @@
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Lucrative Deal",
-          "description": "A chance at a high-risk, high-reward deal. Risk your Benefit rolls and roll Gambler or Broker 8+. Win: half back (round up). Lose: all gone. Either way, gain a level in the skill used.",
+          "description": "A chance at a high-risk, high-reward deal. How many Benefit rolls do you want to risk?",
           "options": [
             {
-              "label": "Risk with Gambler 8+",
+              "label": "Risk 1 Benefit Roll",
               "effects": [
                 {
-                  "type": "ROLL_CHECK",
-                  "stat": "INT",
-                  "checkTarget": 8,
-                  "onPass": "merchant_event_5_pass_gambler",
-                  "onFail": "merchant_event_5_fail_gambler"
+                  "type": "CUSTOM",
+                  "customId": "LUCRATIVE_DEAL_BET",
+                  "payload": { "amountRisked": 1 }
                 }
-              ],
-              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+              ]
             },
             {
-              "label": "Risk with Broker 8+",
+              "label": "Risk 2 Benefit Rolls",
               "effects": [
                 {
-                  "type": "ROLL_CHECK",
-                  "stat": "INT",
-                  "checkTarget": 8,
-                  "onPass": "merchant_event_5_pass_broker",
-                  "onFail": "merchant_event_5_fail_broker"
+                  "type": "CUSTOM",
+                  "customId": "LUCRATIVE_DEAL_BET",
+                  "payload": { "amountRisked": 2 }
                 }
-              ],
-              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+              ]
+            },
+            {
+              "label": "Risk 3 Benefit Rolls",
+              "effects": [
+                {
+                  "type": "CUSTOM",
+                  "customId": "LUCRATIVE_DEAL_BET",
+                  "payload": { "amountRisked": 3 }
+                }
+              ]
             },
             {
               "label": "Pass",

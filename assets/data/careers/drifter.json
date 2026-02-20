@@ -27,6 +27,63 @@
   },
   "assignments": [
     {
+      "name": "Freelancer",
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Pilot (any)",
+        "Mechanic",
+        "Electronics (any)",
+        "Profession (any)",
+        "Broker",
+        "Trade (any)"
+      ],
+      "ranks": [
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Broker",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Mechanic",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
+      ]
+    },
+    {
       "name": "Barbarian",
       "survival": {
         "stat": "END",
