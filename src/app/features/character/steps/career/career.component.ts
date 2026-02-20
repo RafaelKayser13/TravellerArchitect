@@ -2063,7 +2063,7 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.characterService.currentCareer.set(null);
             this.currentState.set('CHOOSE_CAREER');
             // Ensure any lingering events are cleared so overlays don't block the selection screen
-            this.eventEngine.currentEvent.set(null); 
+            this.eventEngine.currentEvent.set(null);
             this.forcedOut = false;
             this.characterService.log(`**Mustered Out** of ${currentCareerName}`);
             this.log('Mustered out of career. You may choose a new career or Finalize.');
@@ -2157,7 +2157,7 @@ export class CareerComponent implements OnInit, OnDestroy {
         this.finishTerm('CONTINUE');
     }
 
-    // --- MUSTERING OUT ---
+    // --- FINAL MUSTERING OUT ---
     canProceedToNext(): boolean {
         return this.currentState() === 'CHOOSE_CAREER' && this.characterService.character().careerHistory.length > 0;
     }
