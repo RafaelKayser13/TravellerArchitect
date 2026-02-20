@@ -479,7 +479,7 @@
         </div>
         <div class="hud-footer">
             <button class="btn-action" (click)="continueCareer()" [disabled]="forcedOut">START_NEXT_TERM</button>
-            <button class="btn-secondary" (click)="startChangeAssignment()"
+            <button class="btn-reconfig" (click)="startChangeAssignment()"
                 [disabled]="mandatoryContinue || forcedOut">RECONFIG_ASSIGNMENT</button>
             <button class="btn-danger" (click)="finishTerm('MUSTER')" [disabled]="mandatoryContinue">MUSTER_OUT</button>
         </div>
