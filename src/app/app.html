@@ -18,6 +18,21 @@
         </button>
         
         <div class="system-dropdown" *ngIf="showSystemMenu()">
+          <div class="menu-divider">EQUIPMENT</div>
+          <div class="menu-item" (click)="openEquipmentSelector()">
+            <i class="icon">🎒</i>
+            <span>EQUIPMENT_SELECTOR</span>
+          </div>
+          <div class="menu-item" (click)="openWeaponSelector()">
+            <i class="icon">🔫</i>
+            <span>WEAPON_SELECTOR</span>
+          </div>
+          <div class="menu-item" (click)="openArmorSelector()">
+            <i class="icon">🛡️</i>
+            <span>ARMOR_SELECTOR</span>
+          </div>
+
+          <div class="menu-divider">SYSTEM</div>
           <div class="menu-item" (click)="toggleDebugMode()" [class.active]="diceService.debugMode()">
             <i class="icon">{{ diceService.debugMode() ? '✅' : '⬜' }}</i>
             <span>DEBUG_MODE</span>
