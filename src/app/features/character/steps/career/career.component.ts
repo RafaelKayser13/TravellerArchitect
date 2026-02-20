@@ -11,7 +11,7 @@ import { EventEngineService } from '../../../../core/services/event-engine.servi
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { CareerTermService } from '../../../../core/services/career-term.service';
 import { createSurvivalCheckEvent, createMishapRollEvent, createEventRollEvent } from '../../../../data/events/shared/career-events';
-import { createLifeEventRollEvent, createInjuryEvent, createInjuryRollEvent } from '../../../../data/events/shared/life-events';
+import { createLifeEventRollEvent, createInjuryEvent, createInjuryRollEvent, createInjuryRollWorstOf2Event } from '../../../../data/events/shared/life-events';
 import { NEURAL_JACK_INSTALL_EVENT } from '../../../../data/events/shared/neural-jack-install.event';
 import { effect } from '@angular/core';
 
@@ -206,6 +206,7 @@ export class CareerComponent implements OnInit, OnDestroy {
         // Register Global Events
         this.eventEngine.registerEvent(createLifeEventRollEvent());
         this.eventEngine.registerEvent(createInjuryRollEvent());
+        this.eventEngine.registerEvent(createInjuryRollWorstOf2Event());
 
         /* 
            Legacy Custom Handlers for migration compatibility.

@@ -67,6 +67,24 @@ export function createInjuryRollEvent(): GameEvent {
     };
 }
 
+export function createInjuryRollWorstOf2Event(): GameEvent {
+    return {
+        id: 'injury_roll_worst_of_2',
+        type: 'INFO',
+        trigger: 'MISHAP',
+        ui: {
+            title: 'Severe Injury Check',
+            description: 'You are severely injured. Roll the Injury table twice and take the lower (worse) result.',
+            options: [
+                {
+                    label: 'Roll Injury Table Twice (1d6)',
+                    effects: [{ type: 'ROLL_TABLE', dice: '1d6', table: INJURY_TABLE, rollCount: 2, takeWorst: true }]
+                }
+            ]
+        }
+    };
+}
+
 export function createInjuryEvent(severity: number, careerName: string): GameEvent {
     return {
         id: `injury_resolution_${Date.now()}`,

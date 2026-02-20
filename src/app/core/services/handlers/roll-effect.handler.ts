@@ -91,14 +91,34 @@ export class RollEffectHandler implements EffectHandler {
                      const quantity = diceStr.startsWith('1') ? 1 : 2;
                      const isD66 = diceStr === 'd66';
                      const tableDm = effect.dm || 0;
-                     
-                     const roll = await ctx.diceDisplay.roll(
-                         isD66 ? 'D66 Event Roll' : `Event Roll (${diceStr})`,
-                         quantity,
-                         tableDm, 0, undefined, undefined, [], effect.table
-                     );
+                     const rollCount = effect.rollCount || 1;
+                     const takeWorst = effect.takeWorst || false;
 
-                     const finalResult = isD66 ? roll : roll + tableDm;
+                     let finalResult = 0;
+
+                     if (rollCount > 1 && takeWorst) {
+                         // Roll multiple times and take worst (lowest)
+                         const rolls = [];
+                         for (let i = 0; i < rollCount; i++) {
+                             const roll = await ctx.diceDisplay.roll(
+                                 isD66 ? 'D66 Event Roll' : `Event Roll (${diceStr}) - Roll ${i + 1} of ${rollCount}`,
+                                 quantity,
+                                 tableDm, 0, undefined, undefined, [], effect.table
+                             );
+                             rolls.push(isD66 ? roll : roll + tableDm);
+                         }
+                         // Take the worst (lowest) result
+                         finalResult = Math.min(...rolls);
+                     } else {
+                         // Single roll
+                         const roll = await ctx.diceDisplay.roll(
+                             isD66 ? 'D66 Event Roll' : `Event Roll (${diceStr})`,
+                             quantity,
+                             tableDm, 0, undefined, undefined, [], effect.table
+                         );
+                         finalResult = isD66 ? roll : roll + tableDm;
+                     }
+
                      const entry = effect.table.find((row) => row.roll === finalResult);
                      if (entry) {
                          console.log('Table Result:', entry);
