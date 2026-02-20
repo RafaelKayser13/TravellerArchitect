@@ -334,6 +334,9 @@ export class CareerComponent implements OnInit, OnDestroy {
         const nation = NATIONALITIES.find(n => n.name === char.nationality);
         const tier = nation?.tier || 3;
 
+        // 0. Prisoner Career - Forced entry only, no voluntary selection
+        if (career.name === 'Prisoner' && !char.forcedCareer) return true;
+
         // 1. Nation Tier Restriction (Term 1)
         if (this.currentTerm() === 1 && tier >= 5) {
             const forbidden = ['Scout', 'Merchant', 'Navy'];
@@ -378,6 +381,10 @@ export class CareerComponent implements OnInit, OnDestroy {
         const char = this.characterService.character();
         const nation = NATIONALITIES.find(n => n.name === char.nationality);
         const tier = nation?.tier || 3;
+
+        if (career.name === 'Prisoner' && !char.forcedCareer) {
+            return 'Prisoner is a forced career only, cannot be selected voluntarily.';
+        }
 
         if (this.currentTerm() === 1 && tier >= 5) {
             const forbidden = ['Scout', 'Merchant', 'Navy'];
