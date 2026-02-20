@@ -5,6 +5,7 @@ import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
 import { CareerService } from '../../../../core/services/career.service';
 import { CareerDefinition, Assignment } from '../../../../core/models/career.model';
+import { GameEvent } from '../../../../core/models/game-event.model';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { NATIONALITIES } from '../../../../data/nationalities';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
@@ -263,6 +264,10 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         this.eventEngine.registerCustomHandler('APPLY_INJURY_DAMAGE', (payload) => {
             this.handleInjuryDamage(payload.severity, payload.method);
+        });
+
+        this.eventEngine.registerCustomHandler('LUCRATIVE_DEAL_BET', (payload) => {
+            this.handleLucrativeDealBet(payload.amountRisked);
         });
 
         // Clear revealed options whenever the active event changes (event chaining, new events, etc.)
@@ -1232,20 +1237,181 @@ export class CareerComponent implements OnInit, OnDestroy {
         }
     }
 
+    handleLucrativeDealBet(amountRisked: number) {
+        // Store the amount risked in component state for use in the skill check outcome events
+        (this as any).lucrrativelyRisked = amountRisked;
+
+        // Create a choice event for the player to pick Gambler or Broker skill
+        const choiceEvent: GameEvent = {
+            id: `lucrative_deal_skill_choice_${Date.now()}`,
+            type: 'CHOICE',
+            trigger: 'DURING_CAREER_TERM',
+            ui: {
+                title: 'Lucrative Deal - Choose Skill',
+                description: `You are risking ${amountRisked} Benefit Roll${amountRisked > 1 ? 's' : ''}. Which skill will you use?`,
+                options: [
+                    {
+                        label: 'Risk with Gambler 8+',
+                        effects: [
+                            {
+                                type: 'ROLL_CHECK',
+                                stat: 'Gambler',
+                                checkTarget: 8,
+                                onPass: `lucrative_deal_success_${amountRisked}_gambler`,
+                                onFail: `lucrative_deal_failure_${amountRisked}_gambler`
+                            }
+                        ]
+                    },
+                    {
+                        label: 'Risk with Broker 8+',
+                        effects: [
+                            {
+                                type: 'ROLL_CHECK',
+                                stat: 'Broker',
+                                checkTarget: 8,
+                                onPass: `lucrative_deal_success_${amountRisked}_broker`,
+                                onFail: `lucrative_deal_failure_${amountRisked}_broker`
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Create success/failure sub-events dynamically
+        const successGamblerEvent: GameEvent = {
+            id: `lucrative_deal_success_${amountRisked}_gambler`,
+            type: 'REWARD',
+            trigger: 'DURING_CAREER_TERM',
+            ui: {
+                title: 'Deal Succeeds!',
+                description: `The deal pays off! You gain ${Math.ceil(amountRisked / 2)} Benefit Roll${Math.ceil(amountRisked / 2) > 1 ? 's' : ''} back and Gambler +1.`,
+                options: [
+                    {
+                        label: 'Collect Winnings',
+                        effects: [
+                            {
+                                type: 'RESOURCE_MOD',
+                                target: 'benefit_rolls',
+                                value: Math.ceil(amountRisked / 2)
+                            },
+                            {
+                                type: 'SKILL_MOD',
+                                target: 'Gambler',
+                                value: 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const failureGamblerEvent: GameEvent = {
+            id: `lucrative_deal_failure_${amountRisked}_gambler`,
+            type: 'INFO',
+            trigger: 'DURING_CAREER_TERM',
+            ui: {
+                title: 'Deal Fails...',
+                description: `The deal collapses. You lose all ${amountRisked} risked Benefit Roll${amountRisked > 1 ? 's' : ''}, but gain Gambler +1 for the experience.`,
+                options: [
+                    {
+                        label: 'Accept Loss',
+                        effects: [
+                            {
+                                type: 'LOSE_BENEFIT',
+                                value: amountRisked
+                            },
+                            {
+                                type: 'SKILL_MOD',
+                                target: 'Gambler',
+                                value: 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const successBrokerEvent: GameEvent = {
+            id: `lucrative_deal_success_${amountRisked}_broker`,
+            type: 'REWARD',
+            trigger: 'DURING_CAREER_TERM',
+            ui: {
+                title: 'Deal Succeeds!',
+                description: `The deal pays off! You gain ${Math.ceil(amountRisked / 2)} Benefit Roll${Math.ceil(amountRisked / 2) > 1 ? 's' : ''} back and Broker +1.`,
+                options: [
+                    {
+                        label: 'Collect Winnings',
+                        effects: [
+                            {
+                                type: 'RESOURCE_MOD',
+                                target: 'benefit_rolls',
+                                value: Math.ceil(amountRisked / 2)
+                            },
+                            {
+                                type: 'SKILL_MOD',
+                                target: 'Broker',
+                                value: 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const failureBrokerEvent: GameEvent = {
+            id: `lucrative_deal_failure_${amountRisked}_broker`,
+            type: 'INFO',
+            trigger: 'DURING_CAREER_TERM',
+            ui: {
+                title: 'Deal Fails...',
+                description: `The deal collapses. You lose all ${amountRisked} risked Benefit Roll${amountRisked > 1 ? 's' : ''}, but gain Broker +1 for the experience.`,
+                options: [
+                    {
+                        label: 'Accept Loss',
+                        effects: [
+                            {
+                                type: 'LOSE_BENEFIT',
+                                value: amountRisked
+                            },
+                            {
+                                type: 'SKILL_MOD',
+                                target: 'Broker',
+                                value: 1
+                            }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Register all events
+        this.eventEngine.registerEvent(choiceEvent);
+        this.eventEngine.registerEvent(successGamblerEvent);
+        this.eventEngine.registerEvent(failureGamblerEvent);
+        this.eventEngine.registerEvent(successBrokerEvent);
+        this.eventEngine.registerEvent(failureBrokerEvent);
+
+        // Trigger the choice event
+        this.eventEngine.triggerEvent(choiceEvent.id, true);
+
+        this.characterService.log(`**Lucrative Deal**: Risking ${amountRisked} Benefit Roll${amountRisked > 1 ? 's' : ''}.`);
+    }
+
     resolveSurvivalFailure(acceptCybernetic: boolean) {
         this.showCyberneticOption = false;
         if (acceptCybernetic) {
             this.success = true;
             this.characterService.log(`**Cybernetic Implant** accepted. Avoided Mishap. Debt: -1 Benefit Roll.`);
             this.log('Accepted Cybernetic Implant. Avoided Mishap. Debt: -1 Benefit Roll.');
-            
+
             // Gain relevant implant
             const implant = this.injurySeverity === 'Missing Eye or Limb' ? 'Cybernetic Limb' : 'Cybernetic Augment';
             const char = this.characterService.character();
-            this.characterService.updateCharacter({ 
-                equipment: [...char.equipment, `${implant} (Benefit Debt)`] 
+            this.characterService.updateCharacter({
+                equipment: [...char.equipment, `${implant} (Benefit Debt)`]
             });
-            
+
             // Spend the benefit roll debt
             this.characterService.spendBenefitRoll(undefined, 1);
 
