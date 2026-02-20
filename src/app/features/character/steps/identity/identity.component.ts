@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CharacterService } from '../../../../core/services/character.service';
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
@@ -14,6 +14,7 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
 export class IdentityComponent implements OnInit, OnDestroy {
   protected characterService = inject(CharacterService);
   private wizardFlow = inject(WizardFlowService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.wizardFlow.registerValidator(1, () => this.isValid());
@@ -91,6 +92,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       reader.onload = (e: any) => {
         this.portraitUrl = e.target.result;
         this.save();
+        this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
     }
@@ -117,6 +119,7 @@ export class IdentityComponent implements OnInit, OnDestroy {
       description: this.description,
       portraitUrl: this.portraitUrl
     });
+    this.wizardFlow.notifyValidation();
   }
 
   finish() {

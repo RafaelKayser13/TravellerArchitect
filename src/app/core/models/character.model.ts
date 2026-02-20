@@ -222,6 +222,8 @@ export interface Character {
   nextTermSkillBonus?: number;
   japaneseRankBonus?: boolean;
   hasNeuralJack: boolean;
+  // Core Rulebook: A Traveller may only enter the draft once in their lifetime
+  hasDrafted: boolean;
 }
 
 // Helper to create empty character
@@ -280,6 +282,7 @@ export const INITIAL_CHARACTER: Character = {
   isSoftPath: false,
   ejectedCareers: [],
   japaneseRankBonus: false,
-  hasNeuralJack: false
+  hasNeuralJack: false,
+  hasDrafted: false
 };
 

@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, NgZone, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
@@ -22,6 +22,7 @@ export class AttributesComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
   private wizardFlow = inject(WizardFlowService);
+  private el = inject(ElementRef);
   characteristicsList = ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC'];
 
   // Data State
@@ -35,7 +36,9 @@ export class AttributesComponent implements OnInit, OnDestroy {
   selectedStat: string | null = null;
 
   isRolling = false;
-  isComplete = false;
+  readonly isCompleteSignal = signal(false);
+  get isComplete(): boolean { return this.isCompleteSignal(); }
+  set isComplete(v: boolean) { this.isCompleteSignal.set(v); }
 
   constructor() {
     this.initializeState();
@@ -109,8 +112,7 @@ export class AttributesComponent implements OnInit, OnDestroy {
             this.isRolling = false;
             this.isComplete = true;
             this.save();
-            this.cdr.detectChanges(); // Final update for local views
-            // Validator is now a closure — no need to emit stateChange
+            this.wizardFlow.notifyValidation(); // reactive: unblocks the Next button
           });
         })
       ).subscribe();
@@ -154,15 +156,16 @@ export class AttributesComponent implements OnInit, OnDestroy {
   startEditing(char: string, event: Event) {
     event.stopPropagation(); // Prevent card selection
     this.editingState[char] = true;
+    this.cdr.detectChanges();
 
-    // Auto-focus and auto-select
+    // Focus the input that just appeared in the DOM
     setTimeout(() => {
-      const input = document.querySelector(`.stat-card.selected input.edit-input, .stat-card:hover input.edit-input`) as HTMLInputElement;
+      const input = this.el.nativeElement.querySelector('input.hex-edit-input') as HTMLInputElement;
       if (input) {
         input.focus();
         input.select();
       }
-    }, 50);
+    }, 30);
   }
 
   stopEditing(char: string) {

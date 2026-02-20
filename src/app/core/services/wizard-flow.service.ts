@@ -66,6 +66,21 @@ export class WizardFlowService {
   /** Registry: stepIndex → finish action */
   private readonly finishActions = new Map<number, () => void>();
 
+  /** Bumped by step components when their validation state changes */
+  private readonly _validationTick = signal(0);
+
+  /** Reactive computed so templates auto-update when a component notifies */
+  readonly canProceedSignal = computed(() => {
+    this._validationTick(); // reactive dependency
+    const validator = this.validators.get(this.currentStepIndex());
+    return validator ? validator() : true;
+  });
+
+  /** Call this after updating local validation state in a step component */
+  notifyValidation(): void {
+    this._validationTick.update(n => n + 1);
+  }
+
   /**
    * Registers a "can proceed" validator for a given step.
    * Step components call this in their constructor / ngOnInit.

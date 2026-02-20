@@ -185,20 +185,32 @@ export class OriginComponent implements OnInit, OnDestroy {
     this.selectedNationality = nat;
     this.onNationalityChange();
     this.processAutoSelections();
-    this.scrollToFirstMissingStep();
+    // After nationality: if origin type was auto-selected, skip to homeworld; else show origin section
+    if (!this.selectedOriginType) {
+      this.scrollToSection('.origin-type-section');
+    } else if (!this.selectedWorld) {
+      this.scrollToSection('.homeworld-section');
+    } else {
+      this.scrollToSection('.philosophy-section');
+    }
   }
 
   setOriginType(type: 'Core' | 'Frontier' | 'Spacer') {
     this.selectedOriginType = type;
     this.onOriginTypeChange();
     this.processAutoSelections();
-    this.scrollToFirstMissingStep();
+    // After origin type: if homeworld was auto-selected skip to philosophy; else show homeworld
+    if (!this.selectedWorld) {
+      this.scrollToSection('.homeworld-section');
+    } else {
+      this.scrollToSection('.philosophy-section');
+    }
   }
 
   selectWorld(world: World) {
     this.selectedWorld = world;
     this.onWorldChange();
-    this.scrollToFirstMissingStep();
+    this.scrollToSection('.philosophy-section');
   }
 
   private processAutoSelections() {
@@ -250,6 +262,20 @@ export class OriginComponent implements OnInit, OnDestroy {
           const top = (element as HTMLElement).offsetTop - 20;
           content.scrollTo({ top, behavior: 'smooth' });
         }
+      }
+    }, 150);
+  }
+
+  /** Scroll to the next section, scoped to .wizard-content to avoid moving the viewport/wizard box. */
+  private scrollToSection(selector: string) {
+    setTimeout(() => {
+      const element = document.querySelector(selector) as HTMLElement | null;
+      const container = document.querySelector('.wizard-content') as HTMLElement | null;
+      if (element && container) {
+        const offsetTop = element.getBoundingClientRect().top
+          - container.getBoundingClientRect().top
+          + container.scrollTop;
+        container.scrollTo({ top: offsetTop - 16, behavior: 'smooth' });
       }
     }, 150);
   }
@@ -335,6 +361,7 @@ export class OriginComponent implements OnInit, OnDestroy {
   setPath(path: 'Hard' | 'Soft') {
       this.selectedPath = path;
       this.save();
+      this.scrollToSection('.skills-section');
   }
 
   isGravityExtreme(world: World): boolean {

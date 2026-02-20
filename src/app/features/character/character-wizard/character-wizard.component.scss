@@ -8,7 +8,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem 1rem; /* MAXIMIZE SPACE */
+    padding: 1.8rem 1rem 1.8rem; /* equal top/bottom spacing outside the wizard box */
+    box-sizing: border-box; /* padding included in height, no overflow */
     flex: 1;
     height: 100%; /* ENSURE IT STAYS WITHIN MAIN-CONTENT */
     min-height: 0; /* PREVENT FLEX EXPANSION beyond parent */
@@ -252,24 +253,53 @@
         gap: 1.5rem;
 
         .fingerprint-sensor {
-            width: 30px;
-            height: 40px;
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 4px;
-            margin-right: 8px;
+            width: 26px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 40% 40% 35% 35% / 30% 30% 40% 40%;
+            margin-right: 6px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 0 6px rgba(0, 243, 255, 0.08), inset 0 0 4px rgba(0, 0, 0, 0.6);
 
+            // Fingerprint ridge lines via repeating gradient
             &::before {
                 content: "";
                 position: absolute;
-                width: 100%;
-                height: 2px;
-                background: rgba(0, 243, 255, 0.5);
-                box-shadow: 0 0 10px #00f3ff;
-                animation: scan-line-v 2s infinite ease-in-out;
+                inset: 3px;
+                background: repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 243, 255, 0.18) 2px,
+                    rgba(0, 243, 255, 0.18) 3px
+                );
+                border-radius: inherit;
+                clip-path: ellipse(50% 50% at 50% 50%);
             }
+
+            // Scan sweep
+            &::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                height: 6px;
+                background: linear-gradient(180deg,
+                    transparent,
+                    rgba(0, 243, 255, 0.35) 50%,
+                    transparent);
+                animation: fp-scan 3s ease-in-out infinite;
+                pointer-events: none;
+            }
+        }
+
+        @keyframes fp-scan {
+            0%   { top: -6px; opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { top: calc(100% + 6px); opacity: 0; }
         }
 
         .hw-button {
@@ -570,7 +600,7 @@
 .wizard-content {
     flex-grow: 1;
     overflow-y: auto;
-    padding: 1rem 1.5rem; /* STANDARDIZED REDUCED PADDING */
+    padding: 1rem 1.5rem;
     padding-bottom: 3.5rem;
 
     &::-webkit-scrollbar {
@@ -604,16 +634,7 @@
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(0, 243, 255, 0.1);
 
     .action-divider {
-        width: 100%;
-        margin: 0 0 0.6rem;
-        height: 1px;
-        background: linear-gradient(90deg,
-            transparent 0%,
-            rgba(0, 243, 255, 0.3) 20%,
-            rgba(0, 243, 255, 0.3) 80%,
-            transparent 100%);
-        opacity: 0.6;
-        box-shadow: 0 0 8px rgba(0, 243, 255, 0.2);
+        display: none;
     }
 
     .action-content {

@@ -92,7 +92,7 @@
 
             <button
               class="btn-wizard-next"
-              [disabled]="!wizardFlow.canProceed()"
+              [disabled]="!wizardFlow.canProceedSignal()"
               (click)="wizardFlow.executeFinish()">
               <span class="btn-index">SYS::CMD</span>
               <span class="btn-label">{{ wizardFlow.actionLabel() }} ▸</span>

@@ -33,8 +33,14 @@ export class SkillPackageComponent implements OnInit, OnDestroy {
     this.selectedPackage.set(pkg);
     this.selectedSkills.set([]); // Reset selection when package changes
     setTimeout(() => {
-        const el = document.querySelector('.skill-selection-area');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      const el = document.querySelector('.skill-selection-area') as HTMLElement | null;
+      const container = document.querySelector('.wizard-content') as HTMLElement | null;
+      if (el && container) {
+        const offsetTop = el.getBoundingClientRect().top
+          - container.getBoundingClientRect().top
+          + container.scrollTop;
+        container.scrollTo({ top: offsetTop - 16, behavior: 'smooth' });
+      }
     }, 100);
   }
 

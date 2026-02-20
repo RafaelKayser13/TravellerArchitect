@@ -171,7 +171,7 @@ export class EducationComponent implements OnInit, OnDestroy {
     canAvoidWar = false;
 
     expelledToPrison = false;
-    warNextCareer: 'Drifter' | 'Army' | 'Marine' | 'Navy' | '' = '';
+    warNextCareer: 'Drifter' | 'Army' | 'Marine' | 'Navy' | 'Merchant' | 'Scout' | 'Agent' | '' = '';
 
     psionicPotential = false;
     graduated = true; // Default, can be flipped by Tragedy/War/Prank
@@ -310,6 +310,18 @@ export class EducationComponent implements OnInit, OnDestroy {
         this.admissionStatus = 'Applying'; // Mark that application has started
         const char = this.characterService.character();
 
+        // Core Rulebook Rule 591: University admission only available in Terms 1-3
+        if (this.educationType === 'University') {
+            const currentTerm = char.careerHistory.length + 1;
+            if (currentTerm > 3) {
+                this.admissionStatus = 'Rejected';
+                this.characterService.log(`**University Admission Denied**: Universities are only available in Terms 1-3 (you are in Term ${currentTerm})`);
+                this.educationStep = 'AdmissionResult';
+                this.scrollToTop();
+                return;
+            }
+        }
+
         // Select DM based on method
         const admissionDm = this.admissionMethod === 'Local' ? this.admissionDMs.local : this.admissionDMs.offWorld;
 
@@ -355,6 +367,16 @@ export class EducationComponent implements OnInit, OnDestroy {
             }
             modifiers.push({ label: statName, value: statMod });
             totalDm += statMod;
+
+            // Rule 614: Academy admission bonuses (2300AD Book 02)
+            if (char.characteristics.end.value >= 8) {
+                modifiers.push({ label: 'END 8+', value: 1 });
+                totalDm += 1;
+            }
+            if (char.characteristics.soc.value >= 8) {
+                modifiers.push({ label: 'SOC 8+', value: 1 });
+                totalDm += 1;
+            }
         }
 
         // 3. Term Penalties (Core Rulebook Rules 592, 614)
@@ -461,6 +483,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         // Clear event engine state to prevent lingering events
         this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]); // clear orphaned stack entries (prevents leak to Career screen)
 
         // Check if expelled/tragedy
         if (this.graduationStatus === 'Failed') {
@@ -539,15 +562,6 @@ export class EducationComponent implements OnInit, OnDestroy {
             statMod = this.diceService.getModifier(int);
             modifiers.push({ label: 'INT', value: statMod });
             totalDm += statMod;
-
-            if (char.characteristics.end.value >= 8) {
-                modifiers.push({ label: 'END 8+', value: 1 });
-                totalDm += 1;
-            }
-            if (char.characteristics.soc.value >= 8) {
-                modifiers.push({ label: 'SOC 8+', value: 1 });
-                totalDm += 1;
-            }
         }
 
         // Save state and move to GraduationRoll screen
@@ -566,6 +580,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         // Clear event engine state to prevent lingering events
         this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]); // clear orphaned stack entries
 
         const modifiers = this.graduationModifiers;
         const target = this.graduationTarget;
@@ -824,7 +839,8 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.educationStep = 'Finished';
             this.scrollToTop();
         } else {
-            // Draft: Roll for career assignment
+            // Draft: Roll for career assignment — Core Rulebook table: 1=Navy,2=Army,3=Marine,4=Merchant,5=Scout,6=Agent
+            // Note: Event-driven drafts may occur more than once per lifetime (Core Rulebook p.17: "This can cause a Traveller to be drafted more than once")
             const roll = await this.diceDisplay.roll(
                 'Military Draft Assignment',
                 1,
@@ -832,15 +848,21 @@ export class EducationComponent implements OnInit, OnDestroy {
                 0,
                 '',
                 (result) => {
-                    if (result <= 3) return 'ARMY (1-3)';
-                    else if (result <= 5) return 'MARINE (4-5)';
-                    else return 'NAVY (6)';
+                    if (result === 1) return 'NAVY (1)';
+                    else if (result === 2) return 'ARMY (2)';
+                    else if (result === 3) return 'MARINE (3)';
+                    else if (result === 4) return 'MERCHANT (4)';
+                    else if (result === 5) return 'SCOUT (5)';
+                    else return 'AGENT (6)';
                 }
             );
 
-            if (roll <= 3) this.warNextCareer = 'Army';
-            else if (roll <= 5) this.warNextCareer = 'Marine';
-            else this.warNextCareer = 'Navy';
+            if (roll === 1) this.warNextCareer = 'Navy';
+            else if (roll === 2) this.warNextCareer = 'Army';
+            else if (roll === 3) this.warNextCareer = 'Marine';
+            else if (roll === 4) this.warNextCareer = 'Merchant';
+            else if (roll === 5) this.warNextCareer = 'Scout';
+            else this.warNextCareer = 'Agent';
 
             this.characterService.setNextCareer(this.warNextCareer);
             this.characterService.updateDm('qualification', 100); // Auto-qualify
@@ -1079,6 +1101,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         // Clear event engine state to prevent lingering events
         this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]); // clear orphaned stack entries
 
         this.wizardFlow.advance();
     }

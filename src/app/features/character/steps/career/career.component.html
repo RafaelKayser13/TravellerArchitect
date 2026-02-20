@@ -154,9 +154,11 @@
             <p class="instruction">In accordance with 2300AD Service Protocols, select one fallback vector:</p>
             
             <div class="action-grid">
-                <button class="btn-action warn" (click)="chooseDraft()">
+                <button class="btn-action warn" (click)="chooseDraft()"
+                    [disabled]="characterService.character().hasDrafted"
+                    [title]="characterService.character().hasDrafted ? 'Already used the Draft once this lifetime' : ''">
                     <span class="primary">THE_DRAFT</span>
-                    <span class="secondary">MANDATORY_PLACEMENT (DICE_ROLL)</span>
+                    <span class="secondary">{{ characterService.character().hasDrafted ? 'UNAVAILABLE — USED ONCE' : 'RANDOM_PLACEMENT (1D6)' }}</span>
                 </button>
                 <button class="btn-action" (click)="chooseDrifter()">
                     <span class="primary">DRIFTER_LIFE</span>
@@ -165,7 +167,7 @@
             </div>
         </div>
         <div class="hud-footer">
-            <p class="status-msg">[ NOTE ]: Accepting the Draft results in a random career. Drifter ensures immediate placement.</p>
+            <p class="status-msg">[ NOTE ]: Draft: 1=Navy, 2=Army, 3=Marine, 4=Merchant, 5=Scout, 6=Agent. May only be used once per lifetime.</p>
         </div>
     </div>
 
