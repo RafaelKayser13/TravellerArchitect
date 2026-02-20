@@ -600,11 +600,15 @@
 .wizard-content {
     flex-grow: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem 1.5rem;
     padding-bottom: 3.5rem;
+    scrollbar-gutter: stable; /* Reserve space for scrollbar */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--neon-cyan) transparent; /* Firefox */
 
     &::-webkit-scrollbar {
-        width: 4px;
+        width: 8px; /* Increased from 4px for better visibility */
     }
 
     &::-webkit-scrollbar-track {
@@ -613,6 +617,23 @@
 
     &::-webkit-scrollbar-thumb {
         background: var(--neon-cyan);
+        border-radius: 4px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+
+        &:hover {
+            background: rgba(0, 243, 255, 0.8);
+            background-clip: padding-box;
+        }
+    }
+
+    /* Mobile devices: increase scrollbar width for easier interaction */
+    @media (max-width: 768px) {
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        scrollbar-width: auto;
     }
 }
 
