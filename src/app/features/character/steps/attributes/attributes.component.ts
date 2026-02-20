@@ -91,8 +91,17 @@ export class AttributesComponent implements OnInit, OnDestroy {
         tap(char => {
           // Check if debug mode is enabled and return 12 (6+6) for all rolls
           const isDebugMode = this.diceDisplay.debugMode();
-          const d1 = isDebugMode ? 6 : Math.floor(Math.random() * 6) + 1;
-          const d2 = isDebugMode ? 6 : Math.floor(Math.random() * 6) + 1;
+          
+          let d1: number, d2: number;
+          if (isDebugMode) {
+            d1 = 6;
+            d2 = 6;
+          } else {
+            // Use 3d6 keep highest 2 for better probability of 8+
+            const rollResult = this.diceService.roll3d6KeepHighest2();
+            d1 = rollResult.dice[0];
+            d2 = rollResult.dice[1];
+          }
 
           this.diceValues[char] = [d1, d2];
           this.scores[char] = d1 + d2;

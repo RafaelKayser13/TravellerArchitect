@@ -67,4 +67,25 @@ export class DiceService {
     if (score >= 15) return 3;
     return 0; // Negative values? Usually impossible for stats, but just in case.
   }
-}
+
+  /**
+   * Rolls 3d6 and returns the two highest dice + their sum.
+   * This improves the probability of scoring 8+ compared to standard 2d6.
+   * Used for attribute generation to create more balanced, capable characters.
+   * @returns { dice: [number, number], sum: number } - Two highest dice and their sum
+   */
+  roll3d6KeepHighest2(): { dice: [number, number]; sum: number } {
+    const d1 = Math.floor(Math.random() * 6) + 1;
+    const d2 = Math.floor(Math.random() * 6) + 1;
+    const d3 = Math.floor(Math.random() * 6) + 1;
+
+    // Sort in descending order and take the two highest
+    const sorted = [d1, d2, d3].sort((a, b) => b - a);
+    const highest1 = sorted[0];
+    const highest2 = sorted[1];
+
+    return {
+      dice: [highest1, highest2],
+      sum: highest1 + highest2
+    };
+  }
