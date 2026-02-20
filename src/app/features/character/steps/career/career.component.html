@@ -494,12 +494,29 @@
             <div class="hud-content">
                 <p class="instruction">{{ eventEngine.currentEvent()?.ui?.description }}</p>
                 <div class="choice-grid">
-                    <button *ngFor="let opt of eventEngine.currentEvent()?.ui?.options; let i = index" 
-                            class="btn-action full-width"
-                            (click)="eventEngine.selectOption(i)">
-                        {{ opt.label }}
-                    </button>
+                    <div *ngFor="let opt of eventEngine.currentEvent()?.ui?.options; let i = index"
+                         class="choice-option-wrap">
 
+                        <div class="choice-row">
+                            <button class="btn-action flex-grow"
+                                    (click)="eventEngine.selectOption(i); revealedOptions.clear()">
+                                {{ opt.label }}
+                            </button>
+                            <button *ngIf="opt.revealText"
+                                    class="btn-reveal"
+                                    [class.active]="revealedOptions.has(i)"
+                                    (click)="toggleReveal(i)"
+                                    title="Reveal consequences">
+                                {{ revealedOptions.has(i) ? '▲' : '?' }}
+                            </button>
+                        </div>
+
+                        <div *ngIf="opt.revealText && revealedOptions.has(i)"
+                             class="reveal-panel">
+                            {{ opt.revealText }}
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -565,6 +582,24 @@
                     <button *ngFor="let stat of ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC']" class="btn-secondary"
                         (click)="selectStatReduction(stat)">
                         {{ stat }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Any Skill Up Choice Modal (Advanced Training) -->
+    <div *ngIf="isSkillChoicePrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>ADVANCED_TRAINING_PROTOCOL</h3>
+            </div>
+            <div class="hud-content">
+                <p>Your advanced training allows you to increase any known skill by +1 level. Select a skill:</p>
+                <div class="grid-options">
+                    <button *ngFor="let skill of skillChoices" class="btn-secondary"
+                        (click)="confirmSkillChoice(skill)">
+                        {{ skill }}
                     </button>
                 </div>
             </div>

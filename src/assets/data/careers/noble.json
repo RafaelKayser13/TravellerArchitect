@@ -7,54 +7,213 @@
     "target": 10
   },
   "skills": {
-    "personal": ["STR +1", "DEX +1", "END +1", "Gambler", "Gun Combat (any)", "Melee (any)"],
-    "service": ["Admin", "Advocate", "Electronics (any)", "Diplomat", "Investigate", "Persuade"],
-    "advanced": ["Science (any)", "Advocate", "Language (any)", "Leadership", "Diplomat", "Art (any)"]
+    "personal": [
+      "STR +1",
+      "DEX +1",
+      "END +1",
+      "Gambler",
+      "Gun Combat (any)",
+      "Melee (any)"
+    ],
+    "service": [
+      "Admin",
+      "Advocate",
+      "Electronics (any)",
+      "Diplomat",
+      "Investigate",
+      "Persuade"
+    ],
+    "advanced": [
+      "Science (any)",
+      "Advocate",
+      "Language (any)",
+      "Leadership",
+      "Diplomat",
+      "Art (any)"
+    ]
   },
   "assignments": [
     {
       "name": "Administrator",
-      "survival": { "stat": "INT", "target": 4 },
-      "advancement": { "stat": "EDU", "target": 6 },
-      "skills": ["Admin", "Advocate", "Broker", "Diplomat", "Leadership", "Persuade"],
+      "survival": {
+        "stat": "INT",
+        "target": 4
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 6
+      },
+      "skills": [
+        "Admin",
+        "Advocate",
+        "Broker",
+        "Diplomat",
+        "Leadership",
+        "Persuade"
+      ],
       "ranks": [
-        { "level": 0, "title": "Assistant" },
-        { "level": 1, "title": "Clerk", "bonus": { "skill": "Admin", "value": 1 } },
-        { "level": 2, "title": "Supervisor" },
-        { "level": 3, "title": "Manager", "bonus": { "skill": "Advocate", "value": 1 } },
-        { "level": 4, "title": "Chief" },
-        { "level": 5, "title": "Director", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 6, "title": "Minister" }
+        {
+          "level": 0,
+          "title": "Assistant"
+        },
+        {
+          "level": 1,
+          "title": "Clerk",
+          "bonus": {
+            "skill": "Admin",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Supervisor"
+        },
+        {
+          "level": 3,
+          "title": "Manager",
+          "bonus": {
+            "skill": "Advocate",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Chief"
+        },
+        {
+          "level": 5,
+          "title": "Director",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Minister"
+        }
       ]
     },
     {
       "name": "Diplomat",
-      "survival": { "stat": "INT", "target": 5 },
-      "advancement": { "stat": "SOC", "target": 7 },
-      "skills": ["Advocate", "Carouse", "Electronics (any)", "Steward", "Diplomat", "Deception"],
+      "survival": {
+        "stat": "INT",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "SOC",
+        "target": 7
+      },
+      "skills": [
+        "Advocate",
+        "Carouse",
+        "Electronics (any)",
+        "Steward",
+        "Diplomat",
+        "Deception"
+      ],
       "ranks": [
-        { "level": 0, "title": "Intern" },
-        { "level": 1, "title": "3rd Secretary", "bonus": { "skill": "Admin", "value": 1 } },
-        { "level": 2, "title": "2nd Secretary" },
-        { "level": 3, "title": "1st Secretary", "bonus": { "skill": "Advocate", "value": 1 } },
-        { "level": 4, "title": "Counsellor" },
-        { "level": 5, "title": "Minister", "bonus": { "skill": "Diplomat", "value": 1 } },
-        { "level": 6, "title": "Ambassador" }
+        {
+          "level": 0,
+          "title": "Intern"
+        },
+        {
+          "level": 1,
+          "title": "3rd Secretary",
+          "bonus": {
+            "skill": "Admin",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "2nd Secretary"
+        },
+        {
+          "level": 3,
+          "title": "1st Secretary",
+          "bonus": {
+            "skill": "Advocate",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Counsellor"
+        },
+        {
+          "level": 5,
+          "title": "Minister",
+          "bonus": {
+            "skill": "Diplomat",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Ambassador"
+        }
       ]
     },
     {
       "name": "Dilettante",
-      "survival": { "stat": "SOC", "target": 5 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Carouse", "Deception", "Flyer (any)", "Streetwise", "Gambler", "Jack-of-all-Trades"],
+      "survival": {
+        "stat": "SOC",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Carouse",
+        "Deception",
+        "Flyer (any)",
+        "Streetwise",
+        "Gambler",
+        "Jack-of-all-Trades"
+      ],
       "ranks": [
-        { "level": 0, "title": "Wastrel" },
-        { "level": 1, "title": "—" },
-        { "level": 2, "title": "Ingrate", "bonus": { "skill": "Carouse", "value": 1 } },
-        { "level": 3, "title": "—" },
-        { "level": 4, "title": "Black Sheep", "bonus": { "skill": "Persuade", "value": 1 } },
-        { "level": 5, "title": "—" },
-        { "level": 6, "title": "Scoundrel", "bonus": { "skill": "Jack-of-all-Trades", "value": 1 } }
+        {
+          "level": 0,
+          "title": "Wastrel"
+        },
+        {
+          "level": 1,
+          "title": "—"
+        },
+        {
+          "level": 2,
+          "title": "Ingrate",
+          "bonus": {
+            "skill": "Carouse",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—"
+        },
+        {
+          "level": 4,
+          "title": "Black Sheep",
+          "bonus": {
+            "skill": "Persuade",
+            "value": 1
+          }
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "Scoundrel",
+          "bonus": {
+            "skill": "Jack-of-all-Trades",
+            "value": 1
+          }
+        }
       ]
     }
   ],
@@ -69,10 +228,24 @@
         "ui": {
           "title": "Disaster!",
           "description": "A scandal or family tragedy strikes. Roll on the Mishap table, but you are not ejected from this career.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -87,14 +260,31 @@
           "options": [
             {
               "label": "Accept Duel (Melee (blade) 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "noble_event_3_pass", "onFail": "noble_event_3_fail" }]
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "noble_event_3_pass",
+                  "onFail": "noble_event_3_fail"
+                }
+              ],
+              "revealText": "Roll **DEX 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Refuse (SOC -1, gain a skill)",
               "effects": [
-                { "type": "STAT_MOD", "target": "SOC", "value": -1 },
-                { "type": "TRIGGER_SUBVENT", "value": "noble_event_3_skill" }
-              ]
+                {
+                  "type": "STAT_MOD",
+                  "target": "SOC",
+                  "value": -1
+                },
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "noble_event_3_skill"
+                }
+              ],
+              "revealText": "**SOC -1** (permanent)."
             }
           ]
         }
@@ -108,10 +298,66 @@
             "title": "Duel Won",
             "description": "You win the duel! Gain SOC +1 and choose a skill.",
             "options": [
-              { "label": "Melee (blade) 1", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }, { "type": "SKILL_MOD", "target": "Melee (blade)", "value": 1 }] },
-              { "label": "Leadership 1", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }, { "type": "SKILL_MOD", "target": "Leadership", "value": 1 }] },
-              { "label": "Tactics (any) 1", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }, { "type": "SKILL_MOD", "target": "Tactics (any)", "value": 1 }] },
-              { "label": "Deception 1", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": 1 }, { "type": "SKILL_MOD", "target": "Deception", "value": 1 }] }
+              {
+                "label": "Melee (blade) 1",
+                "effects": [
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Melee (blade)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Leadership 1",
+                "effects": [
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Leadership",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Tactics (any) 1",
+                "effects": [
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Tactics (any)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Deception 1",
+                "effects": [
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Deception",
+                    "value": 1
+                  }
+                ]
+              }
             ]
           }
         },
@@ -123,10 +369,82 @@
             "title": "Duel Lost",
             "description": "You are wounded and humiliated. Roll on the Injury table, lose SOC -1, and choose a skill.",
             "options": [
-              { "label": "Melee (blade) 1", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "SKILL_MOD", "target": "Melee (blade)", "value": 1 }] },
-              { "label": "Leadership 1", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "SKILL_MOD", "target": "Leadership", "value": 1 }] },
-              { "label": "Tactics (any) 1", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "SKILL_MOD", "target": "Tactics (any)", "value": 1 }] },
-              { "label": "Deception 1", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "SKILL_MOD", "target": "Deception", "value": 1 }] }
+              {
+                "label": "Melee (blade) 1",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  },
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Melee (blade)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Leadership 1",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  },
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Leadership",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Tactics (any) 1",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  },
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Tactics (any)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Deception 1",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  },
+                  {
+                    "type": "STAT_MOD",
+                    "target": "SOC",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Deception",
+                    "value": 1
+                  }
+                ]
+              }
             ]
           }
         },
@@ -138,15 +456,56 @@
             "title": "Lessons Learned",
             "description": "You still gain a level in one skill.",
             "options": [
-              { "label": "Melee (blade) 1", "effects": [{ "type": "SKILL_MOD", "target": "Melee (blade)", "value": 1 }] },
-              { "label": "Leadership 1", "effects": [{ "type": "SKILL_MOD", "target": "Leadership", "value": 1 }] },
-              { "label": "Tactics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (any)", "value": 1 }] },
-              { "label": "Deception 1", "effects": [{ "type": "SKILL_MOD", "target": "Deception", "value": 1 }] }
+              {
+                "label": "Melee (blade) 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Melee (blade)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Leadership 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Leadership",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Tactics (any) 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Tactics (any)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Deception 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Deception",
+                    "value": 1
+                  }
+                ]
+              }
             ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Duel for Honour" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Duel for Honour"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -159,14 +518,64 @@
           "title": "Wide Range of Experiences",
           "description": "Your time as a noble gives you a wide range of experiences.",
           "options": [
-            { "label": "Animals (handling) 1", "effects": [{ "type": "SKILL_MOD", "target": "Animals (handling)", "value": 1 }] },
-            { "label": "Art (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Art (any)", "value": 1 }] },
-            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] },
-            { "label": "Streetwise 1", "effects": [{ "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] }
+            {
+              "label": "Animals (handling) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Animals (handling)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Animals (handling) +1**."
+            },
+            {
+              "label": "Art (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Art (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Art (any) +1**."
+            },
+            {
+              "label": "Carouse 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Carouse",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Carouse +1**."
+            },
+            {
+              "label": "Streetwise 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Streetwise",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Streetwise +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Animals (handling)", "Art (any)", "Carouse", "Streetwise"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Animals (handling)",
+            "Art (any)",
+            "Carouse",
+            "Streetwise"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
@@ -178,10 +587,26 @@
         "ui": {
           "title": "Inheritance",
           "description": "You inherit a gift from a rich relative. Gain DM+1 to any one Benefit roll.",
-          "options": [{ "label": "Accept Gift", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Accept Gift",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefitModifier", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 6,
@@ -194,14 +619,96 @@
           "title": "Political Intrigue",
           "description": "You become deeply involved in politics on your world of residence. Gain a skill but also gain a Rival.",
           "options": [
-            { "label": "Advocate 1", "effects": [{ "type": "SKILL_MOD", "target": "Advocate", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "Political Opponent" } }] },
-            { "label": "Admin 1", "effects": [{ "type": "SKILL_MOD", "target": "Admin", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "Political Opponent" } }] },
-            { "label": "Diplomat 1", "effects": [{ "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "Political Opponent" } }] },
-            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "Political Opponent" } }] }
+            {
+              "label": "Advocate 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Advocate",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Political Opponent"
+                  }
+                }
+              ],
+              "revealText": "Gain **Advocate +1**. Gain a **rival**."
+            },
+            {
+              "label": "Admin 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Admin",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Political Opponent"
+                  }
+                }
+              ],
+              "revealText": "Gain **Admin +1**. Gain a **rival**."
+            },
+            {
+              "label": "Diplomat 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Political Opponent"
+                  }
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**. Gain a **rival**."
+            },
+            {
+              "label": "Persuade 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Persuade",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Political Opponent"
+                  }
+                }
+              ],
+              "revealText": "Gain **Persuade +1**. Gain a **rival**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Advocate", "Admin", "Diplomat", "Persuade"] }, { "type": "npc", "npcType": "rival" }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Advocate",
+            "Admin",
+            "Diplomat",
+            "Persuade"
+          ]
+        },
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
     },
     {
       "roll": 7,
@@ -213,10 +720,24 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
@@ -231,15 +752,42 @@
           "options": [
             {
               "label": "Accept (Deception 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "noble_event_8_pass", "onFail": "noble_event_8_fail" }]
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "noble_event_8_pass",
+                  "onFail": "noble_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Accept (Persuade 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "SOC", "checkTarget": 8, "onPass": "noble_event_8_pass", "onFail": "noble_event_8_fail" }]
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "SOC",
+                  "checkTarget": 8,
+                  "onPass": "noble_event_8_pass",
+                  "onFail": "noble_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **SOC 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Refuse (Gain Enemy)",
-              "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Noble Conspiracy" } }]
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Noble Conspiracy"
+                  }
+                }
+              ],
+              "revealText": "Gain a **enemy**."
             }
           ]
         }
@@ -253,10 +801,46 @@
             "title": "Conspiracy Navigated",
             "description": "You successfully play the conspiracy to your advantage. Gain a skill.",
             "options": [
-              { "label": "Deception 1", "effects": [{ "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
-              { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] },
-              { "label": "Tactics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (any)", "value": 1 }] },
-              { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] }
+              {
+                "label": "Deception 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Deception",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Persuade 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Persuade",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Tactics (any) 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Tactics (any)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Carouse 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Carouse",
+                    "value": 1
+                  }
+                ]
+              }
             ]
           }
         },
@@ -267,11 +851,26 @@
           "ui": {
             "title": "Conspiracy Collapses",
             "description": "The conspiracy collapses around you. Roll on the Mishap table.",
-            "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+            "options": [
+              {
+                "label": "Roll Mishap",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "mishap_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Conspiracy Recruitment" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Conspiracy Recruitment"
+        }
+      ]
     },
     {
       "roll": 9,
@@ -283,16 +882,37 @@
         "ui": {
           "title": "Acclaimed Reign",
           "description": "Your reign is acclaimed by all as being fair and wise. Gain an Enemy (jealous rival) but also gain DM+2 to your next Advancement roll.",
-          "options": [{
-            "label": "Accept",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Jealous Relative or Unhappy Subject" } },
-              { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Accept",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Jealous Relative or Unhappy Subject"
+                  }
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 2
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "advancementModifier", "value": 2 }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "advancementModifier",
+          "value": 2
+        }
+      ]
     },
     {
       "roll": 10,
@@ -305,14 +925,128 @@
           "title": "High Society Manoeuvring",
           "description": "You manipulate and charm your way through high society. Gain a skill, but also gain a Rival and an Ally.",
           "options": [
-            { "label": "Carouse 1", "effects": [{ "type": "SKILL_MOD", "target": "Carouse", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "High Society Rival" } }, { "type": "ADD_NPC", "value": { "type": "ally", "note": "High Society Ally" } }] },
-            { "label": "Diplomat 1", "effects": [{ "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "High Society Rival" } }, { "type": "ADD_NPC", "value": { "type": "ally", "note": "High Society Ally" } }] },
-            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "High Society Rival" } }, { "type": "ADD_NPC", "value": { "type": "ally", "note": "High Society Ally" } }] },
-            { "label": "Steward 1", "effects": [{ "type": "SKILL_MOD", "target": "Steward", "value": 1 }, { "type": "ADD_NPC", "value": { "type": "rival", "note": "High Society Rival" } }, { "type": "ADD_NPC", "value": { "type": "ally", "note": "High Society Ally" } }] }
+            {
+              "label": "Carouse 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Carouse",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "High Society Rival"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "High Society Ally"
+                  }
+                }
+              ],
+              "revealText": "Gain **Carouse +1**. Gain a **rival**. Gain a **ally**."
+            },
+            {
+              "label": "Diplomat 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "High Society Rival"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "High Society Ally"
+                  }
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**. Gain a **rival**. Gain a **ally**."
+            },
+            {
+              "label": "Persuade 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Persuade",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "High Society Rival"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "High Society Ally"
+                  }
+                }
+              ],
+              "revealText": "Gain **Persuade +1**. Gain a **rival**. Gain a **ally**."
+            },
+            {
+              "label": "Steward 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Steward",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "High Society Rival"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "High Society Ally"
+                  }
+                }
+              ],
+              "revealText": "Gain **Steward +1**. Gain a **rival**. Gain a **ally**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Carouse", "Diplomat", "Persuade", "Steward"] }, { "type": "npc", "npcType": "rival" }, { "type": "npc", "npcType": "ally" }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Carouse",
+            "Diplomat",
+            "Persuade",
+            "Steward"
+          ]
+        },
+        {
+          "type": "npc",
+          "npcType": "rival"
+        },
+        {
+          "type": "npc",
+          "npcType": "ally"
+        }
+      ]
     },
     {
       "roll": 11,
@@ -328,21 +1062,52 @@
             {
               "label": "Leadership 1",
               "effects": [
-                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Powerful Noble" } },
-                { "type": "SKILL_MOD", "target": "Leadership", "value": 1 }
-              ]
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Powerful Noble"
+                  }
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Leadership",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain a **ally**. Gain **Leadership +1**."
             },
             {
               "label": "DM+4 to next Advancement roll",
               "effects": [
-                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Powerful Noble" } },
-                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }
-              ]
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Powerful Noble"
+                  }
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ],
+              "revealText": "Gain a **ally**."
             }
           ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "choice", "note": "Leadership or Advancement DM" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "ally"
+        },
+        {
+          "type": "choice",
+          "note": "Leadership or Advancement DM"
+        }
+      ]
     },
     {
       "roll": 12,
@@ -354,10 +1119,24 @@
         "ui": {
           "title": "Imperial Recognition",
           "description": "Your efforts do not go unnoticed by the Imperium. You are automatically promoted.",
-          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION" }] }]
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "PROMOTION"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
@@ -371,10 +1150,28 @@
         "ui": {
           "title": "Severely Injured",
           "description": "A serious accident or attack leaves you severely injured. Roll twice on the Injury table and take the lower result.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll_worst_of_2" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury-worst-of-2" }]
+      "effects": [
+        {
+          "type": "injury-worst-of-2"
+        }
+      ]
     },
     {
       "roll": 2,
@@ -386,10 +1183,35 @@
         "ui": {
           "title": "Family Scandal",
           "description": "A family scandal forces you out of your position. Lose one SOC.",
-          "options": [{ "label": "Accept Exile", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "EJECT_CAREER", "note": "Family Scandal" }] }]
+          "options": [
+            {
+              "label": "Accept Exile",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "SOC",
+                  "value": -1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Family Scandal"
+                }
+              ],
+              "revealText": "**SOC -1** (permanent). You are **ejected from this career** — Family Scandal."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "stat-bonus",
+          "stat": "SOC",
+          "value": -1
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -404,11 +1226,29 @@
           "options": [
             {
               "label": "Escape (Stealth 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "noble_mishap_3_pass", "onFail": "noble_mishap_3_fail" }]
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "noble_mishap_3_pass",
+                  "onFail": "noble_mishap_3_fail"
+                }
+              ],
+              "revealText": "Roll **DEX 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Deceive (Deception 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "noble_mishap_3_pass", "onFail": "noble_mishap_3_fail" }]
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "noble_mishap_3_pass",
+                  "onFail": "noble_mishap_3_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             }
           ]
         }
@@ -421,7 +1261,17 @@
           "ui": {
             "title": "Escaped Unharmed",
             "description": "You escape the disaster unharmed.",
-            "options": [{ "label": "Continue", "effects": [{ "type": "EJECT_CAREER", "note": "Disaster" }] }]
+            "options": [
+              {
+                "label": "Continue",
+                "effects": [
+                  {
+                    "type": "EJECT_CAREER",
+                    "note": "Disaster"
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -431,11 +1281,39 @@
           "ui": {
             "title": "Caught in Disaster",
             "description": "You are caught in the disaster. Roll on the Injury table.",
-            "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Disaster/War" }] }]
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  },
+                  {
+                    "type": "EJECT_CAREER",
+                    "note": "Disaster/War"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Stealth", "Deception"], "onFailure": [{ "type": "injury" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "Stealth",
+            "Deception"
+          ],
+          "onFailure": [
+            {
+              "type": "injury"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 4,
@@ -451,23 +1329,66 @@
             {
               "label": "Diplomat 1",
               "effects": [
-                { "type": "SKILL_MOD", "target": "Diplomat", "value": 1 },
-                { "type": "ADD_NPC", "value": { "type": "rival", "note": "Political Usurper" } },
-                { "type": "EJECT_CAREER", "note": "Political Manoeuverings" }
-              ]
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Political Usurper"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Political Manoeuverings"
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**. Gain a **rival**. You are **ejected from this career** — Political Manoeuverings."
             },
             {
               "label": "Advocate 1",
               "effects": [
-                { "type": "SKILL_MOD", "target": "Advocate", "value": 1 },
-                { "type": "ADD_NPC", "value": { "type": "rival", "note": "Political Usurper" } },
-                { "type": "EJECT_CAREER", "note": "Political Manoeuverings" }
-              ]
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Advocate",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Political Usurper"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Political Manoeuverings"
+                }
+              ],
+              "revealText": "Gain **Advocate +1**. Gain a **rival**. You are **ejected from this career** — Political Manoeuverings."
             }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Diplomat", "Advocate"] }, { "type": "npc", "npcType": "rival" }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Diplomat",
+            "Advocate"
+          ]
+        },
+        {
+          "type": "npc",
+          "npcType": "rival"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 5,
@@ -479,10 +1400,21 @@
         "ui": {
           "title": "Assassination Attempt",
           "description": "An assassin attempts to end your life. Roll END 8+ to survive unharmed.",
-          "options": [{
-            "label": "Survive (END 8+)",
-            "effects": [{ "type": "ROLL_CHECK", "stat": "END", "checkTarget": 8, "onPass": "noble_mishap_5_pass", "onFail": "noble_mishap_5_fail" }]
-          }]
+          "options": [
+            {
+              "label": "Survive (END 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "END",
+                  "checkTarget": 8,
+                  "onPass": "noble_mishap_5_pass",
+                  "onFail": "noble_mishap_5_fail"
+                }
+              ],
+              "revealText": "Roll **END 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -493,7 +1425,17 @@
           "ui": {
             "title": "Survived",
             "description": "You survive the assassination attempt unharmed.",
-            "options": [{ "label": "Continue", "effects": [{ "type": "EJECT_CAREER", "note": "Assassination Attempt" }] }]
+            "options": [
+              {
+                "label": "Continue",
+                "effects": [
+                  {
+                    "type": "EJECT_CAREER",
+                    "note": "Assassination Attempt"
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -503,11 +1445,41 @@
           "ui": {
             "title": "Wounded",
             "description": "The assassin wounds you. Roll on the Injury table.",
-            "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Wounded by Assassin" }] }]
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  },
+                  {
+                    "type": "EJECT_CAREER",
+                    "note": "Wounded by Assassin"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["END"], "onFailure": [{ "type": "injury" }] }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "END"
+          ],
+          "onFailure": [
+            {
+              "type": "injury"
+            }
+          ]
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 6,
@@ -519,14 +1491,40 @@
         "ui": {
           "title": "Injured",
           "description": "You are injured in an accident or attack.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Injured" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [10000, 10000, 50000, 50000, 100000, 100000, 200000],
+    "cash": [
+      10000,
+      10000,
+      50000,
+      50000,
+      100000,
+      100000,
+      200000
+    ],
     "benefits": [
       "Ship Share",
       "Two Ship Shares",
@@ -534,7 +1532,13 @@
       "SOC +1",
       "TAS Membership",
       "Yacht",
-      { "choose": "all", "options": ["SOC +1", "Yacht"] }
+      {
+        "choose": "all",
+        "options": [
+          "SOC +1",
+          "Yacht"
+        ]
+      }
     ]
   },
   "medical": {

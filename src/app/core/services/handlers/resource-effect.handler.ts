@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class ResourceEffectHandler implements EffectHandler {
-    private handledTypes = new Set(['ADD_ITEM', 'RESOURCE_MOD', 'ADD_NPC']);
+    private handledTypes = new Set(['ADD_ITEM', 'RESOURCE_MOD', 'ADD_NPC', 'LOSE_BENEFIT']);
 
     canHandle(type: string): boolean {
         return this.handledTypes.has(type);
@@ -28,14 +28,25 @@ export class ResourceEffectHandler implements EffectHandler {
                     }
                 } else if (effect.target === 'next_qualification_dm') {
                     ctx.characterService.updateDm('qualification', effect.value);
-                } else if (effect.target === 'next_advancement_dm') {
+                } else if (effect.target === 'next_advancement_dm' || effect.target === 'nextAdvancementModifier') {
                     ctx.characterService.updateDm('advancement', effect.value);
                 } else if (effect.target === 'shipShares') {
                     const current = ctx.characterService.character().finances.shipShares || 0;
                     ctx.characterService.updateFinances({ shipShares: current + effect.value });
                     ctx.characterService.log(`**Benefit Gained**: +${effect.value} Ship Share(s).`);
+                } else if (effect.target === 'next_benefit_dm') {
+                    ctx.characterService.updateDm('benefit', effect.value);
+                    ctx.characterService.log(`**Bonus**: +${effect.value} DM to next Benefit Roll.`);
+                } else if (effect.target === 'paroleThreshold') {
+                    ctx.characterService.updateParoleThreshold(effect.value);
                 }
                 break;
+            case 'LOSE_BENEFIT': {
+                const amount = (effect as any).value ?? 1;
+                ctx.characterService.spendBenefitRoll(undefined, Math.abs(amount));
+                ctx.characterService.log(`**Penalty**: Lost ${Math.abs(amount)} Benefit Roll(s).`);
+                break;
+            }
             case 'ADD_NPC':
                 if (effect.value) {
                     const npcData = effect.value;

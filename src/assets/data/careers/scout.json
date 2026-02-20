@@ -7,54 +7,201 @@
     "target": 5
   },
   "skills": {
-    "personal": ["STR +1", "DEX +1", "END +1", "INT +1", "EDU +1", "Jack-of-all-Trades"],
-    "service": ["Pilot (small craft)", "Survival", "Mechanic", "Astrogation", "Vacc Suit", "Gun Combat (any)"],
-    "advanced": ["Medic", "Language (any)", "Seafarer (any)", "Explosives", "Science (any)", "Jack-of-all-Trades"]
+    "personal": [
+      "STR +1",
+      "DEX +1",
+      "END +1",
+      "INT +1",
+      "EDU +1",
+      "Jack-of-all-Trades"
+    ],
+    "service": [
+      "Pilot (small craft)",
+      "Survival",
+      "Mechanic",
+      "Astrogation",
+      "Vacc Suit",
+      "Gun Combat (any)"
+    ],
+    "advanced": [
+      "Medic",
+      "Language (any)",
+      "Seafarer (any)",
+      "Explosives",
+      "Science (any)",
+      "Jack-of-all-Trades"
+    ]
   },
   "assignments": [
     {
       "name": "Courier",
-      "survival": { "stat": "END", "target": 5 },
-      "advancement": { "stat": "EDU", "target": 9 },
-      "skills": ["Electronics (any)", "Flyer (any)", "Pilot (spacecraft)", "Engineer (any)", "Athletics (any)", "Astrogation"],
+      "survival": {
+        "stat": "END",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 9
+      },
+      "skills": [
+        "Electronics (any)",
+        "Flyer (any)",
+        "Pilot (spacecraft)",
+        "Engineer (any)",
+        "Athletics (any)",
+        "Astrogation"
+      ],
       "ranks": [
-        { "level": 0, "title": "—" },
-        { "level": 1, "title": "Scout", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Scout" },
-        { "level": 3, "title": "Senior Scout", "bonus": { "skill": "Pilot (any)", "value": 1 } },
-        { "level": 4, "title": "Senior Scout" },
-        { "level": 5, "title": "Senior Scout" },
-        { "level": 6, "title": "Senior Scout" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "Scout",
+          "bonus": {
+            "skill": "Vacc Suit",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Scout"
+        },
+        {
+          "level": 3,
+          "title": "Senior Scout",
+          "bonus": {
+            "skill": "Pilot (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Senior Scout"
+        },
+        {
+          "level": 5,
+          "title": "Senior Scout"
+        },
+        {
+          "level": 6,
+          "title": "Senior Scout"
+        }
       ]
     },
     {
       "name": "Surveyor",
-      "survival": { "stat": "END", "target": 6 },
-      "advancement": { "stat": "INT", "target": 8 },
-      "skills": ["Electronics (any)", "Persuade", "Pilot (any)", "Navigation", "Diplomat", "Streetwise"],
+      "survival": {
+        "stat": "END",
+        "target": 6
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 8
+      },
+      "skills": [
+        "Electronics (any)",
+        "Persuade",
+        "Pilot (any)",
+        "Navigation",
+        "Diplomat",
+        "Streetwise"
+      ],
       "ranks": [
-        { "level": 0, "title": "—" },
-        { "level": 1, "title": "Scout", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Scout" },
-        { "level": 3, "title": "Senior Scout", "bonus": { "skill": "Pilot (any)", "value": 1 } },
-        { "level": 4, "title": "Senior Scout" },
-        { "level": 5, "title": "Senior Scout" },
-        { "level": 6, "title": "Senior Scout" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "Scout",
+          "bonus": {
+            "skill": "Vacc Suit",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Scout"
+        },
+        {
+          "level": 3,
+          "title": "Senior Scout",
+          "bonus": {
+            "skill": "Pilot (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Senior Scout"
+        },
+        {
+          "level": 5,
+          "title": "Senior Scout"
+        },
+        {
+          "level": 6,
+          "title": "Senior Scout"
+        }
       ]
     },
     {
       "name": "Explorer",
-      "survival": { "stat": "END", "target": 7 },
-      "advancement": { "stat": "EDU", "target": 7 },
-      "skills": ["Electronics (any)", "Pilot (any)", "Engineer (any)", "Science (any)", "Stealth", "Recon"],
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 7
+      },
+      "skills": [
+        "Electronics (any)",
+        "Pilot (any)",
+        "Engineer (any)",
+        "Science (any)",
+        "Stealth",
+        "Recon"
+      ],
       "ranks": [
-        { "level": 0, "title": "—" },
-        { "level": 1, "title": "Scout", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Scout" },
-        { "level": 3, "title": "Senior Scout", "bonus": { "skill": "Pilot (any)", "value": 1 } },
-        { "level": 4, "title": "Senior Scout" },
-        { "level": 5, "title": "Senior Scout" },
-        { "level": 6, "title": "Senior Scout" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "Scout",
+          "bonus": {
+            "skill": "Vacc Suit",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Scout"
+        },
+        {
+          "level": 3,
+          "title": "Senior Scout",
+          "bonus": {
+            "skill": "Pilot (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Senior Scout"
+        },
+        {
+          "level": 5,
+          "title": "Senior Scout"
+        },
+        {
+          "level": 6,
+          "title": "Senior Scout"
+        }
       ]
     }
   ],
@@ -69,10 +216,24 @@
         "ui": {
           "title": "Disaster!",
           "description": "Something has gone terribly wrong. Roll on the Mishap table but you are not ejected from this career.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -88,16 +249,42 @@
             {
               "label": "Run (Pilot 8+)",
               "effects": [
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Ambushers" } },
-                { "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "scout_event_3_pass", "onFail": "scout_event_3_fail" }
-              ]
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Ambushers"
+                  }
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_3_pass",
+                  "onFail": "scout_event_3_fail"
+                }
+              ],
+              "revealText": "Gain a **enemy**. Roll **DEX 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Treat with them (Persuade 10+)",
               "effects": [
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Ambushers" } },
-                { "type": "ROLL_CHECK", "stat": "SOC", "checkTarget": 10, "onPass": "scout_event_3_pass", "onFail": "scout_event_3_fail" }
-              ]
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Ambushers"
+                  }
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "SOC",
+                  "checkTarget": 10,
+                  "onPass": "scout_event_3_pass",
+                  "onFail": "scout_event_3_fail"
+                }
+              ],
+              "revealText": "Gain a **enemy**. Roll **SOC 10+** — success and failure lead to different outcomes."
             }
           ]
         }
@@ -110,7 +297,18 @@
           "ui": {
             "title": "Survived",
             "description": "You survive and gain Electronics (sensors) 1.",
-            "options": [{ "label": "Gain Electronics (sensors)", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (sensors)", "value": 1 }] }]
+            "options": [
+              {
+                "label": "Gain Electronics (sensors)",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Electronics (sensors)",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -120,11 +318,33 @@
           "ui": {
             "title": "Ship Destroyed",
             "description": "Your ship is destroyed. You cannot re-enlist in the Scouts at the end of this term.",
-            "options": [{ "label": "Accept Consequences", "effects": [{ "type": "CUSTOM", "customId": "BLOCK_REENLIST", "payload": { "career": "scout" } }] }]
+            "options": [
+              {
+                "label": "Accept Consequences",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "BLOCK_REENLIST",
+                    "payload": {
+                      "career": "scout"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "choice", "note": "Ambush" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "choice",
+          "note": "Ambush"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -137,14 +357,64 @@
           "title": "Survey Alien World",
           "description": "You survey an alien world and gain experience.",
           "options": [
-            { "label": "Animals (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Animals (any)", "value": 1 }] },
-            { "label": "Survival 1", "effects": [{ "type": "SKILL_MOD", "target": "Survival", "value": 1 }] },
-            { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }] },
-            { "label": "Science (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Science (any)", "value": 1 }] }
+            {
+              "label": "Animals (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Animals (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Animals (any) +1**."
+            },
+            {
+              "label": "Survival 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Survival +1**."
+            },
+            {
+              "label": "Recon 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Recon",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Recon +1**."
+            },
+            {
+              "label": "Science (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Animals (any)", "Survival", "Recon", "Science (any)"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Animals (any)",
+            "Survival",
+            "Recon",
+            "Science (any)"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
@@ -156,10 +426,26 @@
         "ui": {
           "title": "Exemplary Service",
           "description": "Your service is noted as exemplary by your superiors. Gain DM+1 to any one Benefit roll.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Accept Reward",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefitModifier", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 6,
@@ -172,15 +458,76 @@
           "title": "World Hopping",
           "description": "You spend several years jumping from world to world in your scout ship.",
           "options": [
-            { "label": "Astrogation 1", "effects": [{ "type": "SKILL_MOD", "target": "Astrogation", "value": 1 }] },
-            { "label": "Electronics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (any)", "value": 1 }] },
-            { "label": "Navigation 1", "effects": [{ "type": "SKILL_MOD", "target": "Navigation", "value": 1 }] },
-            { "label": "Pilot (small craft) 1", "effects": [{ "type": "SKILL_MOD", "target": "Pilot (small craft)", "value": 1 }] },
-            { "label": "Mechanic 1", "effects": [{ "type": "SKILL_MOD", "target": "Mechanic", "value": 1 }] }
+            {
+              "label": "Astrogation 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Astrogation",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Astrogation +1**."
+            },
+            {
+              "label": "Electronics (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Electronics (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Electronics (any) +1**."
+            },
+            {
+              "label": "Navigation 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Navigation",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Navigation +1**."
+            },
+            {
+              "label": "Pilot (small craft) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Pilot (small craft)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Pilot (small craft) +1**."
+            },
+            {
+              "label": "Mechanic 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Mechanic",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Mechanic +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Astrogation", "Electronics (any)", "Navigation", "Pilot (small craft)", "Mechanic"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Astrogation",
+            "Electronics (any)",
+            "Navigation",
+            "Pilot (small craft)",
+            "Mechanic"
+          ]
+        }
+      ]
     },
     {
       "roll": 7,
@@ -192,10 +539,24 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
@@ -208,8 +569,32 @@
           "title": "Intelligence Gathering",
           "description": "You have an opportunity to gather extra intelligence about an alien species. Roll Electronics 8+ or Deception 8+.",
           "options": [
-            { "label": "Electronics (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "scout_event_8_pass", "onFail": "scout_event_8_fail" }] },
-            { "label": "Deception (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "scout_event_8_pass", "onFail": "scout_event_8_fail" }] }
+            {
+              "label": "Electronics (INT 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_8_pass",
+                  "onFail": "scout_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Deception (INT 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_8_pass",
+                  "onFail": "scout_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+            }
           ]
         }
       },
@@ -221,13 +606,25 @@
           "ui": {
             "title": "Mission Successful",
             "description": "You gather vital intelligence. Gain an Ally in the Imperium and DM+2 to your next Advancement roll.",
-            "options": [{
-              "label": "Accept Reward",
-              "effects": [
-                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Imperial Intelligence Contact" } },
-                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
-              ]
-            }]
+            "options": [
+              {
+                "label": "Accept Reward",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "ally",
+                      "note": "Imperial Intelligence Contact"
+                    }
+                  },
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "nextAdvancementModifier",
+                    "value": 2
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -237,11 +634,26 @@
           "ui": {
             "title": "Compromised",
             "description": "Your mission is compromised. Roll on the Mishap table (not ejected from this career).",
-            "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+            "options": [
+              {
+                "label": "Roll Mishap",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "mishap_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Gather Intel" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Gather Intel"
+        }
+      ]
     },
     {
       "roll": 9,
@@ -254,8 +666,32 @@
           "title": "Rescue Mission",
           "description": "Your scout ship is one of the first on the scene to rescue the survivors of a disaster. Roll Medic 8+ or Engineer 8+.",
           "options": [
-            { "label": "Medic (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "scout_event_9_pass", "onFail": "scout_event_9_fail" }] },
-            { "label": "Engineer (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "scout_event_9_pass", "onFail": "scout_event_9_fail" }] }
+            {
+              "label": "Medic (INT 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_9_pass",
+                  "onFail": "scout_event_9_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Engineer (INT 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_9_pass",
+                  "onFail": "scout_event_9_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+            }
           ]
         }
       },
@@ -267,13 +703,25 @@
           "ui": {
             "title": "Rescue Successful",
             "description": "The rescue is a success. Gain a Contact and DM+2 to your next Advancement roll.",
-            "options": [{
-              "label": "Accept Reward",
-              "effects": [
-                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Disaster Survivor" } },
-                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }
-              ]
-            }]
+            "options": [
+              {
+                "label": "Accept Reward",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "contact",
+                      "note": "Disaster Survivor"
+                    }
+                  },
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "nextAdvancementModifier",
+                    "value": 2
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -283,11 +731,29 @@
           "ui": {
             "title": "Rescue Failed",
             "description": "The rescue fails and blame falls on you. Gain an Enemy.",
-            "options": [{ "label": "Accept Consequences", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Survivor Who Blames You" } }] }]
+            "options": [
+              {
+                "label": "Accept Consequences",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Survivor Who Blames You"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Rescue Mission" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Rescue Mission"
+        }
+      ]
     },
     {
       "roll": 10,
@@ -300,8 +766,32 @@
           "title": "Fringes of Charted Space",
           "description": "You spend a great deal of time on the fringes of Charted Space. Roll Survival 8+ or Pilot 8+.",
           "options": [
-            { "label": "Survival (END 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "END", "checkTarget": 8, "onPass": "scout_event_10_pass", "onFail": "scout_event_10_fail" }] },
-            { "label": "Pilot (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "scout_event_10_pass", "onFail": "scout_event_10_fail" }] }
+            {
+              "label": "Survival (END 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "END",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_10_pass",
+                  "onFail": "scout_event_10_fail"
+                }
+              ],
+              "revealText": "Roll **END 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Pilot (DEX 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "scout_event_10_pass",
+                  "onFail": "scout_event_10_fail"
+                }
+              ],
+              "revealText": "Roll **DEX 8+** — success and failure lead to different outcomes."
+            }
           ]
         }
       },
@@ -313,13 +803,25 @@
           "ui": {
             "title": "Alien Contact",
             "description": "You make first contact with an alien species. Gain a Contact and one level in any skill of your choice.",
-            "options": [{
-              "label": "Gain Reward",
-              "effects": [
-                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Alien Species Contact" } },
-                { "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }
-              ]
-            }]
+            "options": [
+              {
+                "label": "Gain Reward",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "contact",
+                      "note": "Alien Species Contact"
+                    }
+                  },
+                  {
+                    "type": "CUSTOM",
+                    "customId": "ANY_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -329,11 +831,26 @@
           "ui": {
             "title": "Lost in the Fringes",
             "description": "Things go badly out on the frontier. Roll on the Mishap table (not ejected from this career).",
-            "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+            "options": [
+              {
+                "label": "Roll Mishap",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "mishap_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Fringes of Charted Space" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Fringes of Charted Space"
+        }
+      ]
     },
     {
       "roll": 11,
@@ -346,12 +863,36 @@
           "title": "Imperial Courier",
           "description": "You serve as the courier for an important message from the Imperium. Choose your reward.",
           "options": [
-            { "label": "Diplomat 1", "effects": [{ "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }] },
-            { "label": "DM+4 to next Advancement roll", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }] }
+            {
+              "label": "Diplomat 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**."
+            },
+            {
+              "label": "DM+4 to next Advancement roll",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ]
+            }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Courier Duty" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Courier Duty"
+        }
+      ]
     },
     {
       "roll": 12,
@@ -363,10 +904,24 @@
         "ui": {
           "title": "Major Discovery",
           "description": "You discover a world, item or information of worth to the Imperium. You are automatically promoted.",
-          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION" }] }]
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "PROMOTION"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
@@ -380,10 +935,28 @@
         "ui": {
           "title": "Severely Injured",
           "description": "You are severely injured during a mission. Roll twice on the Injury table and take the lower result.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll_worst_of_2" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury-worst-of-2" }]
+      "effects": [
+        {
+          "type": "injury-worst-of-2"
+        }
+      ]
     },
     {
       "roll": 2,
@@ -396,12 +969,52 @@
           "title": "Psychological Damage",
           "description": "You are psychologically damaged by your time in the scouts. Reduce INT or SOC by 1.",
           "options": [
-            { "label": "INT -1", "effects": [{ "type": "STAT_MOD", "target": "INT", "value": -1 }, { "type": "EJECT_CAREER", "note": "Psychological Damage" }] },
-            { "label": "SOC -1", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "EJECT_CAREER", "note": "Psychological Damage" }] }
+            {
+              "label": "INT -1",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "INT",
+                  "value": -1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Psychological Damage"
+                }
+              ],
+              "revealText": "**INT -1** (permanent). You are **ejected from this career** — Psychological Damage."
+            },
+            {
+              "label": "SOC -1",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "SOC",
+                  "value": -1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Psychological Damage"
+                }
+              ],
+              "revealText": "**SOC -1** (permanent). You are **ejected from this career** — Psychological Damage."
+            }
           ]
         }
       },
-      "effects": [{ "type": "stat-choice-reduce", "stats": ["INT", "SOC"], "value": -1 }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "stat-choice-reduce",
+          "stats": [
+            "INT",
+            "SOC"
+          ],
+          "value": -1
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -413,17 +1026,47 @@
         "ui": {
           "title": "Ship Damaged",
           "description": "Your ship is damaged and you have to hitch-hike your way back across the stars to the nearest scout base. Gain 1D Contacts and D3 Enemies from your travels.",
-          "options": [{
-            "label": "Accept Consequences",
-            "effects": [
-              { "type": "ADD_MULTIPLE_NPC", "npcType": "contact", "count": "1D", "note": "Contacts from hitch-hiking" },
-              { "type": "ADD_MULTIPLE_NPC", "npcType": "enemy", "count": "D3", "note": "Enemies made along the way" },
-              { "type": "EJECT_CAREER", "note": "Ship Destroyed" }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Accept Consequences",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "npcType": "contact",
+                  "count": "1D",
+                  "note": "Contacts from hitch-hiking",
+                  "value": {
+                    "type": "contact",
+                    "notes": "Gained via Event",
+                    "count": "1d3"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "npcType": "enemy",
+                  "count": "D3",
+                  "note": "Enemies made along the way",
+                  "value": {
+                    "type": "contact",
+                    "notes": "Gained via Event",
+                    "count": "1d3"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Ship Destroyed"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Ship Destroyed."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -435,17 +1078,46 @@
         "ui": {
           "title": "Diplomatic Incident",
           "description": "You inadvertently cause a conflict between the Imperium and a minor world or species. Gain a Rival and Diplomat 1.",
-          "options": [{
-            "label": "Accept Consequences",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Offended Party" } },
-              { "type": "SKILL_MOD", "target": "Diplomat", "value": 1 },
-              { "type": "EJECT_CAREER", "note": "Diplomatic Incident" }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Accept Consequences",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Offended Party"
+                  }
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Diplomatic Incident"
+                }
+              ],
+              "revealText": "Gain a **rival**. Gain **Diplomat +1**. You are **ejected from this career** — Diplomatic Incident."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "rival" }, { "type": "skill-gain", "skill": "Diplomat", "value": 1 }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "rival"
+        },
+        {
+          "type": "skill-gain",
+          "skill": "Diplomat",
+          "value": 1
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 5,
@@ -457,10 +1129,28 @@
         "ui": {
           "title": "Lost in Space",
           "description": "You have no idea what happened to you – they found your ship drifting on the fringes of friendly space. Roll on the Injury table.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Found Drifting" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Found Drifting"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     },
     {
       "roll": 6,
@@ -472,15 +1162,49 @@
         "ui": {
           "title": "Injured",
           "description": "You are injured during a mission.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Medical Discharge"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [20000, 20000, 30000, 30000, 50000, 50000, 50000],
-    "benefits": ["Ship Share", "INT +1", "EDU +1", "Weapon", "Weapon", "Scout Ship", "Scout Ship"]
+    "cash": [
+      20000,
+      20000,
+      30000,
+      30000,
+      50000,
+      50000,
+      50000
+    ],
+    "benefits": [
+      "Ship Share",
+      "INT +1",
+      "EDU +1",
+      "Weapon",
+      "Weapon",
+      "Scout Ship",
+      "Scout Ship"
+    ]
   },
   "medical": {
     "plan": "independent",

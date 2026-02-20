@@ -126,6 +126,15 @@ export class CareerComponent implements OnInit, OnDestroy {
     isForeignLegionActive = false;
     isNeuralJackPrompt = false;
     isNpcConversionPrompt = false;
+    revealedOptions = new Set<number>();
+
+    toggleReveal(index: number): void {
+        if (this.revealedOptions.has(index)) {
+            this.revealedOptions.delete(index);
+        } else {
+            this.revealedOptions.add(index);
+        }
+    }
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
 
     // Prisoner System
@@ -194,10 +203,6 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.log(`State Advanced to ${state}`);
         });
 
-        this.eventEngine.registerCustomHandler('INJURY_PROCESS', (payload) => {
-            this.handleInjuryProcess(payload);
-        });
-
         // Register Global Events
         this.eventEngine.registerEvent(createLifeEventRollEvent());
         this.eventEngine.registerEvent(createInjuryRollEvent());
@@ -212,15 +217,25 @@ export class CareerComponent implements OnInit, OnDestroy {
         });
 
         this.eventEngine.registerCustomHandler('BETRAYAL_LOGIC', (payload) => {
-            // Logic: Existing Ally/Contact -> Rival/Enemy
-            this.characterService.addNpc({ 
-                id: `npc_${Date.now()}`,
-                name: 'Betrayer',
-                type: 'rival',
-                origin: 'Betrayal Event',
-                notes: 'A former friend who betrayed you.'
-            });
-            this.characterService.log('**Betrayal**: A trusted contact has become a Rival.');
+            // Logic: Convert existing Contact/Ally → Rival; if none, create generic Enemy
+            const npcs = this.characterService.character().npcs;
+            const convertible = npcs.filter(n => n.type === 'contact' || n.type === 'ally');
+            if (convertible.length > 0) {
+                // Show selection modal — player picks which NPC betrayed them
+                this.pendingNpcType = 'rival';
+                this.pendingNpcOrigin = 'Betrayal';
+                this.isNpcPrompt = true;
+            } else {
+                // No contacts to betray — add a new Enemy
+                this.characterService.addNpc({
+                    id: `npc_${Date.now()}`,
+                    name: 'Unknown Betrayer',
+                    type: 'enemy',
+                    origin: 'Betrayal Event',
+                    notes: 'An unknown figure who worked against you from the shadows.'
+                });
+                this.characterService.log('**Betrayal**: An unknown enemy has acted against you.');
+            }
         });
 
         this.eventEngine.registerCustomHandler('INJURY_PROCESS', (payload) => {
@@ -247,6 +262,12 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         this.eventEngine.registerCustomHandler('APPLY_INJURY_DAMAGE', (payload) => {
             this.handleInjuryDamage(payload.severity, payload.method);
+        });
+
+        // Clear revealed options whenever the active event changes (event chaining, new events, etc.)
+        effect(() => {
+            this.eventEngine.currentEvent();
+            this.revealedOptions.clear();
         });
 
         const char = this.characterService.character();
@@ -935,13 +956,24 @@ export class CareerComponent implements OnInit, OnDestroy {
         else if (tableType === 'Officer' && this.selectedCareer.officerSkills) table = this.selectedCareer.officerSkills;
         else if (tableType === 'Specialist' && this.selectedAssignment) table = this.selectedAssignment.skillTable;
 
+        const careerName = this.selectedCareer.name;
+        const termNum = this.currentTerm();
+        const preRollState = this.currentState();
+        const hasBonus = this.bonusSkillRolls() > 0;
+        const stateLabel = hasBonus
+            ? `Advancement Bonus Roll`
+            : preRollState === 'POST_TERM_SKILL_TRAINING'
+                ? `Post-Term Training · Term ${termNum}`
+                : `Term ${termNum} Skill Training`;
+        const tablePreview = table.map((s, i) => `**${i + 1}.** ${s}`).join('  ·  ');
+
         const roll = await this.diceDisplay.roll(
             `${tableType} Skill`, 1, 0, 0, '',
             (res) => { const idx = res - 1; return table[idx] || 'Unknown'; }, [], table,
             {
-                phase: `SKILL TRAINING · ${tableType.toUpperCase()} TABLE`,
-                announcement: `Roll 1D6 on the ${tableType} Skill Table to see which skill or characteristic bonus you develop this term.`,
-                successContext: `You gain the listed skill or characteristic improvement. Apply it to your character sheet.`,
+                phase: `SKILL TRAINING · ${careerName.toUpperCase()} · ${tableType.toUpperCase()}`,
+                announcement: `**${careerName} — ${tableType} Skills** (${stateLabel})\n\nRoll 1D6 to determine your development this term:\n\n${tablePreview}\n\nThe result is applied immediately to your character sheet.`,
+                successContext: `Skill development recorded. Your character advances.`,
                 failureContext: ``
             }
         );
@@ -1024,7 +1056,15 @@ export class CareerComponent implements OnInit, OnDestroy {
         
         if (pathDm !== 0) {
             const effect = survivalEvent.ui.options[0].effects?.find((e: any) => e.type === 'ROLL_CHECK');
-            if (effect) effect.dm = pathDm;
+            if (effect) {
+                effect.dm = pathDm;
+                // Build a human-readable label for the dice roller modifier breakdown
+                const labels: string[] = [];
+                if (character.isSoftPath) labels.push('Soft Path (-1)');
+                else if (character.homeworld?.path === 'Hard') labels.push('Hard Path (+1)');
+                if (!character.hasLeftHome && character.homeworld?.survivalDm) labels.push(`Homeworld (+${character.homeworld.survivalDm})`);
+                effect.dmLabel = labels.join(', ') || 'Path DM';
+            }
         }
 
         // Note: Map legacy tables to dynamic events
@@ -1529,13 +1569,15 @@ export class CareerComponent implements OnInit, OnDestroy {
         // Prisoner Logic: Parole Modifiers
         let paroleDm = 0;
         if (this.selectedCareer.name === 'Prisoner') {
-            paroleDm = 7 - this.paroleThreshold(); // ParoleThreshold starts at 7, lower is better (DM+)
-            if (paroleDm !== 0) modifiers.push({ label: 'Parole Modifiers', value: paroleDm });
+            const eventDelta = char.paroleThresholdDelta || 0;
+            const effectiveThreshold = this.paroleThreshold() + eventDelta;
+            paroleDm = 7 - effectiveThreshold;
+            if (paroleDm !== 0) modifiers.push({ label: 'Parole Record', value: paroleDm });
         }
 
         // Global Advancement DM
         const nextAdvDm = char.nextAdvancementDm || 0;
-        if (nextAdvDm !== 0) modifiers.push({ label: 'Bonus DMs', value: nextAdvDm });
+        if (nextAdvDm !== 0) modifiers.push({ label: 'Event Bonus DM', value: nextAdvDm });
 
         // Neural Jack Bonus (+1)
         if (char.equipment.some(e => e.includes('Neural Jack'))) {
@@ -1570,7 +1612,7 @@ export class CareerComponent implements OnInit, OnDestroy {
         const total = rollResult + statMod + paroleDm + nextAdvDm;
 
         // Clear used bonuses
-        this.characterService.updateCharacter({ nextAdvancementDm: 0 });
+        this.characterService.updateCharacter({ nextAdvancementDm: 0, paroleThresholdDelta: 0 });
 
         if (total >= target || (isPrisoner && rollResult >= 12)) {
             this.success = true;

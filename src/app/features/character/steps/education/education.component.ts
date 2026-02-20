@@ -422,6 +422,8 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         // Modal Roll
         const rollTitle = this.educationType === 'Academy' ? `Admission check - Military Academy (${this.academyType})` : `Admission Check - University`;
+        const eduLabel = this.educationType === 'University' ? 'University' : `${this.academyType} Academy`;
+        const offWorldNote = this.admissionMethod === 'OffWorld' ? ' (Off-World application: harder but grants EDU +1 if admitted)' : '';
 
         const roll = await this.diceDisplay.roll(
             rollTitle,
@@ -430,7 +432,14 @@ export class EducationComponent implements OnInit, OnDestroy {
             target,
             statName,
             undefined,
-            modifiers
+            modifiers,
+            undefined,
+            {
+                phase: `EDUCATION · ADMISSION · ${eduLabel.toUpperCase()}`,
+                announcement: `**${eduLabel} Admission**${offWorldNote}\n\nYou must roll **2D6 + ${statName} modifier** and meet or exceed **${target}+** to be accepted. Current DM breakdown shown above.`,
+                successContext: `Admission granted. You begin your studies immediately.`,
+                failureContext: `Application rejected. You may proceed directly to your career.`
+            }
         );
 
         const total = roll + totalDm;
@@ -596,7 +605,14 @@ export class EducationComponent implements OnInit, OnDestroy {
             target,
             statName,
             undefined,
-            modifiers
+            modifiers,
+            undefined,
+            {
+                phase: `EDUCATION · GRADUATION · ${this.educationType.toUpperCase()}`,
+                announcement: `**Graduation Roll** (${this.educationType})\n\nRoll **2D6 + INT modifier** and meet or exceed **${target}+** to graduate. Roll **${this.educationType === 'University' ? 10 : 11}+** for Honors.`,
+                successContext: `You graduate successfully. Benefits are applied to your character sheet.`,
+                failureContext: `You fail to graduate. ${this.educationType === 'Academy' ? 'A roll above 2 still grants automatic career entry (Rule 632).' : 'No education benefits are gained.'}`
+            }
         );
 
         const total = roll + totalDm;
@@ -622,6 +638,7 @@ export class EducationComponent implements OnInit, OnDestroy {
             // University goes directly to Finished, Academy goes to AcademySkillSelect
             if (this.educationType === 'University') {
                 this.educationStep = 'Finished';
+                this.wizardFlow.notifyValidation();
             } else {
                 this.educationStep = 'AcademySkillSelect';
             }
@@ -642,6 +659,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
             this.saveResult(false, false);
             this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
         }
 
         this.scrollToTop();
@@ -743,6 +761,11 @@ export class EducationComponent implements OnInit, OnDestroy {
         const roll = await this.diceDisplay.roll('Education Event', 2, 0, 0, '', (result) => {
             const entry = createEducationEvent(result);
             return entry.ui.description;
+        }, [], undefined, {
+            phase: `EDUCATION · TERM EVENT · ${this.educationType.toUpperCase()}`,
+            announcement: `**Education Event Roll** (${this.educationType})\n\nRoll 2D6 to determine what significant event occurred during your studies this term. Results range from tragedies and pranks to useful skills and academic recognition.`,
+            successContext: `The event unfolds. Review the outcome below.`,
+            failureContext: ``
         });
 
         this.characterService.log(`**Education Event** (Roll ${roll})`);
@@ -781,6 +804,7 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.characterService.setNextCareer('Prisoner');
             this.characterService.log('**EXPELLED**: Prank went catastrophically wrong. Mandatory transition to Prisoner.');
             this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
             return;
         }
 
@@ -821,6 +845,7 @@ export class EducationComponent implements OnInit, OnDestroy {
         this.characterService.log('**Education Completed**: Successfully graduated with honors (avoided draft).');
         // Continue normally to graduation
         this.educationStep = 'Finished';
+        this.wizardFlow.notifyValidation();
         this.scrollToTop();
     }
 
@@ -837,6 +862,7 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.characterService.log('**Fleeing**: Resigned from education to avoid draft. Next Career: Drifter.');
             // Terminate education immediately
             this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
             this.scrollToTop();
         } else {
             // Draft: Roll for career assignment — Core Rulebook table: 1=Navy,2=Army,3=Marine,4=Merchant,5=Scout,6=Agent
@@ -870,6 +896,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
             // Terminate education after roll
             this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
             this.scrollToTop();
         }
     }
@@ -1020,6 +1047,7 @@ export class EducationComponent implements OnInit, OnDestroy {
         }
 
         this.educationStep = 'Finished';
+        this.wizardFlow.notifyValidation();
     }
 
     applyGraduationBenefits(honors: boolean) {

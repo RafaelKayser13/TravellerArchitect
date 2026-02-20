@@ -41,6 +41,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/TravellerArchitect/",
               "budgets": [
                 {
                   "type": "initial",

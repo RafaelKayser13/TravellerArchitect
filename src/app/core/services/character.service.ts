@@ -236,6 +236,14 @@ addSkill(skillName: string, levelToAdd: number = 1, isFirstTermBasicTraining: bo
     this.patch(updated, `**DM Bonus**: ${value >= 0 ? '+' : ''}${value} to next ${type} roll`);
   }
 
+  updateParoleThreshold(delta: number) {
+    const current = this.character().paroleThresholdDelta || 0;
+    this.patch(
+      { paroleThresholdDelta: current + delta },
+      `**Parole Record**: Threshold adjusted by ${delta > 0 ? '+' : ''}${delta} (favour ${delta < 0 ? 'improved' : 'worsened'})`
+    );
+  }
+
 
   // --- Education & Special Flags ---
 

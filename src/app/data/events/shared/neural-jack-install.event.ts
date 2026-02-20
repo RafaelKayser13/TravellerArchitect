@@ -18,6 +18,7 @@ export const NEURAL_JACK_INSTALL_EVENT: GameEvent = {
         options: [
             {
                 label: 'Accept Installation',
+                revealText: 'You permanently lose 1 Benefit Roll at Mustering Out. In return you gain a Neural Jack (TL12) in your equipment and the \"hasNeuralJack\" flag on your character sheet, which may unlock special options in future events.',
                 effects: [
                     { 
                         type: 'RESOURCE_MOD', 
@@ -42,6 +43,7 @@ export const NEURAL_JACK_INSTALL_EVENT: GameEvent = {
             },
             {
                 label: 'Refuse',
+                revealText: 'No benefit rolls are spent. The offer is logged but no changes are made to your character.',
                 effects: [
                     { type: 'LOG_ENTRY', note: 'Refused Neural Jack installation offer.' }
                 ]

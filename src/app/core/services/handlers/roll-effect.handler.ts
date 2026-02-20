@@ -40,8 +40,14 @@ export class RollEffectHandler implements EffectHandler {
                         successContext: effect.successContext,
                         failureContext: effect.failureContext
                     };
+
+                    // Build individual modifier breakdown for display
+                    const modifiersArr: any[] = [];
+                    if (diceMod !== 0) modifiersArr.push({ label: `${effect.stat} Modifier`, value: diceMod });
+                    if (effectDm !== 0) modifiersArr.push({ label: effect.dmLabel || 'Path/Event DM', value: effectDm });
+
                     const total = await ctx.diceDisplay.roll(
-                        diceTitle, 2, diceMod + effectDm, effect.checkTarget, undefined, undefined, [], undefined, rollContext
+                        diceTitle, 2, diceMod + effectDm, effect.checkTarget, undefined, undefined, modifiersArr, undefined, rollContext
                     );
                     
                     if (total >= effect.checkTarget) {

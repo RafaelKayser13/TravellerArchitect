@@ -229,7 +229,8 @@
   z-index: 9999;
   pointer-events: none;
 
-  app-dice-roller {
+  app-dice-roller,
+  app-npc-interaction {
     pointer-events: auto;
   }
 }

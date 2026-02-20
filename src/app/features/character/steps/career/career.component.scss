@@ -1670,6 +1670,19 @@
     }
 }
 
+@keyframes reveal-slide {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 200px;
+    }
+}
+
 /* NPC Modals Styling */
 
 .npc-id-form {
@@ -1767,6 +1780,62 @@
     flex-direction: column;
     gap: 1.2rem;
     margin-top: 1.5rem;
+
+    .choice-option-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .choice-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: stretch;
+
+        .flex-grow {
+            flex: 1;
+            text-align: left;
+        }
+    }
+
+    .btn-reveal {
+        flex-shrink: 0;
+        width: 36px;
+        background: transparent;
+        border: 2px solid rgba(var(--neon-cyan-rgb), 0.3);
+        color: rgba(var(--neon-cyan-rgb), 0.5);
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        letter-spacing: 0;
+
+        &:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 8px rgba(var(--neon-cyan-rgb), 0.3);
+        }
+
+        &.active {
+            border-color: var(--amber, #f5a623);
+            color: var(--amber, #f5a623);
+            background: rgba(245, 166, 35, 0.08);
+            box-shadow: 0 0 8px rgba(245, 166, 35, 0.2);
+        }
+    }
+
+    .reveal-panel {
+        padding: 0.7rem 1rem;
+        background: rgba(245, 166, 35, 0.06);
+        border-left: 3px solid var(--amber, #f5a623);
+        border-right: 1px solid rgba(245, 166, 35, 0.2);
+        border-bottom: 1px solid rgba(245, 166, 35, 0.2);
+        color: rgba(245, 166, 35, 0.85);
+        font-size: 0.82rem;
+        line-height: 1.5;
+        letter-spacing: 0.02em;
+        animation: reveal-slide 0.2s ease;
+    }
 
     .choice-item {
         display: flex;

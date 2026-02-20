@@ -214,6 +214,7 @@ export interface Character {
   nextSurvivalDm?: number;
   nextAdvancementDm?: number;
   nextBenefitDm?: number;
+  paroleThresholdDelta?: number;   // Accumulated event modifiers to prisoner parole threshold
   psionicPotential: boolean;
   forcedCareer?: string;
   hasLeftHome: boolean;

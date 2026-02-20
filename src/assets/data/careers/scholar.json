@@ -5,58 +5,227 @@
   "qualification": {
     "stat": "INT",
     "target": 6,
-    "minAttributes": { "edu": 6 }
+    "minAttributes": {
+      "edu": 6
+    }
   },
   "skills": {
-    "personal": ["INT +1", "EDU +1", "SOC +1", "DEX +1", "END +1", "Language (any)"],
-    "service": ["Drive (any)", "Electronics (any)", "Diplomat", "Medic", "Investigate", "Science (any)"],
-    "advanced": ["Art (any)", "Advocate", "Electronics (any)", "Language (any)", "Engineer (any)", "Science (any)"]
+    "personal": [
+      "INT +1",
+      "EDU +1",
+      "SOC +1",
+      "DEX +1",
+      "END +1",
+      "Language (any)"
+    ],
+    "service": [
+      "Drive (any)",
+      "Electronics (any)",
+      "Diplomat",
+      "Medic",
+      "Investigate",
+      "Science (any)"
+    ],
+    "advanced": [
+      "Art (any)",
+      "Advocate",
+      "Electronics (any)",
+      "Language (any)",
+      "Engineer (any)",
+      "Science (any)"
+    ]
   },
   "advancedEducationMinEdu": 10,
   "assignments": [
     {
       "name": "Field Researcher",
-      "survival": { "stat": "END", "target": 6 },
-      "advancement": { "stat": "INT", "target": 6 },
-      "skills": ["Electronics (any)", "Science (any)", "Survival", "Recon", "Investigate", "Medic"],
+      "survival": {
+        "stat": "END",
+        "target": 6
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 6
+      },
+      "skills": [
+        "Electronics (any)",
+        "Science (any)",
+        "Survival",
+        "Recon",
+        "Investigate",
+        "Medic"
+      ],
       "ranks": [
-        { "level": 0, "title": "—" },
-        { "level": 1, "title": "—", "bonus": { "skill": "Science (any)", "value": 1 } },
-        { "level": 2, "title": "—", "bonus": { "skill": "Electronics (computers)", "value": 1 } },
-        { "level": 3, "title": "—", "bonus": { "skill": "Investigate", "value": 1 } },
-        { "level": 4, "title": "—" },
-        { "level": 5, "title": "—", "bonus": { "skill": "Science (any)", "value": 2 } },
-        { "level": 6, "title": "—" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Electronics (computers)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Investigate",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 2
+          }
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     },
     {
       "name": "Scientist",
-      "survival": { "stat": "EDU", "target": 4 },
-      "advancement": { "stat": "INT", "target": 8 },
-      "skills": ["Admin", "Electronics (any)", "Science (any)", "Science (any)", "Investigate", "Language (any)"],
+      "survival": {
+        "stat": "EDU",
+        "target": 4
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 8
+      },
+      "skills": [
+        "Admin",
+        "Electronics (any)",
+        "Science (any)",
+        "Science (any)",
+        "Investigate",
+        "Language (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "—" },
-        { "level": 1, "title": "—", "bonus": { "skill": "Science (any)", "value": 1 } },
-        { "level": 2, "title": "—", "bonus": { "skill": "Electronics (computers)", "value": 1 } },
-        { "level": 3, "title": "—", "bonus": { "skill": "Investigate", "value": 1 } },
-        { "level": 4, "title": "—" },
-        { "level": 5, "title": "—", "bonus": { "skill": "Science (any)", "value": 2 } },
-        { "level": 6, "title": "—" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Electronics (computers)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Investigate",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 2
+          }
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     },
     {
       "name": "Physician",
-      "survival": { "stat": "EDU", "target": 4 },
-      "advancement": { "stat": "EDU", "target": 8 },
-      "skills": ["Medic", "Electronics (any)", "Science (any)", "Investigate", "Admin", "Diplomat"],
+      "survival": {
+        "stat": "EDU",
+        "target": 4
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 8
+      },
+      "skills": [
+        "Medic",
+        "Electronics (any)",
+        "Science (any)",
+        "Investigate",
+        "Admin",
+        "Diplomat"
+      ],
       "ranks": [
-        { "level": 0, "title": "—" },
-        { "level": 1, "title": "—", "bonus": { "skill": "Medic", "value": 1 } },
-        { "level": 2, "title": "—" },
-        { "level": 3, "title": "—", "bonus": { "skill": "Science (any)", "value": 1 } },
-        { "level": 4, "title": "—" },
-        { "level": 5, "title": "—", "bonus": { "skill": "Science (any)", "value": 2 } },
-        { "level": 6, "title": "—" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Medic",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 2
+          }
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     }
   ],
@@ -71,10 +240,24 @@
         "ui": {
           "title": "Disaster!",
           "description": "Something has gone terribly wrong in your research.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -86,19 +269,63 @@
         "ui": {
           "title": "Unethical Research",
           "description": "You push the boundaries of what is acceptable. Gain extra Benefit roll and two levels of Science, but make D3 Enemies.",
-          "options": [{
-            "label": "Pursue the Research",
-            "effects": [
-              { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 },
-              { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 },
-              { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 },
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Ethics Committee Member" } },
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Outraged Colleague" } }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Pursue the Research",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Ethics Committee Member"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Outraged Colleague"
+                  }
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**. Gain **Science (any) +1**. Gain a **enemy**. Gain a **enemy**."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefitModifier", "value": 1 }, { "type": "skill-gain", "skill": "Science (any)" }, { "type": "skill-gain", "skill": "Science (any)" }, { "type": "npc", "npcType": "enemy" }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        },
+        {
+          "type": "skill-gain",
+          "skill": "Science (any)"
+        },
+        {
+          "type": "skill-gain",
+          "skill": "Science (any)"
+        },
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -111,14 +338,65 @@
           "title": "Secret Project",
           "description": "A mysterious patron hires you for a classified research project.",
           "options": [
-            { "label": "Medic 1", "effects": [{ "type": "SKILL_MOD", "target": "Medic", "value": 1 }] },
-            { "label": "Science 1", "effects": [{ "type": "SKILL_MOD", "target": "Science (any)", "value": 1 }] },
-            { "label": "Engineer 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (any)", "value": 1 }] },
-            { "label": "Electronics 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (any)", "value": 1 }] }
+            {
+              "label": "Medic 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Medic",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Medic +1**."
+            },
+            {
+              "label": "Science 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**."
+            },
+            {
+              "label": "Engineer 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Engineer (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Engineer (any) +1**."
+            },
+            {
+              "label": "Electronics 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Electronics (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Electronics (any) +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Medic", "Science (any)", "Engineer (any)", "Electronics (any)", "Investigate"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Medic",
+            "Science (any)",
+            "Engineer (any)",
+            "Electronics (any)",
+            "Investigate"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
@@ -130,10 +408,26 @@
         "ui": {
           "title": "Prestigious Prize",
           "description": "Your work earns you a sector-renowned award.",
-          "options": [{ "label": "Accept Award", "effects": [{ "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Accept Award",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefitModifier", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 6,
@@ -145,7 +439,21 @@
         "ui": {
           "title": "Advanced Training",
           "description": "You have the opportunity for advanced training.",
-          "options": [{ "label": "Attempt Training (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "scholar_event_6_pass", "onFail": "scholar_event_6_fail" }] }]
+          "options": [
+            {
+              "label": "Attempt Training (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "scholar_event_6_pass",
+                  "onFail": "scholar_event_6_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -156,7 +464,18 @@
           "ui": {
             "title": "Training Successful",
             "description": "You excel in your training.",
-            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+            "options": [
+              {
+                "label": "Increase Any Skill",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "ANY_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -166,11 +485,29 @@
           "ui": {
             "title": "Training Failed",
             "description": "You fail to qualify for the advanced training.",
-            "options": [{ "label": "Continue", "effects": [] }]
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "any-skill-up"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 7,
@@ -182,10 +519,24 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
@@ -200,7 +551,16 @@
           "options": [
             {
               "label": "Cheat (Deception or Admin 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "scholar_event_8_pass", "onFail": "scholar_event_8_fail" }]
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "scholar_event_8_pass",
+                  "onFail": "scholar_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Refuse",
@@ -217,14 +577,30 @@
           "ui": {
             "title": "Successful Deception",
             "description": "You get away with it — for now. Gain DM+2 Benefit, Science +1, Enemy.",
-            "options": [{
-              "label": "Take the Gains",
-              "effects": [
-                { "type": "RESOURCE_MOD", "target": "benefitModifier", "value": 2 },
-                { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 },
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Suspicious Colleague" } }
-              ]
-            }]
+            "options": [
+              {
+                "label": "Take the Gains",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "benefitModifier",
+                    "value": 2
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Science (any)",
+                    "value": 1
+                  },
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Suspicious Colleague"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -234,17 +610,33 @@
           "ui": {
             "title": "Caught",
             "description": "You are caught cheating. Gain Enemy and lose a Benefit.",
-            "options": [{
-              "label": "Face Consequences",
-              "effects": [
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Exposed You" } },
-                { "type": "LOSE_BENEFIT", "value": 1 }
-              ]
-            }]
+            "options": [
+              {
+                "label": "Face Consequences",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Exposed You"
+                    }
+                  },
+                  {
+                    "type": "LOSE_BENEFIT",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Cheat Opportunity" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Cheat Opportunity"
+        }
+      ]
     },
     {
       "roll": 9,
@@ -256,10 +648,26 @@
         "ui": {
           "title": "Breakthrough",
           "description": "You make a significant discovery in your field.",
-          "options": [{ "label": "Publish Results", "effects": [{ "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 2 }] }]
+          "options": [
+            {
+              "label": "Publish Results",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 2
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "advancementModifier", "value": 2 }]
+      "effects": [
+        {
+          "type": "advancementModifier",
+          "value": 2
+        }
+      ]
     },
     {
       "roll": 10,
@@ -272,14 +680,64 @@
           "title": "Bureaucratic Morass",
           "description": "Red tape threatens to kill your research. You must navigate the system.",
           "options": [
-            { "label": "Admin 1", "effects": [{ "type": "SKILL_MOD", "target": "Admin", "value": 1 }] },
-            { "label": "Advocate 1", "effects": [{ "type": "SKILL_MOD", "target": "Advocate", "value": 1 }] },
-            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] },
-            { "label": "Diplomat 1", "effects": [{ "type": "SKILL_MOD", "target": "Diplomat", "value": 1 }] }
+            {
+              "label": "Admin 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Admin",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Admin +1**."
+            },
+            {
+              "label": "Advocate 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Advocate",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Advocate +1**."
+            },
+            {
+              "label": "Persuade 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Persuade",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Persuade +1**."
+            },
+            {
+              "label": "Diplomat 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Admin", "Advocate", "Persuade", "Diplomat"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Admin",
+            "Advocate",
+            "Persuade",
+            "Diplomat"
+          ]
+        }
+      ]
     },
     {
       "roll": 11,
@@ -295,21 +753,52 @@
             {
               "label": "Science +1",
               "effects": [
-                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Eccentric Mentor" } },
-                { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 }
-              ]
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Eccentric Mentor"
+                  }
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain a **ally**. Gain **Science (any) +1**."
             },
             {
               "label": "DM+4 to Advancement",
               "effects": [
-                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Eccentric Mentor" } },
-                { "type": "RESOURCE_MOD", "target": "nextAdvancementModifier", "value": 4 }
-              ]
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Eccentric Mentor"
+                  }
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ],
+              "revealText": "Gain a **ally**."
             }
           ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "choice", "note": "Mentor Bonus" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "ally"
+        },
+        {
+          "type": "choice",
+          "note": "Mentor Bonus"
+        }
+      ]
     },
     {
       "roll": 12,
@@ -321,15 +810,25 @@
         "ui": {
           "title": "Considerable Breakthrough",
           "description": "Your work changes the way your entire field is understood.",
-          "options": [{
-            "label": "Accept Accolades",
-            "effects": [
-              { "type": "PROMOTION", "note": "Considerable Breakthrough" }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Accept Accolades",
+              "effects": [
+                {
+                  "type": "PROMOTION",
+                  "note": "Considerable Breakthrough"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
@@ -343,10 +842,28 @@
         "ui": {
           "title": "Severely Injured",
           "description": "A major laboratory or field accident leaves you severely injured.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     },
     {
       "roll": 2,
@@ -358,17 +875,40 @@
         "ui": {
           "title": "Disaster Injures Others",
           "description": "An accident in your lab injures colleagues. Roll Injury twice, take the worse result. Gain a Rival.",
-          "options": [{
-            "label": "Accept Consequences",
-            "effects": [
-              { "type": "TRIGGER_EVENT", "value": "injury_roll" },
-              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Injured Colleague" } },
-              { "type": "EJECT_CAREER", "note": "Laboratory Disaster" }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Accept Consequences",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Injured Colleague"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Laboratory Disaster"
+                }
+              ],
+              "revealText": "Triggers a follow-up event. Gain a **rival**. You are **ejected from this career** — Laboratory Disaster."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }, { "type": "npc", "npcType": "rival" }]
+      "effects": [
+        {
+          "type": "injury"
+        },
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -384,21 +924,46 @@
             {
               "label": "Continue Openly (Science +1, Enemy)",
               "effects": [
-                { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 },
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Government Censor" } }
-              ]
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Government Censor"
+                  }
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**. Gain a **enemy**."
             },
             {
               "label": "Continue Secretly (Science +1, SOC -2)",
               "effects": [
-                { "type": "SKILL_MOD", "target": "Science (any)", "value": 1 },
-                { "type": "STAT_MOD", "target": "SOC", "value": -2 }
-              ]
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "STAT_MOD",
+                  "target": "SOC",
+                  "value": -2
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**. **SOC -2** (permanent)."
             }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Government Interference — NOT ejected" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Government Interference — NOT ejected"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -414,21 +979,48 @@
             {
               "label": "Survival +1",
               "effects": [
-                { "type": "SKILL_MOD", "target": "Survival", "value": 1 },
-                { "type": "EJECT_CAREER", "note": "Stranded — Expedition Failed" }
-              ]
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Stranded — Expedition Failed"
+                }
+              ],
+              "revealText": "Gain **Survival +1**. You are **ejected from this career** — Stranded — Expedition Failed."
             },
             {
               "label": "Athletics +1",
               "effects": [
-                { "type": "SKILL_MOD", "target": "Athletics (any)", "value": 1 },
-                { "type": "EJECT_CAREER", "note": "Stranded — Expedition Failed" }
-              ]
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Athletics (any)",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Stranded — Expedition Failed"
+                }
+              ],
+              "revealText": "Gain **Athletics (any) +1**. You are **ejected from this career** — Stranded — Expedition Failed."
             }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Survival", "Athletics (any)"] }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Survival",
+            "Athletics (any)"
+          ]
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 5,
@@ -444,19 +1036,33 @@
             {
               "label": "Leave (retain this term's Benefit)",
               "effects": [
-                { "type": "EJECT_CAREER", "note": "Sabotaged — Chose to Leave" }
-              ]
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Sabotaged — Chose to Leave"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Sabotaged — Chose to Leave."
             },
             {
               "label": "Stay and Restart (lose all term benefits)",
               "effects": [
-                { "type": "LOSE_BENEFIT", "value": 99, "note": "Lose all benefits from this term" }
-              ]
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 99,
+                  "note": "Lose all benefits from this term"
+                }
+              ],
+              "revealText": "Lose **99 Benefit Roll(s)**."
             }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Work Sabotaged" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Work Sabotaged"
+        }
+      ]
     },
     {
       "roll": 6,
@@ -468,20 +1074,50 @@
         "ui": {
           "title": "Reputation Damaged",
           "description": "A rival steals your work and ruins your reputation. Gain a Rival. You stay in the career.",
-          "options": [{
-            "label": "Rebuild Reputation",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "rival", "note": "Research Thief" } }
-            ]
-          }]
+          "options": [
+            {
+              "label": "Rebuild Reputation",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Research Thief"
+                  }
+                }
+              ],
+              "revealText": "Gain a **rival**."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "rival" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [5000, 10000, 20000, 30000, 40000, 60000, 100000],
-    "benefits": ["INT +1", "EDU +1", "Two Ship Shares", "SOC +1", "Scientific Equipment", "Lab Ship", "Lab Ship"]
+    "cash": [
+      5000,
+      10000,
+      20000,
+      30000,
+      40000,
+      60000,
+      100000
+    ],
+    "benefits": [
+      "INT +1",
+      "EDU +1",
+      "Two Ship Shares",
+      "SOC +1",
+      "Scientific Equipment",
+      "Lab Ship",
+      "Lab Ship"
+    ]
   },
   "medical": {
     "plan": "other",
