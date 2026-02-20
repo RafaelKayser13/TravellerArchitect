@@ -172,4 +172,12 @@
     <!-- Benefit Choice Dialog -->
     <app-benefit-choice-dialog></app-benefit-choice-dialog>
 
+    <!-- Equipment Selector Modal -->
+    <app-equipment-selector-modal #equipmentModal></app-equipment-selector-modal>
+
+    <!-- Equipment Display -->
+    <div *ngIf="character().equippedItems && character().equippedItems.length > 0" class="equipped-section">
+        <app-equipment-display [equippedItems]="character().equippedItems"></app-equipment-display>
+    </div>
+
 </div>

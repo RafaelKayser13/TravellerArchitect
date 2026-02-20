@@ -2,6 +2,7 @@
 
 import { NPC, NpcType } from './career.model';
 import { EventEffect } from './game-event.model';
+import { Equipment, EquipmentCategory } from './equipment.model';
 
 // --- Sub-Interfaces ---
 
@@ -103,6 +104,17 @@ export interface Augment {
     isNatural: boolean;
 }
 
+export interface EquipmentSelection {
+  id: string; // Equipment ID from data file
+  name: string; // Equipment name (snapshot from equipment data)
+  category: EquipmentCategory;
+  quantity: number;
+  source: 'career_benefit' | 'muster_out' | 'purchased' | 'found' | 'inherited';
+  dateAcquired?: Date;
+  equipped: boolean; // Currently being worn/used
+  notes?: string;
+}
+
 export interface Injury {
     id: string;
     name: string;
@@ -197,7 +209,11 @@ export interface Character {
   
   // Economy & Assets
   finances: Finances;
-  equipment: string[]; // Future: EquipmentItem[]
+  equipment: string[]; // Legacy: will migrate to equippedItems
+  equippedItems: EquipmentSelection[]; // Structured equipment with tracking
+  weapons: EquipmentSelection[]; // Quick access to weapons
+  armor: EquipmentSelection[]; // Quick access to armor
+  cybernetics: EquipmentSelection[]; // Quick access to cybernetics
   
   // Social & Relations
   npcs: NPC[];
@@ -267,6 +283,10 @@ export const INITIAL_CHARACTER: Character = {
   
   finances: { cash: 0, pension: 0, debt: 0, medicalDebt: 0, shipShares: 0, cashRollsSpent: 0 },
   equipment: [],
+  equippedItems: [],
+  weapons: [],
+  armor: [],
+  cybernetics: [],
   
   npcs: [],
   connectionsUsed: 0,

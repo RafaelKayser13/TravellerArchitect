@@ -1,26 +1,33 @@
-import { Component, inject, computed, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, computed, signal, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
 import { CareerService } from '../../../../core/services/career.service';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { BenefitChoiceService } from '../../../../core/services/benefit-choice.service';
+import { EquipmentService } from '../../../../core/services/equipment.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 import { BenefitChoiceDialogComponent } from '../../../shared/benefit-choice-dialog/benefit-choice-dialog.component';
+import { EquipmentSelectorModalComponent } from '../../components/equipment-selector-modal/equipment-selector-modal.component';
+import { EquipmentDisplayComponent } from '../../components/equipment-display/equipment-display.component';
 import { FormsModule } from '@angular/forms';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
 import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { getBenefitEffects } from '../../../../data/events/shared/mustering-out';
+import { Equipment, EquipmentCategory } from '../../../../core/models/equipment.model';
+import { EquipmentSelection } from '../../../../core/models/character.model';
 
 @Component({
     selector: 'app-mustering-out',
     standalone: true,
-    imports: [CommonModule, FormsModule, StepHeaderComponent, BenefitChoiceDialogComponent],
+    imports: [CommonModule, FormsModule, StepHeaderComponent, BenefitChoiceDialogComponent, EquipmentSelectorModalComponent, EquipmentDisplayComponent],
     templateUrl: './mustering-out.component.html',
     styleUrls: ['./mustering-out.component.scss']
 })
 export class MusteringOutComponent implements OnInit, OnDestroy {
+    @ViewChild('equipmentModal') equipmentModal!: EquipmentSelectorModalComponent;
+
     protected characterService = inject(CharacterService);
     protected diceService = inject(DiceService);
     protected diceDisplay = inject(DiceDisplayService);
@@ -28,6 +35,7 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     protected npcInteractionService = inject(NpcInteractionService);
     protected careerService = inject(CareerService);
     protected benefitChoiceService = inject(BenefitChoiceService);
+    protected equipmentService = inject(EquipmentService);
     private wizardFlow = inject(WizardFlowService);
 
     character = this.characterService.character;
@@ -240,23 +248,43 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     private registerMusteringOutHandlers() {
         this.eventEngine.registerCustomHandler('AWARD_WEAPON', async () => {
             const careerName = this.selectedCareerName() || '';
-            const selected = await this.benefitChoiceService.selectWeapon(careerName);
+            const worldTL = this.character().homeworld?.techLevel || 10;
+            
+            // Show weapons appropriate for career & world tech level
+            const selected = await this.benefitChoiceService.selectEquipment(
+                'WEAPON SELECTION',
+                'weapon_firearm',
+                'Choose a firearm for your muster-out benefits'
+            );
+            
             if (selected) {
-                this.characterService.addItem(selected.name);
+                this.addEquipmentToCharacter(selected, careerName);
                 this.characterService.log(`**Benefit Gained**: ${selected.name}. ${selected.description}`);
             }
         });
 
         this.eventEngine.registerCustomHandler('AWARD_ARMOR', async () => {
-            const selected = await this.benefitChoiceService.selectArmor(this.selectedCareerName() || '');
+            const careerName = this.selectedCareerName() || '';
+            const worldTL = this.character().homeworld?.techLevel || 10;
+            
+            // Show armor options
+            const selected = await this.benefitChoiceService.selectEquipment(
+                'ARMOR SELECTION',
+                ['armor_civilian', 'armor_military', 'armor_hardsuit'],
+                'Choose protective equipment for your muster-out benefits'
+            );
+            
             if (selected) {
-                this.characterService.addItem(selected.name);
+                this.addEquipmentToCharacter(selected, careerName);
                 this.characterService.log(`**Benefit Gained**: ${selected.name}. ${selected.description}`);
             }
         });
 
         this.eventEngine.registerCustomHandler('AWARD_VEHICLE', async () => {
-            const selected = await this.benefitChoiceService.selectVehicle(this.selectedCareerName() || '');
+            const careerName = this.selectedCareerName() || '';
+            
+            // For vehicles, we'll use the old benefit choice system or show a message
+            const selected = await this.benefitChoiceService.selectVehicle(careerName);
             if (selected) {
                 this.characterService.addItem(selected.name);
                 this.characterService.log(`**Benefit Gained**: ${selected.name}. ${selected.description}`);
@@ -283,6 +311,46 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
             this.characterService.updateCharacter({ hasNeuralJack: true });
             this.characterService.log('**Cybernetics**: Neural Jack interface successfully installed.');
         });
+    }
+
+    /**
+     * Add equipment to character's equipped items
+     */
+    private addEquipmentToCharacter(equipment: Equipment, source: string): void {
+        const char = this.character();
+        
+        const selection: EquipmentSelection = {
+            id: equipment.id,
+            name: equipment.name,
+            category: equipment.category,
+            quantity: 1,
+            source: 'muster_out',
+            dateAcquired: new Date(),
+            equipped: true,
+            notes: `Acquired via ${source} muster-out benefits`
+        };
+
+        // Add to character's equipment collection
+        if (!char.equippedItems) {
+            char.equippedItems = [];
+        }
+        
+        char.equippedItems.push(selection);
+
+        // Update typed arrays for quick access
+        if (equipment.category.includes('weapon')) {
+            if (!char.weapons) char.weapons = [];
+            char.weapons.push(selection);
+        } else if (equipment.category.includes('armor')) {
+            if (!char.armor) char.armor = [];
+            char.armor.push(selection);
+        } else if (equipment.category.includes('cybernetic')) {
+            if (!char.cybernetics) char.cybernetics = [];
+            char.cybernetics.push(selection);
+        }
+
+        // Save the character
+        this.characterService.updateCharacter(char);
     }
 
     // Removed old confirmNpcGeneration method
