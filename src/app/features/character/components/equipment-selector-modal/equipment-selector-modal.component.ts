@@ -1,71 +1,87 @@
-import { Component, ElementRef, ViewChild, inject, OnInit, effect } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, OnInitialized, afterNextRender, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EquipmentService, EquipmentFilter } from '../../../../core/services/equipment.service';
 import { Equipment, EquipmentCategory } from '../../../../core/models/equipment.model';
 import { BenefitChoiceService } from '../../../../core/services/benefit-choice.service';
+import { EquipmentDetailPanelComponent } from '../equipment-detail-panel/equipment-detail-panel.component';
 
 @Component({
   selector: 'app-equipment-selector-modal',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EquipmentDetailPanelComponent],
   template: `
-    <dialog #modal class="equipment-modal" [@modalAnimation]>
-      <div class="modal-overlay" *ngIf="isOpen$()"></div>
-      
-      <div class="modal-window" *ngIf="isOpen$()"  (click)="$event.stopPropagation()">
+    <dialog #modal class="equipment-modal">
+      <div class="modal-overlay" @if="isOpen$()"></div>
+
+      <div class="modal-window" @if="isOpen$()"  (click)="$event.stopPropagation()">
         <div class="modal-header">
           <h2>{{ title$() }}</h2>
           <button class="close-btn" (click)="closeModal()">✕</button>
         </div>
 
         <div class="modal-body">
-          <!-- Search & Filter -->
-          <div class="search-section">
-            <input
-              type="text"
-              placeholder="Procure equipamento..."
-              [(ngModel)]="searchTerm"
-              (ngModelChange)="onSearchChange()"
-              class="search-input"
-            />
-            
-            <select [(ngModel)]="techLevelFilter" (change)="onFilterChange()" class="filter-select">
-              <option [value]="null">Qualquer Nível Técnico</option>
-              <option [value]="8">TL 8+</option>
-              <option [value]="9">TL 9+</option>
-              <option [value]="10">TL 10+</option>
-              <option [value]="11">TL 11+</option>
-              <option [value]="12">TL 12+</option>
-            </select>
-          </div>
+          <!-- Equipment List (shown when no item selected) -->
+          @if (!selectedEquipment) {
+            <!-- Search & Filter -->
+            <div class="search-section">
+              <input
+                type="text"
+                placeholder="Procure equipamento..."
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="onSearchChange()"
+                class="search-input"
+              />
 
-          <!-- Equipment List -->
-          <div class="equipment-list">
-            <div *ngIf="filteredEquipment.length === 0" class="no-results">
-              Nenhum equipamento encontrado
+              <select [(ngModel)]="techLevelFilter" (change)="onFilterChange()" class="filter-select">
+                <option [value]="null">Qualquer Nível Técnico</option>
+                <option [value]="8">TL 8+</option>
+                <option [value]="9">TL 9+</option>
+                <option [value]="10">TL 10+</option>
+                <option [value]="11">TL 11+</option>
+                <option [value]="12">TL 12+</option>
+              </select>
             </div>
 
-            <div
-              *ngFor="let item of filteredEquipment"
-              class="equipment-item"
-              [class.selected]="selectedEquipment?.id === item.id"
-              (click)="selectEquipment(item)"
-            >
-              <div class="item-header">
-                <strong>{{ item.name }}</strong>
-                <span class="price">Lv{{ item.cost | number }}</span>
-              </div>
-              <p class="item-desc">{{ item.description }}</p>
-              <div class="item-badges">
-                <span class="badge">TL{{ item.techLevel }}</span>
-                <span class="badge" *ngIf="item.mass">{{ item.mass }}kg</span>
-              </div>
+            <!-- Equipment List -->
+            <div class="equipment-list">
+              @if (filteredEquipment.length === 0) {
+                <div class="no-results">
+                  Nenhum equipamento encontrado
+                </div>
+              } @else {
+                @for (item of filteredEquipment; track item.id) {
+                  <div
+                    class="equipment-item"
+                    [class.selected]="false"
+                    (click)="selectEquipment(item)"
+                  >
+                    <div class="item-header">
+                      <strong>{{ item.name }}</strong>
+                      <span class="price">Lv{{ item.cost | number }}</span>
+                    </div>
+                    <p class="item-desc">{{ item.description }}</p>
+                    <div class="item-badges">
+                      <span class="badge">TL{{ item.techLevel }}</span>
+                      @if (item.mass) {
+                        <span class="badge">{{ item.mass }}kg</span>
+                      }
+                    </div>
+                  </div>
+                }
+              }
             </div>
-          </div>
+          } @else {
+            <!-- Detail Panel (shown when item selected) -->
+            <app-equipment-detail-panel
+              [equipment]="selectedEquipment"
+              (onClose)="clearSelection()"
+              (onAdd)="confirmSelection()">
+            </app-equipment-detail-panel>
+          }
         </div>
 
-        <div class="modal-footer">
+        <div class="modal-footer" @if="!selectedEquipment">
           <button class="btn-cancel" (click)="closeModal()">CANCELAR</button>
           <button
             class="btn-select"
@@ -300,7 +316,7 @@ import { BenefitChoiceService } from '../../../../core/services/benefit-choice.s
     }
   `],
 })
-export class EquipmentSelectorModalComponent {
+export class EquipmentSelectorModalComponent implements OnInitialized {
   @ViewChild('modal') modal!: ElementRef<HTMLDialogElement>;
 
   private benefitChoiceService = inject(BenefitChoiceService);
@@ -315,12 +331,22 @@ export class EquipmentSelectorModalComponent {
   techLevelFilter: number | null = null;
   currentCategories: EquipmentCategory[] = [];
 
-  constructor() {
-    // Use effect to watch for modal open state
+  ngAfterViewInit(): void {
+    // Watch for modal open state changes after ViewChild is initialized
     effect(() => {
-      if (this.isOpen$() && this.modal) {
-        this.modal.nativeElement.showModal();
-      }
+      afterNextRender(() => {
+        if (this.isOpen$() && this.modal?.nativeElement) {
+          // Only call showModal if dialog is not already open
+          if (!this.modal.nativeElement.open) {
+            this.modal.nativeElement.showModal();
+          }
+        } else if (!this.isOpen$() && this.modal?.nativeElement) {
+          // Close the dialog if signal is false
+          if (this.modal.nativeElement.open) {
+            this.modal.nativeElement.close();
+          }
+        }
+      });
     });
   }
 
@@ -331,7 +357,11 @@ export class EquipmentSelectorModalComponent {
   }
 
   selectEquipment(item: Equipment): void {
-    this.selectedEquipment = this.selectedEquipment?.id === item.id ? null : item;
+    this.selectedEquipment = item;
+  }
+
+  clearSelection(): void {
+    this.selectedEquipment = null;
   }
 
   onSearchChange(): void {
