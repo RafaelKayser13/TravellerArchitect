@@ -21,10 +21,11 @@ export class ResourceEffectHandler implements EffectHandler {
                 break;
             case 'RESOURCE_MOD':
                 if (effect.target === 'benefit_rolls') {
+                    const careerName = ctx.characterService.currentCareer() || 'General';
                     if (effect.value > 0) {
-                        ctx.characterService.addBenefitRoll('General', effect.value);
+                        ctx.characterService.addBenefitRoll(careerName, effect.value);
                     } else {
-                        ctx.characterService.spendBenefitRoll(undefined, Math.abs(effect.value));
+                        ctx.characterService.spendBenefitRoll(careerName, Math.abs(effect.value));
                     }
                 } else if (effect.target === 'next_qualification_dm') {
                     ctx.characterService.updateDm('qualification', effect.value);
@@ -42,8 +43,9 @@ export class ResourceEffectHandler implements EffectHandler {
                 }
                 break;
             case 'LOSE_BENEFIT': {
+                const careerName = ctx.characterService.currentCareer() || 'General';
                 const amount = (effect as any).value ?? 1;
-                ctx.characterService.spendBenefitRoll(undefined, Math.abs(amount));
+                ctx.characterService.spendBenefitRoll(careerName, Math.abs(amount));
                 ctx.characterService.log(`**Penalty**: Lost ${Math.abs(amount)} Benefit Roll(s).`);
                 break;
             }

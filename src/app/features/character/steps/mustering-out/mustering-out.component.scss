@@ -294,6 +294,48 @@
                 border-color: rgba(255, 238, 0, 0.4);
             }
         }
+
+        &.general-source {
+            border-color: rgba(0, 243, 255, 0.3);
+            background: rgba(0, 243, 255, 0.03);
+
+            &:hover {
+                background: rgba(0, 243, 255, 0.08);
+                border-color: rgba(0, 243, 255, 0.5);
+            }
+
+            &.active {
+                border-color: var(--neon-cyan);
+                background: rgba(0, 243, 255, 0.1);
+                box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.08);
+
+                &::before {
+                    background: var(--neon-cyan);
+                    box-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+                }
+
+                .c-name { color: var(--neon-cyan); }
+            }
+
+            .source-badge {
+                font-size: 0.6rem;
+                color: rgba(0, 243, 255, 0.6);
+                font-family: var(--font-mono);
+                letter-spacing: 0.5px;
+                opacity: 0.7;
+                transition: opacity 0.3s;
+            }
+
+            &:hover .source-badge {
+                opacity: 1;
+                color: var(--neon-cyan);
+            }
+
+            &.active .source-badge {
+                color: var(--neon-cyan);
+                opacity: 1;
+            }
+        }
     }
 }
 

@@ -4,7 +4,9 @@ import { CharacterService } from '../../../../core/services/character.service';
 import { DiceService } from '../../../../core/services/dice.service';
 import { CareerService } from '../../../../core/services/career.service';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
+import { BenefitChoiceService } from '../../../../core/services/benefit-choice.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+import { BenefitChoiceDialogComponent } from '../../../shared/benefit-choice-dialog/benefit-choice-dialog.component';
 import { FormsModule } from '@angular/forms';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
 import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
@@ -14,7 +16,7 @@ import { getBenefitEffects } from '../../../../data/events/shared/mustering-out'
 @Component({
     selector: 'app-mustering-out',
     standalone: true,
-    imports: [CommonModule, FormsModule, StepHeaderComponent],
+    imports: [CommonModule, FormsModule, StepHeaderComponent, BenefitChoiceDialogComponent],
     templateUrl: './mustering-out.component.html',
     styleUrls: ['./mustering-out.component.scss']
 })
@@ -25,6 +27,7 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     protected eventEngine = inject(EventEngineService);
     protected npcInteractionService = inject(NpcInteractionService);
     protected careerService = inject(CareerService);
+    protected benefitChoiceService = inject(BenefitChoiceService);
     private wizardFlow = inject(WizardFlowService);
 
     character = this.characterService.character;
@@ -69,12 +72,33 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     careerPools = computed(() => {
         const char = this.character();
         const allocated = char.finances.benefitRollsAllocated || {};
-        return Object.keys(allocated)
+        
+        // Start with careers that have specific rolls
+        const result = Object.keys(allocated)
             .filter(name => allocated[name] > 0)
             .map(name => ({
                 name,
-                count: allocated[name]
+                count: allocated[name],
+                source: name === 'General' ? 'general' : 'specific'
             }));
+        
+        // If General has rolls, also show all career history as available options
+        if ((allocated['General'] || 0) > 0) {
+            const careerNames = [...new Set(char.careerHistory.map(h => h.careerName))];
+            
+            for (const careerName of careerNames) {
+                // Don't duplicate if already in list (has specific rolls)
+                if (!result.find(p => p.name === careerName)) {
+                    result.push({
+                        name: careerName,
+                        count: allocated['General'] || 0,
+                        source: 'general-available'
+                    });
+                }
+            }
+        }
+        
+        return result;
     });
 
     // Pension Logic derived from CharacterService
@@ -97,7 +121,11 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
         if (!careerName) return;
 
         const allocated = char.finances.benefitRollsAllocated || {};
-        if ((allocated[careerName] || 0) <= 0) return;
+        const hasSpecificRolls = (allocated[careerName] || 0) > 0;
+        const hasGeneralRolls = (allocated['General'] || 0) > 0;
+        
+        // Check if we can use this career (either has specific rolls or can use General)
+        if (!hasSpecificRolls && !hasGeneralRolls) return;
 
         if (type === 'Cash' && this.cashRolls() >= this.maxCashRolls) return;
 
@@ -108,10 +136,13 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
         let dm = 0;
 
         // 1. 2300AD Path Modifiers
+        // Hard Path: DM+1 | Soft Path: DM-1
+        // Reference: 2300AD Core Rulebook - "A Traveller on the Hard Path adds DM+1 to all Benefit rolls,
+        // while a Traveller on the Soft Path has DM-1."
         if (char.isSoftPath) {
             dm -= 1;
             modifiers.push({ label: 'Soft Path', value: -1 });
-        } else if (char.homeworld?.path === 'Hard') {
+        } else {
             dm += 1;
             modifiers.push({ label: 'Hard Path', value: 1 });
         }
@@ -167,13 +198,17 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
 
         const tableIndex = finalRoll - 1;
 
+        // Determine which pool to debit: specific rolls or general
+        const sourceCareer = hasSpecificRolls ? careerName : 'General';
+        
         if (type === 'Cash') {
             const cash = careerDef.musteringOutCash[tableIndex];
-            const result = `Cash: Lv ${cash}`;
+            const source = sourceCareer === careerName ? careerName : `General (via ${careerName})`;
+            const result = `Cash: Lv ${cash} from ${source}`;
             
             this.characterService.updateFinances({ cash: char.finances.cash + cash });
             this.benefitsLog.update((l: string[]) => [...l, result]);
-            this.characterService.spendBenefitRoll(careerName, 1, true);
+            this.characterService.spendBenefitRoll(sourceCareer, 1, true);
         } else {
             const benefitName = careerDef.musteringOutBenefits[tableIndex];
             const effects = getBenefitEffects(benefitName);
@@ -184,8 +219,9 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
             // Apply effects via Engine
             await this.eventEngine.applyEffects(effects);
             
-            this.benefitsLog.update((l: string[]) => [...l, `Benefit: ${benefitName}`]);
-            this.characterService.spendBenefitRoll(careerName, 1, false);
+            const source = sourceCareer === careerName ? careerName : `General (via ${careerName})`;
+            this.benefitsLog.update((l: string[]) => [...l, `Benefit: ${benefitName} from ${source}`]);
+            this.characterService.spendBenefitRoll(sourceCareer, 1, false);
         }
 
         console.log(`[MusteringOut] Rolled ${rollResult}${dm ? (dm > 0 ? '+' + dm : dm) : ''} (${type})`);
@@ -202,30 +238,29 @@ export class MusteringOutComponent implements OnInit, OnDestroy {
     }
 
     private registerMusteringOutHandlers() {
-        this.eventEngine.registerCustomHandler('AWARD_WEAPON', () => {
-            const char = this.character();
+        this.eventEngine.registerCustomHandler('AWARD_WEAPON', async () => {
             const careerName = this.selectedCareerName() || '';
-            const isMilitary = ['Army', 'Navy', 'Marine', 'Agent'].includes(careerName);
-            const isSpaceborne = ['Spaceborne', 'Belter'].includes(careerName);
-            let restriction = 'Slug throwers (Rifle/Pistol only)';
-            if (isMilitary || isSpaceborne) {
-                restriction = 'Any (including Lasers)';
+            const selected = await this.benefitChoiceService.selectWeapon(careerName);
+            if (selected) {
+                this.characterService.addItem(selected.name);
+                this.characterService.log(`**Benefit Gained**: ${selected.name}. ${selected.description}`);
             }
-            this.characterService.addItem(`Weapon (${restriction})`);
-            this.characterService.log(`**Benefit Gained**: Weapon. Restriction: ${restriction}`);
         });
 
-        this.eventEngine.registerCustomHandler('AWARD_ARMOR', () => {
-            const char = this.character();
-            const hasArmor = char.equipment.some(e => e.includes('Armour'));
-            const limit = hasArmor ? 'Lv 25,000' : 'Lv 10,000';
-            this.characterService.addItem(`Armour (Limit: ${limit} / TL 12)`);
-            this.characterService.log(`**Benefit Gained**: Armour. Limit: ${limit}.`);
+        this.eventEngine.registerCustomHandler('AWARD_ARMOR', async () => {
+            const selected = await this.benefitChoiceService.selectArmor(this.selectedCareerName() || '');
+            if (selected) {
+                this.characterService.addItem(selected.name);
+                this.characterService.log(`**Benefit Gained**: ${selected.name}. ${selected.description}`);
+            }
         });
 
-        this.eventEngine.registerCustomHandler('AWARD_VEHICLE', () => {
-            this.characterService.addItem(`Vehicle (Limit: Lv 300,000 / TL 10 / Unarmed)`);
-            this.characterService.log(`**Benefit Gained**: Vehicle. Restriction: Lv 300,000 / TL 10 / Unarmed.`);
+        this.eventEngine.registerCustomHandler('AWARD_VEHICLE', async () => {
+            const selected = await this.benefitChoiceService.selectVehicle(this.selectedCareerName() || '');
+            if (selected) {
+                this.characterService.addItem(selected.name);
+                this.characterService.log(`**Benefit Gained**: ${selected.name}. ${selected.description}`);
+            }
         });
 
         this.eventEngine.registerCustomHandler('AWARD_NPC', async (payload) => {

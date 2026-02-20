@@ -1,0 +1,33 @@
+<div class="benefit-choice-overlay" *ngIf="isOpen()">
+    <div class="benefit-choice-dialog">
+        <div class="dialog-header">
+            <h2 class="dialog-title">{{ title() }}</h2>
+            <p class="dialog-description">{{ description() }}</p>
+        </div>
+
+        <div class="choices-container">
+            <button 
+                *ngFor="let choice of choices()" 
+                class="choice-button"
+                [class.selected]="selectedChoice() === choice"
+                (click)="onSelectChoice(choice)">
+                <div class="choice-content">
+                    <div class="choice-name">{{ choice.name }}</div>
+                    <div class="choice-description">{{ choice.description }}</div>
+                </div>
+                <div class="choice-indicator" *ngIf="selectedChoice() === choice">
+                    <span class="selected-badge">✓</span>
+                </div>
+            </button>
+        </div>
+
+        <div class="dialog-footer">
+            <button class="btn-confirm" (click)="onConfirm()" [disabled]="!selectedChoice()">
+                CONFIRM CHOICE
+            </button>
+            <button class="btn-cancel" (click)="onCancel()">
+                CANCEL
+            </button>
+        </div>
+    </div>
+</div>

@@ -1043,10 +1043,13 @@ export class CareerComponent implements OnInit, OnDestroy {
         const survivalEvent = createSurvivalCheckEvent(this.selectedCareer.name, stat, target);
         
         // 2300AD: Path Modifiers & Homeworld Survival
+        // Hard Path: DM+1 | Soft Path: DM-1
+        // Reference: 2300AD Core Rulebook - "A Traveller on the Hard Path adds DM+1 to all Benefit rolls,
+        // while a Traveller on the Soft Path has DM-1."
         const character = this.characterService.character();
         let pathDm = 0;
         if (character.isSoftPath) pathDm = -1;
-        else if (character.homeworld?.path === 'Hard') pathDm = 1;
+        else pathDm = 1; // Hard Path (default when not Soft Path)
 
         // Apply Homeworld Survival DM if they haven't left home yet (Rule 221)
         if (!character.hasLeftHome && character.homeworld?.survivalDm) {
@@ -1061,7 +1064,7 @@ export class CareerComponent implements OnInit, OnDestroy {
                 // Build a human-readable label for the dice roller modifier breakdown
                 const labels: string[] = [];
                 if (character.isSoftPath) labels.push('Soft Path (-1)');
-                else if (character.homeworld?.path === 'Hard') labels.push('Hard Path (+1)');
+                else labels.push('Hard Path (+1)');
                 if (!character.hasLeftHome && character.homeworld?.survivalDm) labels.push(`Homeworld (+${character.homeworld.survivalDm})`);
                 effect.dmLabel = labels.join(', ') || 'Path DM';
             }

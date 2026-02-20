@@ -51,9 +51,12 @@
             <span class="hud-label-tiny">SELECT_SOURCE_CAREER</span>
             <div class="career-tabs">
                 <button *ngFor="let pool of careerPools()" class="career-tab"
-                    [class.active]="selectedCareerName() === pool.name" (click)="selectCareer(pool.name)">
+                    [class.active]="selectedCareerName() === pool.name" 
+                    [class.general-source]="pool.source === 'general-available'"
+                    (click)="selectCareer(pool.name)">
                     <span class="c-name">{{ pool.name }}</span>
                     <span class="c-count">{{ pool.count }}</span>
+                    <span class="source-badge" *ngIf="pool.source === 'general-available'">via GENERAL</span>
                 </button>
             </div>
         </div>
@@ -165,5 +168,8 @@
             FINALIZE_CHARACTER
         </button>
     </div>
+
+    <!-- Benefit Choice Dialog -->
+    <app-benefit-choice-dialog></app-benefit-choice-dialog>
 
 </div>

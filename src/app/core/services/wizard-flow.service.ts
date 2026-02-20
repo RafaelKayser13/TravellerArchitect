@@ -1,4 +1,5 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, effect } from '@angular/core';
+import { StorageService } from './storage.service';
 
 /**
  * WizardStep represents each numbered step in the character creation wizard.
@@ -40,6 +41,20 @@ export const WIZARD_STEPS: WizardStep[] = [
 export class WizardFlowService {
   /** 1-based current step index */
   readonly currentStepIndex = signal<number>(1);
+
+  constructor(private storage: StorageService) {
+    // Restore saved step index from localStorage on initialization
+    const saved = this.storage.load<number>('wizard-current-step');
+    if (saved && saved >= 1 && saved <= WIZARD_STEPS.length) {
+      this.currentStepIndex.set(saved);
+    }
+
+    // Auto-save currentStepIndex whenever it changes
+    effect(() => {
+      const stepIndex = this.currentStepIndex();
+      this.storage.save('wizard-current-step', stepIndex);
+    });
+  }
 
   /** Total number of wizard steps */
   readonly totalSteps = WIZARD_STEPS.length;

@@ -89,3 +89,4 @@ export class DiceService {
       sum: highest1 + highest2
     };
   }
+}
