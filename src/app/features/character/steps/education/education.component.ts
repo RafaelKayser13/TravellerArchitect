@@ -649,12 +649,11 @@ export class EducationComponent implements OnInit, OnDestroy {
 
             // Rule 632: Academy failures that still allow automatic career entry (Roll > 2)
             if (this.educationType === 'Academy' && roll > 2) {
-                let careerName = this.academyType as string;
-                if (careerName === 'Marines') careerName = 'Marine';
-                if (careerName === 'Scouts') careerName = 'Scout';
-                this.characterService.updateCharacter({ forcedCareer: careerName });
-                this.log(`Rule 632: Despite failure, your time in the academy grants automatic entry to the ${careerName}.`);
-                this.characterService.log(`**Academy Discharge**: Granted automatic entry to ${careerName} (Rule 632).`);
+                // Don't force a specific career - let the player choose any career
+                // They've earned the right to enter any career due to their academy training
+                this.log(`Rule 632: Despite failure, your time in the academy grants you automatic entry to any career of your choice.`);
+                this.characterService.log(`**Academy Discharge**: Granted automatic career entry (Rule 632) - choose any career next term.`);
+                // No forcedCareer set - player chooses freely
             }
 
             this.saveResult(false, false);
