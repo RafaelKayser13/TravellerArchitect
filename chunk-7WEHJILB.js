@@ -1,0 +1,1 @@
+import{a,b,c,d,e,f,g,h}from"./chunk-SS2D4IL2.js";import"./chunk-2NFLSA4Y.js";export{c as NPC_NATURES,b as NPC_QUIRKS,a as NPC_ROLES,h as createNpc,d as generateNpcId,g as getRandomNpcQuirk,f as getRandomNpcRole,e as rollD66};

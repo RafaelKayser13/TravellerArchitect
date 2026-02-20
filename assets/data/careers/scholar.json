@@ -1,0 +1,1131 @@
+{
+  "id": "scholar",
+  "name": "Scholar",
+  "description": "Researchers, scientists, and academics.",
+  "qualification": {
+    "stat": "INT",
+    "target": 6,
+    "minAttributes": {
+      "edu": 6
+    }
+  },
+  "skills": {
+    "personal": [
+      "INT +1",
+      "EDU +1",
+      "SOC +1",
+      "DEX +1",
+      "END +1",
+      "Language (any)"
+    ],
+    "service": [
+      "Drive (any)",
+      "Electronics (any)",
+      "Diplomat",
+      "Medic",
+      "Investigate",
+      "Science (any)"
+    ],
+    "advanced": [
+      "Art (any)",
+      "Advocate",
+      "Electronics (any)",
+      "Language (any)",
+      "Engineer (any)",
+      "Science (any)"
+    ]
+  },
+  "advancedEducationMinEdu": 10,
+  "assignments": [
+    {
+      "name": "Field Researcher",
+      "survival": {
+        "stat": "END",
+        "target": 6
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 6
+      },
+      "skills": [
+        "Electronics (any)",
+        "Science (any)",
+        "Survival",
+        "Recon",
+        "Investigate",
+        "Medic"
+      ],
+      "ranks": [
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Electronics (computers)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Investigate",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 2
+          }
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
+      ]
+    },
+    {
+      "name": "Scientist",
+      "survival": {
+        "stat": "EDU",
+        "target": 4
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 8
+      },
+      "skills": [
+        "Admin",
+        "Electronics (any)",
+        "Science (any)",
+        "Science (any)",
+        "Investigate",
+        "Language (any)"
+      ],
+      "ranks": [
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Electronics (computers)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Investigate",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 2
+          }
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
+      ]
+    },
+    {
+      "name": "Physician",
+      "survival": {
+        "stat": "EDU",
+        "target": 4
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 8
+      },
+      "skills": [
+        "Medic",
+        "Electronics (any)",
+        "Science (any)",
+        "Investigate",
+        "Admin",
+        "Diplomat"
+      ],
+      "ranks": [
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Medic",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—",
+          "bonus": {
+            "skill": "Science (any)",
+            "value": 2
+          }
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
+      ]
+    }
+  ],
+  "eventTable": [
+    {
+      "roll": 2,
+      "description": "Disaster! Mishap but not ejected.",
+      "gameEvent": {
+        "id": "scholar_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "Something has gone terribly wrong in your research.",
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
+    },
+    {
+      "roll": 3,
+      "description": "You have the opportunity to conduct unethical research. Gain an extra Benefit, two Science +1, and D3 Enemies.",
+      "gameEvent": {
+        "id": "scholar_event_3",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Unethical Research",
+          "description": "You push the boundaries of what is acceptable. Gain extra Benefit roll and two levels of Science, but make D3 Enemies.",
+          "options": [
+            {
+              "label": "Pursue the Research",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Ethics Committee Member"
+                  }
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Outraged Colleague"
+                  }
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**. Gain **Science (any) +1**. Gain a **enemy**. Gain a **enemy**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        },
+        {
+          "type": "skill-gain",
+          "skill": "Science (any)"
+        },
+        {
+          "type": "skill-gain",
+          "skill": "Science (any)"
+        },
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        }
+      ]
+    },
+    {
+      "roll": 4,
+      "description": "A patron recruits you for a secret project. Gain Medic 1, Science 1, Engineer 1, Electronics 1 or Investigate 1.",
+      "gameEvent": {
+        "id": "scholar_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Secret Project",
+          "description": "A mysterious patron hires you for a classified research project.",
+          "options": [
+            {
+              "label": "Medic 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Medic",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Medic +1**."
+            },
+            {
+              "label": "Science 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**."
+            },
+            {
+              "label": "Engineer 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Engineer (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Engineer (any) +1**."
+            },
+            {
+              "label": "Electronics 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Electronics (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Electronics (any) +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Medic",
+            "Science (any)",
+            "Engineer (any)",
+            "Electronics (any)",
+            "Investigate"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 5,
+      "description": "You win a prestigious prize. Gain DM+1 to any Benefit roll.",
+      "gameEvent": {
+        "id": "scholar_event_5",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Prestigious Prize",
+          "description": "Your work earns you a sector-renowned award.",
+          "options": [
+            {
+              "label": "Accept Award",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "roll": 6,
+      "description": "Advanced Training. Roll EDU 8+. Success: Increase any known skill by +1 level.",
+      "gameEvent": {
+        "id": "scholar_event_6",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Advanced Training",
+          "description": "You have the opportunity for advanced training.",
+          "options": [
+            {
+              "label": "Attempt Training (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "scholar_event_6_pass",
+                  "onFail": "scholar_event_6_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "scholar_event_6_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Successful",
+            "description": "You excel in your training.",
+            "options": [
+              {
+                "label": "Increase Any Skill",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "ANY_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "scholar_event_6_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "You fail to qualify for the advanced training.",
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "any-skill-up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "scholar_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
+    },
+    {
+      "roll": 8,
+      "description": "You have the opportunity to cheat. Refuse: nothing happens. Accept: roll Deception or Admin 8+. Success: DM+2 Benefit, skill +1, Enemy. Fail: Enemy, lose Benefit.",
+      "gameEvent": {
+        "id": "scholar_event_8",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Academic Dishonesty",
+          "description": "You have the opportunity to steal or take a shortcut in your research.",
+          "options": [
+            {
+              "label": "Cheat (Deception or Admin 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "scholar_event_8_pass",
+                  "onFail": "scholar_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Refuse",
+              "effects": []
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "scholar_event_8_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Successful Deception",
+            "description": "You get away with it — for now. Gain DM+2 Benefit, Science +1, Enemy.",
+            "options": [
+              {
+                "label": "Take the Gains",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "benefitModifier",
+                    "value": 2
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Science (any)",
+                    "value": 1
+                  },
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Suspicious Colleague"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "scholar_event_8_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Caught",
+            "description": "You are caught cheating. Gain Enemy and lose a Benefit.",
+            "options": [
+              {
+                "label": "Face Consequences",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Exposed You"
+                    }
+                  },
+                  {
+                    "type": "LOSE_BENEFIT",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Cheat Opportunity"
+        }
+      ]
+    },
+    {
+      "roll": 9,
+      "description": "Scientific breakthrough. Gain DM+2 to your next Advancement roll.",
+      "gameEvent": {
+        "id": "scholar_event_9",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Breakthrough",
+          "description": "You make a significant discovery in your field.",
+          "options": [
+            {
+              "label": "Publish Results",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "advancementModifier",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "roll": 10,
+      "description": "Caught in a bureaucratic morass. Gain Admin 1, Advocate 1, Persuade 1 or Diplomat 1.",
+      "gameEvent": {
+        "id": "scholar_event_10",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Bureaucratic Morass",
+          "description": "Red tape threatens to kill your research. You must navigate the system.",
+          "options": [
+            {
+              "label": "Admin 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Admin",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Admin +1**."
+            },
+            {
+              "label": "Advocate 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Advocate",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Advocate +1**."
+            },
+            {
+              "label": "Persuade 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Persuade",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Persuade +1**."
+            },
+            {
+              "label": "Diplomat 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Admin",
+            "Advocate",
+            "Persuade",
+            "Diplomat"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 11,
+      "description": "An eccentric mentor takes an interest in your work. Gain an Ally. Then: Science +1 or DM+4 to Advancement.",
+      "gameEvent": {
+        "id": "scholar_event_11",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Eccentric Mentor",
+          "description": "A brilliant but odd researcher mentors you. Gain an Ally.",
+          "options": [
+            {
+              "label": "Science +1",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Eccentric Mentor"
+                  }
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain a **ally**. Gain **Science (any) +1**."
+            },
+            {
+              "label": "DM+4 to Advancement",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Eccentric Mentor"
+                  }
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ],
+              "revealText": "Gain a **ally**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "ally"
+        },
+        {
+          "type": "choice",
+          "note": "Mentor Bonus"
+        }
+      ]
+    },
+    {
+      "roll": 12,
+      "description": "A considerable breakthrough in your field. Automatically promoted.",
+      "gameEvent": {
+        "id": "scholar_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Considerable Breakthrough",
+          "description": "Your work changes the way your entire field is understood.",
+          "options": [
+            {
+              "label": "Accept Accolades",
+              "effects": [
+                {
+                  "type": "PROMOTION",
+                  "note": "Considerable Breakthrough"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
+    }
+  ],
+  "mishapTable": [
+    {
+      "roll": 1,
+      "description": "Severely injured. Roll on the Injury table twice, take the lower result.",
+      "gameEvent": {
+        "id": "scholar_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "A major laboratory or field accident leaves you severely injured.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
+    },
+    {
+      "roll": 2,
+      "description": "A disaster injures others. Roll on the Injury table twice, take the higher result. Gain a Rival.",
+      "gameEvent": {
+        "id": "scholar_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Disaster Injures Others",
+          "description": "An accident in your lab injures colleagues. Roll Injury twice, take the worse result. Gain a Rival.",
+          "options": [
+            {
+              "label": "Accept Consequences",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Injured Colleague"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Laboratory Disaster"
+                }
+              ],
+              "revealText": "Triggers a follow-up event. Gain a **rival**. You are **ejected from this career** — Laboratory Disaster."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "injury"
+        },
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
+    },
+    {
+      "roll": 3,
+      "description": "The government interferes with your research. Continue openly: Science +1, Enemy. Continue secretly: Science +1, SOC -2. Not ejected.",
+      "gameEvent": {
+        "id": "scholar_mishap_3",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Government Interference",
+          "description": "A government agency attempts to shut down your research. How do you respond?",
+          "options": [
+            {
+              "label": "Continue Openly (Science +1, Enemy)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Government Censor"
+                  }
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**. Gain a **enemy**."
+            },
+            {
+              "label": "Continue Secretly (Science +1, SOC -2)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                },
+                {
+                  "type": "STAT_MOD",
+                  "target": "SOC",
+                  "value": -2
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**. **SOC -2** (permanent)."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Government Interference — NOT ejected"
+        }
+      ]
+    },
+    {
+      "roll": 4,
+      "description": "An expedition or experiment goes badly wrong, leaving you stranded. Gain Survival 1 or Athletics +1. Career ends.",
+      "gameEvent": {
+        "id": "scholar_mishap_4",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Expedition Gone Wrong",
+          "description": "Your expedition is a disaster. You are stranded and must survive on your own.",
+          "options": [
+            {
+              "label": "Survival +1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Stranded — Expedition Failed"
+                }
+              ],
+              "revealText": "Gain **Survival +1**. You are **ejected from this career** — Stranded — Expedition Failed."
+            },
+            {
+              "label": "Athletics +1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Athletics (any)",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Stranded — Expedition Failed"
+                }
+              ],
+              "revealText": "Gain **Athletics (any) +1**. You are **ejected from this career** — Stranded — Expedition Failed."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Survival",
+            "Athletics (any)"
+          ]
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
+    },
+    {
+      "roll": 5,
+      "description": "Your work is sabotaged by a rival. Leave and retain this term's Benefit, or stay and restart (lose all benefits from this term).",
+      "gameEvent": {
+        "id": "scholar_mishap_5",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Work Sabotaged",
+          "description": "A rival sabotages your research. You must decide: salvage what you can, or stay and rebuild.",
+          "options": [
+            {
+              "label": "Leave (retain this term's Benefit)",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Sabotaged — Chose to Leave"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Sabotaged — Chose to Leave."
+            },
+            {
+              "label": "Stay and Restart (lose all term benefits)",
+              "effects": [
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 99,
+                  "note": "Lose all benefits from this term"
+                }
+              ],
+              "revealText": "Lose **99 Benefit Roll(s)**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Work Sabotaged"
+        }
+      ]
+    },
+    {
+      "roll": 6,
+      "description": "A rival blackens your name and steals your research. Gain a Rival. You do not leave the career.",
+      "gameEvent": {
+        "id": "scholar_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Reputation Damaged",
+          "description": "A rival steals your work and ruins your reputation. Gain a Rival. You stay in the career.",
+          "options": [
+            {
+              "label": "Rebuild Reputation",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Research Thief"
+                  }
+                }
+              ],
+              "revealText": "Gain a **rival**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
+    }
+  ],
+  "musteringOut": {
+    "cash": [
+      5000,
+      10000,
+      20000,
+      30000,
+      40000,
+      60000,
+      100000
+    ],
+    "benefits": [
+      "INT +1",
+      "EDU +1",
+      "Two Ship Shares",
+      "SOC +1",
+      "Scientific Equipment",
+      "Lab Ship",
+      "Lab Ship"
+    ]
+  },
+  "medical": {
+    "plan": "other",
+    "coverage": {
+      "below4": 0,
+      "range4to7": 50,
+      "range8to11": 75,
+      "above12": 100
+    }
+  }
+}
