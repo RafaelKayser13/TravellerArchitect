@@ -64,7 +64,9 @@ export interface EventEffect {
     // For ROLL_TABLE
     table?: any[];
     dice?: string; // '1d6', '2d6', 'd66'
-    
+    rollCount?: number; // Number of times to roll the table (for injury roll worst-of-2, etc)
+    takeWorst?: boolean; // If true, take the minimum result; if false, take the maximum
+
     // Generic modifiers
     dm?: number;
     dmLabel?: string;  // Optional label describing the source of dm (shown in dice roller breakdown)

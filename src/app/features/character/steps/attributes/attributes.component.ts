@@ -4,14 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
 import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { CharacterService } from '../../../../core/services/character.service';
-import { DieComponent } from '../../../../features/shared/die/die.component';
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 
 @Component({
   selector: 'app-attributes',
   standalone: true,
-  imports: [CommonModule, DieComponent, FormsModule, StepHeaderComponent],
+  imports: [CommonModule, FormsModule, StepHeaderComponent],
   templateUrl: './attributes.component.html',
   styleUrls: ['./attributes.component.scss']
 })

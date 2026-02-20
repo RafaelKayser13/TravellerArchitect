@@ -144,7 +144,7 @@ export class RollEffectHandler implements EffectHandler {
                              ctx.eventEngine.triggerEvent(dynamicId, true);
                          }
                      } else {
-                         console.warn('Roll result not found in table:', roll);
+                         console.warn('Roll result not found in table:', finalResult);
                      }
                  }
                  break;
