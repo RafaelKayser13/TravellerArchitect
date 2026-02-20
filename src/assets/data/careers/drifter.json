@@ -1,60 +1,204 @@
 {
   "id": "drifter",
   "name": "Drifter",
-  "description": "Freelancers, wanderers, scavengers, and those who live outside mainstream society.",
+  "description": "Wanderers, hitchhikers and travellers who roam the stars without obvious purpose or direction.",
   "qualification": {
     "stat": "DEX",
     "target": 0
   },
   "skills": {
-    "personal": ["STR +1", "END +1", "DEX +1", "Language (any)", "Profession (any)", "Jack-of-all-Trades"],
-    "service": ["Athletics (any)", "Melee (unarmed)", "Recon", "Streetwise", "Stealth", "Survival"],
+    "personal": [
+      "STR +1",
+      "END +1",
+      "DEX +1",
+      "Language (any)",
+      "Profession (any)",
+      "Jack-of-all-Trades"
+    ],
+    "service": [
+      "Athletics (any)",
+      "Melee (unarmed)",
+      "Recon",
+      "Streetwise",
+      "Stealth",
+      "Survival"
+    ],
     "advanced": []
   },
   "assignments": [
     {
-      "name": "Freelancer",
-      "survival": { "stat": "EDU", "target": 7 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Profession (any)", "Electronics (any)", "Streetwise", "Admin", "Deception", "Jack-of-all-Trades"],
+      "name": "Barbarian",
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "STR",
+        "target": 7
+      },
+      "skills": [
+        "Animals (any)",
+        "Carouse",
+        "Melee (blade)",
+        "Stealth",
+        "Seafarer (any)",
+        "Survival"
+      ],
       "ranks": [
-        { "level": 0, "title": "Freelancer" },
-        { "level": 1, "title": "Freelancer" },
-        { "level": 2, "title": "Freelancer" },
-        { "level": 3, "title": "Freelancer" },
-        { "level": 4, "title": "Freelancer" },
-        { "level": 5, "title": "Freelancer" },
-        { "level": 6, "title": "Freelancer" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Survival",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Warrior",
+          "bonus": {
+            "skill": "Melee (blade)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "Warrior"
+        },
+        {
+          "level": 4,
+          "title": "Chieftain",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 5,
+          "title": "Chieftain"
+        },
+        {
+          "level": 6,
+          "title": "Warlord"
+        }
       ]
     },
     {
       "name": "Wanderer",
-      "survival": { "stat": "END", "target": 7 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Drive (any)", "Deception", "Recon", "Stealth", "Streetwise", "Survival"],
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Drive (any)",
+        "Deception",
+        "Recon",
+        "Stealth",
+        "Streetwise",
+        "Survival"
+      ],
       "ranks": [
-        { "level": 0, "title": "Wanderer" },
-        { "level": 1, "title": "Wanderer", "bonus": { "skill": "Profession (any)", "value": 1 } },
-        { "level": 2, "title": "Wanderer", "bonus": { "skill": "Carouse", "value": 1 } },
-        { "level": 3, "title": "Wanderer" },
-        { "level": 4, "title": "Wanderer" },
-        { "level": 5, "title": "Wanderer", "bonus": { "skill": "Admin", "value": 1 } },
-        { "level": 6, "title": "Wanderer" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Streetwise",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Deception",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     },
     {
       "name": "Scavenger",
-      "survival": { "stat": "DEX", "target": 7 },
-      "advancement": { "stat": "END", "target": 7 },
-      "skills": ["Pilot (small craft)", "Mechanic", "Astrogation", "Vacc Suit", "Profession (any)", "Gun Combat (any)"],
+      "survival": {
+        "stat": "DEX",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "END",
+        "target": 7
+      },
+      "skills": [
+        "Pilot (small craft)",
+        "Mechanic",
+        "Astrogation",
+        "Vacc Suit",
+        "Profession (any)",
+        "Gun Combat (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Scavenger" },
-        { "level": 1, "title": "Scavenger", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Scavenger" },
-        { "level": 3, "title": "Scavenger", "bonus": { "skill": "Profession (Belter)", "value": 1 } },
-        { "level": 4, "title": "Scavenger" },
-        { "level": 5, "title": "Scavenger" },
-        { "level": 6, "title": "Scavenger" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Vacc Suit",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "—",
+          "bonus": {
+            "skill": "Profession (Belter)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     }
   ],
@@ -69,78 +213,197 @@
         "ui": {
           "title": "Disaster!",
           "description": "Something goes horribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
-      "description": "Patron offer.",
+      "description": "A Patron offers you a chance at a job. If you accept, gain DM+4 to your next qualification roll but you owe that patron a favour.",
       "gameEvent": {
         "id": "drifter_event_3",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Patron Offer",
-          "description": "You are offered a job by a mysterious patron.",
+          "description": "A Patron offers you a chance at a job. If you accept, you gain DM+4 to your next qualification roll but you owe that patron a favour.",
           "options": [
-            { "label": "Accept", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Mysterious Patron" } }, { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] },
-            { "label": "Refuse", "effects": [] }
+            {
+              "label": "Accept (DM+4 next qualification, owe favour)",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "next_qualification_dm",
+                  "value": 4
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "contact",
+                    "note": "Patron (you owe them a favour)"
+                  }
+                }
+              ],
+              "revealText": "Gain a **contact**."
+            },
+            {
+              "label": "Refuse",
+              "effects": []
+            }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Patron Offer: Accept vs Refuse" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Patron Offer: Accept vs Refuse"
+        }
+      ]
     },
     {
       "roll": 4,
-      "description": "Useful skills.",
+      "description": "You pick up a few useful skills here and there. Gain one level of Jack-of-all-Trades, Survival, Streetwise or Melee (any).",
       "gameEvent": {
         "id": "drifter_event_4",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Useful Skills",
-          "description": "You pick up some useful skills during your travels.",
+          "description": "You pick up a few useful skills here and there.",
           "options": [
-            { "label": "Jack-of-all-Trades 1", "effects": [{ "type": "SKILL_MOD", "target": "Jack-of-all-Trades", "value": 1 }] },
-            { "label": "Survival 1", "effects": [{ "type": "SKILL_MOD", "target": "Survival", "value": 1 }] },
-            { "label": "Streetwise 1", "effects": [{ "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] },
-            { "label": "Melee (Unarmed) 1", "effects": [{ "type": "SKILL_MOD", "target": "Melee (Unarmed)", "value": 1 }] }
+            {
+              "label": "Jack-of-all-Trades 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Jack-of-all-Trades",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Jack-of-all-Trades +1**."
+            },
+            {
+              "label": "Survival 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Survival +1**."
+            },
+            {
+              "label": "Streetwise 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Streetwise",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Streetwise +1**."
+            },
+            {
+              "label": "Melee (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Melee (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Melee (any) +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Jack-of-all-Trades", "Survival", "Streetwise", "Melee (any)"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Jack-of-all-Trades",
+            "Survival",
+            "Streetwise",
+            "Melee (any)"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
-      "description": "Scavenge. Gain DM+1 to any Benefit roll.",
+      "description": "You manage to scavenge something of use. Gain DM+1 to any one Benefit roll.",
       "gameEvent": {
         "id": "drifter_event_5",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Scavenge",
-          "description": "You find something valuable while scavenging.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "description": "You find something valuable while scavenging. Gain DM+1 to any one Benefit roll.",
+          "options": [
+            {
+              "label": "Accept Reward",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 6,
-      "description": "Unusual encounter. Gain a Contact.",
+      "description": "You encounter something unusual. Go to the Life Events table and have an Unusual Event.",
       "gameEvent": {
         "id": "drifter_event_6",
-        "type": "REWARD",
+        "type": "INFO",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Unusual Encounter",
-          "description": "You have a strange encounter that leaves you with a new contact.",
-          "options": [{ "label": "Gain Contact", "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Unusual Individual" } }] }]
+          "description": "You encounter something unusual out on the fringes. Roll on the Unusual Events table.",
+          "options": [
+            {
+              "label": "Roll Unusual Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "unusual_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event", "note": "Unusual Event" }]
+      "effects": [
+        {
+          "type": "unusual-event"
+        }
+      ]
     },
     {
       "roll": 7,
@@ -152,24 +415,76 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
-      "description": "Attacked!",
+      "description": "You are attacked by enemies. Gain an Enemy and roll Melee 8+, Gun Combat 8+ or Stealth 8+ to avoid a roll on the Injury table.",
       "gameEvent": {
         "id": "drifter_event_8",
         "type": "CHECK",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Attacked!",
-          "description": "You are attacked in a dark alley or out in the wilds.",
+          "description": "You are attacked by enemies. Gain an Enemy. Roll Melee 8+, Gun Combat 8+ or Stealth 8+ to avoid injury.",
           "options": [
-            { "label": "Fight Back (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "drifter_event_8_pass", "onFail": "drifter_event_8_fail" }] },
-            { "label": "Hide (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "drifter_event_8_pass", "onFail": "drifter_event_8_fail" }] }
+            {
+              "label": "Fight (Melee/GunCombat 8+)",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Attacker"
+                  }
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "STR",
+                  "checkTarget": 8,
+                  "onPass": "drifter_event_8_pass",
+                  "onFail": "drifter_event_8_fail"
+                }
+              ],
+              "revealText": "Gain a **enemy**. Roll **STR 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Evade (Stealth 8+)",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Attacker"
+                  }
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "drifter_event_8_pass",
+                  "onFail": "drifter_event_8_fail"
+                }
+              ],
+              "revealText": "Gain a **enemy**. Roll **DEX 8+** — success and failure lead to different outcomes."
+            }
           ]
         }
       },
@@ -179,9 +494,14 @@
           "type": "INFO",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Safe",
+            "title": "Escaped Unharmed",
             "description": "You successfully avoid injury.",
-            "options": [{ "label": "Continue", "effects": [] }]
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         },
         {
@@ -191,231 +511,490 @@
           "ui": {
             "title": "Injured",
             "description": "You are wounded in the attack.",
-            "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Melee (any)", "Gun Combat (any)", "Stealth"], "onSuccess": [], "onFailure": [{ "type": "injury" }] }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "Melee (any)",
+            "Gun Combat (any)",
+            "Stealth"
+          ],
+          "onFailure": [
+            {
+              "type": "injury"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 9,
-      "description": "Patron offer. Gain an Ally and DM+1 to any Benefit roll.",
+      "description": "You are offered a risky but rewarding adventure. If you accept, roll 1D: 1-2=Injured or Prisoner next term; 3-4=Survive, gain nothing; 5-6=Succeed, DM+4 to one Benefit roll.",
       "gameEvent": {
         "id": "drifter_event_9",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Patron Offer",
-          "description": "Another patron offers you work.",
-          "options": [
-            { "label": "Accept", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Patron" } }, { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] },
-            { "label": "Refuse", "effects": [] }
-          ]
-        }
-      },
-      "effects": [{ "type": "choice", "note": "Patron Offer", "skills": ["Accept", "Refuse"] }]
-    },
-    {
-      "roll": 10,
-      "description": "Risky adventure.",
-      "gameEvent": {
-        "id": "drifter_event_10",
-        "type": "CHECK",
-        "trigger": "DURING_CAREER_TERM",
-        "ui": {
           "title": "Risky Adventure",
-          "description": "You are invited on a dangerous expedition.",
+          "description": "You are offered a chance to take part in a risky but rewarding adventure.",
           "options": [
-            { "label": "Athletics (END 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "END", "checkTarget": 8, "onPass": "drifter_event_10_pass", "onFail": "drifter_event_10_fail" }] },
-            { "label": "Survival (INT 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "drifter_event_10_pass", "onFail": "drifter_event_10_fail" }] }
+            {
+              "label": "Accept (Roll 1D for outcome)",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "drifter_event_9_subtable"
+                }
+              ]
+            },
+            {
+              "label": "Refuse",
+              "effects": []
+            }
           ]
         }
       },
       "subEvents": [
         {
-          "id": "drifter_event_10_pass",
-          "type": "REWARD",
+          "id": "drifter_event_9_subtable",
+          "type": "SUBTABLE",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Adventure Success",
-            "description": "The mission is a resounding success.",
-            "options": [{ "label": "Gain Reputation", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }]
+            "title": "Adventure Outcome",
+            "description": "Roll 1D to determine the outcome of the adventure.",
+            "options": [
+              {
+                "label": "1-2 — Injured or Arrested",
+                "effects": [
+                  {
+                    "type": "TRIGGER_SUBVENT",
+                    "value": "drifter_event_9_fail"
+                  }
+                ]
+              },
+              {
+                "label": "3-4 — Survive, Gain Nothing",
+                "effects": []
+              },
+              {
+                "label": "5-6 — Success! DM+4 to one Benefit roll",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "benefitModifier",
+                    "value": 4
+                  }
+                ]
+              }
+            ]
           }
         },
         {
-          "id": "drifter_event_10_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
+          "id": "drifter_event_9_fail",
+          "type": "CHOICE",
+          "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Adventure Failed",
-            "description": "Everything goes horribly wrong.",
-            "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+            "title": "Injured or Arrested",
+            "description": "Things went badly. Roll on the Injury table, or take the Prisoner career in your next term.",
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              },
+              {
+                "label": "Take Prisoner next term",
+                "effects": [
+                  {
+                    "type": "FORCE_CAREER",
+                    "value": "prisoner"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Risky Adventure", "skills": ["Accept", "Refuse"] }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Risky Adventure"
+        }
+      ]
     },
     {
-      "roll": 11,
-      "description": "Unusual encounter. Gain an Ally.",
+      "roll": 10,
+      "description": "Life on the edge hones your abilities. Increase any skill you already have by one level.",
       "gameEvent": {
-        "id": "drifter_event_11",
+        "id": "drifter_event_10",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "New Ally",
-          "description": "You meet someone who becomes a steadfast friend.",
-          "options": [{ "label": "Gain Ally", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Friend from the road" } }] }]
+          "title": "Honed Abilities",
+          "description": "Life on the edge hones your abilities. Increase any skill you already have by one level.",
+          "options": [
+            {
+              "label": "Improve a Skill",
+              "effects": [
+                {
+                  "type": "CUSTOM",
+                  "customId": "EXISTING_SKILL_UP"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "existing-skill-up"
+        }
+      ]
+    },
+    {
+      "roll": 11,
+      "description": "You are forcibly drafted. Roll for the Draft next term.",
+      "gameEvent": {
+        "id": "drifter_event_11",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Forcibly Drafted",
+          "description": "You are forcibly drafted into military service. You must roll for the Draft in your next term.",
+          "options": [
+            {
+              "label": "Accept Draft",
+              "effects": [
+                {
+                  "type": "CUSTOM",
+                  "customId": "FORCE_DRAFT_NEXT_TERM"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "force-draft"
+        }
+      ]
     },
     {
       "roll": 12,
-      "description": "Betrayal.",
+      "description": "You thrive on adversity. You are automatically promoted.",
       "gameEvent": {
         "id": "drifter_event_12",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Betrayal",
-          "description": "Someone you trusted turns against you, but the fallout leads you to a new contact.",
-          "options": [{
-            "label": "Accept Change",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Betrayer" } },
-              { "type": "ADD_NPC", "value": { "type": "contact", "note": "Witness to betrayal" } }
-            ]
-          }]
+          "title": "Thrive on Adversity",
+          "description": "You thrive on adversity. You are automatically promoted.",
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "PROMOTION"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Betrayal", "skills": ["Moral Check", "Flee"] }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
     {
       "roll": 1,
-      "description": "Severely injured. Roll on the Injury table.",
+      "description": "Severely injured. Roll twice on the Injury table and take the lower result.",
       "gameEvent": {
         "id": "drifter_mishap_1",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Severely Injured",
-          "description": "A major accident or violent encounter leaves you severely injured.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "description": "A major accident or violent encounter leaves you severely injured. Roll twice on the Injury table and take the lower result.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury-worst-of-2"
+        }
+      ]
     },
     {
       "roll": 2,
-      "description": "Injured. Roll on the Injury table. Lose Benefit of this term.",
+      "description": "Injured. Roll on the Injury table.",
       "gameEvent": {
         "id": "drifter_mishap_2",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Injured and Impoverished",
-          "description": "You are injured and your meager savings are depleted by the cost of recovery.",
-          "options": [{
-            "label": "Suffer Consequences",
-            "effects": [
-              { "type": "TRIGGER_EVENT", "value": "injury_roll" },
-              { "type": "LOSE_BENEFIT", "value": 1 },
-              { "type": "EJECT_CAREER", "note": "Medical Discharge" }
-            ]
-          }]
+          "title": "Injured",
+          "description": "You are injured during your wanderings.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }, { "type": "lose-benefit" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     },
     {
       "roll": 3,
-      "description": "Gain an Enemy. Ejected.",
+      "description": "You run afoul of a criminal gang, corrupt bureaucrat or other foe. Gain an Enemy.",
       "gameEvent": {
         "id": "drifter_mishap_3",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Hostile Territory",
-          "description": "You offend the wrong person in a backwater settlement.",
-          "options": [{
-            "label": "Flee",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Local Power Figure" } },
-              { "type": "EJECT_CAREER", "note": "Forced to Flee" }
-            ]
-          }]
+          "title": "Made a Foe",
+          "description": "You run afoul of a criminal gang, corrupt bureaucrat or other dangerous foe. Gain an Enemy.",
+          "options": [
+            {
+              "label": "Flee",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Criminal/Bureaucrat Foe"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Forced to Flee"
+                }
+              ],
+              "revealText": "Gain a **enemy**. You are **ejected from this career** — Forced to Flee."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 4,
-      "description": "Illness. Reduce END by 1. Ejected.",
+      "description": "You suffer from a life-threatening illness. Reduce your END by 1.",
       "gameEvent": {
         "id": "drifter_mishap_4",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Severe Illness",
-          "description": "A local plague or chronic condition saps your strength.",
-          "options": [{
-            "label": "Recover",
-            "effects": [
-              { "type": "STAT_MOD", "target": "END", "value": -1 },
-              { "type": "EJECT_CAREER", "note": "Severe Illness" }
-            ]
-          }]
-        }
-      },
-      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }, { "type": "forced-out" }]
-    },
-    {
-      "roll": 5,
-      "description": "Betrayed.",
-      "gameEvent": {
-        "id": "drifter_mishap_5",
-        "type": "CHOICE",
-        "trigger": "MISHAP",
-        "ui": {
-          "title": "Betrayal",
-          "description": "You are blamed for a crime you didn't commit.",
+          "title": "Life-Threatening Illness",
+          "description": "A life-threatening illness saps your endurance. Reduce END by 1.",
           "options": [
-            { "label": "Submit to Law (Prison Roll)", "effects": [{ "type": "ROLL_TABLE", "table": [], "dice": "2d6", "note": "Prison Check" }, { "type": "EJECT_CAREER", "note": "Arrested" }] },
-            { "label": "Pay Bribes (Lose Benefits)", "effects": [{ "type": "LOSE_BENEFIT", "value": 100 }, { "type": "EJECT_CAREER", "note": "Bankrupted by Bribes" }] }
+            {
+              "label": "Recover",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "END",
+                  "value": -1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Illness"
+                }
+              ],
+              "revealText": "**END -1** (permanent). You are **ejected from this career** — Illness."
+            }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Betrayal", "skills": ["Prison Check", "Lose Benefits"] }]
+      "effects": [
+        {
+          "type": "stat-bonus",
+          "stat": "END",
+          "value": -1
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
+    },
+    {
+      "roll": 5,
+      "description": "Betrayed by a friend. One of your Contacts or Allies betrays you, ending your career and becoming a Rival or Enemy. Roll 2D — on a 2, take the Prisoner career next term.",
+      "gameEvent": {
+        "id": "drifter_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Betrayal",
+          "description": "One of your Contacts or Allies betrays you, ending your career. That Contact or Ally becomes a Rival or Enemy. Roll 2D — on a 2, you must take the Prisoner career next term.",
+          "options": [
+            {
+              "label": "Suffer Betrayal",
+              "effects": [
+                {
+                  "type": "CUSTOM",
+                  "customId": "CONTACT_BECOMES_ENEMY"
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "SPECIAL_2D",
+                  "checkTarget": 3,
+                  "onFail": "drifter_mishap_5_prison"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Betrayed"
+                }
+              ],
+              "revealText": "Roll **SPECIAL_2D 3+** — success and failure lead to different outcomes. You are **ejected from this career** — Betrayed."
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "drifter_mishap_5_prison",
+          "type": "INFO",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Imprisoned",
+            "description": "The betrayal has you facing criminal charges. You must take the Prisoner career next term.",
+            "options": [
+              {
+                "label": "Accept",
+                "effects": [
+                  {
+                    "type": "FORCE_CAREER",
+                    "value": "prisoner"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "contact-becomes-enemy"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 6,
-      "description": "Amnesia/Betrayed. Ejected.",
+      "description": "You do not know what happened to you. There is a gap in your memory.",
       "gameEvent": {
         "id": "drifter_mishap_6",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Amnesia",
-          "description": "You wake up in a gutter with no memory of how you got there or who you are.",
-          "options": [{
-            "label": "Start Over",
-            "effects": [
-              { "type": "TRAIT_GAIN", "note": "Amnesia" },
-              { "type": "LOSE_BENEFIT", "value": 100 },
-              { "type": "EJECT_CAREER", "note": "Amnesia" }
-            ]
-          }]
+          "title": "Gap in Memory",
+          "description": "You wake up with no memory of what happened. There is a gap in your past.",
+          "options": [
+            {
+              "label": "Accept",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Memory Gap"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "forced-out"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [0, 0, 1000, 2000, 3000, 4000, 8000],
-    "benefits": ["Contact", "Weapon", "Ally", "Weapon", "EDU +1", "Ship Share", "Two Ship Shares"]
+    "cash": [
+      0,
+      0,
+      1000,
+      2000,
+      3000,
+      4000,
+      8000
+    ],
+    "benefits": [
+      "Contact",
+      "Weapon",
+      "Ally",
+      "Weapon",
+      "EDU +1",
+      "Ship Share",
+      "Two Ship Shares"
+    ]
   },
   "medical": {
     "plan": "independent",

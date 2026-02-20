@@ -33,9 +33,11 @@ export interface EventUI {
 
 export interface EventOption {
     label: string;
+    revealText?: string; // Hidden consequence text — player can reveal before confirming choice
     nextEventId?: string; // Chain to next event ID
     replaceNext?: boolean; // If true, the new event replaces the current one on the stack
     effects?: EventEffect[];
+    color?: 'cyan' | 'red' | 'yellow' | 'green' | 'orange'; // Visual semantic coloring for options
 }
 
 export interface EventEffect {
@@ -65,6 +67,7 @@ export interface EventEffect {
     
     // Generic modifiers
     dm?: number;
+    dmLabel?: string;  // Optional label describing the source of dm (shown in dice roller breakdown)
     
     // For CUSTOM
     customId?: string;

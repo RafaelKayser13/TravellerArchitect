@@ -8,54 +8,213 @@
     "note": "Automatic if Origin is Spacer"
   },
   "skills": {
-    "personal": ["STR +1", "END +1", "DEX +1", "Language (Zhargon)", "Profession (any)", "Jack-of-all-Trades"],
-    "service": ["Athletics (any)", "Melee (unarmed)", "Recon", "Streetwise", "Profession (any)", "Vacc Suit"],
-    "advanced": ["Pilot (any)", "Mechanic", "Astrogation", "Engineer (any)", "Electronics (any)", "Science (any)"]
+    "personal": [
+      "STR +1",
+      "END +1",
+      "DEX +1",
+      "Language (Zhargon)",
+      "Profession (any)",
+      "Jack-of-all-Trades"
+    ],
+    "service": [
+      "Athletics (any)",
+      "Melee (unarmed)",
+      "Recon",
+      "Streetwise",
+      "Profession (any)",
+      "Vacc Suit"
+    ],
+    "advanced": [
+      "Pilot (any)",
+      "Mechanic",
+      "Astrogation",
+      "Engineer (any)",
+      "Electronics (any)",
+      "Science (any)"
+    ]
   },
   "assignments": [
     {
       "name": "Belter",
-      "survival": { "stat": "DEX", "target": 8 },
-      "advancement": { "stat": "END", "target": 6 },
-      "skills": ["Pilot (small craft)", "Mechanic", "Astrogation", "Vacc Suit", "Profession (mining)", "Science (planetology)"],
+      "survival": {
+        "stat": "DEX",
+        "target": 8
+      },
+      "advancement": {
+        "stat": "END",
+        "target": 6
+      },
+      "skills": [
+        "Pilot (small craft)",
+        "Mechanic",
+        "Astrogation",
+        "Vacc Suit",
+        "Profession (mining)",
+        "Science (planetology)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Belly-dweller" },
-        { "level": 1, "title": "Belter", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 2, "title": "Belter" },
-        { "level": 3, "title": "Rock-hound", "bonus": { "skill": "Profession (mining)", "value": 1 } },
-        { "level": 4, "title": "Rock-hound" },
-        { "level": 5, "title": "Asteroid Master", "bonus": { "stat": "END", "value": 1 } },
-        { "level": 6, "title": "Belter Lord" }
+        {
+          "level": 0,
+          "title": "Belly-dweller"
+        },
+        {
+          "level": 1,
+          "title": "Belter",
+          "bonus": {
+            "skill": "Vacc Suit",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Belter"
+        },
+        {
+          "level": 3,
+          "title": "Rock-hound",
+          "bonus": {
+            "skill": "Profession (mining)",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Rock-hound"
+        },
+        {
+          "level": 5,
+          "title": "Asteroid Master",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Belter Lord"
+        }
       ]
     },
     {
       "name": "Tinker",
-      "survival": { "stat": "END", "target": 7 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Pilot (any)", "Profession (any)", "Mechanic", "Streetwise", "Engineer (any)", "Vacc Suit"],
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Pilot (any)",
+        "Profession (any)",
+        "Mechanic",
+        "Streetwise",
+        "Engineer (any)",
+        "Vacc Suit"
+      ],
       "ranks": [
-        { "level": 0, "title": "Apprentice" },
-        { "level": 1, "title": "Tinker", "bonus": { "skill": "Profession (any)", "value": 1 } },
-        { "level": 2, "title": "Tinker" },
-        { "level": 3, "title": "Technician", "bonus": { "skill": "Mechanic", "value": 1 } },
-        { "level": 4, "title": "Technician" },
-        { "level": 5, "title": "Master Tinker", "bonus": { "stat": "INT", "value": 1 } },
-        { "level": 6, "title": "Chief Engineer" }
+        {
+          "level": 0,
+          "title": "Apprentice"
+        },
+        {
+          "level": 1,
+          "title": "Tinker",
+          "bonus": {
+            "skill": "Profession (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Tinker"
+        },
+        {
+          "level": 3,
+          "title": "Technician",
+          "bonus": {
+            "skill": "Mechanic",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Technician"
+        },
+        {
+          "level": 5,
+          "title": "Master Tinker",
+          "bonus": {
+            "stat": "INT",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Chief Engineer"
+        }
       ]
     },
     {
       "name": "Libertine",
-      "survival": { "stat": "DEX", "target": 7 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Pilot (any)", "Vacc Suit", "Persuade", "Mechanic", "Engineer (any)", "Electronics (any)"],
+      "survival": {
+        "stat": "DEX",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Pilot (any)",
+        "Vacc Suit",
+        "Persuade",
+        "Mechanic",
+        "Engineer (any)",
+        "Electronics (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Free Soul" },
-        { "level": 1, "title": "Libertine", "bonus": { "skill": "Persuade", "value": 1 } },
-        { "level": 2, "title": "Libertine" },
-        { "level": 3, "title": "Trader", "bonus": { "skill": "Broker", "value": 1 } },
-        { "level": 4, "title": "Trader" },
-        { "level": 5, "title": "Merchant Prince", "bonus": { "stat": "SOC", "value": 1 } },
-        { "level": 6, "title": "Libertine Elder" }
+        {
+          "level": 0,
+          "title": "Free Soul"
+        },
+        {
+          "level": 1,
+          "title": "Libertine",
+          "bonus": {
+            "skill": "Persuade",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Libertine"
+        },
+        {
+          "level": 3,
+          "title": "Trader",
+          "bonus": {
+            "skill": "Broker",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Trader"
+        },
+        {
+          "level": 5,
+          "title": "Merchant Prince",
+          "bonus": {
+            "stat": "SOC",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Libertine Elder"
+        }
       ]
     }
   ],
@@ -70,10 +229,24 @@
         "ui": {
           "title": "Disaster!",
           "description": "A habitat failure or mining accident occurs.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -85,10 +258,26 @@
         "ui": {
           "title": "Salvage Operation",
           "description": "You find a derelict ship or station.",
-          "options": [{ "label": "Accept Salvage", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Accept Salvage",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 4,
@@ -101,12 +290,40 @@
           "title": "Zero-G Training",
           "description": "You spend extra time practicing maneuvers.",
           "options": [
-            { "label": "Vacc Suit 1", "effects": [{ "type": "SKILL_MOD", "target": "Vacc Suit", "value": 1 }] },
-            { "label": "Athletics (Dexterity) 1", "effects": [{ "type": "SKILL_MOD", "target": "Athletics (Dexterity)", "value": 1 }] }
+            {
+              "label": "Vacc Suit 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Vacc Suit",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Vacc Suit +1**."
+            },
+            {
+              "label": "Athletics (Dexterity) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Athletics (Dexterity)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Athletics (Dexterity) +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Vacc Suit", "Athletics (Dexterity)"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Vacc Suit",
+            "Athletics (Dexterity)"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
@@ -118,7 +335,21 @@
         "ui": {
           "title": "Habitat Politics",
           "description": "You get involved in station governance.",
-          "options": [{ "label": "Advocate (EDU 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "spaceborne_event_5_pass", "onFail": "spaceborne_event_5_fail" }] }]
+          "options": [
+            {
+              "label": "Advocate (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "spaceborne_event_5_pass",
+                  "onFail": "spaceborne_event_5_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -129,7 +360,20 @@
           "ui": {
             "title": "Political Success",
             "description": "You gain influence in the habitat. Gain an Ally.",
-            "options": [{ "label": "Gain Ally", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Station Official" } }] }]
+            "options": [
+              {
+                "label": "Gain Ally",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "ally",
+                      "note": "Station Official"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -139,11 +383,44 @@
           "ui": {
             "title": "Political Failure",
             "description": "You make an enemy.",
-            "options": [{ "label": "Gain Enemy", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Official" } }] }]
+            "options": [
+              {
+                "label": "Gain Enemy",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Station Official"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Advocate"], "onSuccess": [{ "type": "npc", "npcType": "ally" }], "onFailure": [{ "type": "npc", "npcType": "enemy" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "Advocate"
+          ],
+          "onSuccess": [
+            {
+              "type": "npc",
+              "npcType": "ally"
+            }
+          ],
+          "onFailure": [
+            {
+              "type": "npc",
+              "npcType": "enemy"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 6,
@@ -155,10 +432,27 @@
         "ui": {
           "title": "Technical Breakthrough",
           "description": "You find a better way to fix things.",
-          "options": [{ "label": "Increase Mechanic", "effects": [{ "type": "SKILL_MOD", "target": "Mechanic", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Increase Mechanic",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Mechanic",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Mechanic +1**."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "skill-gain", "skill": "Mechanic" }]
+      "effects": [
+        {
+          "type": "skill-gain",
+          "skill": "Mechanic"
+        }
+      ]
     },
     {
       "roll": 7,
@@ -170,10 +464,24 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
@@ -185,7 +493,21 @@
         "ui": {
           "title": "Dangerous EVA",
           "description": "A high-risk spacewalk is required.",
-          "options": [{ "label": "Vacc Suit (DEX 8+)", "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "spaceborne_event_8_pass", "onFail": "spaceborne_event_8_fail" }] }]
+          "options": [
+            {
+              "label": "Vacc Suit (DEX 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "spaceborne_event_8_pass",
+                  "onFail": "spaceborne_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **DEX 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -196,7 +518,18 @@
           "ui": {
             "title": "EVA Successful",
             "description": "You earn the respect of your peers.",
-            "options": [{ "label": "Gain Respect", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+            "options": [
+              {
+                "label": "Gain Respect",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "nextAdvancementModifier",
+                    "value": 2
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -206,11 +539,40 @@
           "ui": {
             "title": "EVA Failure",
             "description": "You suffer an accident.",
-            "options": [{ "label": "Accept Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+            "options": [
+              {
+                "label": "Accept Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Vacc Suit"], "onSuccess": [{ "type": "advancement-dm", "value": 2 }], "onFailure": [{ "type": "injury" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "Vacc Suit"
+          ],
+          "onSuccess": [
+            {
+              "type": "advancementModifier",
+              "value": 2
+            }
+          ],
+          "onFailure": [
+            {
+              "type": "injury"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 9,
@@ -226,18 +588,43 @@
             {
               "label": "Deal (Benefit DM+2)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 2 },
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Authority" } }
-              ]
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 2
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Station Authority"
+                  }
+                }
+              ],
+              "revealText": "Gain a **enemy**."
             },
             {
               "label": "Refuse",
-              "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Principled Belter" } }]
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "contact",
+                    "note": "Principled Belter"
+                  }
+                }
+              ],
+              "revealText": "Gain a **contact**."
             }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Black Market" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Black Market"
+        }
+      ]
     },
     {
       "roll": 10,
@@ -249,10 +636,27 @@
         "ui": {
           "title": "Stutterwarp Specialist",
           "description": "You show aptitude for drive systems.",
-          "options": [{ "label": "Gain Engineer (Drive) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (Drive)", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Gain Engineer (Drive) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Engineer (Drive)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Engineer (Drive) +1**."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "skill-gain", "skill": "Engineer (Drive)" }]
+      "effects": [
+        {
+          "type": "skill-gain",
+          "skill": "Engineer (Drive)"
+        }
+      ]
     },
     {
       "roll": 11,
@@ -264,10 +668,25 @@
         "ui": {
           "title": "Mentor",
           "description": "An elder spacer takes you under their wing.",
-          "options": [{ "label": "Increase Any Known Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+          "options": [
+            {
+              "label": "Increase Any Known Skill",
+              "effects": [
+                {
+                  "type": "CUSTOM",
+                  "customId": "ANY_SKILL_UP",
+                  "payload": {}
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "any-skill-up" }]
+      "effects": [
+        {
+          "type": "any-skill-up"
+        }
+      ]
     },
     {
       "roll": 12,
@@ -279,10 +698,25 @@
         "ui": {
           "title": "Heroism",
           "description": "You save the habitat from a disaster.",
-          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Hero of the Habitat" }] }]
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "PROMOTION",
+                  "note": "Hero of the Habitat"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
@@ -296,10 +730,28 @@
         "ui": {
           "title": "Severely Injured",
           "description": "A decompression incident leaves you severely injured.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     },
     {
       "roll": 2,
@@ -311,10 +763,32 @@
         "ui": {
           "title": "Habitat Evacuated",
           "description": "Your habitat is abandoned due to failure or attack.",
-          "options": [{ "label": "Flee", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }, { "type": "EJECT_CAREER", "note": "Habitat Lost" }] }]
+          "options": [
+            {
+              "label": "Flee",
+              "effects": [
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Habitat Lost"
+                }
+              ],
+              "revealText": "Lose **1 Benefit Roll(s)**. You are **ejected from this career** — Habitat Lost."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "lose-benefit" }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "lose-benefit"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 3,
@@ -326,10 +800,36 @@
         "ui": {
           "title": "Accused of Sabotage",
           "description": "You are framed for a station failure.",
-          "options": [{ "label": "Exile", "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Station Authority" } }, { "type": "EJECT_CAREER", "note": "Exiled" }] }]
+          "options": [
+            {
+              "label": "Exile",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Station Authority"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Exiled"
+                }
+              ],
+              "revealText": "Gain a **enemy**. You are **ejected from this career** — Exiled."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -341,10 +841,25 @@
         "ui": {
           "title": "Resource Depletion",
           "description": "The rocks go dry. Your colony can no longer support you.",
-          "options": [{ "label": "Leave Colony", "effects": [{ "type": "EJECT_CAREER", "note": "Economic Exile" }] }]
+          "options": [
+            {
+              "label": "Leave Colony",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Economic Exile"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Economic Exile."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 5,
@@ -356,10 +871,35 @@
         "ui": {
           "title": "Radiation Sickness",
           "description": "Exposure to solar flares causes chronic illness.",
-          "options": [{ "label": "Recover", "effects": [{ "type": "STAT_MOD", "target": "END", "value": -1 }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+          "options": [
+            {
+              "label": "Recover",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "END",
+                  "value": -1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Medical Discharge"
+                }
+              ],
+              "revealText": "**END -1** (permanent). You are **ejected from this career** — Medical Discharge."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "stat-bonus",
+          "stat": "END",
+          "value": -1
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 6,
@@ -371,15 +911,49 @@
         "ui": {
           "title": "Injured",
           "description": "You are injured in an industrial accident.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Medical Discharge"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [0, 0, 1000, 2000, 3000, 5000, 10000],
-    "benefits": ["Contact", "Weapon", "Ally", "Ship Share", "INT +1", "Two Ship Shares", "Belter Ship"]
+    "cash": [
+      0,
+      0,
+      1000,
+      2000,
+      3000,
+      5000,
+      10000
+    ],
+    "benefits": [
+      "Contact",
+      "Weapon",
+      "Ally",
+      "Ship Share",
+      "INT +1",
+      "Two Ship Shares",
+      "Belter Ship"
+    ]
   },
   "medical": {
     "plan": "independent",

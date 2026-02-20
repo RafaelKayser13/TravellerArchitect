@@ -126,6 +126,15 @@ export class CareerComponent implements OnInit, OnDestroy {
     isForeignLegionActive = false;
     isNeuralJackPrompt = false;
     isNpcConversionPrompt = false;
+    revealedOptions = new Set<number>();
+
+    toggleReveal(index: number): void {
+        if (this.revealedOptions.has(index)) {
+            this.revealedOptions.delete(index);
+        } else {
+            this.revealedOptions.add(index);
+        }
+    }
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
 
     // Prisoner System
@@ -154,7 +163,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.wizardFlow.unregisterStep(5);
+        this.wizardFlow.unregisterStep(6);
     }
 
     async onEventFlowComplete() {
@@ -181,17 +190,17 @@ export class CareerComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         // Self-register with WizardFlowService
-        this.wizardFlow.registerValidator(5, () => this.canProceedToNext());
-        this.wizardFlow.registerFinishAction(5, () => this.startMusteringOut());
+        this.wizardFlow.registerValidator(6, () => this.canProceedToNext());
+        this.wizardFlow.registerFinishAction(6, () => this.startMusteringOut());
+
+        // Defensive: clear any event state that may have leaked from Education step
+        this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]);
 
         // Register Custom Handlers
         this.eventEngine.registerCustomHandler('ADVANCE_STATE', (state) => {
             this.currentState.set(state);
             this.log(`State Advanced to ${state}`);
-        });
-
-        this.eventEngine.registerCustomHandler('INJURY_PROCESS', (payload) => {
-            this.handleInjuryProcess(payload);
         });
 
         // Register Global Events
@@ -208,15 +217,25 @@ export class CareerComponent implements OnInit, OnDestroy {
         });
 
         this.eventEngine.registerCustomHandler('BETRAYAL_LOGIC', (payload) => {
-            // Logic: Existing Ally/Contact -> Rival/Enemy
-            this.characterService.addNpc({ 
-                id: `npc_${Date.now()}`,
-                name: 'Betrayer',
-                type: 'rival',
-                origin: 'Betrayal Event',
-                notes: 'A former friend who betrayed you.'
-            });
-            this.characterService.log('**Betrayal**: A trusted contact has become a Rival.');
+            // Logic: Convert existing Contact/Ally → Rival; if none, create generic Enemy
+            const npcs = this.characterService.character().npcs;
+            const convertible = npcs.filter(n => n.type === 'contact' || n.type === 'ally');
+            if (convertible.length > 0) {
+                // Show selection modal — player picks which NPC betrayed them
+                this.pendingNpcType = 'rival';
+                this.pendingNpcOrigin = 'Betrayal';
+                this.isNpcPrompt = true;
+            } else {
+                // No contacts to betray — add a new Enemy
+                this.characterService.addNpc({
+                    id: `npc_${Date.now()}`,
+                    name: 'Unknown Betrayer',
+                    type: 'enemy',
+                    origin: 'Betrayal Event',
+                    notes: 'An unknown figure who worked against you from the shadows.'
+                });
+                this.characterService.log('**Betrayal**: An unknown enemy has acted against you.');
+            }
         });
 
         this.eventEngine.registerCustomHandler('INJURY_PROCESS', (payload) => {
@@ -243,6 +262,12 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         this.eventEngine.registerCustomHandler('APPLY_INJURY_DAMAGE', (payload) => {
             this.handleInjuryDamage(payload.severity, payload.method);
+        });
+
+        // Clear revealed options whenever the active event changes (event chaining, new events, etc.)
+        effect(() => {
+            this.eventEngine.currentEvent();
+            this.revealedOptions.clear();
         });
 
         const char = this.characterService.character();
@@ -424,7 +449,7 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         if (career.qualificationTarget === 0) autoQualify = true;
         if (career.name === 'Prisoner') autoQualify = true;
-        if ((career.name === 'Noble' || (career as any).name === 'Elite') && (char.characteristics as any).soc.value >= 10) autoQualify = true;
+        // Noble/Elite: qualification requires a 2D6 + SOC modifier vs target 10 roll — no auto-entry
         if (career.name === 'Spaceborne' && char.originType === 'Spacer') autoQualify = true;
         
         // 2300AD: Academy Graduation Forced Career
@@ -561,17 +586,18 @@ export class CareerComponent implements OnInit, OnDestroy {
             // Clear used bonuses
             this.characterService.updateCharacter({ nextQualificationDm: 0, forcedCareer: '' });
 
-            if (this.currentTerm() === 1) {
-                this.log('Qualification Failed. You must submit to the Draft (Term 1).');
-                await this.chooseDraft(); // Automatically go to Draft if Term 1 fail
-            } else {
-                this.log('Qualification Failed. You must become a Drifter.');
-                await this.chooseDrifter(); // Automatically go to Drifter if Term > 1 fail
-            }
+            // Core Rulebook: player always chooses — Draft OR Drifter
+            this.currentState.set('QUALIFICATION_FAILURE');
         }
     }
 
     async chooseDraft() {
+        const char = this.characterService.character();
+        // Core Rulebook: A Traveller may only enter the draft once in their lifetime
+        if (char.hasDrafted) {
+            this.log('Cannot enter the Draft again — already used once this lifetime.');
+            return;
+        }
         this.characterService.log('Choosing the Draft...');
         await this.runDraft();
     }
@@ -719,9 +745,24 @@ export class CareerComponent implements OnInit, OnDestroy {
             modifiers.push({ label: 'Academy Grad', value: 2 });
         }
 
-        const rollLabels = academyBonus > 0 ? 'Commission Check (+2 Academy)' : 'Commission Check';
+        // Rule 632 Amendment: Commission attempts after first suffer DM-1 per attempt
+        // Count previous commission attempts in THIS career
+        let commissionAttemptPenalty = 0;
+        const currentCareerName = this.selectedCareer.name.toLowerCase();
+        const commissionAttemptsInCurrentCareer = char.careerHistory.filter(
+            term => term.careerName.toLowerCase() === currentCareerName && term.commissioned
+        ).length;
+
+        if (commissionAttemptsInCurrentCareer > 0) {
+            // Already commissioned once in this career; subsequent attempts suffer -1 DM
+            commissionAttemptPenalty = -(commissionAttemptsInCurrentCareer);
+            modifiers.push({ label: `Commission Penalty (${commissionAttemptsInCurrentCareer} prev attempts)`, value: commissionAttemptPenalty });
+        }
+
+        const totalModifier = statMod + academyBonus + commissionAttemptPenalty;
+        const rollLabels = totalModifier !== statMod ? `Commission Check (${totalModifier > statMod ? '+' : ''}${totalModifier - statMod})` : 'Commission Check';
         const roll = await this.diceDisplay.roll(
-            rollLabels, 2, statMod + academyBonus, target, stat.toUpperCase(), undefined, modifiers, undefined,
+            rollLabels, 2, totalModifier, target, stat.toUpperCase(), undefined, modifiers, undefined,
             {
                 phase: `COMMISSION · ${this.selectedCareer?.name.toUpperCase()}`,
                 announcement: `You are applying for an Officer's Commission in the ${this.selectedCareer?.name}. Roll ${stat.toUpperCase()} ${target}+ to be promoted to Officer Rank 1.`,
@@ -730,7 +771,7 @@ export class CareerComponent implements OnInit, OnDestroy {
             }
         );
 
-        const total = roll + statMod + academyBonus;
+        const total = roll + totalModifier;
         this.log(`Commission Check: ${total} vs ${target}`);
 
         if (total >= target) {
@@ -787,33 +828,39 @@ export class CareerComponent implements OnInit, OnDestroy {
     }
 
     async runDraft() {
-        // 2300AD Draft Table: 1-3=Army, 4-5=Marine, 6=Navy
+        // Core Rulebook Draft Table: 1=Navy, 2=Army, 3=Marine, 4=Merchant, 5=Scout, 6=Agent
         const draftTable = [
-            { roll: 1, career: 'Army' }, { roll: 2, career: 'Army' },
-            { roll: 3, career: 'Army' }, { roll: 4, career: 'Marine' },
-            { roll: 5, career: 'Marine' }, { roll: 6, career: 'Navy' }
+            { roll: 1, career: 'Navy' }, { roll: 2, career: 'Army' },
+            { roll: 3, career: 'Marine' }, { roll: 4, career: 'Merchant' },
+            { roll: 5, career: 'Scout' }, { roll: 6, career: 'Agent' }
         ];
 
         const rollSource = await this.diceDisplay.roll(
             'Draft Table', 1, 0, 0, '', undefined, [], draftTable,
             {
-                phase: 'MILITARY DRAFT · TERM 1',
-                announcement: `You failed to qualify for your chosen career. The Draft assigns you to a random military branch based on a 1D6 roll: 1–3 = Army, 4–5 = Marine, 6 = Navy.`,
-                successContext: `Welcome to the ranks. Your assigned branch begins Basic Training immediately.`,
+                phase: 'MILITARY DRAFT',
+                announcement: `You failed to qualify and submitted to the Draft. Roll 1D6: 1=Navy, 2=Army, 3=Marine, 4=Merchant, 5=Scout, 6=Agent.`,
+                successContext: `Your assigned service begins Basic Training immediately.`,
                 failureContext: ``
             }
         );
         const roll = rollSource;
 
-        let draftedCareerName = '';
-        if (roll <= 3) draftedCareerName = 'Army';
-        else if (roll <= 5) draftedCareerName = 'Marine';
-        else draftedCareerName = 'Navy';
+        // Mark draft as used — Core Rulebook: once per lifetime
+        this.characterService.updateCharacter({ hasDrafted: true } as any);
 
-        let draftTarget = this.careers().find((c: CareerDefinition) => c.name.includes(draftedCareerName));
-        // Fallback for Marine vs Marines naming discrepancy
-        if (!draftTarget && draftedCareerName === 'Marine') {
-            draftTarget = this.careers().find((c: CareerDefinition) => c.name === 'Marines');
+        let draftedCareerName = '';
+        if (roll === 1) draftedCareerName = 'Navy';
+        else if (roll === 2) draftedCareerName = 'Army';
+        else if (roll === 3) draftedCareerName = 'Marine';
+        else if (roll === 4) draftedCareerName = 'Merchant';
+        else if (roll === 5) draftedCareerName = 'Scout';
+        else draftedCareerName = 'Agent';
+
+        let draftTarget = this.careers().find((c: CareerDefinition) => c.name === draftedCareerName);
+        // Fallback for naming discrepancies (e.g. Marine vs Marines)
+        if (!draftTarget) {
+            draftTarget = this.careers().find((c: CareerDefinition) => c.name.includes(draftedCareerName));
         }
 
         if (draftTarget) {
@@ -909,13 +956,24 @@ export class CareerComponent implements OnInit, OnDestroy {
         else if (tableType === 'Officer' && this.selectedCareer.officerSkills) table = this.selectedCareer.officerSkills;
         else if (tableType === 'Specialist' && this.selectedAssignment) table = this.selectedAssignment.skillTable;
 
+        const careerName = this.selectedCareer.name;
+        const termNum = this.currentTerm();
+        const preRollState = this.currentState();
+        const hasBonus = this.bonusSkillRolls() > 0;
+        const stateLabel = hasBonus
+            ? `Advancement Bonus Roll`
+            : preRollState === 'POST_TERM_SKILL_TRAINING'
+                ? `Post-Term Training · Term ${termNum}`
+                : `Term ${termNum} Skill Training`;
+        const tablePreview = table.map((s, i) => `**${i + 1}.** ${s}`).join('  ·  ');
+
         const roll = await this.diceDisplay.roll(
             `${tableType} Skill`, 1, 0, 0, '',
             (res) => { const idx = res - 1; return table[idx] || 'Unknown'; }, [], table,
             {
-                phase: `SKILL TRAINING · ${tableType.toUpperCase()} TABLE`,
-                announcement: `Roll 1D6 on the ${tableType} Skill Table to see which skill or characteristic bonus you develop this term.`,
-                successContext: `You gain the listed skill or characteristic improvement. Apply it to your character sheet.`,
+                phase: `SKILL TRAINING · ${careerName.toUpperCase()} · ${tableType.toUpperCase()}`,
+                announcement: `**${careerName} — ${tableType} Skills** (${stateLabel})\n\nRoll 1D6 to determine your development this term:\n\n${tablePreview}\n\nThe result is applied immediately to your character sheet.`,
+                successContext: `Skill development recorded. Your character advances.`,
                 failureContext: ``
             }
         );
@@ -998,7 +1056,15 @@ export class CareerComponent implements OnInit, OnDestroy {
         
         if (pathDm !== 0) {
             const effect = survivalEvent.ui.options[0].effects?.find((e: any) => e.type === 'ROLL_CHECK');
-            if (effect) effect.dm = pathDm;
+            if (effect) {
+                effect.dm = pathDm;
+                // Build a human-readable label for the dice roller modifier breakdown
+                const labels: string[] = [];
+                if (character.isSoftPath) labels.push('Soft Path (-1)');
+                else if (character.homeworld?.path === 'Hard') labels.push('Hard Path (+1)');
+                if (!character.hasLeftHome && character.homeworld?.survivalDm) labels.push(`Homeworld (+${character.homeworld.survivalDm})`);
+                effect.dmLabel = labels.join(', ') || 'Path DM';
+            }
         }
 
         // Note: Map legacy tables to dynamic events
@@ -1017,21 +1083,19 @@ export class CareerComponent implements OnInit, OnDestroy {
         
         let successNext = termEvent.id;
 
-        // 2300AD: Check for Neural Jack Opportunity (Term 1-3, Military, Tier 3+ Nation)
-        const tier3Nations = ['France', 'United States', 'Germany', 'United Kingdom', 'Manchuria', 'Australia', 'Canada', 'Japan', 'Russia', 'Argentina', 'Brazil', 'Azania', 'Mexico', 'Texas', 'Ukraine', 'Inca Republic', 'Trilon Corp', 'Life Foundation'];
-        
-        if (this.currentTerm() <= 3 && this.isMilitaryCareer() && tier3Nations.includes(character.nationality) && !character.hasNeuralJack) {
+        // 2300AD: Check for Neural Jack Opportunity using unified eligibility check
+        if (this.careerTermService.isNeuralJackEligible(this.selectedCareer.name, this.currentTerm())) {
             // Inject Neural Jack Event
             console.log('Injecting Neural Jack Event into chain.');
             const njEvent = { ...NEURAL_JACK_INSTALL_EVENT };
-            
+
             // Ensure all paths in Neural Jack lead to Term Event
             njEvent.ui.options = njEvent.ui.options.map((opt: any) => ({
                 ...opt,
                 nextEventId: termEvent.id,
                 replaceNext: true
             }));
-            
+
             this.eventEngine.registerEvent(njEvent);
             successNext = njEvent.id;
         }
@@ -1505,13 +1569,15 @@ export class CareerComponent implements OnInit, OnDestroy {
         // Prisoner Logic: Parole Modifiers
         let paroleDm = 0;
         if (this.selectedCareer.name === 'Prisoner') {
-            paroleDm = 7 - this.paroleThreshold(); // ParoleThreshold starts at 7, lower is better (DM+)
-            if (paroleDm !== 0) modifiers.push({ label: 'Parole Modifiers', value: paroleDm });
+            const eventDelta = char.paroleThresholdDelta || 0;
+            const effectiveThreshold = this.paroleThreshold() + eventDelta;
+            paroleDm = 7 - effectiveThreshold;
+            if (paroleDm !== 0) modifiers.push({ label: 'Parole Record', value: paroleDm });
         }
 
         // Global Advancement DM
         const nextAdvDm = char.nextAdvancementDm || 0;
-        if (nextAdvDm !== 0) modifiers.push({ label: 'Bonus DMs', value: nextAdvDm });
+        if (nextAdvDm !== 0) modifiers.push({ label: 'Event Bonus DM', value: nextAdvDm });
 
         // Neural Jack Bonus (+1)
         if (char.equipment.some(e => e.includes('Neural Jack'))) {
@@ -1546,7 +1612,7 @@ export class CareerComponent implements OnInit, OnDestroy {
         const total = rollResult + statMod + paroleDm + nextAdvDm;
 
         // Clear used bonuses
-        this.characterService.updateCharacter({ nextAdvancementDm: 0 });
+        this.characterService.updateCharacter({ nextAdvancementDm: 0, paroleThresholdDelta: 0 });
 
         if (total >= target || (isPrisoner && rollResult >= 12)) {
             this.success = true;

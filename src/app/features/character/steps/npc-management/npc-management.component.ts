@@ -22,12 +22,12 @@ export class NpcManagementComponent implements OnInit, OnDestroy {
   characters = this.characterService.character;
 
   ngOnInit(): void {
-    this.wizardFlow.registerValidator(7, () => this.isValid());
-    this.wizardFlow.registerFinishAction(7, () => this.finish());
+    this.wizardFlow.registerValidator(8, () => this.isValid());
+    this.wizardFlow.registerFinishAction(8, () => this.finish());
   }
 
   ngOnDestroy(): void {
-    this.wizardFlow.unregisterStep(7);
+    this.wizardFlow.unregisterStep(8);
   }
   
   async editNpc(npc: NPC) {

@@ -21,20 +21,26 @@ export class SkillPackageComponent implements OnInit, OnDestroy {
   selectedSkills = signal<string[]>([]);
 
   ngOnInit(): void {
-    this.wizardFlow.registerValidator(8, () => !!this.selectedPackage() && this.selectedSkills().length > 0);
-    this.wizardFlow.registerFinishAction(8, () => this.finish());
+    this.wizardFlow.registerValidator(9, () => !!this.selectedPackage() && this.selectedSkills().length > 0);
+    this.wizardFlow.registerFinishAction(9, () => this.finish());
   }
 
   ngOnDestroy(): void {
-    this.wizardFlow.unregisterStep(8);
+    this.wizardFlow.unregisterStep(9);
   }
 
   selectPackage(pkg: SkillPackage) {
     this.selectedPackage.set(pkg);
     this.selectedSkills.set([]); // Reset selection when package changes
     setTimeout(() => {
-        const el = document.querySelector('.skill-selection-area');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      const el = document.querySelector('.skill-selection-area') as HTMLElement | null;
+      const container = document.querySelector('.wizard-content') as HTMLElement | null;
+      if (el && container) {
+        const offsetTop = el.getBoundingClientRect().top
+          - container.getBoundingClientRect().top
+          + container.scrollTop;
+        container.scrollTo({ top: offsetTop - 16, behavior: 'smooth' });
+      }
     }, 100);
   }
 

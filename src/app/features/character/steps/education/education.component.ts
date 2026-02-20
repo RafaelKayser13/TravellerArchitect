@@ -13,7 +13,6 @@ import { createEducationEvent } from '../../../../data/events/shared/education-e
 interface EduEvent {
     roll: number;
     desc: string;
-    effect?: string;
     lifeEvent?: boolean;
 }
 
@@ -34,14 +33,14 @@ export class EducationComponent implements OnInit, OnDestroy {
     private wizardFlow = inject(WizardFlowService);
 
     ngOnInit(): void {
-        this.wizardFlow.registerValidator(4, () => this.canProceedToNext() || this.admissionStatus === 'Rejected');
-        this.wizardFlow.registerFinishAction(4, () => this.finishStep());
+        this.wizardFlow.registerValidator(5, () => this.canProceedToNext() || this.admissionStatus === 'Rejected');
+        this.wizardFlow.registerFinishAction(5, () => this.finishStep());
         // Ensure DMs are calculated when component loads and data is ready
         setTimeout(() => this.calculateAdmissionDMs(), 100);
     }
 
     ngOnDestroy(): void {
-        this.wizardFlow.unregisterStep(4);
+        this.wizardFlow.unregisterStep(5);
     }
 
     educationType: 'University' | 'Academy' | 'None' = 'None';
@@ -54,20 +53,43 @@ export class EducationComponent implements OnInit, OnDestroy {
     canChooseOffWorld = true;
 
     // Data Lists
-    // 2300AD University Curriculum List (Comprehensive)
+    // 2300AD University Curriculum List - Academic specializations only
+    // Covers advanced academic and scientific disciplines suitable for higher education
     universitySkillList = [
         'Admin',
         'Advocate',
-        'Animals (Handling)', 'Animals (Training)', 'Animals (Veterinary)',
-        'Art (Holography)', 'Art (Instrument)', 'Art (Performer)', 'Art (Visual Media)', 'Art (Write)',
+        'Art (Holography)',
+        'Art (Write)',
         'Astrogation',
-        'Electronics (Comms)', 'Electronics (Computers)', 'Electronics (Remote Ops)', 'Electronics (Sensors)',
-        'Engineer (Life Support)', 'Engineer (Power)', 'Engineer (Stutterwarp)',
-        'Language (French)', 'Language (German)', 'Language (Spanish)', 'Language (Pentapod)', 'Language (Zhargon)',
+        'Broker',
+        'Diplomat',
+        'Electronics (Computers)',
+        'Electronics (Remote Ops)',
+        'Electronics (Sensors)',
+        'Engineer (Life Support)',
+        'Engineer (Power)',
+        'Engineer (Stutterwarp)',
+        'Language (Any)',
+        'Leadership',
         'Medic',
         'Navigation',
-        'Profession (Belter)', 'Profession (Biologicals)', 'Profession (Civil Engineering)', 'Profession (Construction)', 'Profession (Hydroponics)', 'Profession (Polymers)',
-        'Science (Archaeology)', 'Science (Astronomy)', 'Science (Biology)', 'Science (Chemistry)', 'Science (Cosmology)', 'Science (Cybernetics)', 'Science (Economics)', 'Science (Genetics)', 'Science (History)', 'Science (Linguistics)', 'Science (Philosophy)', 'Science (Physics)', 'Science (Planetology)', 'Science (Psionicology)', 'Science (Psychology)', 'Science (Robotics)', 'Science (Sophontology)', 'Science (Xenology)'
+        'Persuade',
+        'Science (Archaeology)',
+        'Science (Astronomy)',
+        'Science (Biology)',
+        'Science (Chemistry)',
+        'Science (Cosmology)',
+        'Science (Cybernetics)',
+        'Science (Economics)',
+        'Science (Genetics)',
+        'Science (History)',
+        'Science (Linguistics)',
+        'Science (Philosophy)',
+        'Science (Physics)',
+        'Science (Planetology)',
+        'Science (Psychology)',
+        'Science (Sophontology)',
+        'Science (Xenology)'
     ];
 
     // Legacy/Default major just for selection initialization if needed.
@@ -90,7 +112,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
 
     // State
-    admissionStatus: string = 'NotApplied';
+    admissionStatus: string = 'NotApplied'; // NotApplied | Applying | Admitted | Rejected
     graduationStatus: string = 'Pending';
     eventResult: string = '';
     rollLog: string[] = [];
@@ -100,7 +122,31 @@ export class EducationComponent implements OnInit, OnDestroy {
     pendingNpcs: any[] = [];
 
     // Refactor State
-    educationStep: 'Selection' | 'UniversitySkillSelect' | 'Studying' | 'Graduation' | 'AcademySkillSelect' | 'Finished' = 'Selection';
+    educationStep:
+        | 'Selection'
+        | 'AdmissionRoll'
+        | 'AdmissionResult'
+        | 'UniversitySkillSelect'
+        | 'EventRoll'
+        | 'EventResult'
+        | 'GraduationRoll'
+        | 'AcademySkillSelect'
+        | 'Finished'
+        = 'Selection';
+
+    // Admission Phase State
+    admissionRollTotal: number = 0;
+    admissionTarget: number = 0;
+    admissionModifiers: { label: string; value: number }[] = [];
+
+    // Event Phase State
+    currentEvent: { roll: number; desc: string; effect?: string } | null = null;
+
+    // Graduation Phase State
+    graduationRollTotal: number = 0;
+    graduationTarget: number = 0;
+    graduationModifiers: { label: string; value: number }[] = [];
+    isGraduationHonors: boolean = false;
 
     // University Selection Vars
     selectedMajorSkill: string = '';
@@ -125,7 +171,7 @@ export class EducationComponent implements OnInit, OnDestroy {
     canAvoidWar = false;
 
     expelledToPrison = false;
-    warNextCareer: 'Drifter' | 'Army' | 'Marine' | 'Navy' | '' = '';
+    warNextCareer: 'Drifter' | 'Army' | 'Marine' | 'Navy' | 'Merchant' | 'Scout' | 'Agent' | '' = '';
 
     psionicPotential = false;
     graduated = true; // Default, can be flipped by Tragedy/War/Prank
@@ -150,8 +196,8 @@ export class EducationComponent implements OnInit, OnDestroy {
             if (this.educationType === 'University' && this.admissionStatus === 'Admitted') {
                 this.educationStep = 'UniversitySkillSelect';
             } else if (this.admissionStatus === 'Admitted') {
-                // Academy - admitted but skill selection happens on graduation
-                this.educationStep = 'Studying';
+                // Academy - admitted, proceed to event roll
+                this.educationStep = 'EventRoll';
             }
             this.scrollToTop();
         }
@@ -258,9 +304,23 @@ export class EducationComponent implements OnInit, OnDestroy {
         return Object.values(this.selectedAcademySkills).includes(skill);
     }
 
-    async apply() {
+    // Phase 1: Initialize Admission (calculate DMs, show roll screen)
+    initAdmission() {
         this.rollLog = [];
+        this.admissionStatus = 'Applying'; // Mark that application has started
         const char = this.characterService.character();
+
+        // Core Rulebook Rule 591: University admission only available in Terms 1-3
+        if (this.educationType === 'University') {
+            const currentTerm = char.careerHistory.length + 1;
+            if (currentTerm > 3) {
+                this.admissionStatus = 'Rejected';
+                this.characterService.log(`**University Admission Denied**: Universities are only available in Terms 1-3 (you are in Term ${currentTerm})`);
+                this.educationStep = 'AdmissionResult';
+                this.scrollToTop();
+                return;
+            }
+        }
 
         // Select DM based on method
         const admissionDm = this.admissionMethod === 'Local' ? this.admissionDMs.local : this.admissionDMs.offWorld;
@@ -301,12 +361,22 @@ export class EducationComponent implements OnInit, OnDestroy {
                 statMod = this.diceService.getModifier(end);
                 statName = 'END';
             } else {
-                target = 8;
+                target = 9;
                 statMod = this.diceService.getModifier(int);
                 statName = 'INT';
             }
             modifiers.push({ label: statName, value: statMod });
             totalDm += statMod;
+
+            // Rule 614: Academy admission bonuses (2300AD Book 02)
+            if (char.characteristics.end.value >= 8) {
+                modifiers.push({ label: 'END 8+', value: 1 });
+                totalDm += 1;
+            }
+            if (char.characteristics.soc.value >= 8) {
+                modifiers.push({ label: 'SOC 8+', value: 1 });
+                totalDm += 1;
+            }
         }
 
         // 3. Term Penalties (Core Rulebook Rules 592, 614)
@@ -329,8 +399,31 @@ export class EducationComponent implements OnInit, OnDestroy {
             }
         }
 
+        // Save state and move to AdmissionRoll screen
+        this.admissionTarget = target;
+        this.admissionModifiers = modifiers;
+        this.educationStep = 'AdmissionRoll';
+        this.scrollToTop();
+    }
+
+    // Phase 2: Execute Admission Roll
+    async executeAdmissionRoll() {
+        const modifiers = this.admissionModifiers;
+        const target = this.admissionTarget;
+        let totalDm = 0;
+        modifiers.forEach(m => totalDm += m.value);
+
+        let statName = 'EDU';
+        modifiers.forEach(m => {
+            if (m.label === 'EDU' || m.label === 'END' || m.label === 'INT') {
+                statName = m.label;
+            }
+        });
+
         // Modal Roll
         const rollTitle = this.educationType === 'Academy' ? `Admission check - Military Academy (${this.academyType})` : `Admission Check - University`;
+        const eduLabel = this.educationType === 'University' ? 'University' : `${this.academyType} Academy`;
+        const offWorldNote = this.admissionMethod === 'OffWorld' ? ' (Off-World application: harder but grants EDU +1 if admitted)' : '';
 
         const roll = await this.diceDisplay.roll(
             rollTitle,
@@ -339,10 +432,18 @@ export class EducationComponent implements OnInit, OnDestroy {
             target,
             statName,
             undefined,
-            modifiers
+            modifiers,
+            undefined,
+            {
+                phase: `EDUCATION · ADMISSION · ${eduLabel.toUpperCase()}`,
+                announcement: `**${eduLabel} Admission**${offWorldNote}\n\nYou must roll **2D6 + ${statName} modifier** and meet or exceed **${target}+** to be accepted. Current DM breakdown shown above.`,
+                successContext: `Admission granted. You begin your studies immediately.`,
+                failureContext: `Application rejected. You may proceed directly to your career.`
+            }
         );
 
         const total = roll + totalDm;
+        this.admissionRollTotal = total;
         this.log(`Roll: ${roll} + DM ${totalDm} = ${total} vs ${target}`);
 
         if (total >= target) {
@@ -354,6 +455,60 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.admissionStatus = 'Rejected';
             this.characterService.log(`**Admission Rejected** (${this.educationType === 'University' ? 'University' : `${this.academyType} Academy`}) — Roll ${total} vs ${target}`);
         }
+
+        // Move to AdmissionResult screen
+        this.educationStep = 'AdmissionResult';
+        this.scrollToTop();
+    }
+
+    // Legacy method for backward compatibility (calls initAdmission instead)
+    apply() {
+        this.initAdmission();
+    }
+
+    // Proceed from AdmissionResult to next phase
+    proceedFromAdmissionResult() {
+        if (this.admissionStatus === 'Rejected') {
+            this.resetAdmission();
+            return;
+        }
+
+        // Admitted
+        if (this.educationType === 'University') {
+            this.educationStep = 'UniversitySkillSelect';
+        } else if (this.educationType === 'Academy') {
+            // Academy goes directly to event roll
+            this.initEventRoll();
+        }
+        this.scrollToTop();
+    }
+
+    // Proceed from EventResult to next phase (or finish if expelled)
+    proceedFromEventResult() {
+        // Close any open event modals
+        this.showHobbySelection = false;
+        this.showTutorSelection = false;
+        this.showWarOptions = false;
+
+        // Clear event engine state to prevent lingering events
+        this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]); // clear orphaned stack entries (prevents leak to Career screen)
+
+        // Check if expelled/tragedy
+        if (this.graduationStatus === 'Failed') {
+            this.educationStep = 'Finished';
+        } else {
+            // Initialize graduation roll
+            this.initGraduationRoll();
+        }
+        this.scrollToTop();
+    }
+
+    // Proceed from confirmAcademyGraduation to finish
+    proceedFromAcademySkillSelect() {
+        this.confirmAcademyGraduation();
+        this.educationStep = 'Finished';
+        this.scrollToTop();
     }
 
     enterUniversity() {
@@ -366,20 +521,19 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         this.characterService.log(`**Entered University**: EDU +1. Select Major (Level 1) and Minor (Level 0).`);
         this.log(`Entered University. EDU +1. Please select your Major (Level 1) and Minor (Level 0) skills.`);
-        this.educationStep = 'UniversitySkillSelect';
-        this.scrollToTop();
+        // Note: educationStep is controlled by AdmissionResult screen, not here
     }
 
     enterAcademy() {
         const char = this.characterService.character();
         const isOffWorld = this.admissionMethod === 'OffWorld';
-        
-        this.characterService.updateCharacter({ 
-            education: { 
-                ...char.education, 
+
+        this.characterService.updateCharacter({
+            education: {
+                ...char.education,
                 academy: true,
-                offworld: isOffWorld 
-            } 
+                offworld: isOffWorld
+            }
         });
 
         const skills = this.academySkills[this.academyType] || [];
@@ -390,20 +544,11 @@ export class EducationComponent implements OnInit, OnDestroy {
         });
         this.characterService.log(`**Entered ${this.academyType} Academy**: Basic Training granted (Service Skills at Level 0)`);
         this.log(`Entered ${this.academyType} Academy. Gained Basic Training (Service Skills 0).`);
-        this.educationStep = 'Studying';
-        this.scrollToTop();
+        // Note: educationStep is controlled by AdmissionResult screen, not here
     }
 
-    async graduate() {
-        await this.runEvent();
-
-        // Check failure from event (Tragedy/Expelled)
-        if (this.graduationStatus === 'Failed') {
-            this.educationStep = 'Finished';
-            this.scrollToTop();
-            return;
-        }
-
+    // Phase 1: Initialize Graduation Roll (calculate DMs, show roll screen)
+    initGraduationRoll() {
         const char = this.characterService.character();
         const int = char.characteristics.int.value + char.characteristics.int.modifier;
         const edu = char.characteristics.edu.value + char.characteristics.edu.modifier;
@@ -426,16 +571,32 @@ export class EducationComponent implements OnInit, OnDestroy {
             statMod = this.diceService.getModifier(int);
             modifiers.push({ label: 'INT', value: statMod });
             totalDm += statMod;
-
-            if (char.characteristics.end.value >= 8) {
-                modifiers.push({ label: 'END 8+', value: 1 });
-                totalDm += 1;
-            }
-            if (char.characteristics.soc.value >= 8) {
-                modifiers.push({ label: 'SOC 8+', value: 1 });
-                totalDm += 1;
-            }
         }
+
+        // Save state and move to GraduationRoll screen
+        this.graduationTarget = target;
+        this.graduationModifiers = modifiers;
+        this.educationStep = 'GraduationRoll';
+        this.scrollToTop();
+    }
+
+    // Phase 2: Execute Graduation Roll
+    async executeGraduationRoll() {
+        // Close any open event modals when entering graduation phase
+        this.showHobbySelection = false;
+        this.showTutorSelection = false;
+        this.showWarOptions = false;
+
+        // Clear event engine state to prevent lingering events
+        this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]); // clear orphaned stack entries
+
+        const modifiers = this.graduationModifiers;
+        const target = this.graduationTarget;
+        let totalDm = 0;
+        modifiers.forEach(m => totalDm += m.value);
+
+        let statName = 'INT';
 
         const roll = await this.diceDisplay.roll(
             'Graduation Check',
@@ -444,26 +605,43 @@ export class EducationComponent implements OnInit, OnDestroy {
             target,
             statName,
             undefined,
-            modifiers
+            modifiers,
+            undefined,
+            {
+                phase: `EDUCATION · GRADUATION · ${this.educationType.toUpperCase()}`,
+                announcement: `**Graduation Roll** (${this.educationType})\n\nRoll **2D6 + INT modifier** and meet or exceed **${target}+** to graduate. Roll **${this.educationType === 'University' ? 10 : 11}+** for Honors.`,
+                successContext: `You graduate successfully. Benefits are applied to your character sheet.`,
+                failureContext: `You fail to graduate. ${this.educationType === 'Academy' ? 'A roll above 2 still grants automatic career entry (Rule 632).' : 'No education benefits are gained.'}`
+            }
         );
 
         const total = roll + totalDm;
+        this.graduationRollTotal = total;
 
         if (total >= target) {
             const honorsTarget = this.educationType === 'University' ? 10 : 11;
             if (total >= honorsTarget) {
+                this.isGraduationHonors = true;
                 this.graduationStatus = 'Honors';
                 this.characterService.log(`**Graduated with Honors!** (${this.educationType}) — Roll ${total} vs ${honorsTarget}`);
                 this.log('Graduated with Honors!');
                 this.applyGraduationBenefits(true);
             } else {
+                this.isGraduationHonors = false;
                 this.graduationStatus = 'Graduated';
                 this.characterService.log(`**Graduated** (${this.educationType}) — Roll ${total} vs ${target}`);
                 this.log('Graduated successfully.');
                 this.applyGraduationBenefits(false);
             }
-            this.saveResult(true, this.graduationStatus === 'Honors');
-            this.educationStep = 'Finished';
+            this.saveResult(true, this.isGraduationHonors);
+
+            // University goes directly to Finished, Academy goes to AcademySkillSelect
+            if (this.educationType === 'University') {
+                this.educationStep = 'Finished';
+                this.wizardFlow.notifyValidation();
+            } else {
+                this.educationStep = 'AcademySkillSelect';
+            }
         } else {
             this.graduationStatus = 'Failed';
             this.characterService.log(`**Failed to Graduate** (${this.educationType})`);
@@ -481,7 +659,25 @@ export class EducationComponent implements OnInit, OnDestroy {
 
             this.saveResult(false, false);
             this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
         }
+
+        this.scrollToTop();
+    }
+
+    // Legacy method for backward compatibility
+    async graduate() {
+        await this.runEvent();
+
+        // Check failure from event (Tragedy/Expelled)
+        if (this.graduationStatus === 'Failed') {
+            this.educationStep = 'Finished';
+            this.scrollToTop();
+            return;
+        }
+
+        // New flow: initialize the graduation roll
+        this.initGraduationRoll();
     }
 
     private registerEducationHandlers() {
@@ -504,9 +700,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         this.eventEngine.registerCustomHandler('FRIENDS', async () => {
             const rollResult = await this.diceDisplay.roll('Allies Gained (1D3)', 1, 0, 0, '', (res) => `Roll ${res} :: Gain ${Math.ceil(res / 2)} Allies during studies.`);
             const alliesCount = Math.ceil(rollResult / 2);
-            this.pendingNpcs = [];
             for (let i = 0; i < alliesCount; i++) {
-                this.pendingNpcs.push({
+                this.characterService.addNpc({
                     id: crypto.randomUUID(),
                     name: `University Friend ${i + 1}`,
                     type: 'ally',
@@ -514,7 +709,7 @@ export class EducationComponent implements OnInit, OnDestroy {
                     notes: 'A close friend from academic years.'
                 });
             }
-            this.isNpcPrompt = true;
+            this.characterService.log(`**Friends**: Gained ${alliesCount} ally/allies from academic network.`);
         });
 
         this.eventEngine.registerCustomHandler('POLITICS', async () => {
@@ -553,19 +748,50 @@ export class EducationComponent implements OnInit, OnDestroy {
         });
     }
 
-    async runEvent() {
+    // Phase 1: Initialize Event Roll
+    initEventRoll() {
+        this.educationStep = 'EventRoll';
+        this.scrollToTop();
+    }
+
+    // Phase 2: Execute Event Roll
+    async executeEventRoll() {
         this.registerEducationHandlers();
 
         const roll = await this.diceDisplay.roll('Education Event', 2, 0, 0, '', (result) => {
             const entry = createEducationEvent(result);
             return entry.ui.description;
+        }, [], undefined, {
+            phase: `EDUCATION · TERM EVENT · ${this.educationType.toUpperCase()}`,
+            announcement: `**Education Event Roll** (${this.educationType})\n\nRoll 2D6 to determine what significant event occurred during your studies this term. Results range from tragedies and pranks to useful skills and academic recognition.`,
+            successContext: `The event unfolds. Review the outcome below.`,
+            failureContext: ``
         });
 
         this.characterService.log(`**Education Event** (Roll ${roll})`);
-        
+
         const event = createEducationEvent(roll);
+        this.currentEvent = { roll: roll, desc: event.ui.description };
         this.eventEngine.registerEvent(event);
         this.eventEngine.triggerEvent(event.id);
+
+        // Execute effects from the event's default option
+        // This ensures stats, skills, and custom handlers are processed
+        if (event.ui.options && event.ui.options.length > 0) {
+            const firstOption = event.ui.options[0];
+            if (firstOption.effects) {
+                await this.eventEngine.applyEffects(firstOption.effects);
+            }
+        }
+
+        // Move to EventResult screen
+        this.educationStep = 'EventResult';
+        this.scrollToTop();
+    }
+
+    // Legacy method for backward compatibility
+    async runEvent() {
+        await this.executeEventRoll();
     }
 
     async handlePrank() {
@@ -578,6 +804,7 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.characterService.setNextCareer('Prisoner');
             this.characterService.log('**EXPELLED**: Prank went catastrophically wrong. Mandatory transition to Prisoner.');
             this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
             return;
         }
 
@@ -612,7 +839,14 @@ export class EducationComponent implements OnInit, OnDestroy {
 
     avoidWar() {
         this.showWarOptions = false;
+        this.graduated = true;
+        this.graduationStatus = 'Passed';
         this.characterService.log('Used social standing to avoid the draft.');
+        this.characterService.log('**Education Completed**: Successfully graduated with honors (avoided draft).');
+        // Continue normally to graduation
+        this.educationStep = 'Finished';
+        this.wizardFlow.notifyValidation();
+        this.scrollToTop();
     }
 
     async joinWar(method: 'Flee' | 'Draft') {
@@ -626,15 +860,44 @@ export class EducationComponent implements OnInit, OnDestroy {
             this.characterService.setNextCareer('Drifter');
             this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log('**Fleeing**: Resigned from education to avoid draft. Next Career: Drifter.');
+            // Terminate education immediately
+            this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
+            this.scrollToTop();
         } else {
-            const roll = Math.floor(Math.random() * 6) + 1;
-            if (roll <= 3) this.warNextCareer = 'Army';
-            else if (roll <= 5) this.warNextCareer = 'Marine';
-            else this.warNextCareer = 'Navy';
-            
+            // Draft: Roll for career assignment — Core Rulebook table: 1=Navy,2=Army,3=Marine,4=Merchant,5=Scout,6=Agent
+            // Note: Event-driven drafts may occur more than once per lifetime (Core Rulebook p.17: "This can cause a Traveller to be drafted more than once")
+            const roll = await this.diceDisplay.roll(
+                'Military Draft Assignment',
+                1,
+                0,
+                0,
+                '',
+                (result) => {
+                    if (result === 1) return 'NAVY (1)';
+                    else if (result === 2) return 'ARMY (2)';
+                    else if (result === 3) return 'MARINE (3)';
+                    else if (result === 4) return 'MERCHANT (4)';
+                    else if (result === 5) return 'SCOUT (5)';
+                    else return 'AGENT (6)';
+                }
+            );
+
+            if (roll === 1) this.warNextCareer = 'Navy';
+            else if (roll === 2) this.warNextCareer = 'Army';
+            else if (roll === 3) this.warNextCareer = 'Marine';
+            else if (roll === 4) this.warNextCareer = 'Merchant';
+            else if (roll === 5) this.warNextCareer = 'Scout';
+            else this.warNextCareer = 'Agent';
+
             this.characterService.setNextCareer(this.warNextCareer);
             this.characterService.updateDm('qualification', 100); // Auto-qualify
             this.characterService.log(`**Drafted**: Education terminated by national service. Drafted into ${this.warNextCareer}.`);
+
+            // Terminate education after roll
+            this.educationStep = 'Finished';
+            this.wizardFlow.notifyValidation();
+            this.scrollToTop();
         }
     }
 
@@ -716,7 +979,9 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         this.characterService.log(`**University Curriculum**: Major: ${this.selectedMajorSkill} (1), Minor: ${this.selectedMinorSkill} (0)`);
         this.log(`Selected Curriculum: ${this.selectedMajorSkill} (1), ${this.selectedMinorSkill} (0).`);
-        this.educationStep = 'Studying';
+
+        // Move to event roll phase
+        this.initEventRoll();
     }
 
     toggleAcademySkill(skill: string) {
@@ -782,6 +1047,7 @@ export class EducationComponent implements OnInit, OnDestroy {
         }
 
         this.educationStep = 'Finished';
+        this.wizardFlow.notifyValidation();
     }
 
     applyGraduationBenefits(honors: boolean) {
@@ -856,6 +1122,15 @@ export class EducationComponent implements OnInit, OnDestroy {
     }
 
     finishStep() {
+        // Close any open event modals before finishing
+        this.showHobbySelection = false;
+        this.showTutorSelection = false;
+        this.showWarOptions = false;
+
+        // Clear event engine state to prevent lingering events
+        this.eventEngine.currentEvent.set(null);
+        this.eventEngine.eventStack.set([]); // clear orphaned stack entries
+
         this.wizardFlow.advance();
     }
 

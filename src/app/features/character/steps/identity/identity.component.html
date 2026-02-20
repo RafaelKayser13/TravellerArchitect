@@ -103,10 +103,13 @@
                 <div class="portrait-box-container">
                     <div class="scanner-line"></div>
                     <div class="portrait-box">
-                        <img *ngIf="portraitUrl" [src]="portraitUrl" alt="Subject Portrait">
-                        <div *ngIf="!portraitUrl" class="placeholder-glitch">
-                            <span class="glitch" data-text="NO_DATA">NO_DATA</span>
-                        </div>
+                        @if (portraitUrl) {
+                            <img [src]="portraitUrl" alt="Subject Portrait">
+                        } @else {
+                            <div class="placeholder-glitch">
+                                <span class="glitch" data-text="NO_DATA">NO_DATA</span>
+                            </div>
+                        }
                     </div>
                 </div>
                 
@@ -118,9 +121,11 @@
                         <input id="portrait-upload" type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden-input">
                     </div>
                     
-                    <button *ngIf="portraitUrl" class="btn-cyber-outline danger-text" (click)="removeImage()">
-                        <span>PURGE_VISUAL_DATA</span>
-                    </button>
+                    @if (portraitUrl) {
+                        <button class="btn-cyber-outline danger-text" (click)="removeImage()">
+                            <span>PURGE_VISUAL_DATA</span>
+                        </button>
+                    }
                 </div>
             </div>
         </div>

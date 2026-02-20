@@ -5,468 +5,1242 @@
   "qualification": {
     "stat": "END",
     "target": 6,
-    "minAttributes": { "str": 6, "dex": 6, "end": 5 }
+    "minAttributes": {
+      "str": 6,
+      "dex": 6,
+      "end": 5
+    }
   },
   "academy": {
     "admission": {
       "stat": "END",
       "target": 8,
-      "requirements": { "str": 5, "dex": 5, "end": 5 }
+      "requirements": {
+        "str": 5,
+        "dex": 5,
+        "end": 5
+      }
     },
-    "skills": ["Athletics", "Vacc Suit", "Tactics", "Heavy Weapons", "Gun Combat", "Stealth"],
-    "honors": { "rank": 1, "title": "Commissioned Officer" }
+    "skills": [
+      "Athletics",
+      "Vacc Suit",
+      "Tactics",
+      "Heavy Weapons",
+      "Gun Combat",
+      "Stealth"
+    ],
+    "honors": {
+      "rank": 1,
+      "title": "Commissioned Officer"
+    }
   },
   "medical": {
     "plan": "military",
-    "coverage": { "below4": 0, "range4to7": 75, "range8to11": 100, "above12": 100 }
+    "coverage": {
+      "below4": 0,
+      "range4to7": 75,
+      "range8to11": 100,
+      "above12": 100
+    }
   },
   "skills": {
-    "personal": ["STR +1", "DEX +1", "END +1", "Gambler", "Melee (any)", "Vacc Suit"],
-    "service": ["Athletics (any)", "Vacc Suit", "Tactics (any)", "Heavy Weapons (any)", "Gun Combat (any)", "Stealth"],
-    "advanced": ["Medic", "Survival", "Explosives", "Engineer (any)", "Pilot (any)", "Navigation"]
+    "personal": [
+      "STR +1",
+      "DEX +1",
+      "END +1",
+      "Gambler",
+      "Melee (any)",
+      "Vacc Suit"
+    ],
+    "service": [
+      "Athletics (any)",
+      "Vacc Suit",
+      "Tactics (any)",
+      "Heavy Weapons (any)",
+      "Gun Combat (any)",
+      "Stealth"
+    ],
+    "advanced": [
+      "Medic",
+      "Survival",
+      "Explosives",
+      "Engineer (any)",
+      "Pilot (any)",
+      "Navigation"
+    ]
   },
   "assignments": [
     {
       "name": "Marine Support",
-      "survival": { "stat": "END", "target": 5 },
-      "advancement": { "stat": "EDU", "target": 7 },
-      "skills": ["Electronics (any)", "Mechanic", "Medic", "Admin", "Diplomat", "Heavy Weapons (any)"],
+      "survival": {
+        "stat": "END",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 7
+      },
+      "skills": [
+        "Electronics (any)",
+        "Mechanic",
+        "Drive (any)",
+        "Medic",
+        "Heavy Weapons (any)",
+        "Gun Combat (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Marine" },
-        { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
-        { "level": 2, "title": "Corporal" },
-        { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "skill": "END", "value": "+1" } },
-        { "level": 6, "title": "Sergeant Major" }
+        {
+          "level": 0,
+          "title": "Marine",
+          "bonus": {
+            "chooseSkill": [
+              "Gun Combat (any)",
+              "Melee (blade)"
+            ],
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "Lance Corporal",
+          "bonus": {
+            "skill": "Gun Combat (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Corporal"
+        },
+        {
+          "level": 3,
+          "title": "Lance Sergeant",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Sergeant"
+        },
+        {
+          "level": 5,
+          "title": "Gunnery Sergeant",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Sergeant Major"
+        }
       ]
     },
     {
       "name": "Star Marine",
-      "survival": { "stat": "END", "target": 6 },
-      "advancement": { "stat": "EDU", "target": 6 },
-      "skills": ["Vacc Suit", "Athletics (any)", "Gunner (any)", "Melee (blade)", "Electronics (any)", "Gun Combat (any)"],
+      "survival": {
+        "stat": "END",
+        "target": 6
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 6
+      },
+      "skills": [
+        "Vacc Suit",
+        "Athletics (any)",
+        "Gunner (any)",
+        "Melee (blade)",
+        "Electronics (any)",
+        "Gun Combat (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Marine", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
-        { "level": 2, "title": "Corporal" },
-        { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "skill": "END", "value": "+1" } },
-        { "level": 6, "title": "Sergeant Major" }
+        {
+          "level": 0,
+          "title": "Marine",
+          "bonus": {
+            "chooseSkill": [
+              "Gun Combat (any)",
+              "Melee (blade)"
+            ],
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "Lance Corporal",
+          "bonus": {
+            "skill": "Gun Combat (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Corporal"
+        },
+        {
+          "level": 3,
+          "title": "Lance Sergeant",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Sergeant"
+        },
+        {
+          "level": 5,
+          "title": "Gunnery Sergeant",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Sergeant Major"
+        }
       ]
     },
     {
       "name": "Ground Assault",
-      "survival": { "stat": "END", "target": 7 },
-      "advancement": { "stat": "EDU", "target": 5 },
-      "skills": ["Vacc Suit", "Heavy Weapons (any)", "Recon", "Melee (blade)", "Tactics (military)", "Gun Combat (any)"],
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 5
+      },
+      "skills": [
+        "Vacc Suit",
+        "Heavy Weapons (any)",
+        "Recon",
+        "Melee (blade)",
+        "Tactics (military)",
+        "Gun Combat (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Marine", "bonus": { "skill": "Vacc Suit", "value": 1 } },
-        { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Gun Combat (any)", "value": 1 } },
-        { "level": 2, "title": "Corporal" },
-        { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "skill": "END", "value": "+1" } },
-        { "level": 6, "title": "Sergeant Major" }
+        {
+          "level": 0,
+          "title": "Marine",
+          "bonus": {
+            "chooseSkill": [
+              "Gun Combat (any)",
+              "Melee (blade)"
+            ],
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "Lance Corporal",
+          "bonus": {
+            "skill": "Gun Combat (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Corporal"
+        },
+        {
+          "level": 3,
+          "title": "Lance Sergeant",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Sergeant"
+        },
+        {
+          "level": 5,
+          "title": "Gunnery Sergeant",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Sergeant Major"
+        }
       ]
     }
   ],
   "eventTable": [
-        {
-            "roll": 2,
-            "description": "Disaster! Roll on the Mishap table, but you are not ejected from this career.",
-            "gameEvent": {
-                "id": "marine_event_2",
-                "type": "MISHAP",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Disaster!",
-                    "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
-                    "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
-                }
-            },
-            "effects": [{ "type": "mishap" }]
-        },
-        {
-            "roll": 3,
-            "description": "Trapped behind enemy lines. Gain one of Survival 1, Stealth 1, Deception 1, Streetwise 1.",
-            "gameEvent": {
-                "id": "marine_event_3",
-                "type": "CHOICE",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Trapped Behind Enemy Lines",
-                    "description": "You are trapped behind enemy lines and have to survive on your own.",
-                    "options": [
-                        { "label": "Survival 1", "effects": [{ "type": "SKILL_MOD", "target": "Survival", "value": 1 }] },
-                        { "label": "Stealth 1", "effects": [{ "type": "SKILL_MOD", "target": "Stealth", "value": 1 }] },
-                        { "label": "Deception 1", "effects": [{ "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
-                        { "label": "Streetwise 1", "effects": [{ "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] }
-                    ]
-                }
-            },
-            "effects": [{ "type": "skill-choice", "skills": ["Survival", "Stealth", "Deception", "Streetwise"] }]
-        },
-        {
-            "roll": 4,
-            "description": "Security duty. Gain one of Vacc Suit 1, Athletics (any) 1.",
-            "gameEvent": {
-                "id": "marine_event_4",
-                "type": "CHOICE",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Security Duty",
-                    "description": "You are assigned to security duty.",
-                    "options": [
-                        { "label": "Vacc Suit 1", "effects": [{ "type": "SKILL_MOD", "target": "Vacc Suit", "value": 1 }] },
-                        { "label": "Athletics (Dexterity) 1", "effects": [{ "type": "SKILL_MOD", "target": "Athletics (Dexterity)", "value": 1 }] },
-                        { "label": "Athletics (Endurance) 1", "effects": [{ "type": "SKILL_MOD", "target": "Athletics (Endurance)", "value": 1 }] },
-                        { "label": "Athletics (Strength) 1", "effects": [{ "type": "SKILL_MOD", "target": "Athletics (Strength)", "value": 1 }] }
-                    ]
-                }
-            },
-            "effects": [{ "type": "skill-choice", "skills": ["Vacc Suit", "Athletics (any)"] }]
-        },
-        {
-            "roll": 5,
-            "description": "Advanced Training. Roll EDU 8+. Success: increase any known skill by +1 level.",
-            "gameEvent": {
-                "id": "marine_event_5",
-                "type": "CHECK",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Advanced Training",
-                    "description": "You have the opportunity for advanced training. Roll EDU 8+.",
-                    "options": [{
-                        "label": "Attempt Training (EDU 8+)",
-                        "effects": [{
-                            "type": "ROLL_CHECK",
-                            "stat": "EDU",
-                            "checkTarget": 8,
-                            "onPass": "marine_event_5_pass",
-                            "onFail": "marine_event_5_fail"
-                        }]
-                    }]
-                }
-            },
-            "subEvents": [
+    {
+      "roll": 2,
+      "description": "Disaster! Roll on the Mishap table, but you are not ejected from this career.",
+      "gameEvent": {
+        "id": "marine_event_2",
+        "type": "MISHAP",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Disaster!",
+          "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
                 {
-                    "id": "marine_event_5_pass",
-                    "type": "REWARD",
-                    "trigger": "DURING_CAREER_TERM",
-                    "ui": {
-                        "title": "Training Successful",
-                        "description": "You excel in your training.",
-                        "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
-                    }
-                },
-                {
-                    "id": "marine_event_5_fail",
-                    "type": "INFO",
-                    "trigger": "DURING_CAREER_TERM",
-                    "ui": {
-                        "title": "Training Failed",
-                        "description": "You fail to qualify for the advanced training.",
-                        "options": [{ "label": "Continue", "effects": [] }]
-                    }
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
                 }
-            ],
-            "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
-        },
-        {
-            "roll": 6,
-            "description": "Assault! Roll Melee or Gun Combat 8+. Success: Leadership 1 or Tactics (Military) 1. Failure: STR -1.",
-            "gameEvent": {
-                "id": "marine_event_6",
-                "type": "CHECK",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Assault!",
-                    "description": "You are involved in a daring assault operation.",
-                    "options": [
-                        {
-                            "label": "Use Melee (STR 8+)",
-                            "effects": [{ "type": "ROLL_CHECK", "stat": "STR", "checkTarget": 8, "onPass": "marine_event_6_pass", "onFail": "marine_event_6_fail" }]
-                        },
-                        {
-                            "label": "Use Gun Combat (DEX 8+)",
-                            "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "marine_event_6_pass", "onFail": "marine_event_6_fail" }]
-                        }
-                    ]
-                }
-            },
-            "subEvents": [
-                {
-                    "id": "marine_event_6_pass",
-                    "type": "CHOICE",
-                    "trigger": "DURING_CAREER_TERM",
-                    "ui": {
-                        "title": "Assault Successful",
-                        "description": "Your assault is a success. You learn from the chaos of battle.",
-                        "options": [
-                            { "label": "Leadership 1", "effects": [{ "type": "SKILL_MOD", "target": "Leadership", "value": 1 }] },
-                            { "label": "Tactics (Military) 1", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (Military)", "value": 1 }] }
-                        ]
-                    }
-                },
-                {
-                    "id": "marine_event_6_fail",
-                    "type": "MISHAP",
-                    "trigger": "MISHAP",
-                    "ui": {
-                        "title": "Wounded in Assault",
-                        "description": "The assault goes poorly and you are injured.",
-                        "options": [{ "label": "Accept Injury (STR -1)", "effects": [{ "type": "STAT_MOD", "target": "STR", "value": -1 }] }]
-                    }
-                }
-            ],
-            "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Melee (any)", "Gun Combat (any)"], "onSuccess": [{ "type": "skill-choice", "skills": ["Tactics (military)", "Leadership"] }], "onFailure": [{ "type": "stat-bonus", "stat": "STR", "value": -1 }] }]
-        },
-        {
-            "roll": 7,
-            "description": "Life Event. Roll on the Life Events table.",
-            "gameEvent": {
-                "id": "marine_event_7",
-                "type": "INFO",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Life Event",
-                    "description": "Something significant happens in your personal life.",
-                    "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
-                }
-            },
-            "effects": [{ "type": "life-event" }]
-        },
-        {
-            "roll": 8,
-            "description": "Front Lines. You are sent to the front. Gain Recon 1, Gun Combat (any) 1, Leadership 1 or Electronics (comms) 1.",
-            "gameEvent": {
-                "id": "marine_event_8",
-                "type": "CHOICE",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Front Lines",
-                    "description": "You are deployed to the front lines.",
-                    "options": [
-                        { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }] },
-                        { "label": "Gun Combat (Energy) 1", "effects": [{ "type": "SKILL_MOD", "target": "Gun Combat (Energy)", "value": 1 }] },
-                        { "label": "Gun Combat (Slug) 1", "effects": [{ "type": "SKILL_MOD", "target": "Gun Combat (Slug)", "value": 1 }] },
-                        { "label": "Leadership 1", "effects": [{ "type": "SKILL_MOD", "target": "Leadership", "value": 1 }] },
-                        { "label": "Electronics (Comms) 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (Comms)", "value": 1 }] }
-                    ]
-                }
-            },
-            "effects": [{ "type": "skill-choice", "skills": ["Recon", "Gun Combat (any)", "Leadership", "Electronics (comms)"] }]
-        },
-        {
-            "roll": 9,
-            "description": "Commander Error. Your CO makes a mistake. Report them (Advancement +2, Enemy) or Protect them (Advancement -2, Ally).",
-            "gameEvent": {
-                "id": "marine_event_9",
-                "type": "CHOICE",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Commander Error",
-                    "description": "Your Commanding Officer makes a critical tactical error. Do you report it or cover for them?",
-                    "options": [
-                        {
-                            "label": "Report Officer",
-                            "effects": [
-                                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 },
-                                { "type": "ADD_NPC", "value": { "type": "enemy", "name": "Disgraced Officer" } }
-                            ]
-                        },
-                        {
-                            "label": "Protect Officer",
-                            "effects": [
-                                { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": -2 },
-                                { "type": "ADD_NPC", "value": { "type": "ally", "name": "Grateful Officer" } }
-                            ]
-                        }
-                    ]
-                }
-            },
-            "effects": [{ "type": "choice", "note": "Commander Error", "skills": ["Report", "Protect"] }]
-        },
-        {
-            "roll": 10,
-            "description": "Black Ops. You are assigned to a black ops mission. Gain DM+2 to your next Advancement roll.",
-            "gameEvent": {
-                "id": "marine_event_10",
-                "type": "REWARD",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Black Ops",
-                    "description": "You participate in a classified Black Ops mission.",
-                    "options": [{ "label": "Accept Commendation", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
-                }
-            },
-            "effects": [{ "type": "advancement-dm", "value": 2 }]
-        },
-        {
-            "roll": 11,
-            "description": "Commanding Officer Interest. Gain Tactics (military) 1 or DM+4 to Advancement.",
-            "gameEvent": {
-                "id": "marine_event_11",
-                "type": "CHOICE",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Command Interest",
-                    "description": "Your Commanding Officer takes an interest in your career.",
-                    "options": [
-                        { "label": "Learn Tactics", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (Military)", "value": 1 }] },
-                        { "label": "Career Advice (Advancement DM+4)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
-                    ]
-                }
-            },
-            "effects": [{ "type": "choice", "note": "CO Interest", "skills": ["Tactics", "Advancement DM"] }]
-        },
-        {
-            "roll": 12,
-            "description": "Heroism. You display heroism in battle. You are automatically Promoted (or Commissioned).",
-            "gameEvent": {
-                "id": "marine_event_12",
-                "type": "REWARD",
-                "trigger": "DURING_CAREER_TERM",
-                "ui": {
-                    "title": "Heroism",
-                    "description": "You display exceptional heroism.",
-                    "options": [{
-                        "label": "Accept Promotion",
-                        "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 100, "note": "Commission or Promotion" }]
-                    }]
-                }
-            },
-            "effects": [{ "type": "choice", "note": "Heroism", "skills": ["Promotion", "Commission"] }]
+              ]
+            }
+          ]
         }
+      },
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
+    },
+    {
+      "roll": 3,
+      "description": "Trapped behind enemy lines. Gain one of Survival 1, Stealth 1, Deception 1, Streetwise 1.",
+      "gameEvent": {
+        "id": "marine_event_3",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Trapped Behind Enemy Lines",
+          "description": "You are trapped behind enemy lines and have to survive on your own.",
+          "options": [
+            {
+              "label": "Survival 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Survival +1**."
+            },
+            {
+              "label": "Stealth 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Stealth",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Stealth +1**."
+            },
+            {
+              "label": "Deception 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Deception",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Deception +1**."
+            },
+            {
+              "label": "Streetwise 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Streetwise",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Streetwise +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Survival",
+            "Stealth",
+            "Deception",
+            "Streetwise"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 4,
+      "description": "Security duty. Gain one of Vacc Suit 1, Athletics (any) 1.",
+      "gameEvent": {
+        "id": "marine_event_4",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Security Duty",
+          "description": "You are assigned to security duty.",
+          "options": [
+            {
+              "label": "Vacc Suit 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Vacc Suit",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Vacc Suit +1**."
+            },
+            {
+              "label": "Athletics (Dexterity) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Athletics (Dexterity)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Athletics (Dexterity) +1**."
+            },
+            {
+              "label": "Athletics (Endurance) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Athletics (Endurance)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Athletics (Endurance) +1**."
+            },
+            {
+              "label": "Athletics (Strength) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Athletics (Strength)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Athletics (Strength) +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Vacc Suit",
+            "Athletics (any)"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 5,
+      "description": "Advanced Training. Roll EDU 8+. Success: increase any known skill by +1 level.",
+      "gameEvent": {
+        "id": "marine_event_5",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Advanced Training",
+          "description": "You have the opportunity for advanced training. Roll EDU 8+.",
+          "options": [
+            {
+              "label": "Attempt Training (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "marine_event_5_pass",
+                  "onFail": "marine_event_5_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "marine_event_5_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Successful",
+            "description": "You excel in your training.",
+            "options": [
+              {
+                "label": "Increase Any Skill",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "ANY_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "marine_event_5_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Training Failed",
+            "description": "You fail to qualify for the advanced training.",
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "any-skill-up"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 6,
+      "description": "Assault! Roll Melee or Gun Combat 8+. Success: Leadership 1 or Tactics (Military) 1. Failure: STR -1.",
+      "gameEvent": {
+        "id": "marine_event_6",
+        "type": "CHECK",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Assault!",
+          "description": "You are involved in a daring assault operation.",
+          "options": [
+            {
+              "label": "Use Melee (STR 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "STR",
+                  "checkTarget": 8,
+                  "onPass": "marine_event_6_pass",
+                  "onFail": "marine_event_6_fail"
+                }
+              ],
+              "revealText": "Roll **STR 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Use Gun Combat (DEX 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 8,
+                  "onPass": "marine_event_6_pass",
+                  "onFail": "marine_event_6_fail"
+                }
+              ],
+              "revealText": "Roll **DEX 8+** — success and failure lead to different outcomes."
+            }
+          ]
+        }
+      },
+      "subEvents": [
+        {
+          "id": "marine_event_6_pass",
+          "type": "CHOICE",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Assault Successful",
+            "description": "Your assault is a success. You learn from the chaos of battle.",
+            "options": [
+              {
+                "label": "Leadership 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Leadership",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Tactics (Military) 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Tactics (Military)",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "marine_event_6_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Wounded in Assault",
+            "description": "The assault goes poorly and you are injured.",
+            "options": [
+              {
+                "label": "Accept Injury (STR -1)",
+                "effects": [
+                  {
+                    "type": "STAT_MOD",
+                    "target": "STR",
+                    "value": -1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "Melee (any)",
+            "Gun Combat (any)"
+          ],
+          "onSuccess": [
+            {
+              "type": "skill-choice",
+              "skills": [
+                "Tactics (military)",
+                "Leadership"
+              ]
+            }
+          ],
+          "onFailure": [
+            {
+              "type": "stat-bonus",
+              "stat": "STR",
+              "value": -1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 7,
+      "description": "Life Event. Roll on the Life Events table.",
+      "gameEvent": {
+        "id": "marine_event_7",
+        "type": "INFO",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Life Event",
+          "description": "Something significant happens in your personal life.",
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
+    },
+    {
+      "roll": 8,
+      "description": "Front Lines. You are sent to the front. Gain Recon 1, Gun Combat (any) 1, Leadership 1 or Electronics (comms) 1.",
+      "gameEvent": {
+        "id": "marine_event_8",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Front Lines",
+          "description": "You are deployed to the front lines.",
+          "options": [
+            {
+              "label": "Recon 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Recon",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Recon +1**."
+            },
+            {
+              "label": "Gun Combat (Energy) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Gun Combat (Energy)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Gun Combat (Energy) +1**."
+            },
+            {
+              "label": "Gun Combat (Slug) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Gun Combat (Slug)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Gun Combat (Slug) +1**."
+            },
+            {
+              "label": "Leadership 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Leadership",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Leadership +1**."
+            },
+            {
+              "label": "Electronics (Comms) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Electronics (Comms)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Electronics (Comms) +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Recon",
+            "Gun Combat (any)",
+            "Leadership",
+            "Electronics (comms)"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 9,
+      "description": "Commander Error. Your CO makes a mistake. Report them (Advancement +2, Enemy) or Protect them (Advancement -2, Ally).",
+      "gameEvent": {
+        "id": "marine_event_9",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Commander Error",
+          "description": "Your Commanding Officer makes a critical tactical error. Do you report it or cover for them?",
+          "options": [
+            {
+              "label": "Report Officer (DM+2 advancement, gain Enemy)",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 2
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Disgraced Officer"
+                  }
+                }
+              ],
+              "revealText": "Gain a **enemy**."
+            },
+            {
+              "label": "Protect Officer (gain Ally)",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Grateful Officer"
+                  }
+                }
+              ],
+              "revealText": "Gain a **ally**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Commander Error",
+          "skills": [
+            "Report",
+            "Protect"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 10,
+      "description": "Black Ops. You are assigned to a black ops mission. Gain DM+2 to your next Advancement roll.",
+      "gameEvent": {
+        "id": "marine_event_10",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Black Ops",
+          "description": "You participate in a classified Black Ops mission.",
+          "options": [
+            {
+              "label": "Accept Commendation",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 2
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "advancementModifier",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "roll": 11,
+      "description": "Commanding Officer Interest. Gain Tactics (military) 1 or DM+4 to Advancement.",
+      "gameEvent": {
+        "id": "marine_event_11",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Command Interest",
+          "description": "Your Commanding Officer takes an interest in your career.",
+          "options": [
+            {
+              "label": "Learn Tactics",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Tactics (Military)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Tactics (Military) +1**."
+            },
+            {
+              "label": "Career Advice (Advancement DM+4)",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "choice",
+          "note": "CO Interest",
+          "skills": [
+            "Tactics",
+            "Advancement DM"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 12,
+      "description": "Heroism. You display heroism in battle. You are automatically Promoted (or Commissioned).",
+      "gameEvent": {
+        "id": "marine_event_12",
+        "type": "REWARD",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Heroism",
+          "description": "You display exceptional heroism.",
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 100,
+                  "note": "Commission or Promotion"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Heroism",
+          "skills": [
+            "Promotion",
+            "Commission"
+          ]
+        }
+      ]
+    }
   ],
   "mishapTable": [
-        {
-            "roll": 1,
-            "description": "Severely injured in action. Roll on the Injury table.",
-            "gameEvent": {
-                "id": "marine_mishap_1",
-                "type": "MISHAP",
-                "trigger": "MISHAP",
-                "ui": {
-                    "title": "Severely Injured",
-                    "description": "You are severely injured in combat. You must be ejected from the Marines.",
-                    "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+    {
+      "roll": 1,
+      "description": "Severely injured in action. Roll twice on the Injury table and take the lower result.",
+      "gameEvent": {
+        "id": "marine_mishap_1",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Severely Injured",
+          "description": "You are severely injured in combat. Roll twice on the Injury table and take the lower result.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
                 }
-            },
-            "effects": [{ "type": "injury" }]
-        },
-        {
-            "roll": 2,
-            "description": "Captured. Maltreated by enemy. Reduce STR and DEX by 1.",
-            "gameEvent": {
-                "id": "marine_mishap_2",
-                "type": "MISHAP",
-                "trigger": "MISHAP",
-                "ui": {
-                    "title": "Captured",
-                    "description": "You are captured by the enemy and maltreated during your imprisonment. You are eventually released or escape, but the experience leaves you weakened.",
-                    "options": [{
-                        "label": "Recover",
-                        "effects": [
-                            { "type": "STAT_MOD", "target": "STR", "value": -1 },
-                            { "type": "STAT_MOD", "target": "DEX", "value": -1 },
-                            { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Tormentor/Captor" } },
-                            { "type": "EJECT_CAREER", "note": "Captured" },
-                            { "type": "LOSE_BENEFIT", "value": 1 }
-                        ]
-                    }]
-                }
-            },
-            "effects": [{ "type": "npc", "npcType": "enemy", "note": "Carcereiro" }, { "type": "stat-bonus", "stat": "STR", "value": -1 }, { "type": "stat-bonus", "stat": "DEX", "value": -1 }, { "type": "forced-out" }, { "type": "lose-benefit" }]
-        },
-        {
-            "roll": 3,
-            "description": "Stranded. Stuck behind lines. Gain skill.",
-            "gameEvent": {
-                "id": "marine_mishap_3",
-                "type": "CHOICE",
-                "trigger": "MISHAP",
-                "ui": {
-                    "title": "Stranded",
-                    "description": "You are stranded behind enemy lines. You survive, but you are forced to leave the service.",
-                    "options": [
-                        { "label": "Stealth 1", "effects": [{ "type": "SKILL_MOD", "target": "Stealth", "value": 1 }, { "type": "EJECT_CAREER", "note": "Stranded" }, { "type": "LOSE_BENEFIT", "value": 1 }] },
-                        { "label": "Survival 1", "effects": [{ "type": "SKILL_MOD", "target": "Survival", "value": 1 }, { "type": "EJECT_CAREER", "note": "Stranded" }, { "type": "LOSE_BENEFIT", "value": 1 }] }
-                    ]
-                }
-            },
-            "effects": [{ "type": "skill-choice", "skills": ["Stealth", "Survival"] }, { "type": "forced-out" }, { "type": "lose-benefit" }]
-        },
-        {
-            "roll": 4,
-            "description": "Black Ops Conflict. Moral choice.",
-            "gameEvent": {
-                "id": "marine_mishap_4",
-                "type": "CHOICE",
-                "trigger": "MISHAP",
-                "ui": {
-                    "title": "Black Ops Conflict",
-                    "description": "You are ordered to take part in a black ops mission that goes against your conscience.",
-                    "options": [
-                        {
-                            "label": "Refuse Order",
-                            "effects": [
-                                { "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }
-                            ]
-                        },
-                        {
-                            "label": "Accept Order",
-                            "effects": [
-                                { "type": "EJECT_CAREER", "note": "Ejected after verify mission" },
-                                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "War Crimes Investigator or Witness" } }
-                            ]
-                        }
-                    ]
-                }
-            },
-            "effects": [{ "type": "choice", "note": "Black Ops Conflict", "skills": ["Recuse", "Accept"] }]
-        },
-        {
-            "roll": 5,
-            "description": "Quarrel. Rival officer.",
-            "gameEvent": {
-                "id": "marine_mishap_5",
-                "type": "MISHAP",
-                "trigger": "MISHAP",
-                "ui": {
-                    "title": "Quarrel",
-                    "description": "You have a major quarrel with a superior officer.",
-                    "options": [{
-                        "label": "Leave Marines",
-                        "effects": [
-                            { "type": "ADD_NPC", "value": { "type": "rival", "note": "Officer" } },
-                            { "type": "EJECT_CAREER", "note": "Quarrel with Officer" }
-                        ]
-                    }]
-                }
-            },
-            "effects": [{ "type": "npc", "npcType": "rival" }, { "type": "forced-out" }]
-        },
-        {
-            "roll": 6,
-            "description": "Injured. Roll on the Injury table.",
-            "gameEvent": {
-                "id": "marine_mishap_6",
-                "type": "MISHAP",
-                "trigger": "MISHAP",
-                "ui": {
-                    "title": "Injured",
-                    "description": "You are injured in combat. Roll on the Injury table.",
-                    "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
-                }
-            },
-            "effects": [{ "type": "injury" }, { "type": "forced-out" }]
+              ]
+            }
+          ]
         }
+      },
+      "effects": [
+        {
+          "type": "injury-worst-of-2"
+        }
+      ]
+    },
+    {
+      "roll": 2,
+      "description": "Captured. Maltreated by enemy. Reduce STR and DEX by 1.",
+      "gameEvent": {
+        "id": "marine_mishap_2",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Captured",
+          "description": "You are captured by the enemy and maltreated during your imprisonment. You are eventually released or escape, but the experience leaves you weakened.",
+          "options": [
+            {
+              "label": "Recover",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "STR",
+                  "value": -1
+                },
+                {
+                  "type": "STAT_MOD",
+                  "target": "DEX",
+                  "value": -1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Tormentor/Captor"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Captured"
+                },
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 1
+                }
+              ],
+              "revealText": "**STR -1** (permanent). **DEX -1** (permanent). Gain a **enemy**. You are **ejected from this career** — Captured. Lose **1 Benefit Roll(s)**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy",
+          "note": "Carcereiro"
+        },
+        {
+          "type": "stat-bonus",
+          "stat": "STR",
+          "value": -1
+        },
+        {
+          "type": "stat-bonus",
+          "stat": "DEX",
+          "value": -1
+        },
+        {
+          "type": "forced-out"
+        },
+        {
+          "type": "lose-benefit"
+        }
+      ]
+    },
+    {
+      "roll": 3,
+      "description": "Stranded. Stuck behind lines. Gain skill.",
+      "gameEvent": {
+        "id": "marine_mishap_3",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Stranded",
+          "description": "You are stranded behind enemy lines. You survive, but you are forced to leave the service.",
+          "options": [
+            {
+              "label": "Stealth 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Stealth",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Stranded"
+                },
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Stealth +1**. You are **ejected from this career** — Stranded. Lose **1 Benefit Roll(s)**."
+            },
+            {
+              "label": "Survival 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Stranded"
+                },
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Survival +1**. You are **ejected from this career** — Stranded. Lose **1 Benefit Roll(s)**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Stealth",
+            "Survival"
+          ]
+        },
+        {
+          "type": "forced-out"
+        },
+        {
+          "type": "lose-benefit"
+        }
+      ]
+    },
+    {
+      "roll": 4,
+      "description": "You are ordered to take part in a black ops mission that goes against your conscience. Refuse: ejected from service. Accept: may stay with the marines but gain the lone survivor as an Enemy.",
+      "gameEvent": {
+        "id": "marine_mishap_4",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Black Ops Conflict",
+          "description": "You are ordered to take part in a black ops mission that goes against your conscience. If you refuse you are ejected from the service. If you accept you may stay with the marines but gain the lone survivor as an Enemy.",
+          "options": [
+            {
+              "label": "Refuse Order (ejected from service)",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Refused Orders"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Refused Orders."
+            },
+            {
+              "label": "Accept Order (stay in Marines, gain Enemy)",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Lone Survivor / Witness"
+                  }
+                }
+              ],
+              "revealText": "Gain a **enemy**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Black Ops Conflict"
+        }
+      ]
+    },
+    {
+      "roll": 5,
+      "description": "Quarrel. Rival officer.",
+      "gameEvent": {
+        "id": "marine_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Quarrel",
+          "description": "You have a major quarrel with a superior officer.",
+          "options": [
+            {
+              "label": "Leave Marines",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Officer"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Quarrel with Officer"
+                }
+              ],
+              "revealText": "Gain a **rival**. You are **ejected from this career** — Quarrel with Officer."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "rival"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
+    },
+    {
+      "roll": 6,
+      "description": "Injured. Roll on the Injury table.",
+      "gameEvent": {
+        "id": "marine_mishap_6",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Injured",
+          "description": "You are injured in combat. Roll on the Injury table.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Medical Discharge"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "injury"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
+    }
   ],
   "musteringOut": {
-    "cash": [0, 2000, 5000, 10000, 20000, 30000, 40000],
-    "benefits": ["Armour", "INT +1", "EDU +1", "Weapon", "Ship Share", "Armour", "SOC +1"]
+    "cash": [
+      2000,
+      5000,
+      5000,
+      10000,
+      20000,
+      30000,
+      40000
+    ],
+    "benefits": [
+      "Armour",
+      "INT +1",
+      "EDU +1",
+      "Weapon",
+      "TAS Membership",
+      {
+        "choose": 1,
+        "options": [
+          "Armour",
+          "END +1"
+        ]
+      },
+      "SOC +2"
+    ]
   }
 }

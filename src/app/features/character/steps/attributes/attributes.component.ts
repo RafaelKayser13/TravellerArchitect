@@ -1,7 +1,8 @@
-import { Component, inject, ChangeDetectorRef, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Component, inject, ChangeDetectorRef, ElementRef, OnInit, OnDestroy, NgZone, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DiceService } from '../../../../core/services/dice.service';
+import { DiceDisplayService } from '../../../../core/services/dice-display.service';
 import { CharacterService } from '../../../../core/services/character.service';
 import { DieComponent } from '../../../../features/shared/die/die.component';
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
@@ -16,10 +17,12 @@ import { StepHeaderComponent } from '../../../shared/step-header/step-header.com
 })
 export class AttributesComponent implements OnInit, OnDestroy {
   protected diceService = inject(DiceService);
+  protected diceDisplay = inject(DiceDisplayService);
   protected characterService = inject(CharacterService);
   private cdr = inject(ChangeDetectorRef);
   private ngZone = inject(NgZone);
   private wizardFlow = inject(WizardFlowService);
+  private el = inject(ElementRef);
   characteristicsList = ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC'];
 
   // Data State
@@ -33,19 +36,21 @@ export class AttributesComponent implements OnInit, OnDestroy {
   selectedStat: string | null = null;
 
   isRolling = false;
-  isComplete = false;
+  readonly isCompleteSignal = signal(false);
+  get isComplete(): boolean { return this.isCompleteSignal(); }
+  set isComplete(v: boolean) { this.isCompleteSignal.set(v); }
 
   constructor() {
     this.initializeState();
   }
 
   ngOnInit(): void {
-    this.wizardFlow.registerValidator(2, () => this.isComplete);
-    this.wizardFlow.registerFinishAction(2, () => this.finish());
+    this.wizardFlow.registerValidator(3, () => this.isComplete);
+    this.wizardFlow.registerFinishAction(3, () => this.finish());
   }
 
   ngOnDestroy(): void {
-    this.wizardFlow.unregisterStep(2);
+    this.wizardFlow.unregisterStep(3);
   }
 
   initializeState() {
@@ -84,8 +89,10 @@ export class AttributesComponent implements OnInit, OnDestroy {
       from(this.characteristicsList).pipe(
         concatMap(char => of(char).pipe(delay(800))),
         tap(char => {
-          const d1 = Math.floor(Math.random() * 6) + 1;
-          const d2 = Math.floor(Math.random() * 6) + 1;
+          // Check if debug mode is enabled and return 12 (6+6) for all rolls
+          const isDebugMode = this.diceDisplay.debugMode();
+          const d1 = isDebugMode ? 6 : Math.floor(Math.random() * 6) + 1;
+          const d2 = isDebugMode ? 6 : Math.floor(Math.random() * 6) + 1;
 
           this.diceValues[char] = [d1, d2];
           this.scores[char] = d1 + d2;
@@ -105,8 +112,7 @@ export class AttributesComponent implements OnInit, OnDestroy {
             this.isRolling = false;
             this.isComplete = true;
             this.save();
-            this.cdr.detectChanges(); // Final update for local views
-            // Validator is now a closure — no need to emit stateChange
+            this.wizardFlow.notifyValidation(); // reactive: unblocks the Next button
           });
         })
       ).subscribe();
@@ -150,15 +156,16 @@ export class AttributesComponent implements OnInit, OnDestroy {
   startEditing(char: string, event: Event) {
     event.stopPropagation(); // Prevent card selection
     this.editingState[char] = true;
+    this.cdr.detectChanges();
 
-    // Auto-focus and auto-select
+    // Focus the input that just appeared in the DOM
     setTimeout(() => {
-      const input = document.querySelector(`.stat-card.selected input.edit-input, .stat-card:hover input.edit-input`) as HTMLInputElement;
+      const input = this.el.nativeElement.querySelector('input.hex-edit-input') as HTMLInputElement;
       if (input) {
         input.focus();
         input.select();
       }
-    }, 50);
+    }, 30);
   }
 
   stopEditing(char: string) {

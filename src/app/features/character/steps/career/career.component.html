@@ -10,6 +10,7 @@
         *ngIf="activeEvent"
         [title]="activeEvent.ui.title"
         [isOpen]="true"
+        [hasFooter]="true"
         width="700px"
         [readoutTL]="'EVENT_LOG: ' + (activeEvent.id | uppercase)"
         readoutTR="SOURCE: CAREER_MTX">
@@ -31,7 +32,8 @@
         <ng-container footer>
             <div class="event-actions">
                 <button *ngFor="let opt of activeEvent.ui.options; let i = index"
-                        class="btn-confirm"
+                        class="btn-option"
+                        [class]="'btn-option-' + (opt.color || 'cyan')"
                         (click)="eventEngine.selectOption(i)">
                     [ {{ opt.label }} ]
                 </button>
@@ -46,55 +48,84 @@
             <h3>CAREER_SELECTION_PROTOCOL</h3>
         </div>
 
-        <div class="career-list">
-            <div *ngFor="let career of careers(); let i = index" class="career-card"
-                [class.selected]="selectedCareer === career" 
-                [class.disabled]="isCareerDisabled(career)"
+        <div class="career-roster">
+
+            <!-- Header row -->
+            <div class="roster-header">
+                <span class="rh-id">ID</span>
+                <span class="rh-name">DESIGNATION</span>
+                <span class="rh-qual">QUAL_REQ</span>
+                <span class="rh-status">STATUS</span>
+            </div>
+
+            <div *ngFor="let career of careers(); let i = index"
+                class="roster-row"
+                [class.row-selected]="selectedCareer === career"
+                [class.row-disabled]="isCareerDisabled(career)"
                 (click)="selectCareer(career)">
 
-                <div class="card-layout">
-                    <!-- Info Column -->
-                    <div class="info-column">
-                        <div class="card-header">
-                            <span class="index">0{{i+1}}</span>
-                            <h3>{{ career.name }}</h3>
-                        </div>
-                        <div class="details">
-                            <p><span class="label">QUALIFICATION:</span> <span class="highlight">{{
-                                    career.qualificationStat
-                                    }} {{ career.qualificationTarget }}+</span></p>
-                            <div class="description-text">{{ career.description }}</div>
-                            
-                            <!-- New: Disabled Reason -->
-                            <div *ngIf="isCareerDisabled(career)" class="disabled-reason">
-                                <span class="icon">⚠</span> {{ getDisabledReason(career) }}
-                            </div>
+                <!-- ── Compact strip (always visible) ── -->
+                <div class="row-strip">
+                    <span class="rs-id">{{ i + 1 | number:'2.0-0' }}</span>
+
+                    <div class="rs-led"
+                        [class.led-active]="selectedCareer === career"
+                        [class.led-locked]="isCareerDisabled(career)">
+                    </div>
+
+                    <span class="rs-name">{{ career.name }}</span>
+
+                    <span class="rs-qual">
+                        <span class="qs-stat">{{ career.qualificationStat }}</span>
+                        <span class="qs-sep">/</span>
+                        <span class="qs-tgt">{{ career.qualificationTarget }}+</span>
+                    </span>
+
+                    <span class="rs-status"
+                        [class.st-selected]="selectedCareer === career"
+                        [class.st-locked]="isCareerDisabled(career)">
+                        {{ isCareerDisabled(career) ? 'LOCKED' : (selectedCareer === career ? 'SELECTED' : 'AVAILABLE') }}
+                    </span>
+
+                    <span class="rs-chevron" [class.open]="selectedCareer === career">&#9656;</span>
+                </div>
+
+                <!-- ── Expand panel (only when selected) ── -->
+                <div class="row-expand" *ngIf="selectedCareer === career" (click)="$event.stopPropagation()">
+
+                    <div class="expand-info">
+                        <p class="expand-desc">{{ career.description }}</p>
+                        <div *ngIf="isCareerDisabled(career)" class="disabled-reason">
+                            <span class="icon">⚠</span> {{ getDisabledReason(career) }}
                         </div>
                     </div>
 
-                    <!-- Config Column (Active only when selected) -->
-                    <div class="config-column" *ngIf="selectedCareer === career" (click)="$event.stopPropagation()">
-                        <div class="assignment-selector">
-                            <span class="hud-label">[ SELECT_ASSIGNMENT_SPECIALIZATION ]</span>
-                            <div class="radio-tab-group">
-                                <label class="radio-tab" *ngFor="let assign of career.assignments">
-                                    <input type="radio" name="assignment" [value]="assign"
-                                        [checked]="selectedAssignment === assign" (change)="selectAssignment(assign)" />
-                                    <div class="tab-content">
-                                        <span class="primary">{{ assign.name }}</span>
-                                        <span class="secondary">SRV: {{ assign.survivalStat }} {{ assign.survivalTarget
-                                            }}+</span>
+                    <div class="expand-config">
+                        <span class="hud-label">[ SELECT_ASSIGNMENT_SPECIALIZATION ]</span>
+
+                        <div class="assign-chips">
+                            <label class="assign-chip" *ngFor="let assign of career.assignments">
+                                <input type="radio" name="assignment" [value]="assign"
+                                    [checked]="selectedAssignment === assign"
+                                    (change)="selectAssignment(assign)" />
+                                <div class="chip-face">
+                                    <span class="chip-led"></span>
+                                    <div class="chip-text">
+                                        <span class="chip-name">{{ assign.name }}</span>
+                                        <span class="chip-stat">SRV {{ assign.survivalStat }} {{ assign.survivalTarget }}+</span>
                                     </div>
-                                </label>
-                            </div>
+                                    <div class="chip-corner"></div>
+                                </div>
+                            </label>
                         </div>
 
-                        <div class="card-footer-actions">
-                            <button class="btn-action" [disabled]="!selectedAssignment" (click)="qualify()">
+                        <div class="expand-actions">
+                            <button class="btn-action enroll" [disabled]="!selectedAssignment" (click)="qualify()">
                                 {{ characterService.character().forcedCareer === selectedCareer.name ? 'CONFIRM_ENROLLMENT' : 'ATTEMPT_QUALIFICATION' }}
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -123,9 +154,11 @@
             <p class="instruction">In accordance with 2300AD Service Protocols, select one fallback vector:</p>
             
             <div class="action-grid">
-                <button class="btn-action warn" (click)="chooseDraft()">
+                <button class="btn-action warn" (click)="chooseDraft()"
+                    [disabled]="characterService.character().hasDrafted"
+                    [title]="characterService.character().hasDrafted ? 'Already used the Draft once this lifetime' : ''">
                     <span class="primary">THE_DRAFT</span>
-                    <span class="secondary">MANDATORY_PLACEMENT (DICE_ROLL)</span>
+                    <span class="secondary">{{ characterService.character().hasDrafted ? 'UNAVAILABLE — USED ONCE' : 'RANDOM_PLACEMENT (1D6)' }}</span>
                 </button>
                 <button class="btn-action" (click)="chooseDrifter()">
                     <span class="primary">DRIFTER_LIFE</span>
@@ -134,7 +167,7 @@
             </div>
         </div>
         <div class="hud-footer">
-            <p class="status-msg">[ NOTE ]: Accepting the Draft results in a random career. Drifter ensures immediate placement.</p>
+            <p class="status-msg">[ NOTE ]: Draft: 1=Navy, 2=Army, 3=Marine, 4=Merchant, 5=Scout, 6=Agent. May only be used once per lifetime.</p>
         </div>
     </div>
 
@@ -350,32 +383,25 @@
             <span class="index">SEC_04G</span>
             <h3>ASSIGNMENT_RECONFIGURATION</h3>
         </div>
-        <p class="status-msg" style="text-align: center;">Select new operational specialization. Qualification required.
-        </p>
+        <p class="assignment-instruction">Select new operational specialization. Qualification required.</p>
 
-        <div class="career-list">
-            <div *ngFor="let assign of selectedCareer?.assignments" class="career-card"
+        <div class="assignment-grid">
+            <div *ngFor="let assign of selectedCareer?.assignments" class="assignment-card"
                 (click)="verifyAssignmentChange(assign)">
-                <div class="card-layout">
-                    <div class="info-column">
-                        <div class="card-header">
-                            <h3>{{ assign.name }}</h3>
-                        </div>
-                        <div class="details">
-                            <p><span class="label">QUALIFICATION:</span> <span class="highlight">{{
-                                    selectedCareer?.qualificationStat }} {{ selectedCareer?.qualificationTarget
-                                    }}+</span>
-                            </p>
-                        </div>
+                <div class="assignment-inner">
+                    <div class="assignment-header">
+                        <h3 class="assignment-name">{{ assign.name }}</h3>
                     </div>
-                    <div class="config-column action-centered">
-                        <button class="btn-action">SELECT_ASSIGNMENT</button>
+                    <div class="assignment-detail">
+                        <span class="qual-label">QUALIFICATION:</span>
+                        <span class="qual-value">{{ selectedCareer?.qualificationStat }} {{ selectedCareer?.qualificationTarget }}+</span>
                     </div>
+                    <button class="btn-action btn-select-assignment">SELECT_ASSIGNMENT</button>
                 </div>
             </div>
         </div>
 
-        <div class="hud-footer">
+        <div class="assignment-footer">
             <button class="btn-secondary" (click)="finishTerm('CONTINUE')">ABORT_CHANGE & STAY_CURRENT</button>
         </div>
     </div>
@@ -468,12 +494,29 @@
             <div class="hud-content">
                 <p class="instruction">{{ eventEngine.currentEvent()?.ui?.description }}</p>
                 <div class="choice-grid">
-                    <button *ngFor="let opt of eventEngine.currentEvent()?.ui?.options; let i = index" 
-                            class="btn-action full-width"
-                            (click)="eventEngine.selectOption(i)">
-                        {{ opt.label }}
-                    </button>
+                    <div *ngFor="let opt of eventEngine.currentEvent()?.ui?.options; let i = index"
+                         class="choice-option-wrap">
 
+                        <div class="choice-row">
+                            <button class="btn-action flex-grow"
+                                    (click)="eventEngine.selectOption(i); revealedOptions.clear()">
+                                {{ opt.label }}
+                            </button>
+                            <button *ngIf="opt.revealText"
+                                    class="btn-reveal"
+                                    [class.active]="revealedOptions.has(i)"
+                                    (click)="toggleReveal(i)"
+                                    title="Reveal consequences">
+                                {{ revealedOptions.has(i) ? '▲' : '?' }}
+                            </button>
+                        </div>
+
+                        <div *ngIf="opt.revealText && revealedOptions.has(i)"
+                             class="reveal-panel">
+                            {{ opt.revealText }}
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -539,6 +582,24 @@
                     <button *ngFor="let stat of ['STR', 'DEX', 'END', 'INT', 'EDU', 'SOC']" class="btn-secondary"
                         (click)="selectStatReduction(stat)">
                         {{ stat }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. Any Skill Up Choice Modal (Advanced Training) -->
+    <div *ngIf="isSkillChoicePrompt" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>ADVANCED_TRAINING_PROTOCOL</h3>
+            </div>
+            <div class="hud-content">
+                <p>Your advanced training allows you to increase any known skill by +1 level. Select a skill:</p>
+                <div class="grid-options">
+                    <button *ngFor="let skill of skillChoices" class="btn-secondary"
+                        (click)="confirmSkillChoice(skill)">
+                        {{ skill }}
                     </button>
                 </div>
             </div>

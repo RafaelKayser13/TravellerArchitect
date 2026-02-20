@@ -14,15 +14,16 @@ export interface WizardStep {
 }
 
 export const WIZARD_STEPS: WizardStep[] = [
-  { index: 1, key: 'identity',     label: 'IDENTITY',   actionLabel: 'PROCEED > BIOMETRICS', hasActionBar: true },
-  { index: 2, key: 'attributes',   label: 'BIOMETRICS', actionLabel: 'PROCEED > ORIGIN',     hasActionBar: true },
-  { index: 3, key: 'origin',       label: 'ORIGIN',     actionLabel: 'PROCEED > EDUCATION',  hasActionBar: true },
-  { index: 4, key: 'education',    label: 'EDUCATION',  actionLabel: 'PROCEED > CAREER',     hasActionBar: true },
-  { index: 5, key: 'career',       label: 'CAREER',     actionLabel: 'PROCEED > MUSTER_OUT', hasActionBar: true },
-  { index: 6, key: 'mustering',    label: 'MUSTER',     actionLabel: 'PROCEED > NETWORK',    hasActionBar: true },
-  { index: 7, key: 'npc',          label: 'NETWORK',    actionLabel: 'PROCEED > PACKAGE',    hasActionBar: true },
-  { index: 8, key: 'skillPackage', label: 'PACKAGE',    actionLabel: 'FINALIZE_CHARACTER',   hasActionBar: true },
-  { index: 9, key: 'sheet',        label: 'FINALIZE',   actionLabel: '',                     hasActionBar: false },
+  { index: 1,  key: 'identity',     label: 'IDENTITY',   actionLabel: 'PROCEED > SPECIES',    hasActionBar: true },
+  { index: 2,  key: 'species',      label: 'SPECIES',    actionLabel: 'PROCEED > BIOMETRICS', hasActionBar: true },
+  { index: 3,  key: 'attributes',   label: 'BIOMETRICS', actionLabel: 'PROCEED > ORIGIN',     hasActionBar: true },
+  { index: 4,  key: 'origin',       label: 'ORIGIN',     actionLabel: 'PROCEED > EDUCATION',  hasActionBar: true },
+  { index: 5,  key: 'education',    label: 'EDUCATION',  actionLabel: 'PROCEED > CAREER',     hasActionBar: true },
+  { index: 6,  key: 'career',       label: 'CAREER',     actionLabel: 'PROCEED > MUSTER_OUT', hasActionBar: true },
+  { index: 7,  key: 'mustering',    label: 'MUSTER',     actionLabel: 'PROCEED > NETWORK',    hasActionBar: true },
+  { index: 8,  key: 'npc',          label: 'NETWORK',    actionLabel: 'PROCEED > PACKAGE',    hasActionBar: true },
+  { index: 9,  key: 'skillPackage', label: 'PACKAGE',    actionLabel: 'FINALIZE_CHARACTER',   hasActionBar: true },
+  { index: 10, key: 'sheet',        label: 'FINALIZE',   actionLabel: '',                     hasActionBar: false },
 ];
 
 /**
@@ -64,6 +65,21 @@ export class WizardFlowService {
 
   /** Registry: stepIndex → finish action */
   private readonly finishActions = new Map<number, () => void>();
+
+  /** Bumped by step components when their validation state changes */
+  private readonly _validationTick = signal(0);
+
+  /** Reactive computed so templates auto-update when a component notifies */
+  readonly canProceedSignal = computed(() => {
+    this._validationTick(); // reactive dependency
+    const validator = this.validators.get(this.currentStepIndex());
+    return validator ? validator() : true;
+  });
+
+  /** Call this after updating local validation state in a step component */
+  notifyValidation(): void {
+    this._validationTick.update(n => n + 1);
+  }
 
   /**
    * Registers a "can proceed" validator for a given step.

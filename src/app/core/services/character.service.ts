@@ -236,6 +236,14 @@ addSkill(skillName: string, levelToAdd: number = 1, isFirstTermBasicTraining: bo
     this.patch(updated, `**DM Bonus**: ${value >= 0 ? '+' : ''}${value} to next ${type} roll`);
   }
 
+  updateParoleThreshold(delta: number) {
+    const current = this.character().paroleThresholdDelta || 0;
+    this.patch(
+      { paroleThresholdDelta: current + delta },
+      `**Parole Record**: Threshold adjusted by ${delta > 0 ? '+' : ''}${delta} (favour ${delta < 0 ? 'improved' : 'worsened'})`
+    );
+  }
+
 
   // --- Education & Special Flags ---
 
@@ -382,26 +390,13 @@ addSkill(skillName: string, levelToAdd: number = 1, isFirstTermBasicTraining: bo
 
   finalizeCharacter() {
     const char = this.character();
-    let pension = 0;
-    
-    // 2300AD: Standard Pension (Military Rank 4+ or 20+ years service)
-    const careerHistory = char.careerHistory || [];
-    const totalTerms = careerHistory.length;
-    const militaryCareers = ['army', 'navy', 'marine', 'agent'];
-    const highestMilitaryRank = Math.max(...careerHistory.filter(h => militaryCareers.includes(h.careerName.toLowerCase())).map(h => h.rank), 0);
-    
-    if (highestMilitaryRank >= 4 || totalTerms >= 5) {
-        pension = 10000 + (totalTerms * 2000);
-    }
-    
-    const shipShares = char.finances.shipShares || 0;
-    const dividends = shipShares * 1000;
-    const totalPension = pension + dividends;
-    
+
+    // Use the computed pension signal which implements 2300AD per-career pension tiers
+    const totalPension = this.pension();
+
     const history = [];
     history.push(`**Character Finalized**: Total Pension & Dividends: Lv ${totalPension.toLocaleString()} per year.`);
-    if (pension > 0) history.push(`- Pension: Lv ${pension.toLocaleString()} / year`);
-    if (dividends > 0) history.push(`- Ship Share Dividends: Lv ${dividends.toLocaleString()} / year`);
+    if (totalPension > 0) history.push(`- Annual Income: Lv ${totalPension.toLocaleString()} / year`);
 
     this.patch({
       finances: { ...char.finances, pension: totalPension },

@@ -8,54 +8,226 @@
     "note": "Forced career"
   },
   "skills": {
-    "personal": ["STR +1", "DEX +1", "END +1", "INT +1", "Athletics (any)", "Melee (unarmed)"],
-    "service": ["Athletics (any)", "Deception", "Melee (any)", "Profession (any)", "Stealth", "Streetwise"],
-    "advanced": ["Electronics (any)", "Engineer (any)", "Investigate", "Medic", "Persuade", "Science (any)"]
+    "personal": [
+      "STR +1",
+      "Melee (unarmed)",
+      "END +1",
+      "Jack-of-all-Trades",
+      "EDU +1",
+      "Gambler"
+    ],
+    "service": [
+      "Athletics (any)",
+      "Deception",
+      "Profession (any)",
+      "Streetwise",
+      "Melee (unarmed)",
+      "Persuade"
+    ],
+    "advanced": [
+      "Electronics (any)",
+      "Engineer (any)",
+      "Investigate",
+      "Medic",
+      "Persuade",
+      "Science (any)"
+    ]
   },
   "assignments": [
     {
       "name": "Inmate",
-      "survival": { "stat": "END", "target": 7 },
-      "advancement": { "stat": "INT", "target": 7, "note": "Parole" },
-      "skills": ["Athletics (any)", "Deception", "Melee (unarmed)", "Profession (any)", "Stealth", "Streetwise"],
+      "survival": {
+        "stat": "END",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "STR",
+        "target": 7,
+        "note": "Parole"
+      },
+      "skills": [
+        "Stealth",
+        "Melee (unarmed)",
+        "Streetwise",
+        "Survival",
+        "Athletics (strength)",
+        "Mechanic"
+      ],
       "ranks": [
-        { "level": 0, "title": "New Fish" },
-        { "level": 1, "title": "Inmate", "bonus": { "skill": "Streetwise", "value": 1 } },
-        { "level": 2, "title": "Inmate" },
-        { "level": 3, "title": "Trusted Inmate", "bonus": { "skill": "Profession (any)", "value": 1 } },
-        { "level": 4, "title": "Trusted Inmate" },
-        { "level": 5, "title": "Model Prisoner", "bonus": { "stat": "INT", "value": 1 } },
-        { "level": 6, "title": "Paroled" }
+        {
+          "level": 0,
+          "title": "—",
+          "bonus": {
+            "skill": "Melee (unarmed)",
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "—"
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Athletics (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—"
+        },
+        {
+          "level": 4,
+          "title": "—",
+          "bonus": {
+            "skill": "Advocate",
+            "value": 1
+          }
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        }
       ]
     },
     {
       "name": "Thug",
-      "survival": { "stat": "STR", "target": 8 },
-      "advancement": { "stat": "STR", "target": 6 },
-      "skills": ["Melee (unarmed)", "Melee (bludgeon)", "Athletics (strength)", "Streetwise", "Persuade", "Language (any)"],
+      "survival": {
+        "stat": "STR",
+        "target": 8
+      },
+      "advancement": {
+        "stat": "END",
+        "target": 6
+      },
+      "skills": [
+        "Persuade",
+        "Melee (unarmed)",
+        "Melee (unarmed)",
+        "Melee (blade)",
+        "Athletics (strength)",
+        "Athletics (strength)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Inmate" },
-        { "level": 1, "title": "Enforcer", "bonus": { "skill": "Melee (unarmed)", "value": 1 } },
-        { "level": 2, "title": "Enforcer" },
-        { "level": 3, "title": "Shark", "bonus": { "skill": "Melee (bludgeon)", "value": 1 } },
-        { "level": 4, "title": "Shark" },
-        { "level": 5, "title": "Shot Caller", "bonus": { "stat": "STR", "value": 1 } },
-        { "level": 6, "title": "Paroled" }
+        {
+          "level": 0,
+          "title": "—",
+          "bonus": {
+            "skill": "Melee (unarmed)",
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "—"
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Athletics (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—"
+        },
+        {
+          "level": 4,
+          "title": "—",
+          "bonus": {
+            "skill": "Advocate",
+            "value": 1
+          }
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        }
       ]
     },
     {
       "name": "Fixer",
-      "survival": { "stat": "INT", "target": 7 },
-      "advancement": { "stat": "INT", "target": 8 },
-      "skills": ["Broker", "Deception", "Electronics (any)", "Engineer (any)", "Streetwise", "Investigate"],
+      "survival": {
+        "stat": "INT",
+        "target": 9
+      },
+      "advancement": {
+        "stat": "END",
+        "target": 5
+      },
+      "skills": [
+        "Investigate",
+        "Broker",
+        "Deception",
+        "Streetwise",
+        "Stealth",
+        "Admin"
+      ],
       "ranks": [
-        { "level": 0, "title": "Inmate" },
-        { "level": 1, "title": "Runner", "bonus": { "skill": "Streetwise", "value": 1 } },
-        { "level": 2, "title": "Runner" },
-        { "level": 3, "title": "Fixer", "bonus": { "skill": "Broker", "value": 1 } },
-        { "level": 4, "title": "Fixer" },
-        { "level": 5, "title": "Kingpin", "bonus": { "stat": "INT", "value": 1 } },
-        { "level": 6, "title": "Paroled" }
+        {
+          "level": 0,
+          "title": "—",
+          "bonus": {
+            "skill": "Melee (unarmed)",
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "—"
+        },
+        {
+          "level": 2,
+          "title": "—",
+          "bonus": {
+            "skill": "Athletics (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 3,
+          "title": "—"
+        },
+        {
+          "level": 4,
+          "title": "—",
+          "bonus": {
+            "skill": "Advocate",
+            "value": 1
+          }
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—",
+          "bonus": {
+            "stat": "END",
+            "value": 1
+          }
+        }
       ]
     }
   ],
@@ -70,75 +242,276 @@
         "ui": {
           "title": "Disaster!",
           "description": "Something goes horribly wrong in the prison.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
-      "description": "Solitary Confinement.",
+      "description": "Escape opportunity. Roll Stealth 10+ or Deception 10+. Success: leave. Fail: Parole Threshold +2.",
       "gameEvent": {
         "id": "prisoner_event_3",
-        "type": "INFO",
+        "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Solitary Confinement",
-          "description": "You are thrown into the hole.",
-          "options": [{
-            "label": "Endure",
-            "effects": [
-              { "type": "STAT_MOD", "target": "END", "value": -1 },
-              { "type": "RESOURCE_MOD", "target": "parole_dm", "value": -1 }
-            ]
-          }]
+          "title": "Escape Opportunity",
+          "description": "You see a chance to escape. It is risky.",
+          "options": [
+            {
+              "label": "Attempt Escape (Stealth 10+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "DEX",
+                  "checkTarget": 10,
+                  "onPass": "prisoner_event_3_pass",
+                  "onFail": "prisoner_event_3_fail"
+                }
+              ],
+              "revealText": "Roll **DEX 10+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Attempt Escape (Deception 10+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 10,
+                  "onPass": "prisoner_event_3_pass",
+                  "onFail": "prisoner_event_3_fail"
+                }
+              ],
+              "revealText": "Roll **INT 10+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Stay Put",
+              "effects": []
+            }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }]
+      "subEvents": [
+        {
+          "id": "prisoner_event_3_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Free!",
+            "description": "You successfully escape. You must take Drifter next term.",
+            "options": [
+              {
+                "label": "Head for Freedom",
+                "effects": [
+                  {
+                    "type": "EJECT_CAREER",
+                    "note": "Escaped"
+                  },
+                  {
+                    "type": "FORCE_CAREER",
+                    "value": "drifter"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_event_3_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Caught Escaping",
+            "description": "You are caught. Your Parole Threshold increases by 2.",
+            "options": [
+              {
+                "label": "Accept Punishment",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 2
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Escape Attempt"
+        }
+      ]
     },
     {
       "roll": 4,
-      "description": "Prison Labour. Gain Athletics 1 and DM+1 to Parole.",
+      "description": "Difficult labour. Roll END 8+. Fail: Parole Threshold +1. Success: Parole -1, gain Athletics or Mechanic or Melee (unarmed) 1.",
       "gameEvent": {
         "id": "prisoner_event_4",
-        "type": "REWARD",
+        "type": "CHECK",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Prison Labour",
-          "description": "You are assigned to hard labor.",
-          "options": [{
-            "label": "Work Hard",
-            "effects": [
-              { "type": "SKILL_MOD", "target": "Athletics (Strength)", "value": 1 },
-              { "type": "RESOURCE_MOD", "target": "parole_dm", "value": 1 }
-            ]
-          }]
+          "title": "Difficult Labour",
+          "description": "You are assigned to backbreaking labour.",
+          "options": [
+            {
+              "label": "Endure (END 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "END",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_event_4_pass",
+                  "onFail": "prisoner_event_4_fail"
+                }
+              ],
+              "revealText": "Roll **END 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "skill-gain", "skill": "Athletics" }]
+      "subEvents": [
+        {
+          "id": "prisoner_event_4_pass",
+          "type": "CHOICE",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Labour Endured",
+            "description": "You impress your overseers. Parole -1. Choose a skill.",
+            "options": [
+              {
+                "label": "Athletics 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Athletics (any)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Mechanic 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Mechanic",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Melee (unarmed) 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": -1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Melee (unarmed)",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_event_4_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Collapsed",
+            "description": "You cannot keep up. Parole Threshold +1.",
+            "options": [
+              {
+                "label": "Recover",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Labour Check"
+        }
+      ]
     },
     {
       "roll": 5,
-      "description": "Prison Gang.",
+      "description": "Join a gang. Roll Persuade or Melee 8+. Fail: Enemy. Success: Parole +1, DM+1 survival, gain Deception/Persuade/Melee(unarmed)/Stealth 1.",
       "gameEvent": {
         "id": "prisoner_event_5",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Prison Gang",
-          "description": "You are invited to join a gang.",
+          "description": "You are invited to join a gang for mutual protection.",
           "options": [
             {
-              "label": "Join (Melee 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "STR", "checkTarget": 8, "onPass": "prisoner_event_5_pass", "onFail": "prisoner_event_5_fail" }]
+              "label": "Join (Persuade 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_event_5_pass",
+                  "onFail": "prisoner_event_5_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             },
             {
-              "label": "Join (Deception 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "prisoner_event_5_pass", "onFail": "prisoner_event_5_fail" }]
+              "label": "Join (Melee 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "STR",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_event_5_pass",
+                  "onFail": "prisoner_event_5_fail"
+                }
+              ],
+              "revealText": "Roll **STR 8+** — success and failure lead to different outcomes."
             },
             {
               "label": "Refuse",
-              "effects": [{ "type": "ADD_NPC", "value": { "type": "enemy", "note": "Prison Gang" } }]
+              "effects": []
             }
           ]
         }
@@ -146,18 +519,73 @@
       "subEvents": [
         {
           "id": "prisoner_event_5_pass",
-          "type": "REWARD",
+          "type": "CHOICE",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
             "title": "Gang Member",
-            "description": "You are accepted into the gang. Gain Streetwise 1 and an Ally.",
-            "options": [{
-              "label": "Gain Skills",
-              "effects": [
-                { "type": "SKILL_MOD", "target": "Streetwise", "value": 1 },
-                { "type": "ADD_NPC", "value": { "type": "ally", "note": "Gang Leader" } }
-              ]
-            }]
+            "description": "You are accepted. Parole Threshold +1. Choose a skill.",
+            "options": [
+              {
+                "label": "Deception 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Deception",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Persuade 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Persuade",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Melee (unarmed) 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Melee (unarmed)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Stealth 1",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 1
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Stealth",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -165,28 +593,54 @@
           "type": "MISHAP",
           "trigger": "MISHAP",
           "ui": {
-            "title": "Rejected",
+            "title": "Rejected Violently",
             "description": "The gang rejects you violently.",
-            "options": [{ "label": "Recover", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+            "options": [
+              {
+                "label": "Recover",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Join Gang" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Join Gang"
+        }
+      ]
     },
     {
       "roll": 6,
-      "description": "Prison Brawl. Roll Melee 8+. Success: Increase any known skill. Failure: Injury.",
+      "description": "Vocational Training. Roll EDU 8+. Success: gain any skill except Jack-of-all-Trades.",
       "gameEvent": {
         "id": "prisoner_event_6",
         "type": "CHECK",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Prison Brawl",
-          "description": "A violent confrontation.",
-          "options": [{
-            "label": "Fight (DEX 8+)",
-            "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "prisoner_event_6_pass", "onFail": "prisoner_event_6_fail" }]
-          }]
+          "title": "Vocational Training",
+          "description": "The prison offers vocational training. Roll EDU 8+ to benefit.",
+          "options": [
+            {
+              "label": "Attempt Training (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_event_6_pass",
+                  "onFail": "prisoner_event_6_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -195,83 +649,262 @@
           "type": "REWARD",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Tough as Nails",
-            "description": "You hold your own. Increase any skill.",
-            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+            "title": "Vocational Skill",
+            "description": "You complete the course. Gain any skill (except Jack-of-all-Trades).",
+            "options": [
+              {
+                "label": "Gain Skill",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "ANY_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
           }
         },
         {
           "id": "prisoner_event_6_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Victim",
-            "description": "You are beaten severely.",
-            "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+            "title": "Training Failed",
+            "description": "You cannot keep up with the course material.",
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["Melee"], "onSuccess": [{ "type": "any-skill-up" }], "onFailure": [{ "type": "injury" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "any-skill-up"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 7,
-      "description": "Life Event. Roll on the Life Events table.",
+      "description": "Prison Event. Roll 1D: 1=Riot (1D: 1-2=Injury, 5-6=extra Benefit); 2=Contact; 3=Rival; 4=Transfer (re-roll Parole); 5=Good Behaviour (Parole -2); 6=Attacked (Melee 8+, Parole -1).",
       "gameEvent": {
         "id": "prisoner_event_7",
-        "type": "INFO",
+        "type": "SUBTABLE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Prison Life Event",
-          "description": "Something significant happens.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "title": "Prison Event",
+          "description": "An unusual event occurs in the prison. Roll 1D to determine what happens.",
+          "options": [
+            {
+              "label": "1 — Riot",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "prisoner_event_7_riot"
+                }
+              ]
+            },
+            {
+              "label": "2 — New Contact",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "contact",
+                    "note": "Fellow Inmate"
+                  }
+                }
+              ],
+              "revealText": "Gain a **contact**."
+            },
+            {
+              "label": "3 — New Rival",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Inmate or Guard"
+                  }
+                }
+              ],
+              "revealText": "Gain a **rival**."
+            },
+            {
+              "label": "4 — Transferred",
+              "effects": [
+                {
+                  "type": "CUSTOM",
+                  "customId": "REROLL_PAROLE_THRESHOLD"
+                }
+              ]
+            },
+            {
+              "label": "5 — Good Behaviour",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "paroleThreshold",
+                  "value": -2
+                }
+              ]
+            },
+            {
+              "label": "6 — Attacked",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "prisoner_event_7_attacked"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "subEvents": [
+        {
+          "id": "prisoner_event_7_riot",
+          "type": "SUBTABLE",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Prison Riot",
+            "description": "A riot engulfs the prison. Roll 1D.",
+            "options": [
+              {
+                "label": "1-2 — Injured in Riot",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              },
+              {
+                "label": "3-4 — Survive Unscathed",
+                "effects": []
+              },
+              {
+                "label": "5-6 — Loot Something Useful",
+                "effects": [
+                  {
+                    "type": "BENEFIT_ROLL",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_event_7_attacked",
+          "type": "CHECK",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Attacked",
+            "description": "You are attacked by another prisoner. Roll Melee (unarmed) 8+.",
+            "options": [
+              {
+                "label": "Defend (STR/DEX 8+)",
+                "effects": [
+                  {
+                    "type": "ROLL_CHECK",
+                    "stat": "STR",
+                    "checkTarget": 8,
+                    "onPass": "prisoner_event_7_attacked_pass",
+                    "onFail": "prisoner_event_7_attacked_fail"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_event_7_attacked_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Fought Back",
+            "description": "You drive off your attacker. Reduce Parole Threshold by 1.",
+            "options": [
+              {
+                "label": "Accept",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": -1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_event_7_attacked_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Beaten",
+            "description": "You are beaten by your attacker. Roll on the Injury table.",
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "subtable",
+          "note": "Prison Event 1D"
+        }
+      ]
     },
     {
       "roll": 8,
-      "description": "Informant.",
+      "description": "New lawyer. Cost Cr1,000 × (Advocate level)². Roll 2D + Advocate 8+: reduce Parole Threshold by 1D.",
       "gameEvent": {
         "id": "prisoner_event_8",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Informant",
-          "description": "The guards offer you a deal.",
+          "title": "New Lawyer",
+          "description": "A new lawyer offers to review your case. This costs Cr1,000 × (Advocate)². Roll 2D + Advocate 8+ to reduce Parole Threshold.",
           "options": [
             {
-              "label": "Snitch (Parole DM+2)",
+              "label": "Hire Lawyer (INT 8+)",
               "effects": [
-                { "type": "RESOURCE_MOD", "target": "parole_dm", "value": 2 },
-                { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Betrayed Prisoner" } }
-              ]
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_event_8_pass",
+                  "onFail": "prisoner_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             },
             {
-              "label": "Refuse",
-              "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Principled Prisoner" } }]
-            }
-          ]
-        }
-      },
-      "effects": [{ "type": "choice", "note": "Informant" }]
-    },
-    {
-      "roll": 9,
-      "description": "Escape Attempt.",
-      "gameEvent": {
-        "id": "prisoner_event_9",
-        "type": "CHOICE",
-        "trigger": "DURING_CAREER_TERM",
-        "ui": {
-          "title": "Escape Opportunity",
-          "description": "You see a chance to make a break for it.",
-          "options": [
-            {
-              "label": "Attempt (Athletics 10+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "STR", "checkTarget": 10, "onPass": "prisoner_event_9_pass", "onFail": "prisoner_event_9_fail" }]
-            },
-            {
-              "label": "Wait",
+              "label": "Cannot Afford / Decline",
               "effects": []
             }
           ]
@@ -279,174 +912,504 @@
       },
       "subEvents": [
         {
-          "id": "prisoner_event_9_pass",
+          "id": "prisoner_event_8_pass",
           "type": "REWARD",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Free!",
-            "description": "You successfully escape the prison.",
-            "options": [{ "label": "Head for the Wilds", "effects": [{ "type": "EJECT_CAREER", "note": "Escaped" }, { "type": "FORCE_CAREER", "value": "drifter" }] }]
+            "title": "Case Reviewed",
+            "description": "Your lawyer makes headway. Reduce Parole Threshold by 1D.",
+            "options": [
+              {
+                "label": "Accept Result",
+                "effects": [
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": -3
+                  }
+                ]
+              }
+            ]
           }
         },
         {
-          "id": "prisoner_event_9_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
+          "id": "prisoner_event_8_fail",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Caught Escaping",
-            "description": "You are caught and punished.",
-            "options": [{ "label": "Accept Punishment", "effects": [{ "type": "STAT_MOD", "target": "END", "value": -1 }, { "type": "RESOURCE_MOD", "target": "parole_dm", "value": -4 }] }]
+            "title": "No Progress",
+            "description": "The lawyer makes no headway on your case.",
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Escape" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Lawyer Review"
+        }
+      ]
+    },
+    {
+      "roll": 9,
+      "description": "Special duty. Gain Admin 1, Advocate 1, Electronics (computers) 1 or Steward 1.",
+      "gameEvent": {
+        "id": "prisoner_event_9",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Special Duty",
+          "description": "You are selected for special work within the prison.",
+          "options": [
+            {
+              "label": "Admin 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Admin",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Admin +1**."
+            },
+            {
+              "label": "Advocate 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Advocate",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Advocate +1**."
+            },
+            {
+              "label": "Electronics (computers) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Electronics (computers)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Electronics (computers) +1**."
+            },
+            {
+              "label": "Steward 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Steward",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Steward +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Admin",
+            "Advocate",
+            "Electronics (computers)",
+            "Steward"
+          ]
+        }
+      ]
     },
     {
       "roll": 10,
-      "description": "Good Behaviour. Gain DM+2 to Parole.",
+      "description": "The warden takes an interest in your case. Parole Threshold -2.",
       "gameEvent": {
         "id": "prisoner_event_10",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Good Behaviour",
-          "description": "You keep your head down.",
-          "options": [{ "label": "Accept Mod", "effects": [{ "type": "RESOURCE_MOD", "target": "parole_dm", "value": 2 }] }]
+          "title": "Warden's Interest",
+          "description": "The warden reviews your case and is impressed by your conduct.",
+          "options": [
+            {
+              "label": "Accept Mod",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "paroleThreshold",
+                  "value": -2
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "parole-mod", "value": 2 }]
+      "effects": [
+        {
+          "type": "paroleModifier",
+          "value": -2
+        }
+      ]
     },
     {
       "roll": 11,
-      "description": "Black Market Merchant. Gain Broker 1.",
+      "description": "Heroism saves a guard or officer. Roll 2D: 7 or less = Injury. 8+ = Ally and Parole -2.",
       "gameEvent": {
         "id": "prisoner_event_11",
-        "type": "REWARD",
+        "type": "CHECK",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Black Market",
-          "description": "You become part of the prison economy.",
-          "options": [{ "label": "Gain Broker 1", "effects": [{ "type": "SKILL_MOD", "target": "Broker", "value": 1 }] }]
+          "title": "Heroic Act",
+          "description": "You have a chance to save a guard or officer from danger.",
+          "options": [
+            {
+              "label": "Act Heroically (2D roll)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "END",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_event_11_pass",
+                  "onFail": "prisoner_event_11_fail"
+                }
+              ],
+              "revealText": "Roll **END 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "skill-gain", "skill": "Broker" }]
+      "subEvents": [
+        {
+          "id": "prisoner_event_11_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Heroism Rewarded",
+            "description": "Your heroism is recognized. Gain an Ally and Parole -2.",
+            "options": [
+              {
+                "label": "Accept Reward",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "ally",
+                      "note": "Grateful Guard/Officer"
+                    }
+                  },
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": -2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_event_11_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Injured",
+            "description": "You are hurt in the incident.",
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Heroic Act"
+        }
+      ]
     },
     {
       "roll": 12,
-      "description": "Parole Granted. Automatic Release.",
+      "description": "An unexpected turn of events works in your favour. Reduce your Parole Threshold by 1D.",
       "gameEvent": {
         "id": "prisoner_event_12",
         "type": "REWARD",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Paroled",
-          "description": "You are granted early release.",
-          "options": [{ 
-            "label": "Walk Free", 
-            "effects": [
-              { "type": "PROMOTION", "note": "Paroled" },
-              { "type": "EJECT_CAREER", "note": "Parole Granted" }
-            ] 
-          }]
+          "title": "Lucky Break",
+          "description": "An unexpected turn of events works in your favour. Reduce your Parole Threshold by 1D.",
+          "options": [
+            {
+              "label": "Accept",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "paroleThreshold",
+                  "value": -3
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }, { "type": "forced-out" }]
+      "effects": [
+        {
+          "type": "paroleModifier",
+          "value": -3
+        }
+      ]
     }
   ],
   "mishapTable": [
     {
       "roll": 1,
-      "description": "Severely injured. Roll on the Injury table.",
+      "description": "Severely injured. Roll on the Injury table twice, take the lower result.",
       "gameEvent": {
         "id": "prisoner_mishap_1",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Severely Injured",
-          "description": "A major prison riot leaves you severely injured.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+          "description": "A major incident leaves you severely injured. Roll twice on the Injury table and take the lower result.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury-worst-of-2"
+        }
+      ]
     },
     {
       "roll": 2,
-      "description": "Sentence extended. -2 to Release checks.",
+      "description": "Accused of assaulting a guard. Parole Threshold +2.",
       "gameEvent": {
         "id": "prisoner_mishap_2",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Sentence Extended",
-          "description": "You are caught breaking rules.",
-          "options": [{
-            "label": "Endure",
-            "effects": [
-              { "type": "RESOURCE_MOD", "target": "parole_dm", "value": -2 }
-            ]
-          }]
+          "title": "Accused of Assault",
+          "description": "You are accused of assaulting a guard. Your Parole Threshold increases by 2 — harder to get out.",
+          "options": [
+            {
+              "label": "Endure",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "paroleThreshold",
+                  "value": 2
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "parole-mod", "value": -2 }]
+      "effects": [
+        {
+          "type": "paroleModifier",
+          "value": 2
+        }
+      ]
     },
     {
       "roll": 3,
-      "description": "Targeted by guards. Reduce END 1.",
+      "description": "A gang persecutes you. Fight back (Melee 8+): Fail = Injury twice (take lower) + Enemy + Parole +1. Don't fight: Lose all Benefits.",
       "gameEvent": {
         "id": "prisoner_mishap_3",
-        "type": "MISHAP",
+        "type": "CHOICE",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Targeted by Guards",
-          "description": "The guards have it in for you.",
-          "options": [{
-            "label": "Endure",
-            "effects": [
-              { "type": "STAT_MOD", "target": "END", "value": -1 }
-            ]
-          }]
+          "title": "Gang Persecution",
+          "description": "A prison gang targets you. You must decide how to respond.",
+          "options": [
+            {
+              "label": "Fight Back (STR 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "STR",
+                  "checkTarget": 8,
+                  "onPass": "prisoner_mishap_3_fight_pass",
+                  "onFail": "prisoner_mishap_3_fight_fail"
+                }
+              ],
+              "revealText": "Roll **STR 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Don't Fight (Lose all Benefits)",
+              "effects": [
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 99,
+                  "note": "Lose all benefits from this term"
+                }
+              ],
+              "revealText": "Lose **99 Benefit Roll(s)**."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }]
+      "subEvents": [
+        {
+          "id": "prisoner_mishap_3_fight_pass",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Stood Your Ground",
+            "description": "You drive them off. Gain Enemy. Parole Threshold +1.",
+            "options": [
+              {
+                "label": "Accept Result",
+                "effects": [
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Prison Gang"
+                    }
+                  },
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "paroleThreshold",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "prisoner_mishap_3_fight_fail",
+          "type": "MISHAP",
+          "trigger": "MISHAP",
+          "ui": {
+            "title": "Beaten Down",
+            "description": "You are beaten severely. Roll twice on the Injury table and take the lower result. Gain Enemy.",
+            "options": [
+              {
+                "label": "Recover",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll_worst_of_2"
+                  },
+                  {
+                    "type": "ADD_NPC",
+                    "value": {
+                      "type": "enemy",
+                      "note": "Prison Gang"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Gang Persecution"
+        }
+      ]
     },
     {
       "roll": 4,
-      "description": "Targeted by inmates. Gain Enemy.",
+      "description": "A guard takes a dislike to you. Gain an Enemy. Parole Threshold +1.",
       "gameEvent": {
         "id": "prisoner_mishap_4",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Targeted by Inmates",
-          "description": "A powerful inmate marks you.",
-          "options": [{
-            "label": "Fearful",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Hostile Inmate" } }
-            ]
-          }]
-        }
-      },
-      "effects": [{ "type": "npc", "npcType": "enemy" }]
-    },
-    {
-      "roll": 5,
-      "description": "Health crisis. Reduce physical stat.",
-      "gameEvent": {
-        "id": "prisoner_mishap_5",
-        "type": "CHOICE",
-        "trigger": "MISHAP",
-        "ui": {
-          "title": "Health Crisis",
-          "description": "Poor prison conditions lead to a health issue.",
+          "title": "Guard's Dislike",
+          "description": "A guard decides to make your life miserable. Gain Enemy and Parole Threshold +1.",
           "options": [
-            { "label": "Reduce STR", "effects": [{ "type": "STAT_MOD", "target": "STR", "value": -1 }] },
-            { "label": "Reduce DEX", "effects": [{ "type": "STAT_MOD", "target": "DEX", "value": -1 }] },
-            { "label": "Reduce END", "effects": [{ "type": "STAT_MOD", "target": "END", "value": -1 }] }
+            {
+              "label": "Endure",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Hostile Guard"
+                  }
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "paroleThreshold",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain a **enemy**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "stat-reduction-choice" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "paroleModifier",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "roll": 5,
+      "description": "Disgraced. Your criminal past becomes known on your homeworld. Lose 1 SOC.",
+      "gameEvent": {
+        "id": "prisoner_mishap_5",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Disgraced",
+          "description": "News of your crimes spreads to your homeworld. Your reputation is destroyed.",
+          "options": [
+            {
+              "label": "Accept Shame",
+              "effects": [
+                {
+                  "type": "STAT_MOD",
+                  "target": "SOC",
+                  "value": -1
+                }
+              ],
+              "revealText": "**SOC -1** (permanent)."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "stat-bonus",
+          "stat": "SOC",
+          "value": -1
+        }
+      ]
     },
     {
       "roll": 6,
@@ -457,16 +1420,73 @@
         "trigger": "MISHAP",
         "ui": {
           "title": "Injured",
-          "description": "You are injured.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+          "description": "You are injured in a prison incident.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [0, 0, 0, 0, 0, 0, 0],
-    "benefits": ["Release"]
+    "cash": [
+      0,
+      0,
+      100,
+      200,
+      500,
+      1000,
+      2500
+    ],
+    "benefits": [
+      "Contact",
+      "Blade",
+      {
+        "choose": 1,
+        "options": [
+          "Deception",
+          "Persuade",
+          "Stealth"
+        ]
+      },
+      "Ally",
+      {
+        "choose": 1,
+        "options": [
+          "Melee (unarmed)",
+          "Recon",
+          "Streetwise"
+        ]
+      },
+      {
+        "choose": 1,
+        "options": [
+          "STR +1",
+          "END +1"
+        ]
+      },
+      {
+        "choose": 3,
+        "options": [
+          "Deception",
+          "Persuade",
+          "Stealth"
+        ]
+      }
+    ]
   },
   "medical": {
     "plan": "other",

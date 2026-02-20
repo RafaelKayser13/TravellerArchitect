@@ -97,14 +97,17 @@ export const PROSTHETIC_CHOICE_EVENT: GameEvent = {
         options: [
             {
                 label: 'Gain Prosthetic Limb',
+                revealText: 'A cosmetic prosthetic arm or leg is fitted. You gain the item \'Prosthetic Limb (Cosmetic)\' on your equipment list. No stat penalties.',
                 effects: [{ type: 'ADD_ITEM', value: 'Prosthetic Limb (Cosmetic)' }, { type: 'LOG_ENTRY', note: '**Rule 245**: Gained prosthetic limb after close call.' }]
             },
             {
                 label: 'Gain Prosthetic Eye(s)',
+                revealText: 'A cosmetic prosthetic eye is fitted. You gain the item \'Prosthetic Eye(s) (Cosmetic)\'. No stat penalties.',
                 effects: [{ type: 'ADD_ITEM', value: 'Prosthetic Eye(s) (Cosmetic)' }, { type: 'LOG_ENTRY', note: '**Rule 245**: Gained prosthetic eye(s) after close call.' }]
             },
             {
                 label: 'Decline',
+                revealText: 'You decline the prosthetic. No item is added, but your record notes the close call.',
                 effects: [{ type: 'LOG_ENTRY', note: '**Rule 245**: Declined prosthetic after close call.' }]
             }
         ]

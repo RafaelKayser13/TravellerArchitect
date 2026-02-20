@@ -20,41 +20,38 @@
         </div>
     </div>
 
-    <div class="npc-grid">
-        <div *ngFor="let npc of characters().npcs" class="npc-card" [ngClass]="npc.type">
-            <div class="corner-detail tl"></div>
-            <div class="corner-detail tr"></div>
+    <div class="contact-roster">
+        <div class="cr-header">
+            <span class="crh-type">TYPE</span>
+            <span class="crh-name">DESIGNATION</span>
+            <span class="crh-origin">ORIGIN_LOG</span>
+            <span class="crh-notes">INTEL_NOTES</span>
+            <span class="crh-act">ACTIONS</span>
+        </div>
 
-            <div class="card-header">
-                <span class="type-tag">{{ npc.type.toUpperCase() }}</span>
-                <div class="header-main">
-                    <h3>{{ npc.name }}</h3>
+        <div class="cr-row" *ngFor="let npc of characters().npcs; let i = index"
+            [class.cr-ally]="npc.type === 'ally'"
+            [class.cr-rival]="npc.type === 'rival'"
+            [class.cr-enemy]="npc.type === 'enemy'">
+            <div class="cr-strip">
+                <div class="cr-type-cell">
+                    <span class="cr-led"></span>
+                    <span class="cr-type-tag">{{ npc.type | uppercase }}</span>
                 </div>
-            </div>
-
-            <div class="card-content">
-                <div class="origin-readout">
-                    <span class="label">ORIGIN:</span>
-                    <span class="val">{{ npc.origin }}</span>
-                </div>
-
-                <div class="notes-section">
-                    <span class="label">INTEL_NOTES:</span>
-                    <p class="notes-text">{{ npc.notes || 'No data recorded.' }}</p>
-                </div>
-            </div>
-
-            <div class="card-footer">
-                <div class="actions">
-                    <button class="btn-mini" (click)="editNpc(npc)">EDIT</button>
-                    <button class="btn-mini risk" (click)="removeNpc(npc.id)">DELETE</button>
+                <span class="cr-name">{{ npc.name }}</span>
+                <span class="cr-origin">{{ npc.origin }}</span>
+                <span class="cr-notes-clip">{{ npc.notes || '—' }}</span>
+                <div class="cr-actions">
+                    <button class="cr-btn" (click)="editNpc(npc); $event.stopPropagation()">EDIT</button>
+                    <button class="cr-btn danger" (click)="removeNpc(npc.id); $event.stopPropagation()">DEL</button>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="characters().npcs.length === 0" class="no-npcs">
-            <p>[ NO_ACTIVE_RELATIONSHIPS_DETECTED ]</p>
-            <span class="subtext">Proceed to finalize character biometrics.</span>
+        <div *ngIf="characters().npcs.length === 0" class="cr-empty">
+            <span class="cr-empty-icon">◈</span>
+            <span class="cr-empty-text">[ NO_ACTIVE_RELATIONSHIPS_DETECTED ]</span>
+            <span class="cr-empty-sub">Proceed to finalize character biometrics.</span>
         </div>
     </div>
 </div>

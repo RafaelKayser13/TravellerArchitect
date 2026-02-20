@@ -5,57 +5,212 @@
   "qualification": {
     "stat": "INT",
     "target": 4,
-    "minAttributes": { "int": 5, "soc": 5 }
+    "minAttributes": {
+      "int": 5,
+      "soc": 5
+    }
   },
   "skills": {
-    "personal": ["STR +1", "DEX +1", "END +1", "INT +1", "EDU +1", "SOC +1"],
-    "service": ["Drive (any)", "Vacc Suit", "Broker", "Steward", "Electronics (any)", "Persuade"],
-    "advanced": ["Engineer (any)", "Astrogation", "Electronics (sensors)", "Pilot (small craft)", "Admin", "Advocate"]
+    "personal": [
+      "STR +1",
+      "DEX +1",
+      "END +1",
+      "INT +1",
+      "Language (any)",
+      "Streetwise"
+    ],
+    "service": [
+      "Drive (any)",
+      "Vacc Suit",
+      "Broker",
+      "Steward",
+      "Electronics (any)",
+      "Persuade"
+    ],
+    "advanced": [
+      "Engineer (any)",
+      "Astrogation",
+      "Electronics (any)",
+      "Pilot (any)",
+      "Admin",
+      "Advocate"
+    ]
   },
+  "advancedEducationMinEdu": 8,
   "assignments": [
     {
       "name": "Merchant Marine",
-      "survival": { "stat": "EDU", "target": 5 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Pilot (any)", "Vacc Suit", "Athletics (any)", "Mechanic", "Electronics (any)", "Gunner (any)"],
+      "survival": {
+        "stat": "EDU",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Pilot (any)",
+        "Vacc Suit",
+        "Athletics (any)",
+        "Mechanic",
+        "Electronics (any)",
+        "Gunner (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Fourth Officer" },
-        { "level": 1, "title": "Fourth Officer", "bonus": { "skill": "Mechanic", "value": 1 } },
-        { "level": 2, "title": "Third Officer" },
-        { "level": 3, "title": "Second Officer", "bonus": { "skill": "Electronics (any)", "value": 1 } },
-        { "level": 4, "title": "First Officer" },
-        { "level": 5, "title": "Captain", "bonus": { "skill": "Admin", "value": 1 } },
-        { "level": 6, "title": "Senior Captain" }
+        {
+          "level": 0,
+          "title": "Crewman"
+        },
+        {
+          "level": 1,
+          "title": "Senior Crewman",
+          "bonus": {
+            "skill": "Mechanic",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "4th Officer"
+        },
+        {
+          "level": 3,
+          "title": "3rd Officer"
+        },
+        {
+          "level": 4,
+          "title": "2nd Officer",
+          "bonus": {
+            "skill": "Pilot (any)",
+            "value": 1
+          }
+        },
+        {
+          "level": 5,
+          "title": "1st Officer",
+          "bonus": {
+            "stat": "SOC",
+            "value": 1
+          }
+        },
+        {
+          "level": 6,
+          "title": "Captain"
+        }
       ]
     },
     {
       "name": "Free Trader",
-      "survival": { "stat": "DEX", "target": 6 },
-      "advancement": { "stat": "INT", "target": 6 },
-      "skills": ["Pilot (any)", "Vacc Suit", "Deception", "Mechanic", "Streetwise", "Gunner (any)"],
+      "survival": {
+        "stat": "DEX",
+        "target": 6
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 6
+      },
+      "skills": [
+        "Pilot (any)",
+        "Vacc Suit",
+        "Deception",
+        "Mechanic",
+        "Streetwise",
+        "Gunner (any)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Novice" },
-        { "level": 1, "title": "Novice", "bonus": { "skill": "Persuade", "value": 1 } },
-        { "level": 2, "title": "Trader" },
-        { "level": 3, "title": "Trader", "bonus": { "skill": "Broker", "value": 1 } },
-        { "level": 4, "title": "Trader" },
-        { "level": 5, "title": "Experienced Trader", "bonus": { "skill": "Streetwise", "value": 1 } },
-        { "level": 6, "title": "Trader" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Persuade",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "Experienced Trader",
+          "bonus": {
+            "skill": "Jack-of-all-Trades",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     },
     {
       "name": "Broker",
-      "survival": { "stat": "EDU", "target": 5 },
-      "advancement": { "stat": "INT", "target": 7 },
-      "skills": ["Admin", "Advocate", "Broker", "Streetwise", "Deception", "Persuade"],
+      "survival": {
+        "stat": "EDU",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 7
+      },
+      "skills": [
+        "Admin",
+        "Advocate",
+        "Broker",
+        "Streetwise",
+        "Deception",
+        "Persuade"
+      ],
       "ranks": [
-        { "level": 0, "title": "Clerk" },
-        { "level": 1, "title": "Clerk", "bonus": { "skill": "Admin", "value": 1 } },
-        { "level": 2, "title": "Agent" },
-        { "level": 3, "title": "Agent", "bonus": { "skill": "Broker", "value": 1 } },
-        { "level": 4, "title": "Broker" },
-        { "level": 5, "title": "Experienced Broker", "bonus": { "skill": "Streetwise", "value": 1 } },
-        { "level": 6, "title": "Master Broker" }
+        {
+          "level": 0,
+          "title": "—"
+        },
+        {
+          "level": 1,
+          "title": "—",
+          "bonus": {
+            "skill": "Broker",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "—"
+        },
+        {
+          "level": 3,
+          "title": "Experienced Broker",
+          "bonus": {
+            "skill": "Streetwise",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "—"
+        },
+        {
+          "level": 5,
+          "title": "—"
+        },
+        {
+          "level": 6,
+          "title": "—"
+        }
       ]
     }
   ],
@@ -70,31 +225,62 @@
         "ui": {
           "title": "Disaster!",
           "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "mishap" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
     },
     {
       "roll": 3,
-      "description": "Smuggling offer.",
+      "description": "Opportunity to smuggle illegal items. Accept: roll Deception 8+ or Persuade 8+ to gain Streetwise 1 and an extra Benefit roll. Refuse: gain an Enemy in the criminal sphere.",
       "gameEvent": {
         "id": "merchant_event_3",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Smuggling Offer",
-          "description": "You are offered a deal that is not strictly legal.",
+          "title": "Smuggling Opportunity",
+          "description": "You are offered a chance to smuggle illegal items. Accept and roll Deception or Persuade 8+ to profit, or refuse and make a criminal enemy.",
           "options": [
             {
-              "label": "Accept (Deception 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "merchant_event_3_pass", "onFail": "merchant_event_3_fail" }]
+              "label": "Accept (roll Deception/Persuade 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "merchant_event_3_pass",
+                  "onFail": "merchant_event_3_fail"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             },
             {
-              "label": "Accept (Stealth 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "DEX", "checkTarget": 8, "onPass": "merchant_event_3_pass", "onFail": "merchant_event_3_fail" }]
-            },
-            { "label": "Refuse", "effects": [] }
+              "label": "Refuse (gain Enemy)",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Criminal Sphere"
+                  }
+                }
+              ],
+              "revealText": "Gain a **enemy**."
+            }
           ]
         }
       },
@@ -105,28 +291,48 @@
           "trigger": "DURING_CAREER_TERM",
           "ui": {
             "title": "Smuggling Successful",
-            "description": "The deal goes through. Gain a Contact in the criminal underworld and +1 DM to a Benefit roll.",
-            "options": [{
-              "label": "Accept Reward",
-              "effects": [
-                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Underworld Contact" } },
-                { "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }
-              ]
-            }]
+            "description": "The deal goes through. You gain Streetwise 1 and an extra Benefit roll.",
+            "options": [
+              {
+                "label": "Accept Reward",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Streetwise",
+                    "value": 1
+                  },
+                  {
+                    "type": "RESOURCE_MOD",
+                    "target": "benefitModifier",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
           }
         },
         {
           "id": "merchant_event_3_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Busted",
-            "description": "The deal is a setup or you get caught.",
-            "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+            "title": "Smuggling Failed",
+            "description": "The deal falls through — you gain nothing.",
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Smuggling Offer", "skills": ["Accept", "Refuse"] }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Smuggling: Accept or Refuse"
+        }
+      ]
     },
     {
       "roll": 4,
@@ -139,58 +345,221 @@
           "title": "Diverse Experience",
           "description": "Your travels provide you with a wide range of experiences.",
           "options": [
-            { "label": "Profession (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Profession (any)", "value": 1 }] },
-            { "label": "Electronics (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Electronics (any)", "value": 1 }] },
-            { "label": "Engineer (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Engineer (any)", "value": 1 }] },
-            { "label": "Animals (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Animals (any)", "value": 1 }] },
-            { "label": "Science (any) 1", "effects": [{ "type": "SKILL_MOD", "target": "Science (any)", "value": 1 }] }
+            {
+              "label": "Profession (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Profession (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Profession (any) +1**."
+            },
+            {
+              "label": "Electronics (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Electronics (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Electronics (any) +1**."
+            },
+            {
+              "label": "Engineer (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Engineer (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Engineer (any) +1**."
+            },
+            {
+              "label": "Animals (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Animals (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Animals (any) +1**."
+            },
+            {
+              "label": "Science (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Science (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Science (any) +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Profession (any)", "Electronics (any)", "Engineer (any)", "Animals (any)", "Science (any)"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Profession (any)",
+            "Electronics (any)",
+            "Engineer (any)",
+            "Animals (any)",
+            "Science (any)"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
-      "description": "Gambling/Risk.",
+      "description": "Chance to risk Benefit rolls on a lucrative deal. Roll Gambler 8+ or Broker 8+. Success: gain half the risked rolls (round up). Fail: lose all risked rolls. Either way, gain one level in the skill used.",
       "gameEvent": {
         "id": "merchant_event_5",
         "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
-          "title": "Gambling Risk",
-          "description": "You see an opportunity for a high-risk, high-reward investment or a literal game of chance.",
+          "title": "Lucrative Deal",
+          "description": "A chance at a high-risk, high-reward deal. Risk your Benefit rolls and roll Gambler or Broker 8+. Win: half back (round up). Lose: all gone. Either way, gain a level in the skill used.",
           "options": [
             {
-              "label": "Bet (Gambler 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "INT", "checkTarget": 8, "onPass": "merchant_event_5_pass", "onFail": "merchant_event_5_fail" }]
+              "label": "Risk with Gambler 8+",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "merchant_event_5_pass_gambler",
+                  "onFail": "merchant_event_5_fail_gambler"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
             },
-            { "label": "Pass", "effects": [] }
+            {
+              "label": "Risk with Broker 8+",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "INT",
+                  "checkTarget": 8,
+                  "onPass": "merchant_event_5_pass_broker",
+                  "onFail": "merchant_event_5_fail_broker"
+                }
+              ],
+              "revealText": "Roll **INT 8+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Pass",
+              "effects": []
+            }
           ]
         }
       },
       "subEvents": [
         {
-          "id": "merchant_event_5_pass",
+          "id": "merchant_event_5_pass_gambler",
           "type": "REWARD",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Big Win",
-            "description": "Your risk pays off handsomely. Gain +1 DM to all Benefit rolls this term.",
-            "options": [{ "label": "Collect Winnings", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+            "title": "Deal Succeeds",
+            "description": "The deal pays off. Gain half the risked Benefit rolls (round up) and Gambler +1.",
+            "options": [
+              {
+                "label": "Collect Winnings",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Gambler",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
           }
         },
         {
-          "id": "merchant_event_5_fail",
+          "id": "merchant_event_5_fail_gambler",
           "type": "INFO",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Big Loss",
-            "description": "You lose your stake.",
-            "options": [{ "label": "Accept Loss", "effects": [{ "type": "LOSE_BENEFIT", "value": 1 }] }]
+            "title": "Deal Fails",
+            "description": "The deal collapses. You lose all risked Benefit rolls, but gain Gambler +1.",
+            "options": [
+              {
+                "label": "Accept Loss",
+                "effects": [
+                  {
+                    "type": "LOSE_BENEFIT",
+                    "value": 100
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Gambler",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "merchant_event_5_pass_broker",
+          "type": "REWARD",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Deal Succeeds",
+            "description": "The deal pays off. Gain half the risked Benefit rolls (round up) and Broker +1.",
+            "options": [
+              {
+                "label": "Collect Winnings",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Broker",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "merchant_event_5_fail_broker",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
+          "ui": {
+            "title": "Deal Fails",
+            "description": "The deal collapses. You lose all risked Benefit rolls, but gain Broker +1.",
+            "options": [
+              {
+                "label": "Accept Loss",
+                "effects": [
+                  {
+                    "type": "LOSE_BENEFIT",
+                    "value": 100
+                  },
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Broker",
+                    "value": 1
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "choice", "note": "Gambling Risk", "skills": ["Bet", "Pass"] }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Lucrative Deal: Gambler/Broker 8+ or Pass"
+        }
+      ]
     },
     {
       "roll": 6,
@@ -202,10 +571,29 @@
         "ui": {
           "title": "High Connection",
           "description": "You make a connection with a powerful individual or organization.",
-          "options": [{ "label": "Gain Contact", "effects": [{ "type": "ADD_NPC", "value": { "type": "contact", "note": "Merchant Prince" } }] }]
+          "options": [
+            {
+              "label": "Gain Contact",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "contact",
+                    "note": "Merchant Prince"
+                  }
+                }
+              ],
+              "revealText": "Gain a **contact**."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "contact" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "contact"
+        }
+      ]
     },
     {
       "roll": 7,
@@ -217,74 +605,185 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
-      "description": "Legal Trouble.",
+      "description": "Embroiled in legal trouble. Gain Advocate 1, Admin 1, Diplomat 1 or Investigate 1, then roll 2D — on a 2, must take the Prisoner career next term.",
       "gameEvent": {
         "id": "merchant_event_8",
-        "type": "CHECK",
+        "type": "CHOICE",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Legal Trouble",
-          "description": "One of your deals is scrutinized by the authorities.",
+          "description": "You are embroiled in legal trouble. Gain a useful skill from navigating the process, but there's a small chance you end up imprisoned.",
           "options": [
             {
-              "label": "Advocate (EDU 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "merchant_event_8_pass", "onFail": "merchant_event_8_fail" }]
+              "label": "Advocate 1 (then roll 2D)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Advocate",
+                  "value": 1
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "2D",
+                  "checkTarget": 3,
+                  "onPass": "merchant_event_8_safe",
+                  "onFail": "merchant_event_8_prison"
+                }
+              ],
+              "revealText": "Gain **Advocate +1**. Roll **2D 3+** — success and failure lead to different outcomes."
             },
             {
-              "label": "Admin (EDU 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "merchant_event_8_pass", "onFail": "merchant_event_8_fail" }]
+              "label": "Admin 1 (then roll 2D)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Admin",
+                  "value": 1
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "2D",
+                  "checkTarget": 3,
+                  "onPass": "merchant_event_8_safe",
+                  "onFail": "merchant_event_8_prison"
+                }
+              ],
+              "revealText": "Gain **Admin +1**. Roll **2D 3+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Diplomat 1 (then roll 2D)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Diplomat",
+                  "value": 1
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "2D",
+                  "checkTarget": 3,
+                  "onPass": "merchant_event_8_safe",
+                  "onFail": "merchant_event_8_prison"
+                }
+              ],
+              "revealText": "Gain **Diplomat +1**. Roll **2D 3+** — success and failure lead to different outcomes."
+            },
+            {
+              "label": "Investigate 1 (then roll 2D)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Investigate",
+                  "value": 1
+                },
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "2D",
+                  "checkTarget": 3,
+                  "onPass": "merchant_event_8_safe",
+                  "onFail": "merchant_event_8_prison"
+                }
+              ],
+              "revealText": "Gain **Investigate +1**. Roll **2D 3+** — success and failure lead to different outcomes."
             }
           ]
         }
       },
       "subEvents": [
         {
-          "id": "merchant_event_8_pass",
-          "type": "REWARD",
+          "id": "merchant_event_8_safe",
+          "type": "INFO",
           "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Cleared",
-            "description": "You successfully clear your name and learn a few things about the law or bureaucracy in the process.",
+            "title": "Case Resolved",
+            "description": "The legal case is resolved without further consequence.",
             "options": [
-              { "label": "Gain Advocate 1", "effects": [{ "type": "SKILL_MOD", "target": "Advocate", "value": 1 }] },
-              { "label": "Gain Admin 1", "effects": [{ "type": "SKILL_MOD", "target": "Admin", "value": 1 }] }
+              {
+                "label": "Continue",
+                "effects": []
+              }
             ]
           }
         },
         {
-          "id": "merchant_event_8_fail",
-          "type": "MISHAP",
-          "trigger": "MISHAP",
+          "id": "merchant_event_8_prison",
+          "type": "INFO",
+          "trigger": "DURING_CAREER_TERM",
           "ui": {
-            "title": "Prison",
-            "description": "You are found guilty of minor infractions or unable to prove your innocence.",
-            "options": [{ "label": "Accept Sentence", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
+            "title": "Imprisoned",
+            "description": "You roll a 2 — you must take the Prisoner career next term.",
+            "options": [
+              {
+                "label": "Accept Sentence",
+                "effects": [
+                  {
+                    "type": "FORCE_CAREER",
+                    "value": "prisoner"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-choice", "skills": ["Advocate", "Admin"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Advocate",
+            "Admin",
+            "Diplomat",
+            "Investigate"
+          ]
+        }
+      ]
     },
     {
       "roll": 9,
-      "description": "Advanced Training. Roll EDU 8+. Success: Increase any known skill by +1 level.",
+      "description": "Advanced training in specialist field. Roll EDU 8+ to increase any one skill you already have by one level.",
       "gameEvent": {
         "id": "merchant_event_9",
         "type": "CHECK",
         "trigger": "DURING_CAREER_TERM",
         "ui": {
           "title": "Advanced Training",
-          "description": "You have the opportunity for advanced training.",
-          "options": [{
-            "label": "Attempt Training (EDU 8+)",
-            "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "merchant_event_9_pass", "onFail": "merchant_event_9_fail" }]
-          }]
+          "description": "You have the opportunity for advanced training in your specialist field.",
+          "options": [
+            {
+              "label": "Attempt Training (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "merchant_event_9_pass",
+                  "onFail": "merchant_event_9_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -294,8 +793,19 @@
           "trigger": "DURING_CAREER_TERM",
           "ui": {
             "title": "Training Successful",
-            "description": "You excel in your training.",
-            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+            "description": "You master a new level of an existing skill.",
+            "options": [
+              {
+                "label": "Improve Existing Skill",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "EXISTING_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -304,12 +814,30 @@
           "trigger": "DURING_CAREER_TERM",
           "ui": {
             "title": "Training Failed",
-            "description": "You fail to qualify for the advanced training.",
-            "options": [{ "label": "Continue", "effects": [] }]
+            "description": "The material is beyond your current level.",
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "existing-skill-up"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 10,
@@ -321,10 +849,26 @@
         "ui": {
           "title": "Good Deal",
           "description": "You pull off a particularly profitable trade deal.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Accept Reward",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefit-dm", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 11,
@@ -337,12 +881,59 @@
           "title": "Helpful Ally",
           "description": "A friend in a high place helps you out.",
           "options": [
-            { "label": "Carouse 1", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Business Partner" } }, { "type": "SKILL_MOD", "target": "Carouse", "value": 1 }] },
-            { "label": "Advancement DM+4", "effects": [{ "type": "ADD_NPC", "value": { "type": "ally", "note": "Business Partner" } }, { "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            {
+              "label": "Carouse 1",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Business Partner"
+                  }
+                },
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Carouse",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain a **ally**. Gain **Carouse +1**."
+            },
+            {
+              "label": "Advancement DM+4",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Business Partner"
+                  }
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ],
+              "revealText": "Gain a **ally**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "ally" }, { "type": "choice", "note": "Ally Benefit", "skills": ["Carouse 1", "Advancement DM+4"] }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "ally"
+        },
+        {
+          "type": "choice",
+          "note": "Ally Benefit",
+          "skills": [
+            "Carouse 1",
+            "Advancement DM+4"
+          ]
+        }
+      ]
     },
     {
       "roll": 12,
@@ -354,127 +945,285 @@
         "ui": {
           "title": "Thriving Business",
           "description": "Your business ventures are exceptionally successful.",
-          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Thriving Business" }] }]
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "PROMOTION",
+                  "note": "Thriving Business"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
     {
       "roll": 1,
-      "description": "Severely injured. Roll on the Injury table.",
+      "description": "Severely injured. Roll twice on the Injury table and take the lower result.",
       "gameEvent": {
         "id": "merchant_mishap_1",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Severely Injured",
-          "description": "You are severely injured during a trade mission or industrial accident.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
+          "description": "You are severely injured. Roll twice on the Injury table and take the lower result.",
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury_roll_worst_of_2"
+        }
+      ]
     },
     {
       "roll": 2,
-      "description": "Bankrupt.",
+      "description": "Bankrupted by a rival. Lose all Benefits from this career. Gain the other trader as a Rival.",
       "gameEvent": {
         "id": "merchant_mishap_2",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Bankrupt",
-          "description": "A series of bad investments or a market collapse leaves you bankrupt.",
-          "options": [{
-            "label": "Accept Losses",
-            "effects": [
-              { "type": "LOSE_CASH_BENEFITS" },
-              { "type": "EJECT_CAREER", "note": "Bankruptcy" },
-              { "type": "LOSE_BENEFIT", "value": 1 }
-            ]
-          }]
+          "title": "Bankrupted by Rival",
+          "description": "A rival trader bankrupts you. You lose all Benefits from this career and gain the trader as a Rival.",
+          "options": [
+            {
+              "label": "Accept Losses",
+              "effects": [
+                {
+                  "type": "LOSE_BENEFIT",
+                  "value": 100
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Rival Trader"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Bankrupted by Rival"
+                }
+              ],
+              "revealText": "Lose **100 Benefit Roll(s)**. Gain a **rival**. You are **ejected from this career** — Bankrupted by Rival."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "lose-cash-benefits" }, { "type": "forced-out" }, { "type": "lose-benefit" }]
+      "effects": [
+        {
+          "type": "lose-benefit"
+        },
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
     },
     {
       "roll": 3,
-      "description": "Trade War. Gain an Enemy.",
+      "description": "A sudden war destroys trade routes and contacts, forcing you to flee. Gain Gun Combat 1 or Pilot 1.",
       "gameEvent": {
         "id": "merchant_mishap_3",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Trade War",
-          "description": "You are on the losing side of a brutal trade war.",
-          "options": [{
-            "label": "Leave Sector",
-            "effects": [
-              { "type": "ADD_NPC", "value": { "type": "enemy", "note": "Corporate Rival" } },
-              { "type": "EJECT_CAREER", "note": "Lost Trade War" },
-              { "type": "LOSE_BENEFIT", "value": 1 }
-            ]
-          }]
-        }
-      },
-      "effects": [{ "type": "npc", "npcType": "enemy" }, { "type": "forced-out" }, { "type": "lose-benefit" }]
-    },
-    {
-      "roll": 4,
-      "description": "Legal Trouble.",
-      "gameEvent": {
-        "id": "merchant_mishap_4",
-        "type": "CHOICE",
-        "trigger": "MISHAP",
-        "ui": {
-          "title": "Legal Trouble",
-          "description": "Authorities accuse you of smuggling or tax evasion.",
+          "title": "War Disrupts Trade",
+          "description": "A sudden war destroys your trade routes and contacts, forcing you to flee. You learn to survive.",
           "options": [
-            { "label": "Accept Sentence", "effects": [{ "type": "TRIGGER_EVENT", "value": "prison_term" }, { "type": "EJECT_CAREER", "note": "Convicted" }] },
             {
-              "label": "Fight (Advocate 8+)",
-              "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "merchant_mishap_4_pass", "onFail": "merchant_mishap_4_fail" }]
+              "label": "Gun Combat 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Gun Combat (any)",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "War Disrupts Trade"
+                }
+              ],
+              "revealText": "Gain **Gun Combat (any) +1**. You are **ejected from this career** — War Disrupts Trade."
+            },
+            {
+              "label": "Pilot 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Pilot (any)",
+                  "value": 1
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "War Disrupts Trade"
+                }
+              ],
+              "revealText": "Gain **Pilot (any) +1**. You are **ejected from this career** — War Disrupts Trade."
             }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Legal Trouble", "skills": ["Advocate check"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Gun Combat",
+            "Pilot"
+          ]
+        }
+      ]
+    },
+    {
+      "roll": 4,
+      "description": "Ship or starport destroyed by criminals. Gain them as an Enemy.",
+      "gameEvent": {
+        "id": "merchant_mishap_4",
+        "type": "MISHAP",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Destroyed by Criminals",
+          "description": "Criminals destroy your ship or starport operation. You gain them as an Enemy.",
+          "options": [
+            {
+              "label": "Flee",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Criminal Organization"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Ship/Starport Destroyed"
+                }
+              ],
+              "revealText": "Gain a **enemy**. You are **ejected from this career** — Ship/Starport Destroyed."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        }
+      ]
     },
     {
       "roll": 5,
-      "description": "Market Crash. Ejected.",
+      "description": "Imperial trade restrictions force you out of business. May take the Rogue career next term without a qualification roll.",
       "gameEvent": {
         "id": "merchant_mishap_5",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Market Crash",
-          "description": "The market for your primary goods collapses.",
-          "options": [{ "label": "Look for New Work", "effects": [{ "type": "EJECT_CAREER", "note": "Market Crash" }, { "type": "LOSE_BENEFIT", "value": 1 }] }]
+          "title": "Trade Restrictions",
+          "description": "Imperial trade restrictions force you out of business. You may take the Rogue career next term without a qualification roll.",
+          "options": [
+            {
+              "label": "Accept Ejection",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Trade Restrictions"
+                },
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "next_qualification_dm",
+                  "value": 100,
+                  "note": "May take Rogue career without qualification roll"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Trade Restrictions."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "forced-out" }, { "type": "lose-benefit" }]
+      "effects": [
+        {
+          "type": "forced-out",
+          "note": "May take Rogue next term without qual roll"
+        }
+      ]
     },
     {
       "roll": 6,
-      "description": "Injured. Roll on the Injury table.",
+      "description": "Bad deals force bankruptcy. You salvage what you can: take a Benefit roll for this term as well as any others entitled to.",
       "gameEvent": {
         "id": "merchant_mishap_6",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Injured",
-          "description": "You are injured in an industrial accident.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+          "title": "Bad Deals",
+          "description": "Bad deals force you into bankruptcy. You salvage what you can, keeping your benefit rolls.",
+          "options": [
+            {
+              "label": "Accept Discharge",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Bad Deals"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Bad Deals."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "forced-out"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [1000, 5000, 10000, 20000, 20000, 40000, 40000],
-    "benefits": ["Blade", "INT +1", "EDU +1", "Weapon", "Ship Share", "Free Trader", "Two Ship Shares"]
+    "cash": [
+      1000,
+      5000,
+      10000,
+      20000,
+      20000,
+      40000,
+      40000
+    ],
+    "benefits": [
+      "Blade",
+      "INT +1",
+      "EDU +1",
+      "Gun",
+      "Ship Share",
+      "Free Trader",
+      "Free Trader"
+    ]
   },
   "medical": {
     "plan": "other",

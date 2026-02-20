@@ -5,66 +5,266 @@
   "qualification": {
     "stat": "END",
     "target": 5,
-    "minAttributes": { "str": 5, "dex": 5, "end": 5 }
+    "minAttributes": {
+      "str": 5,
+      "dex": 5,
+      "end": 5
+    }
   },
   "skills": {
-    "personal": ["STR +1", "DEX +1", "END +1", "Gambler", "Medic", "Melee (any)"],
-    "service": ["Drive (any)", "Athletics (any)", "Gun Combat (any)", "Recon", "Melee (any)", "Heavy Weapons (any)"],
-    "advanced": ["Tactics (Military)", "Electronics (any)", "Navigation", "Explosives", "Engineer (any)", "Survival"],
-    "officer": ["Tactics (Military)", "Leadership", "Advocate", "Diplomat", "Electronics (any)", "Admin"]
+    "personal": [
+      "STR +1",
+      "DEX +1",
+      "END +1",
+      "Gambler",
+      "Medic",
+      "Melee (any)"
+    ],
+    "service": [
+      "Drive (any)",
+      "Athletics (any)",
+      "Gun Combat (any)",
+      "Recon",
+      "Melee (any)",
+      "Heavy Weapons (any)"
+    ],
+    "advanced": [
+      "Tactics (Military)",
+      "Electronics (any)",
+      "Navigation",
+      "Explosives",
+      "Engineer (any)",
+      "Survival"
+    ],
+    "officer": [
+      "Tactics (Military)",
+      "Leadership",
+      "Advocate",
+      "Diplomat",
+      "Electronics (any)",
+      "Admin"
+    ]
   },
   "officerRanks": [
-    { "level": 1, "title": "Lieutenant", "bonus": { "skill": "Leadership", "value": 1 } },
-    { "level": 2, "title": "Captain" },
-    { "level": 3, "title": "Major", "bonus": { "skill": "Tactics (Military)", "value": 1 } },
-    { "level": 4, "title": "Lt Colonel" },
-    { "level": 5, "title": "Colonel" },
-    { "level": 6, "title": "General", "bonus": { "stat": "SOC", "value": "10 or +1" } }
+    {
+      "level": 1,
+      "title": "Lieutenant",
+      "bonus": {
+        "skill": "Leadership",
+        "value": 1
+      }
+    },
+    {
+      "level": 2,
+      "title": "Captain"
+    },
+    {
+      "level": 3,
+      "title": "Major",
+      "bonus": {
+        "skill": "Tactics (Military)",
+        "value": 1
+      }
+    },
+    {
+      "level": 4,
+      "title": "Lt Colonel"
+    },
+    {
+      "level": 5,
+      "title": "Colonel"
+    },
+    {
+      "level": 6,
+      "title": "General",
+      "bonus": {
+        "stat": "SOC",
+        "value": "10 or +1"
+      }
+    }
   ],
   "assignments": [
     {
       "name": "Support",
-      "survival": { "stat": "END", "target": 5 },
-      "advancement": { "stat": "EDU", "target": 7 },
-      "skills": ["Mechanic", "Drive (any)", "Profession (any)", "Explosives", "Electronics (comms)", "Medic"],
+      "survival": {
+        "stat": "END",
+        "target": 5
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 7
+      },
+      "skills": [
+        "Mechanic",
+        "Drive (any)",
+        "Profession (any)",
+        "Explosives",
+        "Electronics (comms)",
+        "Medic"
+      ],
       "ranks": [
-        { "level": 0, "title": "Private", "bonus": { "skill": "Gun Combat (slug)", "value": 1 } },
-        { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Recon", "value": 1 } },
-        { "level": 2, "title": "Corporal" },
-        { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "STR", "value": 1 } },
-        { "level": 6, "title": "Sergeant Major" }
+        {
+          "level": 0,
+          "title": "Private",
+          "bonus": {
+            "skill": "Gun Combat (slug)",
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "Lance Corporal",
+          "bonus": {
+            "skill": "Recon",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Corporal"
+        },
+        {
+          "level": 3,
+          "title": "Lance Sergeant",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Sergeant"
+        },
+        {
+          "level": 5,
+          "title": "Gunnery Sergeant"
+        },
+        {
+          "level": 6,
+          "title": "Sergeant Major"
+        }
       ]
     },
     {
       "name": "Infantry",
-      "survival": { "stat": "STR", "target": 6 },
-      "advancement": { "stat": "EDU", "target": 6 },
-      "skills": ["Gun Combat (any)", "Melee (any)", "Heavy Weapons (any)", "Stealth", "Athletics (any)", "Recon"],
+      "survival": {
+        "stat": "STR",
+        "target": 6
+      },
+      "advancement": {
+        "stat": "EDU",
+        "target": 6
+      },
+      "skills": [
+        "Gun Combat (any)",
+        "Melee (any)",
+        "Heavy Weapons (any)",
+        "Stealth",
+        "Athletics (any)",
+        "Recon"
+      ],
       "ranks": [
-        { "level": 0, "title": "Private", "bonus": { "skill": "Gun Combat (slug)", "value": 1 } },
-        { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Recon", "value": 1 } },
-        { "level": 2, "title": "Corporal" },
-        { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "STR", "value": 1 } },
-        { "level": 6, "title": "Sergeant Major" }
+        {
+          "level": 0,
+          "title": "Private",
+          "bonus": {
+            "skill": "Gun Combat (slug)",
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "Lance Corporal",
+          "bonus": {
+            "skill": "Recon",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Corporal"
+        },
+        {
+          "level": 3,
+          "title": "Lance Sergeant",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Sergeant"
+        },
+        {
+          "level": 5,
+          "title": "Gunnery Sergeant"
+        },
+        {
+          "level": 6,
+          "title": "Sergeant Major"
+        }
       ]
     },
     {
       "name": "Cavalry",
-      "survival": { "stat": "DEX", "target": 7 },
-      "advancement": { "stat": "INT", "target": 5 },
-      "skills": ["Mechanic", "Drive (any)", "Flyer (any)", "Recon", "Heavy Weapons (vehicle)", "Electronics (sensors)"],
+      "survival": {
+        "stat": "DEX",
+        "target": 7
+      },
+      "advancement": {
+        "stat": "INT",
+        "target": 5
+      },
+      "skills": [
+        "Mechanic",
+        "Drive (any)",
+        "Flyer (any)",
+        "Recon",
+        "Heavy Weapons (vehicle)",
+        "Electronics (sensors)"
+      ],
       "ranks": [
-        { "level": 0, "title": "Private", "bonus": { "skill": "Gun Combat (slug)", "value": 1 } },
-        { "level": 1, "title": "Lance Corporal", "bonus": { "skill": "Recon", "value": 1 } },
-        { "level": 2, "title": "Corporal" },
-        { "level": 3, "title": "Lance Sergeant", "bonus": { "skill": "Leadership", "value": 1 } },
-        { "level": 4, "title": "Sergeant" },
-        { "level": 5, "title": "Gunnery Sergeant", "bonus": { "stat": "STR", "value": 1 } },
-        { "level": 6, "title": "Sergeant Major" }
+        {
+          "level": 0,
+          "title": "Private",
+          "bonus": {
+            "skill": "Gun Combat (slug)",
+            "value": 1
+          }
+        },
+        {
+          "level": 1,
+          "title": "Lance Corporal",
+          "bonus": {
+            "skill": "Recon",
+            "value": 1
+          }
+        },
+        {
+          "level": 2,
+          "title": "Corporal"
+        },
+        {
+          "level": 3,
+          "title": "Lance Sergeant",
+          "bonus": {
+            "skill": "Leadership",
+            "value": 1
+          }
+        },
+        {
+          "level": 4,
+          "title": "Sergeant"
+        },
+        {
+          "level": 5,
+          "title": "Gunnery Sergeant"
+        },
+        {
+          "level": 6,
+          "title": "Sergeant Major"
+        }
       ]
     }
   ],
@@ -79,35 +279,94 @@
         "ui": {
           "title": "Disaster!",
           "description": "Something has gone terribly wrong. You must roll on the Mishap table, but you will not be ejected from this career.",
-          "options": [{ "label": "Roll Mishap", "effects": [{ "type": "TRIGGER_EVENT", "value": "mishap_roll" }] }]
-        }
-      },
-      "effects": [{ "type": "mishap" }]
-    },
-    {
-      "roll": 3,
-      "description": "Neural Jack opportunity. (Term 1-3 only).",
-      "gameEvent": {
-        "id": "army_event_3",
-        "type": "CHOICE",
-        "trigger": "DURING_CAREER_TERM",
-        "conditions": { "term": 3 },
-        "ui": {
-          "title": "Neural Jack Opportunity",
-          "description": "You are offered the chance to have a Neural Jack installed.",
           "options": [
             {
-              "label": "Consider Neural Jack",
-              "effects": [{ "type": "TRIGGER_EVENT", "value": "neural_jack_install" }]
-            },
-            {
-              "label": "Decline",
-              "effects": []
+              "label": "Roll Mishap",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "mishap_roll"
+                }
+              ]
             }
           ]
         }
       },
-      "effects": [{ "type": "neural-jack" }]
+      "effects": [
+        {
+          "type": "mishap"
+        }
+      ]
+    },
+    {
+      "roll": 3,
+      "description": "You are assigned to a planet with a hostile or wild environment. Gain one of Vacc Suit 1, Engineer 1, Animals (riding or training) 1 or Recon 1.",
+      "gameEvent": {
+        "id": "army_event_3",
+        "type": "CHOICE",
+        "trigger": "DURING_CAREER_TERM",
+        "ui": {
+          "title": "Hostile Environment",
+          "description": "You are assigned to a planet with a hostile or wild environment. Gain experience from surviving.",
+          "options": [
+            {
+              "label": "Vacc Suit 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Vacc Suit",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Vacc Suit +1**."
+            },
+            {
+              "label": "Engineer (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Engineer (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Engineer (any) +1**."
+            },
+            {
+              "label": "Animals (any) 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Animals (any)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Animals (any) +1**."
+            },
+            {
+              "label": "Recon 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Recon",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Recon +1**."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Vacc Suit",
+            "Engineer (any)",
+            "Animals (any)",
+            "Recon"
+          ]
+        }
+      ]
     },
     {
       "roll": 4,
@@ -120,14 +379,64 @@
           "title": "Urban War",
           "description": "You are deployed in a brutal urban war.",
           "options": [
-            { "label": "Stealth 1", "effects": [{ "type": "SKILL_MOD", "target": "Stealth", "value": 1 }] },
-            { "label": "Streetwise 1", "effects": [{ "type": "SKILL_MOD", "target": "Streetwise", "value": 1 }] },
-            { "label": "Persuade 1", "effects": [{ "type": "SKILL_MOD", "target": "Persuade", "value": 1 }] },
-            { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }] }
+            {
+              "label": "Stealth 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Stealth",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Stealth +1**."
+            },
+            {
+              "label": "Streetwise 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Streetwise",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Streetwise +1**."
+            },
+            {
+              "label": "Persuade 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Persuade",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Persuade +1**."
+            },
+            {
+              "label": "Recon 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Recon",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Recon +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Stealth", "Streetwise", "Persuade", "Recon"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Stealth",
+            "Streetwise",
+            "Persuade",
+            "Recon"
+          ]
+        }
+      ]
     },
     {
       "roll": 5,
@@ -139,10 +448,26 @@
         "ui": {
           "title": "Special Assignment",
           "description": "You are given a special assignment.",
-          "options": [{ "label": "Accept Reward", "effects": [{ "type": "RESOURCE_MOD", "target": "benefit_rolls", "value": 1 }] }]
+          "options": [
+            {
+              "label": "Accept Reward",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "benefit_rolls",
+                  "value": 1
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "benefit-mod", "value": 1 }]
+      "effects": [
+        {
+          "type": "benefitModifier",
+          "value": 1
+        }
+      ]
     },
     {
       "roll": 6,
@@ -154,10 +479,21 @@
         "ui": {
           "title": "Brutal War",
           "description": "You are thrown into a brutal war. Surviving requires learning quickly.",
-          "options": [{
-            "label": "Endure (EDU 8+)", 
-            "effects": [{ "type": "ROLL_CHECK", "stat": "EDU", "checkTarget": 8, "onPass": "army_event_6_pass", "onFail": "army_event_6_fail" }]
-          }]
+          "options": [
+            {
+              "label": "Endure (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "army_event_6_pass",
+                  "onFail": "army_event_6_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -169,8 +505,26 @@
             "title": "War Survivor",
             "description": "You survive the brutal conditions and learn valuable skills.",
             "options": [
-              { "label": "Gun Combat (Slug) 1", "effects": [{ "type": "SKILL_MOD", "target": "Gun Combat (Slug)", "value": 1 }] },
-              { "label": "Leadership 1", "effects": [{ "type": "SKILL_MOD", "target": "Leadership", "value": 1 }] }
+              {
+                "label": "Gun Combat (Slug) 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Gun Combat (Slug)",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "label": "Leadership 1",
+                "effects": [
+                  {
+                    "type": "SKILL_MOD",
+                    "target": "Leadership",
+                    "value": 1
+                  }
+                ]
+              }
             ]
           }
         },
@@ -181,11 +535,43 @@
           "ui": {
             "title": "Casualty",
             "description": "You are injured in the fighting.",
-            "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }] }]
+            "options": [
+              {
+                "label": "Roll Injury",
+                "effects": [
+                  {
+                    "type": "TRIGGER_EVENT",
+                    "value": "injury_roll"
+                  }
+                ]
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "skill-choice", "skills": ["Gun Combat", "Leadership"] }], "onFailure": [{ "type": "injury" }] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "skill-choice",
+              "skills": [
+                "Gun Combat",
+                "Leadership"
+              ]
+            }
+          ],
+          "onFailure": [
+            {
+              "type": "injury"
+            }
+          ]
+        }
+      ]
     },
     {
       "roll": 7,
@@ -197,10 +583,24 @@
         "ui": {
           "title": "Life Event",
           "description": "Something significant happens in your personal life.",
-          "options": [{ "label": "Roll Life Event", "effects": [{ "type": "TRIGGER_EVENT", "value": "life_event_roll" }] }]
+          "options": [
+            {
+              "label": "Roll Life Event",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "life_event_roll"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "life-event" }]
+      "effects": [
+        {
+          "type": "life-event"
+        }
+      ]
     },
     {
       "roll": 8,
@@ -212,16 +612,21 @@
         "ui": {
           "title": "Advanced Training",
           "description": "You have the opportunity for advanced training. Roll EDU 8+.",
-          "options": [{
-            "label": "Attempt Training (EDU 8+)",
-            "effects": [{
-              "type": "ROLL_CHECK",
-              "stat": "EDU",
-              "checkTarget": 8,
-              "onPass": "army_event_8_pass",
-              "onFail": "army_event_8_fail"
-            }]
-          }]
+          "options": [
+            {
+              "label": "Attempt Training (EDU 8+)",
+              "effects": [
+                {
+                  "type": "ROLL_CHECK",
+                  "stat": "EDU",
+                  "checkTarget": 8,
+                  "onPass": "army_event_8_pass",
+                  "onFail": "army_event_8_fail"
+                }
+              ],
+              "revealText": "Roll **EDU 8+** — success and failure lead to different outcomes."
+            }
+          ]
         }
       },
       "subEvents": [
@@ -232,7 +637,18 @@
           "ui": {
             "title": "Training Successful",
             "description": "You excel in your training.",
-            "options": [{ "label": "Increase Any Skill", "effects": [{ "type": "CUSTOM", "customId": "ANY_SKILL_UP", "payload": {} }] }]
+            "options": [
+              {
+                "label": "Increase Any Skill",
+                "effects": [
+                  {
+                    "type": "CUSTOM",
+                    "customId": "ANY_SKILL_UP",
+                    "payload": {}
+                  }
+                ]
+              }
+            ]
           }
         },
         {
@@ -242,11 +658,30 @@
           "ui": {
             "title": "Training Failed",
             "description": "You fail to qualify for the advanced training.",
-            "options": [{ "label": "Continue", "effects": [] }]
+            "options": [
+              {
+                "label": "Continue",
+                "effects": []
+              }
+            ]
           }
         }
       ],
-      "effects": [{ "type": "skill-check", "target": 8, "checkSkills": ["EDU"], "onSuccess": [{ "type": "any-skill-up" }], "onFailure": [] }]
+      "effects": [
+        {
+          "type": "skill-check",
+          "target": 8,
+          "checkSkills": [
+            "EDU"
+          ],
+          "onSuccess": [
+            {
+              "type": "any-skill-up"
+            }
+          ],
+          "onFailure": []
+        }
+      ]
     },
     {
       "roll": 9,
@@ -258,10 +693,26 @@
         "ui": {
           "title": "Surrounded",
           "description": "You are surrounded and outnumbered but hold out until relief arrives.",
-          "options": [{ "label": "Accept Commendation", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 2 }] }]
+          "options": [
+            {
+              "label": "Accept Commendation",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 2
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "advancement-dm", "value": 2 }]
+      "effects": [
+        {
+          "type": "advancementModifier",
+          "value": 2
+        }
+      ]
     },
     {
       "roll": 10,
@@ -274,14 +725,64 @@
           "title": "Peacekeeping",
           "description": "You are assigned to peacekeeping duties.",
           "options": [
-            { "label": "Admin 1", "effects": [{ "type": "SKILL_MOD", "target": "Admin", "value": 1 }] },
-            { "label": "Investigate 1", "effects": [{ "type": "SKILL_MOD", "target": "Investigate", "value": 1 }] },
-            { "label": "Deception 1", "effects": [{ "type": "SKILL_MOD", "target": "Deception", "value": 1 }] },
-            { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }] }
+            {
+              "label": "Admin 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Admin",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Admin +1**."
+            },
+            {
+              "label": "Investigate 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Investigate",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Investigate +1**."
+            },
+            {
+              "label": "Deception 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Deception",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Deception +1**."
+            },
+            {
+              "label": "Recon 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Recon",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Recon +1**."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Admin", "Investigate", "Deception", "Recon"] }]
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Admin",
+            "Investigate",
+            "Deception",
+            "Recon"
+          ]
+        }
+      ]
     },
     {
       "roll": 11,
@@ -294,12 +795,36 @@
           "title": "Command Interest",
           "description": "Your Commanding Officer takes an interest in your career.",
           "options": [
-            { "label": "Learn Tactics (Military)", "effects": [{ "type": "SKILL_MOD", "target": "Tactics (Military)", "value": 1 }] },
-            { "label": "Career Advice (Advancement DM+4)", "effects": [{ "type": "RESOURCE_MOD", "target": "next_advancement_dm", "value": 4 }] }
+            {
+              "label": "Learn Tactics (Military)",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Tactics (Military)",
+                  "value": 1
+                }
+              ],
+              "revealText": "Gain **Tactics (Military) +1**."
+            },
+            {
+              "label": "Career Advice (Advancement DM+4)",
+              "effects": [
+                {
+                  "type": "RESOURCE_MOD",
+                  "target": "nextAdvancementModifier",
+                  "value": 4
+                }
+              ]
+            }
           ]
         }
       },
-      "effects": [{ "type": "choice", "note": "Officer Interest: Tactics 1 OR DM+4 Advancement" }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Officer Interest: Tactics 1 OR DM+4 Advancement"
+        }
+      ]
     },
     {
       "roll": 12,
@@ -311,84 +836,227 @@
         "ui": {
           "title": "Heroism",
           "description": "You display exceptional heroism.",
-          "options": [{ "label": "Accept Promotion", "effects": [{ "type": "PROMOTION", "note": "Heroism In Battle" }] }]
+          "options": [
+            {
+              "label": "Accept Promotion",
+              "effects": [
+                {
+                  "type": "PROMOTION",
+                  "note": "Heroism In Battle"
+                }
+              ],
+              "revealText": "Receive a **promotion** and rank bonus."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "auto-promotion" }]
+      "effects": [
+        {
+          "type": "auto-promotion"
+        }
+      ]
     }
   ],
   "mishapTable": [
     {
       "roll": 1,
-      "description": "Severely injured in action. Roll on the Injury table.",
+      "description": "Severely injured in action. Roll twice on the Injury table and take the lower result.",
       "gameEvent": {
         "id": "army_mishap_1",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Severely Injured",
-          "description": "You are severely injured in the line of duty. You must be ejected from the Army.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Severely Injured" }] }]
-        }
-      },
-      "effects": [{ "type": "injury" }]
-    },
-    {
-      "roll": 2,
-      "description": "You are psychologically damaged by your time in the service. Reduce END by 1 and gain PTSD trait.",
-      "gameEvent": {
-        "id": "army_mishap_2",
-        "type": "MISHAP",
-        "trigger": "MISHAP",
-        "ui": {
-          "title": "Psychological Trauma",
-          "description": "You are psychologically damaged by your time in the service. You are discharged.",
+          "description": "You are severely injured in the line of duty. Roll twice on the Injury table and take the lower result.",
           "options": [
             {
-              "label": "Accept Discharge",
+              "label": "Roll Injury",
               "effects": [
-                { "type": "STAT_MOD", "target": "END", "value": -1 },
-                { "type": "TRAIT_GAIN", "note": "Survivor (PTSD)" },
-                { "type": "EJECT_CAREER", "note": "Medical Discharge (Psychological)" }
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll_worst_of_2"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Severely Injured"
+                }
               ]
             }
           ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "END", "value": -1 }, { "type": "trait-gain", "note": "Survivor (PTSD)" }]
+      "effects": [
+        {
+          "type": "injury-worst-of-2"
+        }
+      ]
     },
     {
-      "roll": 3,
-      "description": "Your unit is slaughtered in a disastrous battle. Gain Survival 1 or Recon 1.",
+      "roll": 2,
+      "description": "Your unit is slaughtered in a disastrous battle, for which you blame your commander. Gain them as an Enemy as they have you removed from the service.",
       "gameEvent": {
-        "id": "army_mishap_3",
+        "id": "army_mishap_2",
         "type": "MISHAP",
         "trigger": "MISHAP",
         "ui": {
           "title": "Unit Slaughtered",
-          "description": "Your unit is slaughtered in a disastrous battle. You are one of the few survivors.",
+          "description": "Your unit is slaughtered in a disastrous battle, for which you blame your commander. Gain them as an Enemy as they have you removed from the service.",
           "options": [
-            { "label": "Survival 1", "effects": [{ "type": "SKILL_MOD", "target": "Survival", "value": 1 }, { "type": "EJECT_CAREER", "note": "Unit Destroyed" }] },
-            { "label": "Recon 1", "effects": [{ "type": "SKILL_MOD", "target": "Recon", "value": 1 }, { "type": "EJECT_CAREER", "note": "Unit Destroyed" }] }
+            {
+              "label": "Accept Discharge",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Commander who got your unit killed"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Removed by Commander"
+                }
+              ],
+              "revealText": "Gain a **enemy**. You are **ejected from this career** — Removed by Commander."
+            }
           ]
         }
       },
-      "effects": [{ "type": "skill-choice", "skills": ["Survival", "Recon"] }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
+    },
+    {
+      "roll": 3,
+      "description": "You are sent to a very unpleasant region to battle guerilla fighters. Discharged due to stress/injury. Gain Recon or Survival 1, but also gain the rebels as an Enemy.",
+      "gameEvent": {
+        "id": "army_mishap_3",
+        "type": "CHOICE",
+        "trigger": "MISHAP",
+        "ui": {
+          "title": "Unpleasant Region",
+          "description": "You are sent to a very unpleasant region (jungle, swamp, desert, icecap, urban) to battle against guerilla fighters. You are discharged because of stress, injury or because the government wishes to bury the whole incident. Gain a skill but also gain the rebels as an Enemy.",
+          "options": [
+            {
+              "label": "Recon 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Recon",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Rebel/Guerilla Force"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Discharged"
+                }
+              ],
+              "revealText": "Gain **Recon +1**. Gain a **enemy**. You are **ejected from this career** — Discharged."
+            },
+            {
+              "label": "Survival 1",
+              "effects": [
+                {
+                  "type": "SKILL_MOD",
+                  "target": "Survival",
+                  "value": 1
+                },
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "enemy",
+                    "note": "Rebel/Guerilla Force"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Discharged"
+                }
+              ],
+              "revealText": "Gain **Survival +1**. Gain a **enemy**. You are **ejected from this career** — Discharged."
+            }
+          ]
+        }
+      },
+      "effects": [
+        {
+          "type": "skill-choice",
+          "skills": [
+            "Recon",
+            "Survival"
+          ]
+        },
+        {
+          "type": "npc",
+          "npcType": "enemy"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 4,
-      "description": "Scandal. You are discharged. Lose SOC 1.",
+      "description": "You discover your commanding officer is engaged in illegal activity (weapon smuggling etc). Join their ring (gain Ally, get discharged) or co-operate with MPs (keep Benefit roll, get discharged anyway).",
       "gameEvent": {
         "id": "army_mishap_4",
-        "type": "MISHAP",
+        "type": "CHOICE",
         "trigger": "MISHAP",
         "ui": {
-          "title": "Scandal",
-          "description": "You are involved in a scandal and discharged from the service.",
-          "options": [{ "label": "Accept Discharge", "effects": [{ "type": "STAT_MOD", "target": "SOC", "value": -1 }, { "type": "EJECT_CAREER", "note": "Dishonorable Discharge" }, { "type": "LOSE_BENEFIT", "value": 100 }] }]
+          "title": "Illegal Activity Discovered",
+          "description": "You discover that your commanding officer is engaged in some illegal activity, such as weapon smuggling. Join their ring and gain them as an Ally before the inevitable investigation gets you discharged, or co-operate with the military police — the official whitewash gets you discharged anyway but you may keep your Benefit roll.",
+          "options": [
+            {
+              "label": "Join Their Ring (gain Ally, get discharged)",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "ally",
+                    "note": "Corrupt Commanding Officer"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Discharged after investigation"
+                }
+              ],
+              "revealText": "Gain a **ally**. You are **ejected from this career** — Discharged after investigation."
+            },
+            {
+              "label": "Co-operate with MPs (keep Benefit roll, get discharged)",
+              "effects": [
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Discharged — official whitewash"
+                }
+              ],
+              "revealText": "You are **ejected from this career** — Discharged — official whitewash."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "stat-bonus", "stat": "SOC", "value": -1 }]
+      "effects": [
+        {
+          "type": "choice",
+          "note": "Illegal CO Activity"
+        },
+        {
+          "type": "forced-out"
+        }
+      ]
     },
     {
       "roll": 5,
@@ -400,10 +1068,33 @@
         "ui": {
           "title": "Torment",
           "description": "You are tormented by or quarrel with an officer or fellow soldier. You choose to leave.",
-          "options": [{ "label": "Leave Army", "effects": [{ "type": "ADD_NPC", "value": { "type": "rival", "note": "Officer/Soldier" } }, { "type": "EJECT_CAREER", "note": "Quarrel" }] }]
+          "options": [
+            {
+              "label": "Leave Army",
+              "effects": [
+                {
+                  "type": "ADD_NPC",
+                  "value": {
+                    "type": "rival",
+                    "note": "Officer/Soldier"
+                  }
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Quarrel"
+                }
+              ],
+              "revealText": "Gain a **rival**. You are **ejected from this career** — Quarrel."
+            }
+          ]
         }
       },
-      "effects": [{ "type": "npc", "npcType": "rival" }]
+      "effects": [
+        {
+          "type": "npc",
+          "npcType": "rival"
+        }
+      ]
     },
     {
       "roll": 6,
@@ -415,27 +1106,86 @@
         "ui": {
           "title": "Injured",
           "description": "You are injured in an accident involving military equipment.",
-          "options": [{ "label": "Roll Injury", "effects": [{ "type": "TRIGGER_EVENT", "value": "injury_roll" }, { "type": "EJECT_CAREER", "note": "Medical Discharge" }] }]
+          "options": [
+            {
+              "label": "Roll Injury",
+              "effects": [
+                {
+                  "type": "TRIGGER_EVENT",
+                  "value": "injury_roll"
+                },
+                {
+                  "type": "EJECT_CAREER",
+                  "note": "Medical Discharge"
+                }
+              ]
+            }
+          ]
         }
       },
-      "effects": [{ "type": "injury" }]
+      "effects": [
+        {
+          "type": "injury"
+        }
+      ]
     }
   ],
   "musteringOut": {
-    "cash": [2000, 5000, 10000, 10000, 10000, 20000, 30000],
-    "benefits": ["Combat Implant", "INT +1", "EDU +1", "Weapon", "Armour", "SOC +1", "Ship Share"]
+    "cash": [
+      2000,
+      5000,
+      10000,
+      10000,
+      10000,
+      20000,
+      30000
+    ],
+    "benefits": [
+      "Cybernetic Implant",
+      "INT +1",
+      "EDU +1",
+      "Weapon",
+      "Armour",
+      {
+        "choose": 1,
+        "options": [
+          "END +1",
+          "Cybernetic Implant"
+        ]
+      },
+      "SOC +1"
+    ]
   },
   "academy": {
     "admission": {
       "stat": "END",
       "target": 8,
-      "requirements": { "str": 5, "dex": 5, "end": 5 }
+      "requirements": {
+        "str": 5,
+        "dex": 5,
+        "end": 5
+      }
     },
-    "skills": ["Drive", "Athletics", "Gun Combat", "Recon", "Melee", "Heavy Weapons"],
-    "honors": { "rank": 1, "title": "Lieutenant" }
+    "skills": [
+      "Drive",
+      "Athletics",
+      "Gun Combat",
+      "Recon",
+      "Melee",
+      "Heavy Weapons"
+    ],
+    "honors": {
+      "rank": 1,
+      "title": "Lieutenant"
+    }
   },
   "medical": {
     "plan": "military",
-    "coverage": { "below4": 0, "range4to7": 75, "range8to11": 100, "above12": 100 }
+    "coverage": {
+      "below4": 0,
+      "range4to7": 75,
+      "range8to11": 100,
+      "above12": 100
+    }
   }
 }

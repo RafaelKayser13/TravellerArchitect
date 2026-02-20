@@ -91,6 +91,7 @@
                     "options": [
                         {
                             "label": "Reduce STR by 2",
+                            "revealText": "Strength permanently reduced by 2. Represents loss of an arm or similar strength-affecting wound.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -109,6 +110,7 @@
                         },
                         {
                             "label": "Reduce DEX by 2",
+                            "revealText": "Dexterity permanently reduced by 2. Represents loss of a hand, eye, or fine motor function.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -153,6 +155,7 @@
                     "options": [
                         {
                             "label": "Reduce STR by 2",
+                            "revealText": "Strength permanently reduced by 2. Muscle or skeletal damage from the scarring trauma.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -163,6 +166,7 @@
                         },
                         {
                             "label": "Reduce DEX by 2",
+                            "revealText": "Dexterity permanently reduced by 2. Nerve damage or loss of fine motor control.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -173,6 +177,7 @@
                         },
                         {
                             "label": "Reduce END by 2",
+                            "revealText": "Endurance permanently reduced by 2. Internal scarring or organ damage reduces your stamina.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -209,6 +214,7 @@
                     "options": [
                         {
                             "label": "Reduce STR by 1",
+                            "revealText": "Strength permanently reduced by 1.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -219,6 +225,7 @@
                         },
                         {
                             "label": "Reduce DEX by 1",
+                            "revealText": "Dexterity permanently reduced by 1.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -229,6 +236,7 @@
                         },
                         {
                             "label": "Reduce END by 1",
+                            "revealText": "Endurance permanently reduced by 1.",
                             "effects": [
                                 {
                                     "type": "STAT_MOD",
@@ -323,18 +331,37 @@
             "description": "Birth or Death: Someone close to you dies, or a new life enters your circle.",
             "gameEvent": {
                 "id": "life_3",
-                "type": "INFO",
+                "type": "CHOICE",
                 "trigger": "LIFE_EVENT",
                 "ui": {
                     "title": "Birth or Death",
-                    "description": "A significant personal event involves a close relation.",
+                    "description": "A significant personal event touches your inner circle. What happened?",
                     "options": [
                         {
-                            "label": "Accept Change",
+                            "label": "A loved one has passed away",
+                            "revealText": "Someone close to you has died. You grieve the loss and carry it with you.",
                             "effects": [
                                 {
                                     "type": "LOG_ENTRY",
-                                    "note": "Life Event: Birth or Death involves a close relation."
+                                    "note": "Life Event: A close relation has died. You carry the grief with you."
+                                }
+                            ]
+                        },
+                        {
+                            "label": "A child or relative is born",
+                            "revealText": "A new life has entered your world. You gain an Ally — someone you will protect.",
+                            "effects": [
+                                {
+                                    "type": "ADD_NPC",
+                                    "value": {
+                                        "type": "Ally",
+                                        "name": "Family Member",
+                                        "notes": "Born during your service"
+                                    }
+                                },
+                                {
+                                    "type": "LOG_ENTRY",
+                                    "note": "Life Event: A child or relative was born. Gained an Ally."
                                 }
                             ]
                         }
@@ -484,6 +511,35 @@
             "roll": 6,
             "name": "New Relationship",
             "description": "New Relationship: You become involved in a new romantic relationship.",
+            "gameEvent": {
+                "id": "life_6",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "New Relationship",
+                    "description": "You have become involved in a new romantic relationship. Despite the uncertainties of your life, this person has become important to you.",
+                    "options": [
+                        {
+                            "label": "Embrace the Relationship",
+                            "revealText": "Your partner becomes an Ally — someone who supports you in difficult times.",
+                            "effects": [
+                                {
+                                    "type": "ADD_NPC",
+                                    "value": {
+                                        "type": "Ally",
+                                        "name": "New Partner",
+                                        "notes": "Romantic partner met during service"
+                                    }
+                                },
+                                {
+                                    "type": "LOG_ENTRY",
+                                    "note": "Life Event: New romantic relationship. Gained an Ally."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
             "effects": [
                 {
                     "type": "LOG_ENTRY",
@@ -502,6 +558,35 @@
             "roll": 7,
             "name": "New Contact",
             "description": "New Contact: You gain a new contact outside of your career.",
+            "gameEvent": {
+                "id": "life_7",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "New Contact",
+                    "description": "You have met someone interesting outside of your career — a person with their own network, skills, and connections who may prove useful in the future.",
+                    "options": [
+                        {
+                            "label": "Note the Contact",
+                            "revealText": "This person becomes a Contact in your network.",
+                            "effects": [
+                                {
+                                    "type": "ADD_NPC",
+                                    "value": {
+                                        "type": "Contact",
+                                        "name": "New Contact",
+                                        "notes": "Met outside of career"
+                                    }
+                                },
+                                {
+                                    "type": "LOG_ENTRY",
+                                    "note": "Life Event: Gained a new Contact outside of career."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
             "effects": [
                 {
                     "type": "LOG_ENTRY",
@@ -520,6 +605,28 @@
             "roll": 8,
             "name": "Betrayal",
             "description": "Betrayal: You have been betrayed by a friend or colleague.",
+            "gameEvent": {
+                "id": "life_8",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Betrayal",
+                    "description": "Someone you trusted has turned against you — selling your secrets, abandoning you at a critical moment, or actively working to undermine you.",
+                    "options": [
+                        {
+                            "label": "Confront the Betrayal",
+                            "revealText": "An existing Contact or Ally becomes a Rival. If you have no one to betray you, a new Enemy appears.",
+                            "effects": [
+                                {
+                                    "type": "CUSTOM",
+                                    "customId": "BETRAYAL_LOGIC",
+                                    "payload": {}
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
             "effects": [
                 {
                     "type": "LOG_ENTRY",
@@ -829,33 +936,151 @@
     "unusualEventTable": [
         {
             "roll": 1,
-            "description": "Psionic Latency",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Psionic potential discovered." }]
+            "description": "Psionics",
+            "gameEvent": {
+                "id": "unusual_1",
+                "type": "INFO",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Unusual Event: Psionics",
+                    "description": "You encounter a psionic training institute operating outside official channels. Latent abilities may be lying dormant within you.",
+                    "options": [{
+                        "label": "Accept Testing",
+                        "revealText": "Your psionic potential flag will be set. This may unlock special options later in character creation.",
+                        "effects": [
+                            { "type": "CUSTOM", "customId": "PSIONIC_CONTACT" },
+                            { "type": "LOG_ENTRY", "note": "Unusual Event: Psionic potential discovered." }
+                        ]
+                    }]
+                }
+            },
+            "effects": [
+                { "type": "CUSTOM", "customId": "PSIONIC_CONTACT" },
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Potencial psi\u00f4nico latente descoberto." }
+            ]
         },
         {
             "roll": 2,
-            "description": "Ancient Technology",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Encountered ancient tech." }]
+            "description": "Aliens",
+            "gameEvent": {
+                "id": "unusual_2",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Unusual Event: Aliens",
+                    "description": "You spend an extended period living and working among a non-human species. The experience is disorienting but deeply enlightening.",
+                    "options": [{
+                        "label": "Embrace the Experience",
+                        "revealText": "Gain Science 1 and an alien Contact.",
+                        "effects": [
+                            { "type": "SKILL_MOD", "target": "Science", "value": 1 },
+                            { "type": "ADD_NPC", "value": { "type": "Contact", "name": "Alien Acquaintance", "notes": "Non-human contact from unusual encounter" } },
+                            { "type": "LOG_ENTRY", "note": "Unusual Event: Lived among aliens. Gained Science 1 and an alien Contact." }
+                        ]
+                    }]
+                }
+            },
+            "effects": [
+                { "type": "SKILL_MOD", "target": "Science", "value": 1 },
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Alien Contact" } },
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Passou um per\u00edodo entre uma esp\u00e9cie alien\u00edgena. Ganha Science 1 e um Contact alien\u00edgena." }
+            ]
         },
         {
             "roll": 3,
-            "description": "Alien Encounter",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: First contact situation." }]
+            "description": "Alien Artefact",
+            "gameEvent": {
+                "id": "unusual_3",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Unusual Event: Alien Artefact",
+                    "description": "You come into possession of a strange, ancient object clearly not of human origin. It is not available on any known market and its purpose is unclear.",
+                    "options": [{
+                        "label": "Keep the Artefact",
+                        "revealText": "The artefact is added to your equipment. Its true value or function is unknown.",
+                        "effects": [
+                            { "type": "ADD_ITEM", "value": "Alien Artefact (origin unknown)" },
+                            { "type": "LOG_ENTRY", "note": "Unusual Event: Found a strange alien artefact." }
+                        ]
+                    }]
+                }
+            },
+            "effects": [
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Encontrou um artefato alien\u00edgena." }
+            ]
         },
         {
             "roll": 4,
-            "description": "Time Loss",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Missing time." }]
+            "description": "Amnesia",
+            "gameEvent": {
+                "id": "unusual_4",
+                "type": "MISHAP",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Unusual Event: Amnesia",
+                    "description": "Something happened \u2014 but you don't know what. There is a gap in your memory, a period you cannot account for. Perhaps it was an accident. Perhaps someone wanted it that way.",
+                    "options": [{
+                        "label": "Accept the Gap",
+                        "revealText": "No mechanical penalty. The event is recorded in your history as an unexplained gap.",
+                        "effects": [
+                            { "type": "LOG_ENTRY", "note": "Unusual Event: Amnesia \u2014 an unexplained gap in your memory. Something happened, but you don't know what." }
+                        ]
+                    }]
+                }
+            },
+            "effects": [
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Algo aconteceu, mas voc\u00ea n\u00e3o sabe o qu\u00ea. H\u00e1 uma lacuna em sua mem\u00f3ria." }
+            ]
         },
         {
             "roll": 5,
-            "description": "Secret Society",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Approached by a secret society." }]
+            "description": "Contact with Government",
+            "gameEvent": {
+                "id": "unusual_5",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Unusual Event: Government Contact",
+                    "description": "Through an unlikely sequence of events, you have a brief but meaningful interaction with someone at the highest levels of government \u2014 an Archduke, an Imperial intelligence officer, or perhaps someone even higher.",
+                    "options": [{
+                        "label": "Make the Connection",
+                        "revealText": "Gain a high-tier government Contact. This connection may prove extremely valuable \u2014 or extremely dangerous.",
+                        "effects": [
+                            { "type": "ADD_NPC", "value": { "type": "Contact", "name": "Government Official", "notes": "High-ranking government contact from unusual encounter" } },
+                            { "type": "LOG_ENTRY", "note": "Unusual Event: Gained a high-ranking government Contact." }
+                        ]
+                    }]
+                }
+            },
+            "effects": [
+                { "type": "ADD_NPC", "value": { "type": "contact", "note": "Contato Imperial de alto escal\u00e3o" } },
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Breve contato com os mais altos escal\u00f5es do governo." }
+            ]
         },
         {
             "roll": 6,
-            "description": "Prophecy",
-            "effects": [{ "type": "LOG_ENTRY", "note": "Unusual Event: Named in a prophecy." }]
+            "description": "Ancient Technology",
+            "gameEvent": {
+                "id": "unusual_6",
+                "type": "REWARD",
+                "trigger": "LIFE_EVENT",
+                "ui": {
+                    "title": "Unusual Event: Ancient Technology",
+                    "description": "You encounter something older than the Imperium \u2014 older, perhaps, than humanity itself. Its purpose is unclear. Its power, undeniable.",
+                    "options": [{
+                        "label": "Take It",
+                        "revealText": "The ancient device is added to your equipment. What it does, and who might want it, remains to be discovered.",
+                        "effects": [
+                            { "type": "ADD_ITEM", "value": "Ancient Technology (pre-human origin)" },
+                            { "type": "LOG_ENTRY", "note": "Unusual Event: Found something older than humanity." }
+                        ]
+                    }]
+                }
+            },
+            "effects": [
+                { "type": "LOG_ENTRY", "note": "Unusual Event: Encontrou algo mais antigo que o Imp\u00e9rio." }
+            ]
         }
     ],
     "medicalBills": [

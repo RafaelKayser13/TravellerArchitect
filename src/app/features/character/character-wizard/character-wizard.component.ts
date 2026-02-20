@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { IdentityComponent } from '../steps/identity/identity.component';
+import { SpeciesComponent } from '../steps/species/species.component';
 import { AttributesComponent } from '../steps/attributes/attributes.component';
 import { OriginComponent } from '../steps/origin/origin.component';
 import { EducationComponent } from '../steps/education/education.component';
@@ -30,6 +31,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
   standalone: true,
   imports: [
     IdentityComponent,
+    SpeciesComponent,
     AttributesComponent,
     OriginComponent,
     EducationComponent,
