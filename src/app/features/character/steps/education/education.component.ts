@@ -715,7 +715,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         this.eventEngine.registerCustomHandler('POLITICS', async () => {
             const char = this.characterService.character();
             const statMod = this.diceService.getModifier(char.characteristics.soc.value + char.characteristics.soc.modifier);
-            const polRoll = await this.diceDisplay.roll('Politics Check (SOC)', 2, statMod, 8, 'SOC');
+            const polMods = statMod !== 0 ? [{ label: 'SOC', value: statMod }] : [];
+            const polRoll = await this.diceDisplay.roll('Politics Check (SOC)', 2, statMod, 8, 'SOC', undefined, polMods);
             
             if (polRoll + statMod >= 8) {
                 this.characterService.addNpc({
@@ -955,7 +956,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         const charStat = (char.characteristics as any)[stat];
         const statMod = this.diceService.getModifier(charStat.value + charStat.modifier);
         
-        const roll = await this.diceDisplay.roll(`Tutor Check (${skill})`, 2, statMod, 9, 'EDU');
+        const tutorMods = statMod !== 0 ? [{ label: 'EDU', value: statMod }] : [];
+        const roll = await this.diceDisplay.roll(`Tutor Check (${skill})`, 2, statMod, 9, 'EDU', undefined, tutorMods);
         if (roll + statMod >= 9) {
             this.characterService.addSkill(skill, 1);
             this.characterService.addNpc({

@@ -130,7 +130,7 @@
                             <div class="mod-pill"
                                 *ngIf="(!request.modifiers || request.modifiers.length === 0) && request.dm !== 0"
                                 [class.pos]="request.dm > 0" [class.neg]="request.dm < 0">
-                                NET_OFFSET: {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
+                                DM: {{ request.dm >= 0 ? '+' : ''}}{{ request.dm }}
                             </div>
                         </div>
                     </div>

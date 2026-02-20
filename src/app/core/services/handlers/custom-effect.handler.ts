@@ -23,7 +23,7 @@ export class CustomEffectHandler implements EffectHandler {
                 break;
             case 'TRIGGER_EVENT':
                  if (effect.value) {
-                     ctx.eventEngine.triggerEvent(effect.value);
+                     ctx.eventEngine.triggerEvent(effect.value, true); // Replace current event (don't stack parent)
                  }
                  break;
         }
