@@ -21,6 +21,8 @@ export interface RollContext {
   successContext?: string;
   /** What failure means for the character in plain language. */
   failureContext?: string;
+  /** Debug table data to display in the modal (e.g. Education Events table) */
+  debugTableData?: any;
 }
 
 export interface RollRequest extends RollContext {

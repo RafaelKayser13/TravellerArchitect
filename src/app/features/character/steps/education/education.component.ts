@@ -766,7 +766,8 @@ export class EducationComponent implements OnInit, OnDestroy {
             phase: `EDUCATION · TERM EVENT · ${this.educationType.toUpperCase()}`,
             announcement: `**Education Event Roll** (${this.educationType})\n\nRoll 2D6 to determine what significant event occurred during your studies this term. Results range from tragedies and pranks to useful skills and academic recognition.`,
             successContext: `The event unfolds. Review the outcome below.`,
-            failureContext: ``
+            failureContext: ``,
+            debugTableData: EDUCATION_EVENT_TABLE
         });
 
         this.characterService.log(`**Education Event** (Roll ${roll})`);
