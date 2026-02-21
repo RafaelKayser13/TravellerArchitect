@@ -7,6 +7,7 @@ declare var pdfMake: any;
 
 interface SkillGroup {
   name: string;
+  parentLevel?: number;
   children: any[];
 }
 
@@ -40,12 +41,85 @@ export class CharacterSheetComponent implements OnInit {
   }
 
   skillsTree() {
-     // Properly typed to avoid 'never' errors in template
-     const groups: SkillGroup[] = [];
-     return { 
-       groups: groups, 
-       standalone: this.character().skills 
-     };
+    // Group skills by parent skill name
+    const char = this.character();
+    const grouped = new Map<string, any[]>();
+    const parentInfo = new Map<string, { level: number }>();
+    const standalone: any[] = [];
+
+    char.skills.forEach((skill) => {
+      // If skill has a specialization, group it under the parent skill name
+      if (skill.specialization) {
+        const parentName = skill.name;
+        if (!grouped.has(parentName)) {
+          grouped.set(parentName, []);
+        }
+        grouped.get(parentName)!.push({
+          name: skill.name,
+          specialization: skill.specialization,
+          level: skill.level
+        });
+        // Track highest level of specializations for this parent
+        const current = parentInfo.get(parentName);
+        if (!current || skill.level > current.level) {
+          parentInfo.set(parentName, { level: skill.level });
+        }
+      } else {
+        // Skills without specialization stay standalone
+        standalone.push(skill);
+      }
+    });
+
+    // Convert map to array of groups, with parent skill info
+    const groups: SkillGroup[] = Array.from(grouped.entries()).map(([name, children]) => ({
+      name,
+      parentLevel: parentInfo.get(name)?.level || 0,
+      children
+    }));
+
+    return { groups, standalone };
+  }
+
+  getSkillsForPdf() {
+    // Return flattened skill array for PDF with grouped display
+    // Parent skills show first (with level), then children indented
+    const result: any[] = [];
+    const { groups, standalone } = this.skillsTree();
+
+    // Add grouped skills (parent + children)
+    groups.forEach((group) => {
+      // Parent skill line
+      result.push({
+        columns: [
+          { text: group.name, fontSize: 10, bold: true, width: '*' },
+          { text: `LVL ${group.parentLevel}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
+        ],
+        margin: [0, 3, 0, 2]
+      });
+      // Child skills (specializations)
+      group.children.forEach((child) => {
+        result.push({
+          columns: [
+            { text: `  ↳ ${child.specialization}`, fontSize: 9, color: '#999999', width: '*' },
+            { text: `LVL ${child.level}`, fontSize: 9, color: '#666666', width: 'auto' }
+          ],
+          margin: [0, 1, 0, 1]
+        });
+      });
+    });
+
+    // Add standalone skills
+    standalone.forEach((skill) => {
+      result.push({
+        columns: [
+          { text: skill.name, fontSize: 10, width: '*' },
+          { text: `LVL ${skill.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
+        ],
+        margin: [0, 2, 0, 2]
+      });
+    });
+
+    return result;
   }
 
   implants() {
@@ -186,13 +260,7 @@ export class CharacterSheetComponent implements OnInit {
                 { text: 'NEURAL_ENCODING (SKILLS)', fontSize: 10, bold: true, color: '#00ccff', margin: [0, 5, 0, 2] },
                 { canvas: [{ type: 'rect', x: 0, y: 0, w: 240, h: 1, color: '#eeeeee' }] },
                 {
-                  stack: char.skills.map((s: any) => ({
-                    columns: [
-                      { text: s.name, fontSize: 10, width: '*' },
-                      { text: `LVL ${s.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
-                    ],
-                    margin: [0, 2, 0, 2]
-                  }))
+                  stack: this.getSkillsForPdf()
                 }
               ]
             },

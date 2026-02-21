@@ -287,6 +287,32 @@ $text-muted: #6c757d;
             text-transform: uppercase;
             letter-spacing: 2px;
             border-left: 2px solid $cyber-amber;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .g-name {
+                flex: 1;
+            }
+
+            .g-dots {
+                display: flex;
+                gap: 3px;
+                .dot {
+                    width: 8px;
+                    height: 8px;
+                    border: 1px solid rgba(255,255,255,0.2);
+                    border-radius: 1px;
+                    &.fill { background: $cyber-amber; border-color: $cyber-amber; }
+                }
+            }
+
+            .g-lvl {
+                width: 25px;
+                text-align: right;
+                color: $cyber-amber;
+                font-weight: 800;
+            }
         }
 
         .group-children {

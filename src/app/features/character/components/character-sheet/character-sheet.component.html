@@ -176,6 +176,10 @@
                         <div class="skill-group" *ngFor="let group of skillsTree().groups">
                             <div class="group-header">
                                 <span class="g-name">{{ group.name }}</span>
+                                <div class="g-dots" *ngIf="group.parentLevel">
+                                    <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < (group.parentLevel || 0)"></div>
+                                </div>
+                                <span class="g-lvl" *ngIf="group.parentLevel">{{ group.parentLevel }}</span>
                             </div>
                             <div class="group-children">
                                 <div class="skill-entry" *ngFor="let child of group.children">
