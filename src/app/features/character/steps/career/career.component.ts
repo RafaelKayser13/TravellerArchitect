@@ -172,6 +172,18 @@ export class CareerComponent implements OnInit, OnDestroy {
             return true;
         }
 
+        // Auto-execute any event with a single option and no interaction needed
+        // (e.g., injury outcomes, mishap results, etc.)
+        if (option.effects && option.effects.length > 0) {
+            // If all effects are non-interactive (no ROLL_CHECK or ROLL_TABLE), auto-execute
+            const hasInteractiveEffect = option.effects.some(e =>
+                e.type === 'ROLL_CHECK' || e.type === 'ROLL_TABLE'
+            );
+            if (!hasInteractiveEffect) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -211,6 +223,23 @@ export class CareerComponent implements OnInit, OnDestroy {
                 // Event flow just finished
                 this.eventFlowActive = false;
                 this.onEventFlowComplete();
+            }
+        });
+
+        // Clear revealed options and auto-execute direct roll checks
+        effect(() => {
+            const currentEvent = this.eventEngine.currentEvent();
+            this.revealedOptions.clear();
+
+            // Auto-execute direct roll checks (skip event modal, go to dice-roller)
+            if (currentEvent && currentEvent.id !== this.lastAutoExecutedEventId) {
+                if (this.isDirectRollCheck()) {
+                    this.lastAutoExecutedEventId = currentEvent.id;
+                    // Use Promise.resolve().then() for async selectOption since effects can't use async/await
+                    Promise.resolve().then(() => {
+                        this.eventEngine.selectOption(0);
+                    });
+                }
             }
         });
     }
@@ -324,23 +353,6 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         this.eventEngine.registerCustomHandler('LUCRATIVE_DEAL_BET', (payload) => {
             this.handleLucrativeDealBet(payload.amountRisked);
-        });
-
-        // Clear revealed options and auto-execute direct roll checks
-        effect(() => {
-            const currentEvent = this.eventEngine.currentEvent();
-            this.revealedOptions.clear();
-
-            // Auto-execute direct roll checks (skip event modal, go to dice-roller)
-            if (currentEvent && currentEvent.id !== this.lastAutoExecutedEventId) {
-                if (this.isDirectRollCheck()) {
-                    this.lastAutoExecutedEventId = currentEvent.id;
-                    // Use Promise.resolve().then() for async selectOption since effects can't use async/await
-                    Promise.resolve().then(() => {
-                        this.eventEngine.selectOption(0);
-                    });
-                }
-            }
         });
 
         const char = this.characterService.character();
