@@ -141,6 +141,47 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.revealedOptions.add(index);
         }
     }
+
+    // Auto-execute direct roll checks (skip event modal intermediary)
+    autoExecutedRoll = false;
+
+    /**
+     * Check if current event is a "direct roll check" that should skip the modal intermediary.
+     * Direct roll checks have:
+     * - Exactly one option
+     * - That option has a ROLL_CHECK effect
+     * - The effect has announcement text (briefing info)
+     * This means the dice-roller modal will have all the context needed.
+     */
+    isDirectRollCheck(): boolean {
+        const event = this.eventEngine.currentEvent();
+        if (!event || !event.ui.options || event.ui.options.length !== 1) return false;
+
+        const option = event.ui.options[0];
+        if (!option.effects) return false;
+
+        const rollCheckEffect = option.effects.find(e => e.type === 'ROLL_CHECK');
+        if (!rollCheckEffect) return false;
+
+        // Has announcement means it has full briefing context for the dice-roller
+        return !!rollCheckEffect.announcement;
+    }
+
+    /**
+     * Automatically execute direct roll checks (skip modal, go to dice-roller)
+     */
+    triggerDirectRollCheck(): string {
+        if (!this.autoExecutedRoll) {
+            this.autoExecutedRoll = true;
+            // Execute the first (and only) option after a brief delay to allow Angular rendering
+            setTimeout(() => {
+                this.eventEngine.selectOption(0);
+                this.autoExecutedRoll = false;
+            }, 0);
+        }
+        return '';
+    }
+
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
 
     // Prisoner System
