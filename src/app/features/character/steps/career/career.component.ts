@@ -166,16 +166,7 @@ export class CareerComponent implements OnInit, OnDestroy {
         }
 
         // Has announcement means it has full briefing context for the dice-roller
-        const isDirect = !!rollCheckEffect.announcement;
-        if (isDirect) {
-            console.log('[Direct Roll Check Detected]', {
-                eventId: event.id,
-                stat: rollCheckEffect.stat,
-                target: rollCheckEffect.checkTarget,
-                hasAnnouncement: !!rollCheckEffect.announcement
-            });
-        }
-        return isDirect;
+        return !!rollCheckEffect.announcement;
     }
 
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
@@ -332,13 +323,10 @@ export class CareerComponent implements OnInit, OnDestroy {
 
             // Auto-execute direct roll checks (skip event modal, go to dice-roller)
             if (currentEvent && currentEvent.id !== this.lastAutoExecutedEventId) {
-                console.log('[Effect triggered] Current event:', currentEvent.id, 'lastAutoExecutedId:', this.lastAutoExecutedEventId);
                 if (this.isDirectRollCheck()) {
-                    console.log('[Auto-executing direct roll check]', currentEvent.id);
                     this.lastAutoExecutedEventId = currentEvent.id;
                     // Use Promise.resolve().then() for async selectOption since effects can't use async/await
                     Promise.resolve().then(() => {
-                        console.log('[selectOption(0) scheduled for]', currentEvent.id);
                         this.eventEngine.selectOption(0);
                     });
                 }
@@ -1119,7 +1107,6 @@ export class CareerComponent implements OnInit, OnDestroy {
         const stat = this.selectedAssignment.survivalStat;
         const target = this.selectedAssignment.survivalTarget;
 
-        console.log('[rollSurvival] Starting survival check', { stat, target, career: this.selectedCareer.name });
         this.log(`Initiating Survival Check: ${stat} ${target}+`);
 
         // 1. Create Base Events
@@ -1193,9 +1180,7 @@ export class CareerComponent implements OnInit, OnDestroy {
         }
 
         // 4. Trigger Start
-        console.log('[rollSurvival] Triggering event:', survivalEvent.id);
         this.eventEngine.triggerEvent(survivalEvent.id);
-        console.log('[rollSurvival] Event triggered, waiting for effect detection');
     }
 
     handleInjuryDamage(severity: number, method: 'debt' | 'augment') {
