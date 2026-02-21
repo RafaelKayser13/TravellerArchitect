@@ -429,6 +429,30 @@
         <div class="hud-content">
             <p class="instruction">Rolling mustering out benefits for <span class="highlight">{{ selectedMusterOutCareer() }}</span>...</p>
 
+            <!-- Benefits Allocation Stats Panel -->
+            <div class="benefits-stats-panel">
+                <div class="stat-row">
+                    <span class="stat-label">Base Rolls (Terms Served):</span>
+                    <span class="stat-value">{{ currentTerm() - 1 }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Bonus Rolls (Promotions):</span>
+                    <span class="stat-value">{{ currentRank() }}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Deductions (Choices):</span>
+                    <span class="stat-value">{{ Math.max(0, (currentTerm() - 1 + currentRank()) - musterOutBenefitsLog().length) }}</span>
+                </div>
+                <div class="stat-row divider">
+                    <span class="stat-label">Total Allocated Rolls:</span>
+                    <span class="stat-value">{{ musterOutBenefitsLog().length }}</span>
+                </div>
+                <div class="stat-row cash-counter">
+                    <span class="stat-label">Career Cash Rolls:</span>
+                    <span class="stat-value">{{ musterOutCashRolls() }} / {{ musterOutMaxCashRolls }}</span>
+                </div>
+            </div>
+
             <!-- Benefits Log -->
             <div class="mission-log-container" *ngIf="musterOutBenefitsLog().length > 0">
                 <span class="hud-label">[ BENEFITS_ACQUIRED ]</span>
@@ -443,8 +467,10 @@
         </div>
 
         <div class="hud-footer">
-            <button class="btn-action" (click)="rollBenefit('Cash')" title="Roll for cash benefit">
-                CASH_ROLL
+            <button class="btn-action" (click)="rollBenefit('Cash')"
+                    [disabled]="musterOutCashRolls() >= musterOutMaxCashRolls"
+                    [title]="musterOutCashRolls() >= musterOutMaxCashRolls ? 'Cash rolls limit reached' : 'Roll for cash benefit'">
+                CASH_ROLL ({{ musterOutCashRolls() }}/{{ musterOutMaxCashRolls }})
             </button>
             <button class="btn-action" (click)="rollBenefit('Material')" title="Roll for material benefit">
                 MATERIAL_ROLL

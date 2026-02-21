@@ -40,6 +40,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     public diceService = inject(DiceService);
     public diceDisplay = inject(DiceDisplayService);
     public eventEngine = inject(EventEngineService);
+    public Math = Math;
     private careerService = inject(CareerService);
     private wizardFlow = inject(WizardFlowService);
     /** Handles per-term game mechanics (aging, leaving home, medical, etc.) */
