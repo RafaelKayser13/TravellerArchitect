@@ -20,11 +20,10 @@ export const WIZARD_STEPS: WizardStep[] = [
   { index: 3,  key: 'attributes',   label: 'BIOMETRICS', actionLabel: 'PROCEED > ORIGIN',     hasActionBar: true },
   { index: 4,  key: 'origin',       label: 'ORIGIN',     actionLabel: 'PROCEED > EDUCATION',  hasActionBar: true },
   { index: 5,  key: 'education',    label: 'EDUCATION',  actionLabel: 'PROCEED > CAREER',     hasActionBar: true },
-  { index: 6,  key: 'career',       label: 'CAREER',     actionLabel: 'PROCEED > MUSTER_OUT', hasActionBar: true },
-  { index: 7,  key: 'mustering',    label: 'MUSTER',     actionLabel: 'PROCEED > NETWORK',    hasActionBar: true },
-  { index: 8,  key: 'npc',          label: 'NETWORK',    actionLabel: 'PROCEED > PACKAGE',    hasActionBar: true },
-  { index: 9,  key: 'skillPackage', label: 'PACKAGE',    actionLabel: 'FINALIZE_CHARACTER',   hasActionBar: true },
-  { index: 10, key: 'sheet',        label: 'FINALIZE',   actionLabel: '',                     hasActionBar: false },
+  { index: 6,  key: 'career',       label: 'CAREER',     actionLabel: 'PROCEED > NETWORK',    hasActionBar: true },
+  { index: 7,  key: 'npc',          label: 'NETWORK',    actionLabel: 'PROCEED > PACKAGE',    hasActionBar: true },
+  { index: 8,  key: 'skillPackage', label: 'PACKAGE',    actionLabel: 'FINALIZE_CHARACTER',   hasActionBar: true },
+  { index: 9,  key: 'sheet',        label: 'FINALIZE',   actionLabel: '',                     hasActionBar: false },
 ];
 
 /**

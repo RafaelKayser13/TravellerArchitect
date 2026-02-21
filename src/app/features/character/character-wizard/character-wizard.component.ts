@@ -5,7 +5,6 @@ import { AttributesComponent } from '../steps/attributes/attributes.component';
 import { OriginComponent } from '../steps/origin/origin.component';
 import { EducationComponent } from '../steps/education/education.component';
 import { CareerComponent } from '../steps/career/career.component';
-import { MusteringOutComponent } from '../steps/mustering-out/mustering-out.component';
 import { NpcManagementComponent } from '../steps/npc-management/npc-management.component';
 import { SkillPackageComponent } from '../steps/skill-package/skill-package.component';
 import { CharacterSheetComponent } from '../components/character-sheet/character-sheet.component';
@@ -36,7 +35,6 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
     OriginComponent,
     EducationComponent,
     CareerComponent,
-    MusteringOutComponent,
     NpcManagementComponent,
     SkillPackageComponent,
     CharacterSheetComponent,

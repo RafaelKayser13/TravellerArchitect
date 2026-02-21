@@ -14,6 +14,9 @@ import { CareerTermService } from '../../../../core/services/career-term.service
 import { createSurvivalCheckEvent, createMishapRollEvent, createEventRollEvent } from '../../../../data/events/shared/career-events';
 import { createLifeEventRollEvent, createInjuryEvent, createInjuryRollEvent, createInjuryRollWorstOf2Event } from '../../../../data/events/shared/life-events';
 import { NEURAL_JACK_INSTALL_EVENT } from '../../../../data/events/shared/neural-jack-install.event';
+import { getBenefitEffects } from '../../../../data/events/shared/mustering-out';
+import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
+import { BenefitChoiceService } from '../../../../core/services/benefit-choice.service';
 import { effect } from '@angular/core';
 
 /** Careers that count as "military" for medical and other rule checks. */
@@ -21,7 +24,7 @@ const MILITARY_CAREERS = ['Army', 'Navy', 'Marine'];
 /** @deprecated Use CareerTermService.calculateMedicalCoverage instead */
 const MEDICAL_MILITARY_BUCKET = ['Army', 'Navy', 'Marine'];
 
-type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'POST_TERM_SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT' | 'NEURAL_JACK_EVENT';
+type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'POST_TERM_SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT' | 'MUSTER_OUT_ROLLING' | 'NEURAL_JACK_EVENT';
 
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
 import { HudWindowComponent } from '../../../shared/hud-window/hud-window.component';
@@ -42,6 +45,8 @@ export class CareerComponent implements OnInit, OnDestroy {
     private wizardFlow = inject(WizardFlowService);
     /** Handles per-term game mechanics (aging, leaving home, medical, etc.) */
     public careerTermService = inject(CareerTermService);
+    public npcInteractionService = inject(NpcInteractionService);
+    public benefitChoiceService = inject(BenefitChoiceService);
 
     careers = computed(() => this.careerService.getAllCareers());
 
@@ -149,6 +154,16 @@ export class CareerComponent implements OnInit, OnDestroy {
 
     // Event Flow Tracking
     private eventFlowActive = false;
+
+    // --- MUSTER-OUT STATE (Integrated into Career Step) ---
+    musterOutCareerName: string | null = null;
+    selectedMusterOutCareer = signal<string | null>(null);
+    musterOutBenefitsLog = signal<string[]>([]);
+    musterOutCashRolls = computed(() => this.characterService.character().finances.cashRollsSpent || 0);
+    musterOutMaxCashRolls = 3;
+    isBenefitChoicePrompt = signal(false);
+    benefitChoiceOptions = signal<string[]>([]);
+    pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
 
     constructor() {
         effect(() => {
@@ -2061,12 +2076,18 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.selectedCareer = null;
             this.selectedAssignment = null;
             this.characterService.currentCareer.set(null);
-            this.currentState.set('CHOOSE_CAREER');
+
+            // Enter muster-out rolling state (integrated into career component)
+            this.musterOutCareerName = currentCareerName;
+            this.selectedMusterOutCareer.set(currentCareerName);
+            this.musterOutBenefitsLog.set([]);
+            this.currentState.set('MUSTER_OUT_ROLLING');
+
             // Ensure any lingering events are cleared so overlays don't block the selection screen
             this.eventEngine.currentEvent.set(null);
             this.forcedOut = false;
             this.characterService.log(`**Mustered Out** of ${currentCareerName}`);
-            this.log('Mustered out of career. You may choose a new career or Finalize.');
+            this.log('Rolling mustering out benefits for ' + currentCareerName + '...');
         } else {
             // Continue Logic: Clear ejected bans after serving a full term
             this.characterService.clearEjectedCareers();
@@ -2155,6 +2176,202 @@ export class CareerComponent implements OnInit, OnDestroy {
         }
 
         this.finishTerm('CONTINUE');
+    }
+
+    // --- MUSTER-OUT ROLLING (Integrated into Career) ---
+
+    async rollBenefit(type: 'Cash' | 'Material') {
+        const char = this.characterService.character();
+        const careerName = this.musterOutCareerName;
+        if (!careerName) return;
+
+        const allocated = char.finances.benefitRollsAllocated || {};
+        const hasSpecificRolls = (allocated[careerName] || 0) > 0;
+        const hasGeneralRolls = (allocated['General'] || 0) > 0;
+
+        if (!hasSpecificRolls && !hasGeneralRolls) return;
+        if (type === 'Cash' && this.musterOutCashRolls() >= this.musterOutMaxCashRolls) return;
+
+        const careerDef = this.careerService.getCareer(careerName);
+        if (!careerDef) return;
+
+        const modifiers: { label: string, value: number }[] = [];
+        let dm = 0;
+
+        // DM Calculations
+        if (char.isSoftPath) {
+            dm -= 1;
+            modifiers.push({ label: 'Soft Path', value: -1 });
+        } else {
+            dm += 1;
+            modifiers.push({ label: 'Hard Path', value: 1 });
+        }
+
+        if (char.education?.offworld) {
+            dm -= 1;
+            modifiers.push({ label: 'Off-World Edu', value: -1 });
+        }
+
+        const careerHistory = char.careerHistory.filter(h => h.careerName === careerName);
+        const highestRank = Math.max(...careerHistory.map(h => h.rank), 0);
+        if (highestRank >= 5) {
+            dm += 1;
+            modifiers.push({ label: 'Rank 5+ Bonus', value: 1 });
+        }
+
+        if (type === 'Cash') {
+            const gambler = char.skills.find(s => s.name.includes('Gambler'));
+            if (gambler && gambler.level >= 1) {
+                dm += 1;
+                modifiers.push({ label: 'Gambler Skill', value: 1 });
+            }
+        }
+
+        const tableData = type === 'Cash' ? careerDef.musteringOutCash : careerDef.musteringOutBenefits;
+
+        const rollResult = await this.diceDisplay.roll(
+            'Benefit: ' + type + ' (' + careerName + ')',
+            1,
+            dm,
+            0,
+            '',
+            (res) => {
+                let r = res + dm;
+                if (r < 1) r = 1;
+                if (r > 7) r = 7;
+                const idx = r - 1;
+                if (type === 'Cash') return `Cash: Lv ${careerDef.musteringOutCash[idx]}`;
+                return `Benefit: ${careerDef.musteringOutBenefits[idx]}`;
+            },
+            modifiers,
+            tableData
+        );
+
+        let finalRoll = rollResult + dm;
+        if (finalRoll > 7) finalRoll = 7;
+        if (finalRoll < 1) finalRoll = 1;
+
+        const tableIndex = finalRoll - 1;
+        const sourceCareer = hasSpecificRolls ? careerName : 'General';
+
+        if (type === 'Cash') {
+            const cash = careerDef.musteringOutCash[tableIndex];
+            const source = sourceCareer === careerName ? careerName : `General (via ${careerName})`;
+            const result = `Cash: Lv ${cash} from ${source}`;
+
+            this.characterService.updateFinances({ cash: char.finances.cash + cash });
+            this.musterOutBenefitsLog.update((l: string[]) => [...l, result]);
+            this.characterService.spendBenefitRoll(sourceCareer, 1, true);
+        } else {
+            const benefitEntry: any = careerDef.musteringOutBenefits[tableIndex];
+
+            // Handle choice-based benefits
+            if (typeof benefitEntry === 'object' && benefitEntry && 'choose' in benefitEntry) {
+                this.pendingBenefitChoice = { options: benefitEntry.options, choose: benefitEntry.choose };
+                this.benefitChoiceOptions.set(benefitEntry.options);
+                this.isBenefitChoicePrompt.set(true);
+                return; // Wait for user choice
+            }
+
+            // Single benefit
+            const benefitName = typeof benefitEntry === 'string' ? benefitEntry : JSON.stringify(benefitEntry);
+            await this.applyBenefits([benefitName], careerName, sourceCareer);
+        }
+
+        const updatedAlloc = this.characterService.character().finances.benefitRollsAllocated || {};
+        if ((updatedAlloc[careerName] || 0) <= 0) {
+            // All rolls for this career exhausted — go back to CHOOSE_CAREER
+            if (Object.values(updatedAlloc).some(v => v > 0)) {
+                // More rolls available from other careers
+                this.currentState.set('CHOOSE_CAREER');
+                this.musterOutCareerName = null;
+                this.selectedMusterOutCareer.set(null);
+            } else {
+                // All rolls exhausted
+                await this.applyFinalBenefits();
+                this.wizardFlow.advance();
+            }
+        }
+    }
+
+    async applyBenefits(benefitNames: string[], careerName: string, sourceCareer: string) {
+        const char = this.characterService.character();
+        for (const benefitName of benefitNames) {
+            const effects = getBenefitEffects(benefitName);
+
+            // Register handlers for vehicle, NPC, neural jack
+            this.eventEngine.registerCustomHandler('AWARD_VEHICLE', async () => {
+                const selected = await this.benefitChoiceService.selectVehicle(careerName);
+                if (selected) {
+                    this.characterService.addItem(selected.name);
+                    this.characterService.log(`**Vehicle Acquired**: ${selected.name}.`);
+                }
+            });
+
+            this.eventEngine.registerCustomHandler('AWARD_NPC', async (payload) => {
+                const type = payload.type || 'Contact';
+                const npc = await this.npcInteractionService.promptForNpc({
+                    role: type,
+                    notes: `Gained during Muster Out from ${careerName}`
+                });
+                if (npc) {
+                    this.characterService.addNpc(npc);
+                    this.characterService.log(`**${type} Established**: ${npc.name}.`);
+                }
+            });
+
+            this.eventEngine.registerCustomHandler('SET_NEURAL_JACK', () => {
+                this.characterService.updateCharacter({ hasNeuralJack: true });
+                this.characterService.log('**Cybernetics**: Neural Jack interface installed.');
+            });
+
+            await this.eventEngine.applyEffects(effects);
+            const source = sourceCareer === careerName ? careerName : `General (via ${careerName})`;
+            this.musterOutBenefitsLog.update((l: string[]) => [...l, `Benefit: ${benefitName} from ${source}`]);
+            this.characterService.spendBenefitRoll(sourceCareer, 1, false);
+            this.characterService.log(`**Muster-Out Benefit**: ${benefitName}`);
+        }
+    }
+
+    async applyFinalBenefits() {
+        const char = this.characterService.character();
+        let extraCash = 0;
+
+        // German Nationality (1D3 kLv)
+        if (char.nationality === 'Germany') {
+            const extra = (Math.floor(Math.random() * 3) + 1) * 1000;
+            extraCash += extra;
+            this.characterService.log(`**German Bonus**: Gained extra Lv ${extra} (1D3 kLv)`);
+        }
+
+        // Social Standing Bonus (SOC 10+ adds 1 kLv per term)
+        if (char.characteristics.soc.value >= 10) {
+            const terms = char.careerHistory.length;
+            const extra = terms * 1000;
+            extraCash += extra;
+            this.characterService.log(`**High SOC Bonus**: Gained extra Lv ${extra} (SOC 10+ bonus x ${terms} terms)`);
+        }
+
+        // Standard Issue Equipment
+        const standardIssue = ['Hand Comp (TL 10)', 'Link Phone (TL 10)', 'Standard Clothing'];
+        const existingEquipment = char.equipment || [];
+        const newEquipment = [...existingEquipment];
+
+        standardIssue.forEach(item => {
+            if (!newEquipment.includes(item)) {
+                newEquipment.push(item);
+            }
+        });
+
+        const pension = this.characterService.pension();
+        this.characterService.updateCharacter({
+            finances: {
+                ...char.finances,
+                pension: pension,
+                cash: char.finances.cash + extraCash
+            },
+            equipment: newEquipment
+        });
     }
 
     // --- FINAL MUSTERING OUT ---
