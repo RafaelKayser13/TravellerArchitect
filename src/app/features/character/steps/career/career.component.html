@@ -281,7 +281,7 @@
         </div>
 
         <div *ngIf="!showCyberneticOption" class="hud-footer">
-            <button class="btn-action large" (click)="rollSurvival()">
+            <button class="btn-action large" (click)="rollSurvival()" [disabled]="isProcessingRoll">
                 EXECUTE_SURVIVAL_ROLL
                 <span class="sub-text">2D6 + {{ selectedAssignment?.survivalStat }} DM</span>
             </button>

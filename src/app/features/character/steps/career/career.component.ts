@@ -200,6 +200,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
     selectedBenefitOptions: string[] = [];
     lastAutoExecutedEventId: string = '';  // Public for template access
+    isProcessingRoll = false;  // Prevent multiple simultaneous rolls
 
     constructor() {
         effect(() => {
@@ -219,6 +220,9 @@ export class CareerComponent implements OnInit, OnDestroy {
     }
 
     async onEventFlowComplete() {
+        // Reset the roll processing flag
+        this.isProcessingRoll = false;
+
         // If we were in SURVIVAL mode and the event chain (Survival -> Event) completed
         if (this.currentState() === 'SURVIVAL') {
             // Check if we are still in the career (not ejected during event)
@@ -1108,8 +1112,12 @@ export class CareerComponent implements OnInit, OnDestroy {
     // --- 3. SURVIVAL & EVENT ---
 
     async rollSurvival() {
+        // Prevent multiple simultaneous survival rolls
+        if (this.isProcessingRoll) return;
+
         if (!this.selectedAssignment || !this.selectedCareer) return;
 
+        this.isProcessingRoll = true;
         const stat = this.selectedAssignment.survivalStat;
         const target = this.selectedAssignment.survivalTarget;
 
