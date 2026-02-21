@@ -261,7 +261,7 @@
     </div>
 
     <!-- STATE: SURVIVAL -->
-    <div *ngIf="currentState() === 'SURVIVAL'" class="hud-module warning fade-in">
+    <div *ngIf="currentState() === 'SURVIVAL' && !(activeEvent && !isDirectRollCheck())" class="hud-module warning fade-in">
         <div class="corner-detail tl"></div>
         <div class="corner-detail tr"></div>
         <div class="corner-detail bl"></div>
