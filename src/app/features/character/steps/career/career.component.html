@@ -4,7 +4,23 @@
     </app-step-header>
 
     <!-- HUD WINDOW REMOVED - All direct roll checks auto-execute to dice-roller directly -->
-    <!-- Non-direct events will have their own modals as needed -->
+    <!-- Non-direct events (like term event roll, mishap roll) shown with clickable button -->
+    <div *ngIf="activeEvent && !isDirectRollCheck()" class="hud-module info fade-in">
+        <div class="hud-box-header">
+            <span class="index">EVENT</span>
+            <h3>{{ activeEvent.ui.title }}</h3>
+        </div>
+        <div class="hud-content">
+            <p class="description">{{ activeEvent.ui.description }}</p>
+        </div>
+        <div class="hud-footer">
+            <button *ngFor="let opt of activeEvent.ui.options; let i = index"
+                    class="btn-action"
+                    (click)="eventEngine.selectOption(i)">
+                {{ opt.label }}
+            </button>
+        </div>
+    </div>
 
     <!-- 1. CHOOSE CAREER -->
     <div *ngIf="currentState() === 'CHOOSE_CAREER'" class="career-stack fade-in">

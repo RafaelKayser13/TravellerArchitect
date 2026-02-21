@@ -160,20 +160,14 @@ export class CareerComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        // Check for ROLL_CHECK with announcement
+        // Check for ROLL_CHECK with announcement (survival/advancement checks auto-execute)
         const rollCheckEffect = option.effects.find(e => e.type === 'ROLL_CHECK');
         if (rollCheckEffect && rollCheckEffect.announcement) {
             return true;
         }
 
-        // Also check for ROLL_TABLE with announcement (event rolls that should auto-execute)
-        const rollTableEffect = option.effects.find(e => e.type === 'ROLL_TABLE');
-        if (rollTableEffect && rollTableEffect.announcement) {
-            return true;
-        }
-
-        // Auto-execute any event with a single option and no interaction needed
-        // (e.g., injury outcomes, mishap results, etc.)
+        // Auto-execute any event with a single option and no interactive effects
+        // (e.g., injury outcomes, mishap results, etc.) - these are pure outcome displays
         if (option.effects && option.effects.length > 0) {
             // If all effects are non-interactive (no ROLL_CHECK or ROLL_TABLE), auto-execute
             const hasInteractiveEffect = option.effects.some(e =>
