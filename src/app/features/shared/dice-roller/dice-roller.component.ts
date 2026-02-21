@@ -45,16 +45,19 @@ export class DiceRollerComponent implements OnDestroy {
     effect(() => {
       const req = this.diceService.request();
       if (req) {
-        if (req.announcement) {
-          // Pre-roll announcement provided — show briefing first.
-          this.rollPhase = 'briefing';
-          this.resultValues = [];
-          this.total = 0;
-          this.cdr.detectChanges();
-        } else {
-          // No announcement — roll immediately (backward-compatible).
-          this.startRoll();
-        }
+        // Use setTimeout to defer state changes outside of the current change detection cycle
+        setTimeout(() => {
+          if (req.announcement) {
+            // Pre-roll announcement provided — show briefing first.
+            this.rollPhase = 'briefing';
+            this.resultValues = [];
+            this.total = 0;
+            this.cdr.markForCheck();
+          } else {
+            // No announcement — roll immediately (backward-compatible).
+            this.startRoll();
+          }
+        }, 0);
       }
     });
 
