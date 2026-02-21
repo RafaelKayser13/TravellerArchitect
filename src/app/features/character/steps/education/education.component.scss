@@ -1273,12 +1273,13 @@
       min-height: 250px;
     }
 
-    &.two-column {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: flex-start;
+    &.result.two-column {
+      flex-direction: row !important;
+      justify-content: flex-start !important;
+      align-items: flex-start !important;
       gap: 2rem;
       text-align: left;
+      padding: 1.5rem;
     }
   }
 }
