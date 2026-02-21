@@ -255,11 +255,12 @@ export class CareerComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.eventEngine.registerCustomHandler('INJURY_PROCESS', (payload) => {
+        this.eventEngine.registerCustomHandler('INJURY_PROCESS', async (payload) => {
             const severity = payload.severity;
             const event = createInjuryEvent(severity, this.selectedCareer?.name || 'Unknown');
             this.eventEngine.registerEvent(event);
-            this.eventEngine.triggerEvent(event.id);
+            // Use triggerEvent with replaceNext=true to prevent stacking
+            this.eventEngine.triggerEvent(event.id, true);
         });
 
         this.eventEngine.registerCustomHandler('SET_NEURAL_JACK', (payload) => {
