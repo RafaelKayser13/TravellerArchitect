@@ -3,42 +3,8 @@
         title="CAREER_SERVICE_RECORDS" subtitle="Term {{ currentTerm() }} (Age {{ currentAge() }})">
     </app-step-header>
 
-    <!-- --- DYNAMIC EVENT OVERLAY (NEW SYSTEM) --- -->
-    <!-- Direct roll checks are auto-executed by effect, HUD may briefly show then hide -->
-    <app-hud-window
-        *ngIf="activeEvent"
-        [title]="activeEvent.ui.title"
-        [isOpen]="true"
-        [hasFooter]="true"
-        width="700px"
-        [readoutTL]="'EVENT_LOG: ' + (activeEvent.id | uppercase)"
-        readoutTR="SOURCE: CAREER_MTX">
-        
-        <div class="event-content">
-            <div class="event-description">
-                <p *ngIf="activeEvent.ui.description" [innerHTML]="activeEvent.ui.description"></p>
-            </div>
-            
-            <div class="visual-rep" *ngIf="activeEvent.ui.imageUrl">
-                <div class="img-frame">
-                    <img [src]="activeEvent.ui.imageUrl" class="event-image" 
-                         alt="Visual Record" [alt]="activeEvent.ui.title">
-                    <div class="scan-line"></div>
-                </div>
-            </div>
-        </div>
-
-        <ng-container footer>
-            <div class="event-actions">
-                <button *ngFor="let opt of activeEvent.ui.options; let i = index"
-                        class="btn-option"
-                        [class]="'btn-option-' + (opt.color || 'cyan')"
-                        (click)="eventEngine.selectOption(i)">
-                    [ {{ opt.label }} ]
-                </button>
-            </div>
-        </ng-container>
-    </app-hud-window>
+    <!-- HUD WINDOW REMOVED - All direct roll checks auto-execute to dice-roller directly -->
+    <!-- Non-direct events will have their own modals as needed -->
 
     <!-- 1. CHOOSE CAREER -->
     <div *ngIf="currentState() === 'CHOOSE_CAREER'" class="career-stack fade-in">
