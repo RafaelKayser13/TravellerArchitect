@@ -38,7 +38,10 @@ export function createMishapRollEvent(careerName: string, table: any[], eject: b
         {
             type: 'ROLL_TABLE',
             table: table,
-            dice: '1d6'
+            dice: '1d6',
+            // Direct roll check with briefing - auto-execute to dice-roller
+            announcement: `Your survival check failed. You must consult the Mishap table to determine what accident or injury occurred. Roll 1D6 to see the outcome.`,
+            phase: `MISHAP RESOLUTION · ${careerName.toUpperCase()}`
         }
     ];
 
@@ -78,7 +81,10 @@ export function createEventRollEvent(careerName: string, table: any[]): GameEven
                         {
                             type: 'ROLL_TABLE',
                             table: table,
-                            dice: '2d6'
+                            dice: '2d6',
+                            // Direct roll check with briefing - auto-execute to dice-roller
+                            announcement: `You have survived the term! Now roll to see what significant event occurred during your service. Roll 2D6 to determine your fate.`,
+                            phase: `LIFE EVENT · ${careerName.toUpperCase()}`
                         }
                     ]
                 }

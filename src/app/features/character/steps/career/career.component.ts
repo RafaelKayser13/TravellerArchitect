@@ -160,13 +160,19 @@ export class CareerComponent implements OnInit, OnDestroy {
             return false;
         }
 
+        // Check for ROLL_CHECK with announcement
         const rollCheckEffect = option.effects.find(e => e.type === 'ROLL_CHECK');
-        if (!rollCheckEffect) {
-            return false;
+        if (rollCheckEffect && rollCheckEffect.announcement) {
+            return true;
         }
 
-        // Has announcement means it has full briefing context for the dice-roller
-        return !!rollCheckEffect.announcement;
+        // Also check for ROLL_TABLE with announcement (event rolls that should auto-execute)
+        const rollTableEffect = option.effects.find(e => e.type === 'ROLL_TABLE');
+        if (rollTableEffect && rollTableEffect.announcement) {
+            return true;
+        }
+
+        return false;
     }
 
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
