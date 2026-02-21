@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DiceRollerComponent } from './features/shared/dice-roller/dice-roller.component';
 import { NpcInteractionComponent } from './features/shared/npc-interaction/npc-interaction.component';
+import { NavigationSidebarComponent } from './features/shared/navigation-sidebar/navigation-sidebar.component';
 import { DiceDisplayService } from './core/services/dice-display.service';
 import { NpcInteractionService } from './core/services/npc-interaction.service';
 import { BenefitChoiceService } from './core/services/benefit-choice.service';
@@ -11,7 +12,7 @@ import { DebugFloaterComponent } from './features/shared/debug-floater/debug-flo
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, DiceRollerComponent, NpcInteractionComponent, DebugFloaterComponent],
+  imports: [RouterOutlet, CommonModule, DiceRollerComponent, NpcInteractionComponent, NavigationSidebarComponent, DebugFloaterComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

@@ -230,6 +230,7 @@ export interface Character {
   nextSurvivalDm?: number;
   nextAdvancementDm?: number;
   nextBenefitDm?: number;
+  inheritanceBonuses?: Array<{ careerName: string; termReceived: number; used: boolean }>; // Noble inheritance +1 DM
   paroleThresholdDelta?: number;   // Accumulated event modifiers to prisoner parole threshold
   psionicPotential: boolean;
   forcedCareer?: string;
@@ -304,6 +305,7 @@ export const INITIAL_CHARACTER: Character = {
   ejectedCareers: [],
   japaneseRankBonus: false,
   hasNeuralJack: false,
-  hasDrafted: false
+  hasDrafted: false,
+  inheritanceBonuses: []
 };
 

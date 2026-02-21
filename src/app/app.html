@@ -50,9 +50,13 @@
     </nav>
   </header>
 
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+  <div class="app-container">
+    <app-navigation-sidebar></app-navigation-sidebar>
+    
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 
   <app-debug-floater></app-debug-floater>
 </div>

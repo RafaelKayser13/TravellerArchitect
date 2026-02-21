@@ -17,6 +17,9 @@ import { NEURAL_JACK_INSTALL_EVENT } from '../../../../data/events/shared/neural
 import { getBenefitEffects } from '../../../../data/events/shared/mustering-out';
 import { NpcInteractionService } from '../../../../core/services/npc-interaction.service';
 import { BenefitChoiceService } from '../../../../core/services/benefit-choice.service';
+import { InheritanceBonusService } from '../../../../core/services/inheritance-bonus.service';
+import { BenefitRerollService } from '../../../../core/services/benefit-reroll.service';
+import { ShipSelectionService, MUSTER_OUT_SHIPS } from '../../../shared/ship-selection-dialog/ship-selection-dialog.component';
 import { effect } from '@angular/core';
 
 /** Careers that count as "military" for medical and other rule checks. */
@@ -27,11 +30,13 @@ const MEDICAL_MILITARY_BUCKET = ['Army', 'Navy', 'Marine'];
 type CareerState = 'CHOOSE_CAREER' | 'QUALIFICATION' | 'QUALIFICATION_FAILURE' | 'BASIC_TRAINING' | 'SKILL_TRAINING' | 'POST_TERM_SKILL_TRAINING' | 'SURVIVAL' | 'EVENT' | 'MISHAP' | 'ADVANCEMENT' | 'CHANGE_ASSIGNMENT' | 'LEAVING_HOME' | 'TERM_END' | 'MUSTER_OUT' | 'MUSTER_OUT_ROLLING' | 'NEURAL_JACK_EVENT';
 
 import { StepHeaderComponent } from '../../../shared/step-header/step-header.component';
+import { ShipSelectionDialogComponent } from '../../../shared/ship-selection-dialog/ship-selection-dialog.component';
+import { BenefitRerollDialogComponent } from '../../../shared/benefit-reroll-dialog/benefit-reroll-dialog.component';
 
 @Component({
     selector: 'app-career',
     standalone: true,
-    imports: [CommonModule, FormsModule, StepHeaderComponent],
+    imports: [CommonModule, FormsModule, StepHeaderComponent, ShipSelectionDialogComponent, BenefitRerollDialogComponent],
     templateUrl: './career.component.html',
     styleUrls: ['./career.component.scss']
 })
@@ -47,6 +52,9 @@ export class CareerComponent implements OnInit, OnDestroy {
     public careerTermService = inject(CareerTermService);
     public npcInteractionService = inject(NpcInteractionService);
     public benefitChoiceService = inject(BenefitChoiceService);
+    public inheritanceBonusService = inject(InheritanceBonusService);
+    public rerollService = inject(BenefitRerollService);
+    public shipSelectionService = inject(ShipSelectionService);
 
     careers = computed(() => this.careerService.getAllCareers());
 
@@ -200,8 +208,12 @@ export class CareerComponent implements OnInit, OnDestroy {
     musterOutCareerName: string | null = null;
     selectedMusterOutCareer = signal<string | null>(null);
     musterOutBenefitsLog = signal<string[]>([]);
+    musterOutCashLog = signal<string[]>([]); // Cash-specific log for UI
+    musterOutMaterialLog = signal<string[]>([]); // Material-specific log for UI
     musterOutCashRolls = computed(() => this.characterService.character().finances.cashRollsSpent || 0);
     musterOutMaxCashRolls = 3;
+    showInheritanceBonus = signal(false); // Show checkbox for using inheritance bonus
+    useInheritanceBonus = signal(false); // User selected to use inheritance bonus
     isBenefitChoicePrompt = signal(false);
     benefitChoiceOptions = signal<string[]>([]);
     pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
@@ -2146,6 +2158,8 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.musterOutCareerName = currentCareerName;
             this.selectedMusterOutCareer.set(currentCareerName);
             this.musterOutBenefitsLog.set([]);
+            this.musterOutCashLog.set([]);
+            this.musterOutMaterialLog.set([]);
             this.currentState.set('MUSTER_OUT_ROLLING');
 
             // Ensure any lingering events are cleared so overlays don't block the selection screen
@@ -2292,6 +2306,20 @@ export class CareerComponent implements OnInit, OnDestroy {
             }
         }
 
+        // Check for Inheritance Bonus (Noble career)
+        const canUseInheritance = careerName === 'Noble' && 
+                                   this.inheritanceBonusService.canUseInheritanceBonus(careerName);
+        if (canUseInheritance) {
+            this.showInheritanceBonus.set(true);
+            if (this.useInheritanceBonus()) {
+                dm += 1;
+                modifiers.push({ label: 'Inheritance Bonus', value: 1 });
+            }
+        } else {
+            this.showInheritanceBonus.set(false);
+            this.useInheritanceBonus.set(false);
+        }
+
         const tableData = type === 'Cash' ? careerDef.musteringOutCash : careerDef.musteringOutBenefits;
 
         const rollResult = await this.diceDisplay.roll(
@@ -2322,10 +2350,11 @@ export class CareerComponent implements OnInit, OnDestroy {
         if (type === 'Cash') {
             const cash = careerDef.musteringOutCash[tableIndex];
             const source = sourceCareer === careerName ? careerName : `General (via ${careerName})`;
-            const result = `Cash: Lv ${cash} from ${source}`;
+            const result = `Cr${cash}k from ${source}`;
 
             this.characterService.updateFinances({ cash: char.finances.cash + cash });
             this.musterOutBenefitsLog.update((l: string[]) => [...l, result]);
+            this.musterOutCashLog.update((l: string[]) => [...l, result]);
             this.characterService.spendBenefitRoll(sourceCareer, 1, true);
         } else {
             const benefitEntry: any = careerDef.musteringOutBenefits[tableIndex];
@@ -2338,9 +2367,36 @@ export class CareerComponent implements OnInit, OnDestroy {
                 return; // Wait for user choice
             }
 
-            // Single benefit
+            // Get the benefit name for re-roll checking
             const benefitName = typeof benefitEntry === 'string' ? benefitEntry : JSON.stringify(benefitEntry);
-            await this.applyBenefits([benefitName], careerName, sourceCareer);
+            
+            // Check for duplicate benefit (re-roll system)
+            const rerollChoice = await this.rerollService.checkForReroll(careerName, benefitName, finalRoll);
+            
+            // Apply benefit with reroll consideration
+            let benefitsToApply = [benefitName];
+            if (rerollChoice === 'double') {
+                // Apply doubled/duplicated benefit
+                benefitsToApply = [benefitName, benefitName];
+            } else if (rerollChoice === 'alternative') {
+                // Get alternative benefit from rules
+                const rule = await this.rerollService.getRerollRule(benefitName, careerName);
+                if (rule?.alternativeDescription) {
+                    benefitsToApply = [rule.alternativeDescription];
+                } else {
+                    benefitsToApply = [benefitName];
+                }
+            }
+            
+            // Apply all benefits
+            await this.applyBenefits(benefitsToApply, careerName, sourceCareer);
+
+            // Mark inheritance bonus as used if applied
+            if (canUseInheritance && this.useInheritanceBonus()) {
+                this.inheritanceBonusService.useBonusForRoll(careerName);
+                this.useInheritanceBonus.set(false);
+                this.showInheritanceBonus.set(false);
+            }
         }
 
         const updatedAlloc = this.characterService.character().finances.benefitRollsAllocated || {};
@@ -2361,15 +2417,47 @@ export class CareerComponent implements OnInit, OnDestroy {
 
     async applyBenefits(benefitNames: string[], careerName: string, sourceCareer: string) {
         const char = this.characterService.character();
+        const shipBenefitMap: Record<string, keyof typeof MUSTER_OUT_SHIPS> = {
+            'Yacht': 'YACHT',
+            'Free Trader': 'FREE_TRADER',
+            'Scout Ship': 'SCOUT_SHIP',
+            'Scout/Courier': 'SCOUT_SHIP',
+            'Lab Ship': 'LAB_SHIP',
+            'Scientific Research Ship': 'LAB_SHIP',
+            "Ship's Boat": 'SHIPS_BOAT'
+        };
+        
         for (const benefitName of benefitNames) {
             const effects = getBenefitEffects(benefitName);
 
             // Register handlers for vehicle, NPC, neural jack
             this.eventEngine.registerCustomHandler('AWARD_VEHICLE', async () => {
-                const selected = await this.benefitChoiceService.selectVehicle(careerName);
-                if (selected) {
-                    this.characterService.addItem(selected.name);
-                    this.characterService.log(`**Vehicle Acquired**: ${selected.name}.`);
+                // Check if this is a ship benefit requiring modal selection
+                const shipKey = shipBenefitMap[benefitName];
+                if (shipKey && MUSTER_OUT_SHIPS[shipKey]) {
+                    try {
+                        const shipArray = [MUSTER_OUT_SHIPS[shipKey]]; // Present only this ship
+                        const selectedShip = await this.shipSelectionService.selectShip(careerName, shipArray);
+                        if (selectedShip) {
+                            this.characterService.addItem(selectedShip.name);
+                            const mortgage = Math.ceil(selectedShip.mortgage);
+                            this.characterService.log(`**Ship Acquired**: ${selectedShip.name} (${selectedShip.tonnage}t, Cr${selectedShip.cost}M, 25% mortgage: Cr${mortgage}k annually).`);
+                        }
+                    } catch (err) {
+                        // Fallback to generic vehicle selection if modal fails
+                        const selected = await this.benefitChoiceService.selectVehicle(careerName);
+                        if (selected) {
+                            this.characterService.addItem(selected.name);
+                            this.characterService.log(`**Vehicle Acquired**: ${selected.name}.`);
+                        }
+                    }
+                } else {
+                    // Use generic vehicle selection for other vehicles
+                    const selected = await this.benefitChoiceService.selectVehicle(careerName);
+                    if (selected) {
+                        this.characterService.addItem(selected.name);
+                        this.characterService.log(`**Vehicle Acquired**: ${selected.name}.`);
+                    }
                 }
             });
 
@@ -2392,7 +2480,9 @@ export class CareerComponent implements OnInit, OnDestroy {
 
             await this.eventEngine.applyEffects(effects);
             const source = sourceCareer === careerName ? careerName : `General (via ${careerName})`;
-            this.musterOutBenefitsLog.update((l: string[]) => [...l, `Benefit: ${benefitName} from ${source}`]);
+            const benefitLogEntry = `Benefit: ${benefitName} from ${source}`;
+            this.musterOutBenefitsLog.update((l: string[]) => [...l, benefitLogEntry]);
+            this.musterOutMaterialLog.update((l: string[]) => [...l, benefitLogEntry]);
             this.characterService.spendBenefitRoll(sourceCareer, 1, false);
             this.characterService.log(`**Muster-Out Benefit**: ${benefitName}`);
         }

@@ -1,0 +1,80 @@
+<div *ngIf="isOpen()" class="ship-selection-modal-overlay fade-in">
+    <div class="ship-selection-modal hud-module success">
+        <div class="hud-box-header">
+            <span class="index">SEL_SHIP</span>
+            <h3>VESSEL_SELECTION_PROTOCOL</h3>
+            <span class="subheader">Career: {{ selectedCareer() }}</span>
+        </div>
+
+        <div class="hud-content">
+            <p class="instruction">
+                Select your <span class="highlight">muster-out vessel</span>. The mortgage (25% of cost) becomes an annual liability.
+            </p>
+
+            <div class="ships-grid">
+                <div *ngFor="let ship of ships()" class="ship-card" (click)="onSelectShip(ship)">
+                    <!-- Header -->
+                    <div class="ship-header">
+                        <h4>{{ ship.name }}</h4>
+                        <span class="ship-category">{{ ship.category }}</span>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="ship-desc">{{ ship.description }}</p>
+
+                    <!-- Stats Grid -->
+                    <div class="ship-stats">
+                        <div class="stat">
+                            <span class="label">TONNAGE</span>
+                            <span class="value">{{ ship.tonnage }}t</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">J-DRIVE</span>
+                            <span class="value">J-{{ ship.jumpDrive }}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">M-DRIVE</span>
+                            <span class="value">M-{{ ship.manDrive }}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">CREW</span>
+                            <span class="value">{{ ship.crew }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Cost Info -->
+                    <div class="cost-section">
+                        <div class="cost-line">
+                            <span class="cost-label">Purchase:</span>
+                            <span class="cost-value">{{ formatCredits(ship.cost) }}</span>
+                        </div>
+                        <div class="cost-line mortgage">
+                            <span class="cost-label">Annual Mortgage (25%):</span>
+                            <span class="cost-value">{{ formatCredits(ship.mortgage) }}/year</span>
+                        </div>
+                    </div>
+
+                    <!-- Specs -->
+                    <div class="specs-section">
+                        <span class="specs-title">SPECIFICATIONS:</span>
+                        <ul class="specs-list">
+                            <li *ngFor="let spec of ship.specs">{{ spec }}</li>
+                        </ul>
+                    </div>
+
+                    <!-- Selection Button -->
+                    <button class="btn-select">
+                        SELECT_VESSEL
+                        <span class="arrow">→</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hud-footer">
+            <button class="btn-secondary" (click)="onCancel()">
+                CANCEL_SELECTION
+            </button>
+        </div>
+    </div>
+</div>

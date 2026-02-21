@@ -2127,3 +2127,312 @@
         }
     }
 }
+
+// Allocation Summary - Compact stats grid
+.allocation-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+
+    .summary-block {
+        background: linear-gradient(135deg, rgba(0, 243, 255, 0.08) 0%, rgba(255, 140, 0, 0.05) 100%);
+        border: 1px solid rgba(0, 243, 255, 0.3);
+        border-radius: 4px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--neon-cyan);
+            border-radius: 2px;
+
+            &.cash-row {
+                border-left-color: var(--neon-orange);
+                background: rgba(255, 140, 0, 0.08);
+            }
+
+            .label {
+                color: rgba(255, 255, 255, 0.75);
+                text-transform: uppercase;
+                font-size: 0.8rem;
+                letter-spacing: 1px;
+                flex: 1;
+            }
+
+            .value {
+                color: var(--neon-cyan);
+                font-weight: bold;
+                font-size: 1.1rem;
+                text-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+            }
+
+            &.cash-row .value {
+                color: var(--neon-orange);
+                text-shadow: 0 0 8px rgba(255, 140, 0, 0.4);
+            }
+        }
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+// Inheritance Bonus Panel - Noble Career Enhancement
+.inheritance-bonus-panel {
+    background: linear-gradient(135deg, rgba(255, 200, 0, 0.1) 0%, rgba(255, 140, 0, 0.08) 100%);
+    border: 2px solid rgba(255, 140, 0, 0.5);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 12px rgba(255, 140, 0, 0.2) inset;
+    font-family: var(--font-mono);
+
+    .bonus-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid rgba(255, 140, 0, 0.3);
+
+        .bonus-icon {
+            color: var(--neon-orange);
+            font-size: 1.2rem;
+            text-shadow: 0 0 8px rgba(255, 140, 0, 0.4);
+        }
+
+        .bonus-title {
+            color: var(--neon-orange);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    }
+
+    .bonus-content {
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: rgba(255, 255, 255, 0.85);
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 2px;
+            transition: background 0.2s ease;
+
+            &:hover {
+                background: rgba(255, 140, 0, 0.1);
+            }
+
+            input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+                accent-color: var(--neon-orange);
+            }
+
+            .checkbox-label {
+                flex: 1;
+                font-size: 0.9rem;
+            }
+
+            .bonus-count {
+                color: var(--neon-orange);
+                font-size: 0.8rem;
+                font-weight: bold;
+                text-shadow: 0 0 4px rgba(255, 140, 0, 0.3);
+            }
+        }
+    }
+}
+
+// Two-column Benefits Grid
+.benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+
+    .benefits-column {
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 243, 255, 0.05) 100%);
+        border: 1px solid rgba(0, 243, 255, 0.2);
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        &.cash-column {
+            border-color: rgba(0, 243, 255, 0.3);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 243, 255, 0.08) 100%);
+        }
+
+        &.material-column {
+            border-color: rgba(255, 140, 0, 0.3);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 140, 0, 0.08) 100%);
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+
+            .cash-column & {
+                border-bottom-color: rgba(0, 243, 255, 0.3);
+            }
+
+            .material-column & {
+                border-bottom-color: rgba(255, 140, 0, 0.3);
+            }
+
+            .header-icon {
+                font-size: 1.3rem;
+                color: var(--neon-cyan);
+                text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            }
+
+            .material-column & .header-icon {
+                color: var(--neon-orange);
+                text-shadow: 0 0 10px rgba(255, 140, 0, 0.4);
+            }
+
+            .header-title {
+                color: rgba(255, 255, 255, 0.9);
+                font-family: var(--font-mono);
+                font-size: 0.9rem;
+                font-weight: bold;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+        }
+
+        .benefits-table {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+
+            .table-header {
+                display: grid;
+                grid-template-columns: 60px 1fr;
+                gap: 1rem;
+                padding: 0.75rem 1rem;
+                background: rgba(0, 0, 0, 0.4);
+                border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+                color: rgba(0, 243, 255, 0.7);
+                text-transform: uppercase;
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+                font-weight: bold;
+
+                .material-column & {
+                    color: rgba(255, 140, 0, 0.7);
+                    border-bottom-color: rgba(255, 140, 0, 0.15);
+                }
+
+                .col-roll {
+                    text-align: left;
+                }
+
+                .col-amount,
+                .col-benefit {
+                    text-align: left;
+                }
+            }
+
+            .table-body {
+                flex: 1;
+                overflow-y: auto;
+                max-height: 200px;
+
+                .table-row {
+                    display: grid;
+                    grid-template-columns: 60px 1fr;
+                    gap: 1rem;
+                    padding: 0.75rem 1rem;
+                    border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+                    color: rgba(255, 255, 255, 0.8);
+                    transition: background 0.2s;
+
+                    &:hover {
+                        background: rgba(0, 243, 255, 0.08);
+                    }
+
+                    &.cash-entry {
+                        background: rgba(0, 243, 255, 0.05);
+                        color: var(--neon-cyan);
+                        font-weight: 500;
+                        text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
+                    }
+
+                    &.material-entry {
+                        background: rgba(255, 140, 0, 0.05);
+                        color: var(--neon-orange);
+                        font-weight: 500;
+                        text-shadow: 0 0 5px rgba(255, 140, 0, 0.3);
+                    }
+
+                    .col-roll {
+                        color: rgba(255, 255, 255, 0.6);
+                        font-size: 0.8rem;
+                    }
+
+                    .col-amount,
+                    .col-benefit {
+                        word-break: break-word;
+                    }
+                }
+
+                &::-webkit-scrollbar {
+                    width: 6px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: rgba(0, 0, 0, 0.2);
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background: rgba(0, 243, 255, 0.3);
+                    border-radius: 3px;
+
+                    &:hover {
+                        background: rgba(0, 243, 255, 0.5);
+                    }
+                }
+
+                .material-column & {
+                    &::-webkit-scrollbar-thumb {
+                        background: rgba(255, 140, 0, 0.3);
+
+                        &:hover {
+                            background: rgba(255, 140, 0, 0.5);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+
+        .benefits-column {
+            .benefits-table .table-body {
+                max-height: 150px;
+            }
+        }
+    }
+}

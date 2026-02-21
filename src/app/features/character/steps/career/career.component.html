@@ -429,41 +429,118 @@
         <div class="hud-content">
             <p class="instruction">Rolling mustering out benefits for <span class="highlight">{{ selectedMusterOutCareer() }}</span>...</p>
 
-            <!-- Benefits Allocation Stats Panel -->
-            <div class="benefits-stats-panel">
-                <div class="stat-row">
-                    <span class="stat-label">Base Rolls (Terms Served):</span>
-                    <span class="stat-value">{{ currentTerm() - 1 }}</span>
+            <!-- Allocation Summary Stats Panel -->
+            <div class="allocation-summary">
+                <div class="summary-block">
+                    <div class="summary-row">
+                        <span class="label">TERMS SERVED</span>
+                        <span class="value">{{ currentTerm() - 1 }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">PROMOTIONS</span>
+                        <span class="value">{{ currentRank() }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">TOTAL ROLLS</span>
+                        <span class="value">{{ currentTerm() - 1 + currentRank() }}</span>
+                    </div>
                 </div>
-                <div class="stat-row">
-                    <span class="stat-label">Bonus Rolls (Promotions):</span>
-                    <span class="stat-value">{{ currentRank() }}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Deductions (Choices):</span>
-                    <span class="stat-value">{{ Math.max(0, (currentTerm() - 1 + currentRank()) - musterOutBenefitsLog().length) }}</span>
-                </div>
-                <div class="stat-row divider">
-                    <span class="stat-label">Total Allocated Rolls:</span>
-                    <span class="stat-value">{{ musterOutBenefitsLog().length }}</span>
-                </div>
-                <div class="stat-row cash-counter">
-                    <span class="stat-label">Career Cash Rolls:</span>
-                    <span class="stat-value">{{ musterOutCashRolls() }} / {{ musterOutMaxCashRolls }}</span>
-                </div>
-            </div>
-
-            <!-- Benefits Log -->
-            <div class="mission-log-container" *ngIf="musterOutBenefitsLog().length > 0">
-                <span class="hud-label">[ BENEFITS_ACQUIRED ]</span>
-                <div class="mission-log-entries">
-                    <div *ngFor="let entry of musterOutBenefitsLog()" class="log-entry">
-                        <span class="prefix">>></span> {{ entry }}
+                <div class="summary-block">
+                    <div class="summary-row">
+                        <span class="label">ALLOCATED</span>
+                        <span class="value">{{ musterOutBenefitsLog().length }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="label">REMAINING</span>
+                        <span class="value">{{ Math.max(0, (currentTerm() - 1 + currentRank()) - musterOutBenefitsLog().length) }}</span>
+                    </div>
+                    <div class="summary-row cash-row">
+                        <span class="label">CASH ROLLS</span>
+                        <span class="value">{{ musterOutCashRolls() }}/{{ musterOutMaxCashRolls }}</span>
                     </div>
                 </div>
             </div>
 
-            <p class="status-msg" *ngIf="musterOutBenefitsLog().length === 0">[ AWAITING_ROLLS ]: Initiate benefit allocation process.</p>
+            <!-- Inheritance Bonus Option (Noble Career) -->
+            @if (showInheritanceBonus()) {
+                <div class="inheritance-bonus-panel">
+                    <div class="bonus-header">
+                        <span class="bonus-icon">✦</span>
+                        <span class="bonus-title">NOBLE INHERITANCE BONUS</span>
+                    </div>
+                    <div class="bonus-content">
+                        <label class="checkbox-container">
+                            <input type="checkbox" [checked]="useInheritanceBonus()" 
+                                   (change)="useInheritanceBonus.set(!useInheritanceBonus())">
+                            <span class="checkbox-label">Apply +1 DM to Next Benefit Roll</span>
+                            <span class="bonus-count">({{ inheritanceBonusService.getAvailableCount('Noble') }} available)</span>
+                        </label>
+                    </div>
+                </div>
+            }
+
+            <!-- Two-Column Benefits Display -->
+            <div class="benefits-grid">
+                <!-- Cash Benefits Table -->
+                <div class="benefits-column cash-column">
+                    <div class="column-header">
+                        <span class="header-icon">$</span>
+                        <span class="header-title">CASH BENEFITS</span>
+                    </div>
+                    <div class="benefits-table">
+                        <div class="table-header">
+                            <div class="col-roll">ROLL</div>
+                            <div class="col-amount">AMOUNT</div>
+                        </div>
+                        <div class="table-body">
+                            @if (musterOutCashLog().length > 0) {
+                                @for (entry of musterOutCashLog(); track $index) {
+                                    <div class="table-row cash-entry">
+                                        <div class="col-roll">{{ entry.split(' ')[0] || 'd6+DM' }}</div>
+                                        <div class="col-amount">{{ entry }}</div>
+                                    </div>
+                                }
+                            } @else {
+                                <div class="table-row no-data">
+                                    <div class="col-roll">—</div>
+                                    <div class="col-amount">[No cash rolls yet]</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Material Benefits Table -->
+                <div class="benefits-column material-column">
+                    <div class="column-header">
+                        <span class="header-icon">⚔</span>
+                        <span class="header-title">MATERIAL BENEFITS</span>
+                    </div>
+                    <div class="benefits-table">
+                        <div class="table-header">
+                            <div class="col-roll">ROLL</div>
+                            <div class="col-benefit">BENEFIT</div>
+                        </div>
+                        <div class="table-body">
+                            @if (musterOutMaterialLog().length > 0) {
+                                @for (entry of musterOutMaterialLog(); track $index) {
+                                    <div class="table-row material-entry">
+                                        <div class="col-roll">{{ entry.split(' ')[0] || 'd6+DM' }}</div>
+                                        <div class="col-benefit">{{ entry }}</div>
+                                    </div>
+                                }
+                            } @else {
+                                <div class="table-row no-data">
+                                    <div class="col-roll">—</div>
+                                    <div class="col-benefit">[No material rolls yet]</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="status-msg" *ngIf="musterOutBenefitsLog().length === 0">[ AWAITING_ROLLS ]: Allocate benefit rolls using CASH_ROLL and MATERIAL_ROLL.</p>
         </div>
 
         <div class="hud-footer">
@@ -696,3 +773,9 @@
         </div>
     </div>
 </div>
+
+<!-- Ship Selection Modal -->
+<app-ship-selection-dialog></app-ship-selection-dialog>
+
+<!-- Benefit Re-Roll Detection Modal -->
+<app-benefit-reroll-dialog></app-benefit-reroll-dialog>
