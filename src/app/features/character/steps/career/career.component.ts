@@ -142,9 +142,6 @@ export class CareerComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Auto-execute direct roll checks (skip event modal intermediary)
-    autoExecutedRoll = false;
-
     /**
      * Check if current event is a "direct roll check" that should skip the modal intermediary.
      * Direct roll checks have:
@@ -165,21 +162,6 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         // Has announcement means it has full briefing context for the dice-roller
         return !!rollCheckEffect.announcement;
-    }
-
-    /**
-     * Automatically execute direct roll checks (skip modal, go to dice-roller)
-     */
-    triggerDirectRollCheck(): string {
-        if (!this.autoExecutedRoll) {
-            this.autoExecutedRoll = true;
-            // Execute the first (and only) option after a brief delay to allow Angular rendering
-            setTimeout(() => {
-                this.eventEngine.selectOption(0);
-                this.autoExecutedRoll = false;
-            }, 0);
-        }
-        return '';
     }
 
     neuralJackCostType: 'cash' | 'benefit' = 'cash';
@@ -328,10 +310,18 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.handleLucrativeDealBet(payload.amountRisked);
         });
 
-        // Clear revealed options whenever the active event changes (event chaining, new events, etc.)
+        // Clear revealed options and auto-execute direct roll checks
         effect(() => {
-            this.eventEngine.currentEvent();
+            const currentEvent = this.eventEngine.currentEvent();
             this.revealedOptions.clear();
+
+            // Auto-execute direct roll checks (skip event modal, go to dice-roller)
+            if (currentEvent && this.isDirectRollCheck()) {
+                // Use microtask to ensure event UI is rendered before execution
+                queueMicrotask(() => {
+                    this.eventEngine.selectOption(0);
+                });
+            }
         });
 
         const char = this.characterService.character();

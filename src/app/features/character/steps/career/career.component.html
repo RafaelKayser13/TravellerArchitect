@@ -563,11 +563,6 @@
         </div>
     </div>
 
-    <!-- Auto-execute direct roll checks (skip event modal, go straight to dice roller) -->
-    <div *ngIf="eventEngine.currentEvent()?.ui?.options?.length && isDirectRollCheck() && !autoExecutedRoll" style="display: none;">
-        {{ triggerDirectRollCheck() }}
-    </div>
-
     <!-- 6. Injury Selection Modal -->
     <div *ngIf="isInjuryPrompt" class="modal-overlay fade-in">
         <div class="modal hud-module warning">
