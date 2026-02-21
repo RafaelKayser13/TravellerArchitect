@@ -18,7 +18,7 @@ export type RollPhase = 'briefing' | 'rolling' | 'result';
   templateUrl: './dice-roller.component.html',
   styleUrls: ['./dice-roller.component.scss']
 })
-export class DiceRollerComponent implements OnDestroy, AfterViewInit {
+export class DiceRollerComponent implements OnDestroy {
   diceService = inject(DiceDisplayService);
   private cdr = inject(ChangeDetectorRef);
   protected Math = Math;
@@ -55,6 +55,13 @@ export class DiceRollerComponent implements OnDestroy, AfterViewInit {
           // No announcement — roll immediately (backward-compatible).
           this.startRoll();
         }
+      }
+    });
+
+    // Scroll to active item when results are shown
+    effect(() => {
+      if (this.isResult && this.outcomesTable) {
+        setTimeout(() => this.scrollToActiveRow(), 100);
       }
     });
   }
@@ -149,14 +156,6 @@ export class DiceRollerComponent implements OnDestroy, AfterViewInit {
     return '';
   }
 
-  ngAfterViewInit() {
-    // Scroll to active item when results are shown
-    effect(() => {
-      if (this.isResult && this.outcomesTable) {
-        setTimeout(() => this.scrollToActiveRow(), 100);
-      }
-    });
-  }
 
   private scrollToActiveRow() {
     if (!this.outcomesTable) return;
