@@ -152,13 +152,19 @@ export class CareerComponent implements OnInit, OnDestroy {
      */
     isDirectRollCheck(): boolean {
         const event = this.eventEngine.currentEvent();
-        if (!event || !event.ui.options || event.ui.options.length !== 1) return false;
+        if (!event || !event.ui.options || event.ui.options.length !== 1) {
+            return false;
+        }
 
         const option = event.ui.options[0];
-        if (!option.effects) return false;
+        if (!option.effects) {
+            return false;
+        }
 
         const rollCheckEffect = option.effects.find(e => e.type === 'ROLL_CHECK');
-        if (!rollCheckEffect) return false;
+        if (!rollCheckEffect) {
+            return false;
+        }
 
         // Has announcement means it has full briefing context for the dice-roller
         return !!rollCheckEffect.announcement;
