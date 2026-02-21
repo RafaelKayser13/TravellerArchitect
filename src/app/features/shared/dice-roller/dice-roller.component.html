@@ -97,7 +97,7 @@
                 <!-- TABLE OVERLAY -->
                 <div class="table-overlay-container" *ngIf="tableRows.length > 0">
                     <span class="label-tiny">PROBABILITY_MATRIX / OUTCOMES</span>
-                    <div class="outcomes-table">
+                    <div class="outcomes-table" #outcomesTable>
                         <div class="outcome-row" *ngFor="let row of tableRows" [class.active]="row.active">
                             <span class="roll-val">{{ row.roll }}</span>
                             <span class="outcome-desc">{{ row.value }}</span>

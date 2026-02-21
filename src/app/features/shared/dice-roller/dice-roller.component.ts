@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, ChangeDetectorRef, effect } from '@angular/core';
+import { Component, inject, OnDestroy, ChangeDetectorRef, effect, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DiceDisplayService } from '../../../core/services/dice-display.service';
 import { HudWindowComponent } from '../hud-window/hud-window.component';
@@ -18,10 +18,12 @@ export type RollPhase = 'briefing' | 'rolling' | 'result';
   templateUrl: './dice-roller.component.html',
   styleUrls: ['./dice-roller.component.scss']
 })
-export class DiceRollerComponent implements OnDestroy {
+export class DiceRollerComponent implements OnDestroy, AfterViewInit {
   diceService = inject(DiceDisplayService);
   private cdr = inject(ChangeDetectorRef);
   protected Math = Math;
+
+  @ViewChild('outcomesTable', { read: ElementRef }) outcomesTable?: ElementRef;
 
   // ── phase state ───────────────────────────────────────────────────────────
   rollPhase: RollPhase = 'rolling';
@@ -145,6 +147,24 @@ export class DiceRollerComponent implements OnDestroy {
     if (this.request.successContext && this.isSuccess) return this.request.successContext;
     if (this.request.failureContext && !this.isSuccess) return this.request.failureContext;
     return '';
+  }
+
+  ngAfterViewInit() {
+    // Scroll to active item when results are shown
+    effect(() => {
+      if (this.isResult && this.outcomesTable) {
+        setTimeout(() => this.scrollToActiveRow(), 100);
+      }
+    });
+  }
+
+  private scrollToActiveRow() {
+    if (!this.outcomesTable) return;
+
+    const activeElement = this.outcomesTable.nativeElement.querySelector('.outcome-row.active');
+    if (activeElement) {
+      activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   }
 
   get tableRows(): { roll: string, value: string, active: boolean }[] {
