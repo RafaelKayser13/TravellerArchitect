@@ -524,43 +524,9 @@
         </div>
     </div>
 
-    <!-- EVENT ENGINE GENERIC UI -->
-    <!-- Event Modal: SKIP for direct roll checks - they auto-execute to dice-roller with full briefing -->
-    <div *ngIf="eventEngine.currentEvent()?.ui?.options?.length && !isDirectRollCheck() && eventEngine.currentEvent()?.id !== lastAutoExecutedEventId" class="modal-overlay fade-in">
-        <div class="modal hud-module info">
-            <div class="hud-box-header">
-                <h3>{{ eventEngine.currentEvent()?.ui?.title }}</h3>
-            </div>
-            <div class="hud-content">
-                <p class="instruction">{{ eventEngine.currentEvent()?.ui?.description }}</p>
-                <div class="choice-grid">
-                    <div *ngFor="let opt of eventEngine.currentEvent()?.ui?.options; let i = index"
-                         class="choice-option-wrap">
-
-                        <div class="choice-row">
-                            <button class="btn-action flex-grow"
-                                    (click)="eventEngine.selectOption(i); revealedOptions.clear()">
-                                {{ opt.label }}
-                            </button>
-                            <button *ngIf="opt.revealText"
-                                    class="btn-reveal"
-                                    [class.active]="revealedOptions.has(i)"
-                                    (click)="toggleReveal(i)"
-                                    title="Reveal consequences">
-                                {{ revealedOptions.has(i) ? '▲' : '?' }}
-                            </button>
-                        </div>
-
-                        <div *ngIf="opt.revealText && revealedOptions.has(i)"
-                             class="reveal-panel">
-                            {{ opt.revealText }}
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- EVENT ENGINE GENERIC UI REMOVED -->
+    <!-- All events now use HUD window with auto-execute to dice-roller for direct roll checks -->
+    <!-- Non-direct-roll events will show HUD window buttons to select options manually -->
 
     <!-- 6. Injury Selection Modal -->
     <div *ngIf="isInjuryPrompt" class="modal-overlay fade-in">
