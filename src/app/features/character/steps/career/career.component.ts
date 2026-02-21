@@ -194,7 +194,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     benefitChoiceOptions = signal<string[]>([]);
     pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
     selectedBenefitOptions: string[] = [];
-    private lastAutoExecutedEventId: string = '';
+    lastAutoExecutedEventId: string = '';  // Public for template access
 
     constructor() {
         effect(() => {

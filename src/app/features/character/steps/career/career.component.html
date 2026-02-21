@@ -525,8 +525,8 @@
     </div>
 
     <!-- EVENT ENGINE GENERIC UI -->
-    <!-- Event Modal: Skip modal if it's a direct roll check (has briefing context) -->
-    <div *ngIf="eventEngine.currentEvent()?.ui?.options?.length && !isDirectRollCheck()" class="modal-overlay fade-in">
+    <!-- Event Modal: SKIP for direct roll checks - they auto-execute to dice-roller with full briefing -->
+    <div *ngIf="eventEngine.currentEvent()?.ui?.options?.length && !isDirectRollCheck() && eventEngine.currentEvent()?.id !== lastAutoExecutedEventId" class="modal-overlay fade-in">
         <div class="modal hud-module info">
             <div class="hud-box-header">
                 <h3>{{ eventEngine.currentEvent()?.ui?.title }}</h3>
