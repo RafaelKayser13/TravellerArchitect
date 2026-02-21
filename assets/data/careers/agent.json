@@ -374,7 +374,7 @@
                 "Deception",
                 "Jack-of-all-Trades",
                 "Persuade",
-                "Tactics"
+                "Tactics (any)"
               ]
             }
           ],
@@ -720,7 +720,7 @@
               "effects": [
                 {
                   "type": "SKILL_MOD",
-                  "target": "Drive",
+                  "target": "Drive (any)",
                   "value": 1
                 }
               ],
@@ -731,7 +731,7 @@
               "effects": [
                 {
                   "type": "SKILL_MOD",
-                  "target": "Flyer",
+                  "target": "Flyer (any)",
                   "value": 1
                 }
               ],
@@ -742,7 +742,7 @@
               "effects": [
                 {
                   "type": "SKILL_MOD",
-                  "target": "Pilot",
+                  "target": "Pilot (any)",
                   "value": 1
                 }
               ],
@@ -766,10 +766,10 @@
         {
           "type": "skill-choice",
           "skills": [
-            "Drive",
-            "Flyer",
-            "Pilot",
-            "Gunner"
+            "Drive (any)",
+            "Flyer (any)",
+            "Pilot (any)",
+            "Gunner (any)"
           ]
         }
       ]
