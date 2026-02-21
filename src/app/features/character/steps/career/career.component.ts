@@ -388,7 +388,9 @@ export class CareerComponent implements OnInit, OnDestroy {
         const termEvent = createEventRollEvent(career.name, career.eventTable);
         this.eventEngine.registerEvent(termEvent);
 
-        const mishapEvent = createMishapRollEvent(career.name, career.mishapTable);
+        // Register mishap event WITHOUT automatic ejection (eject=false)
+        // This is used by career events that may say "you are not ejected"
+        const mishapEvent = createMishapRollEvent(career.name, career.mishapTable, false);
         this.eventEngine.registerEvent(mishapEvent);
 
         // Initialize per-career state
