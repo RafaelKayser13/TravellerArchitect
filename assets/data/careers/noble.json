@@ -592,21 +592,14 @@
               "label": "Accept Gift",
               "effects": [
                 {
-                  "type": "RESOURCE_MOD",
-                  "target": "benefit_rolls",
-                  "value": 1
+                  "type": "CUSTOM",
+                  "customId": "INHERITANCE_BONUS"
                 }
               ]
             }
           ]
         }
-      },
-      "effects": [
-        {
-          "type": "benefitModifier",
-          "value": 1
-        }
-      ]
+      }
     },
     {
       "roll": 6,
