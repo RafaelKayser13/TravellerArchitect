@@ -164,6 +164,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     isBenefitChoicePrompt = signal(false);
     benefitChoiceOptions = signal<string[]>([]);
     pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
+    selectedBenefitOptions: string[] = [];
 
     constructor() {
         effect(() => {
@@ -2373,6 +2374,57 @@ export class CareerComponent implements OnInit, OnDestroy {
             },
             equipment: newEquipment
         });
+    }
+
+    // --- BENEFIT CHOICE SELECTION ---
+    selectBenefitOption(option: string): void {
+        if (!this.pendingBenefitChoice) return;
+
+        if (this.pendingBenefitChoice.choose === 'all') {
+            // For "all", automatically select all
+            this.selectedBenefitOptions = [...this.benefitChoiceOptions()];
+        } else if (typeof this.pendingBenefitChoice.choose === 'number') {
+            const max = this.pendingBenefitChoice.choose;
+            const idx = this.selectedBenefitOptions.indexOf(option);
+
+            if (idx >= 0) {
+                // Already selected, deselect
+                this.selectedBenefitOptions.splice(idx, 1);
+            } else if (this.selectedBenefitOptions.length < max) {
+                // Not selected and under limit, select
+                this.selectedBenefitOptions.push(option);
+            }
+        }
+    }
+
+    canConfirmBenefitChoice(): boolean {
+        if (!this.pendingBenefitChoice) return false;
+
+        if (this.pendingBenefitChoice.choose === 'all') {
+            return this.selectedBenefitOptions.length === this.benefitChoiceOptions().length;
+        } else if (typeof this.pendingBenefitChoice.choose === 'number') {
+            return this.selectedBenefitOptions.length === this.pendingBenefitChoice.choose;
+        }
+
+        return false;
+    }
+
+    async confirmBenefitChoice(): Promise<void> {
+        if (!this.canConfirmBenefitChoice()) return;
+
+        const careerName = this.musterOutCareerName || 'Unknown';
+        await this.applyBenefits(this.selectedBenefitOptions, careerName, careerName);
+
+        // Reset and continue rolling
+        this.selectedBenefitOptions = [];
+        this.isBenefitChoicePrompt.set(false);
+        this.pendingBenefitChoice = null;
+    }
+
+    cancelBenefitChoice(): void {
+        this.selectedBenefitOptions = [];
+        this.isBenefitChoicePrompt.set(false);
+        this.pendingBenefitChoice = null;
     }
 
     // --- FINAL MUSTERING OUT ---

@@ -434,6 +434,46 @@
         </div>
     </div>
 
+    <!-- MUSTER_OUT_ROLLING STATE -->
+    <div *ngIf="currentState() === 'MUSTER_OUT_ROLLING'" class="hud-module success fade-in">
+        <div class="corner-detail tl"></div>
+        <div class="corner-detail tr"></div>
+        <div class="corner-detail bl"></div>
+        <div class="corner-detail br"></div>
+        <div class="hud-box-header">
+            <span class="index">SEC_04Z</span>
+            <h3>MUSTERING_OUT_BENEFITS_ROLLOVER</h3>
+            <span class="difficulty-badge">CAREER: {{ selectedMusterOutCareer() }}</span>
+        </div>
+        <div class="hud-content">
+            <p class="instruction">Rolling mustering out benefits for <span class="highlight">{{ selectedMusterOutCareer() }}</span>...</p>
+
+            <!-- Benefits Log -->
+            <div class="mission-log-container" *ngIf="musterOutBenefitsLog().length > 0">
+                <span class="hud-label">[ BENEFITS_ACQUIRED ]</span>
+                <div class="mission-log-entries">
+                    <div *ngFor="let entry of musterOutBenefitsLog()" class="log-entry">
+                        <span class="prefix">>></span> {{ entry }}
+                    </div>
+                </div>
+            </div>
+
+            <p class="status-msg" *ngIf="musterOutBenefitsLog().length === 0">[ AWAITING_ROLLS ]: Initiate benefit allocation process.</p>
+        </div>
+
+        <div class="hud-footer">
+            <button class="btn-action" (click)="rollBenefit('Cash')" title="Roll for cash benefit">
+                CASH_ROLL
+            </button>
+            <button class="btn-action" (click)="rollBenefit('Material')" title="Roll for material benefit">
+                MATERIAL_ROLL
+            </button>
+            <button class="btn-secondary" (click)="currentState.set('CHOOSE_CAREER')" [disabled]="musterOutBenefitsLog().length === 0">
+                CONTINUE_CAREER_SELECTION
+            </button>
+        </div>
+    </div>
+
     <!-- Term End -->
     <div *ngIf="currentState() === 'TERM_END'" class="hud-module status fade-in">
         <div class="corner-detail tl"></div>
@@ -643,6 +683,41 @@
                     <button class="btn-danger" (click)="applyEventEffect({type: 'injury'})">NONE_AVAILABLE (Suffer
                         Injury)</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Benefit Choice Modal (Mustering Out) -->
+    <div *ngIf="isBenefitChoicePrompt()" class="modal-overlay fade-in">
+        <div class="modal hud-module info">
+            <div class="hud-box-header">
+                <h3>BENEFIT_SELECTION_PROTOCOL</h3>
+            </div>
+            <div class="hud-content">
+                <p class="instruction">
+                    <span *ngIf="pendingBenefitChoice?.choose === 'all'">
+                        Select <span class="highlight">ALL</span> available benefits:
+                    </span>
+                    <span *ngIf="pendingBenefitChoice?.choose !== 'all'">
+                        Select <span class="highlight">{{ pendingBenefitChoice?.choose }}</span> benefit<span *ngIf="pendingBenefitChoice?.choose !== 1">s</span>:
+                    </span>
+                </p>
+                <div class="grid-options">
+                    <button *ngFor="let option of benefitChoiceOptions()" class="btn-secondary"
+                        (click)="selectBenefitOption(option)"
+                        [class.selected]="selectedBenefitOptions.includes(option)">
+                        {{ option }}
+                    </button>
+                </div>
+            </div>
+            <div class="hud-footer">
+                <button class="btn-action" (click)="confirmBenefitChoice()"
+                    [disabled]="!canConfirmBenefitChoice()">
+                    CONFIRM_SELECTION
+                </button>
+                <button class="btn-secondary" (click)="cancelBenefitChoice()">
+                    CANCEL
+                </button>
             </div>
         </div>
     </div>
