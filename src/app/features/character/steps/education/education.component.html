@@ -171,75 +171,6 @@
 
   <!-- Results -->
   <div class="results" *ngIf="$any(admissionStatus) !== 'NotApplied'" #resultsSection>
-    <!-- ADMISSION ROLL SCREEN -->
-    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'AdmissionRoll'">
-      <div class="corner-detail tl"></div>
-      <div class="corner-detail tr"></div>
-      <div class="corner-detail bl"></div>
-      <div class="corner-detail br"></div>
-
-      <div class="hud-box-header">
-        <span class="index">ADM_01</span>
-        <h3>ADMISSION_ROLL_PREPARATION</h3>
-      </div>
-
-      <div class="hud-content">
-        <!-- Roll Formula Identity -->
-        <div class="roll-spec-row">
-          <span class="spec-dice">2D6</span>
-          <span class="spec-sep">·</span>
-          <span class="spec-stat">{{ admissionStatName }}</span>
-          <span class="spec-sep">→</span>
-          <span class="spec-target">{{ admissionTarget }}+</span>
-        </div>
-
-        <!-- Announcement -->
-        <p class="announcement-text">{{ admissionAnnouncement }}</p>
-
-        <!-- Modifiers Table -->
-        <div class="modifiers-table">
-          <div class="mod-row header">
-            <span class="mod-label">MODIFIER</span>
-            <span class="mod-value">VALUE</span>
-          </div>
-          <div class="mod-row">
-            <span class="mod-label">Target Number:</span>
-            <span class="mod-value">{{ admissionTarget }}</span>
-          </div>
-          <div class="mod-row" *ngFor="let mod of admissionModifiers">
-            <span class="mod-label">{{ mod.label }}:</span>
-            <span class="mod-value" [class.positive]="mod.value > 0" [class.negative]="mod.value < 0">
-              {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Outcome Matrix -->
-        <div class="outcome-matrix">
-          <div class="outcome-block success">
-            <div class="outcome-icon">✔</div>
-            <div class="outcome-content">
-              <span class="outcome-label">SUCCESS</span>
-              <span class="outcome-text">Admission granted. You begin your studies immediately.</span>
-            </div>
-          </div>
-          <div class="outcome-block failure">
-            <div class="outcome-icon">✘</div>
-            <div class="outcome-content">
-              <span class="outcome-label">FAILURE</span>
-              <span class="outcome-text">Application rejected. You may proceed directly to your career.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hud-footer tactical">
-        <button class="btn-action elite" (click)="executeAdmissionRoll()">
-          <span class="primary">EXECUTE_ROLL</span>
-          <span class="secondary">2D6 DICE_SIMULATION</span>
-        </button>
-      </div>
-    </div>
 
     <!-- ADMISSION RESULT SCREEN -->
     <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'AdmissionResult'">
@@ -281,49 +212,6 @@
       </div>
     </div>
 
-    <!-- EVENT ROLL SCREEN -->
-    <div class="roll-phase-screen hud-module event-phase fade-in" *ngIf="educationStep === 'EventRoll'">
-      <div class="corner-detail tl"></div>
-      <div class="corner-detail tr"></div>
-      <div class="corner-detail bl"></div>
-      <div class="corner-detail br"></div>
-
-      <div class="hud-box-header event-header">
-        <span class="index">EVT_01</span>
-        <h3>EDUCATION_EVENT_TRIGGER</h3>
-        <div class="status-light pulse"></div>
-      </div>
-
-      <div class="hud-content event-content">
-        <!-- Roll Formula Identity -->
-        <div class="roll-spec-row">
-          <span class="spec-dice">2D6</span>
-          <span class="spec-sep">→</span>
-          <span class="spec-target">EVENT</span>
-        </div>
-
-        <!-- Announcement -->
-        <p class="announcement-text">Roll 2D6 to determine what significant event occurred during your {{ educationType }} studies. Results range from tragedies and pranks to useful skills and academic recognition.</p>
-
-        <!-- Events Table Preview -->
-        <div class="events-table-preview">
-          <span class="table-label">POSSIBLE_OUTCOMES:</span>
-          <div class="events-list">
-            <div class="event-row" *ngFor="let evt of educationEvents">
-              <span class="event-roll">{{ evt.roll }}</span>
-              <span class="event-desc">{{ evt.desc }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hud-footer tactical event-footer">
-        <button class="btn-action elite modern event-roll" (click)="executeEventRoll()">
-          <span class="primary">ROLL_EVENT</span>
-          <span class="secondary">2D6 EVENT_SIMULATION</span>
-        </button>
-      </div>
-    </div>
 
     <!-- EVENT RESULT SCREEN -->
     <div class="roll-phase-screen hud-module event-phase fade-in" *ngIf="educationStep === 'EventResult'">
@@ -358,75 +246,6 @@
       </div>
     </div>
 
-    <!-- GRADUATION ROLL SCREEN -->
-    <div class="roll-phase-screen hud-module info fade-in" *ngIf="educationStep === 'GraduationRoll'">
-      <div class="corner-detail tl"></div>
-      <div class="corner-detail tr"></div>
-      <div class="corner-detail bl"></div>
-      <div class="corner-detail br"></div>
-
-      <div class="hud-box-header">
-        <span class="index">GRAD_01</span>
-        <h3>GRADUATION_ROLL_PREPARATION</h3>
-      </div>
-
-      <div class="hud-content">
-        <!-- Roll Formula Identity -->
-        <div class="roll-spec-row">
-          <span class="spec-dice">2D6</span>
-          <span class="spec-sep">·</span>
-          <span class="spec-stat">INT</span>
-          <span class="spec-sep">→</span>
-          <span class="spec-target">{{ graduationTarget }}+</span>
-        </div>
-
-        <!-- Announcement with Honors Threshold -->
-        <p class="announcement-text">{{ graduationAnnouncement }}</p>
-
-        <!-- Modifiers Table -->
-        <div class="modifiers-table">
-          <div class="mod-row header">
-            <span class="mod-label">MODIFIER</span>
-            <span class="mod-value">VALUE</span>
-          </div>
-          <div class="mod-row">
-            <span class="mod-label">Target Number:</span>
-            <span class="mod-value">{{ graduationTarget }}</span>
-          </div>
-          <div class="mod-row" *ngFor="let mod of graduationModifiers">
-            <span class="mod-label">{{ mod.label }}:</span>
-            <span class="mod-value" [class.positive]="mod.value > 0" [class.negative]="mod.value < 0">
-              {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
-            </span>
-          </div>
-        </div>
-
-        <!-- Outcome Matrix -->
-        <div class="outcome-matrix">
-          <div class="outcome-block success">
-            <div class="outcome-icon">✔</div>
-            <div class="outcome-content">
-              <span class="outcome-label">SUCCESS</span>
-              <span class="outcome-text">You graduate successfully. Benefits are applied to your character sheet.</span>
-            </div>
-          </div>
-          <div class="outcome-block failure">
-            <div class="outcome-icon">✘</div>
-            <div class="outcome-content">
-              <span class="outcome-label">FAILURE</span>
-              <span class="outcome-text">You fail to graduate. {{ educationType === 'Academy' ? 'A roll above 2 still grants automatic career entry (Rule 632).' : 'No education benefits are gained.' }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hud-footer tactical">
-        <button class="btn-action elite" (click)="executeGraduationRoll()">
-          <span class="primary">EXECUTE_GRADUATION_ROLL</span>
-          <span class="secondary">2D6 FINAL_ASSESSMENT</span>
-        </button>
-      </div>
-    </div>
 
     <!-- University Skill Selection (Step 2) -->
     <div class="skill-selection university-polish hud-module info fade-in" *ngIf="educationStep === 'UniversitySkillSelect'" #skillsSection>

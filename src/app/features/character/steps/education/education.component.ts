@@ -309,8 +309,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         return Object.values(this.selectedAcademySkills).includes(skill);
     }
 
-    // Phase 1: Initialize Admission (calculate DMs, show roll screen)
-    initAdmission() {
+    // Initiate Admission Roll (calculate DMs and execute immediately)
+    async initAdmission() {
         this.rollLog = [];
         this.admissionStatus = 'Applying'; // Mark that application has started
         const char = this.characterService.character();
@@ -404,46 +404,38 @@ export class EducationComponent implements OnInit, OnDestroy {
             }
         }
 
-        // Save state and move to AdmissionRoll screen
+        // Save state and execute roll immediately (no prep screen)
         this.admissionTarget = target;
         this.admissionModifiers = modifiers;
         this.admissionStatName = statName;
         const offWorldNote = this.admissionMethod === 'OffWorld' ? ' (Off-World: grants EDU +1 if admitted)' : '';
         this.admissionAnnouncement = `Roll 2D6 + ${statName} modifier and meet or exceed ${target}+.${offWorldNote}`;
-        this.educationStep = 'AdmissionRoll';
-        this.scrollToTop();
+
+        await this.executeAdmissionRoll();
     }
 
-    // Phase 2: Execute Admission Roll
+    // Execute Admission Roll (directly opens modal with all info)
     async executeAdmissionRoll() {
         const modifiers = this.admissionModifiers;
         const target = this.admissionTarget;
         let totalDm = 0;
         modifiers.forEach(m => totalDm += m.value);
 
-        let statName = 'EDU';
-        modifiers.forEach(m => {
-            if (m.label === 'EDU' || m.label === 'END' || m.label === 'INT') {
-                statName = m.label;
-            }
-        });
-
-        // Modal Roll
-        const rollTitle = this.educationType === 'Academy' ? `Admission check - Military Academy (${this.academyType})` : `Admission Check - University`;
         const eduLabel = this.educationType === 'University' ? 'University' : `${this.academyType} Academy`;
-        const offWorldNote = this.admissionMethod === 'OffWorld' ? ' (Off-World application: harder but grants EDU +1 if admitted)' : '';
 
+        // Roll directly in modal with all briefing info
         const roll = await this.diceDisplay.roll(
-            rollTitle,
+            `Admission Check - ${eduLabel}`,
             2,
             totalDm,
             target,
-            statName,
+            this.admissionStatName,
             undefined,
             modifiers,
             undefined,
             {
                 phase: `EDUCATION · ADMISSION · ${eduLabel.toUpperCase()}`,
+                announcement: `**${eduLabel} Admission**\n\n${this.admissionAnnouncement}`,
                 successContext: `Admission granted. You begin your studies immediately.`,
                 failureContext: `Application rejected. You may proceed directly to your career.`
             }
@@ -455,12 +447,12 @@ export class EducationComponent implements OnInit, OnDestroy {
 
         if (total >= target) {
             this.admissionStatus = 'Admitted';
-            this.characterService.log(`**Admitted** to ${this.educationType === 'University' ? 'University' : `${this.academyType} Academy`} (${this.admissionMethod}) — Roll ${total} vs ${target}`);
+            this.characterService.log(`**Admitted** to ${eduLabel} (${this.admissionMethod}) — Roll ${total} vs ${target}`);
             if (this.educationType === 'University') this.enterUniversity();
             else this.enterAcademy();
         } else {
             this.admissionStatus = 'Rejected';
-            this.characterService.log(`**Admission Rejected** (${this.educationType === 'University' ? 'University' : `${this.academyType} Academy`}) — Roll ${total} vs ${target}`);
+            this.characterService.log(`**Admission Rejected** (${eduLabel}) — Roll ${total} vs ${target}`);
         }
 
         // Move to AdmissionResult screen
@@ -554,43 +546,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         // Note: educationStep is controlled by AdmissionResult screen, not here
     }
 
-    // Phase 1: Initialize Graduation Roll (calculate DMs, show roll screen)
-    initGraduationRoll() {
-        const char = this.characterService.character();
-        const int = char.characteristics.int.value + char.characteristics.int.modifier;
-        const edu = char.characteristics.edu.value + char.characteristics.edu.modifier;
-
-        let target = 0;
-        let statMod = 0;
-        let statName = '';
-        let totalDm = 0;
-        const modifiers: { label: string, value: number }[] = [];
-
-        if (this.educationType === 'University') {
-            target = 6;
-            statName = 'INT';
-            statMod = this.diceService.getModifier(int);
-            modifiers.push({ label: 'INT', value: statMod });
-            totalDm += statMod;
-        } else {
-            target = 7;
-            statName = 'INT';
-            statMod = this.diceService.getModifier(int);
-            modifiers.push({ label: 'INT', value: statMod });
-            totalDm += statMod;
-        }
-
-        // Save state and move to GraduationRoll screen
-        this.graduationTarget = target;
-        this.graduationModifiers = modifiers;
-        this.graduationHonorsTarget = this.educationType === 'University' ? 10 : 11;
-        this.graduationAnnouncement = `Roll 2D6 + INT modifier and meet or exceed ${target}+ to graduate. Roll ${this.graduationHonorsTarget}+ for Honors.`;
-        this.educationStep = 'GraduationRoll';
-        this.scrollToTop();
-    }
-
-    // Phase 2: Execute Graduation Roll
-    async executeGraduationRoll() {
+    // Initialize and Execute Graduation Roll (directly opens modal with all info)
+    async initGraduationRoll() {
         // Close any open event modals when entering graduation phase
         this.showHobbySelection = false;
         this.showTutorSelection = false;
@@ -600,24 +557,52 @@ export class EducationComponent implements OnInit, OnDestroy {
         this.eventEngine.currentEvent.set(null);
         this.eventEngine.eventStack.set([]); // clear orphaned stack entries
 
+        const char = this.characterService.character();
+        const int = char.characteristics.int.value + char.characteristics.int.modifier;
+
+        let target = 0;
+        let totalDm = 0;
+        const modifiers: { label: string, value: number }[] = [];
+
+        if (this.educationType === 'University') {
+            target = 6;
+        } else {
+            target = 7;
+        }
+
+        const statMod = this.diceService.getModifier(int);
+        modifiers.push({ label: 'INT', value: statMod });
+        totalDm += statMod;
+
+        // Save state
+        this.graduationTarget = target;
+        this.graduationModifiers = modifiers;
+        this.graduationHonorsTarget = this.educationType === 'University' ? 10 : 11;
+        this.graduationAnnouncement = `Roll 2D6 + INT modifier and meet or exceed ${target}+ to graduate. Roll ${this.graduationHonorsTarget}+ for Honors.`;
+
+        // Execute roll immediately (no prep screen)
+        await this.executeGraduationRoll();
+    }
+
+    // Execute Graduation Roll (directly opens modal with all info)
+    async executeGraduationRoll() {
         const modifiers = this.graduationModifiers;
         const target = this.graduationTarget;
         let totalDm = 0;
         modifiers.forEach(m => totalDm += m.value);
 
-        let statName = 'INT';
-
         const roll = await this.diceDisplay.roll(
-            'Graduation Check',
+            `Graduation Check - ${this.educationType}`,
             2,
             totalDm,
             target,
-            statName,
+            'INT',
             undefined,
             modifiers,
             undefined,
             {
                 phase: `EDUCATION · GRADUATION · ${this.educationType.toUpperCase()}`,
+                announcement: `**Graduation Roll** (${this.educationType})\n\n${this.graduationAnnouncement}`,
                 successContext: `You graduate successfully. Benefits are applied to your character sheet.`,
                 failureContext: `You fail to graduate. ${this.educationType === 'Academy' ? 'A roll above 2 still grants automatic career entry (Rule 632).' : 'No education benefits are gained.'}`
             }
@@ -756,14 +741,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         });
     }
 
-    // Phase 1: Initialize Event Roll
-    initEventRoll() {
-        this.educationStep = 'EventRoll';
-        this.scrollToTop();
-    }
-
-    // Phase 2: Execute Event Roll
-    async executeEventRoll() {
+    // Initialize and Execute Event Roll (directly opens modal)
+    async initEventRoll() {
         this.registerEducationHandlers();
 
         const roll = await this.diceDisplay.roll('Education Event', 2, 0, 0, '', (result) => {
@@ -771,6 +750,7 @@ export class EducationComponent implements OnInit, OnDestroy {
             return entry.ui.description;
         }, [], undefined, {
             phase: `EDUCATION · TERM EVENT · ${this.educationType.toUpperCase()}`,
+            announcement: `Roll 2D6 to determine what significant event occurred during your ${this.educationType} studies. Results range from tragedies and pranks to useful skills and academic recognition.`,
             successContext: `The event unfolds. Review the outcome below.`,
             failureContext: ``,
             debugTableData: EDUCATION_EVENT_TABLE
@@ -799,7 +779,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
     // Legacy method for backward compatibility
     async runEvent() {
-        await this.executeEventRoll();
+        await this.initEventRoll();
     }
 
     async handlePrank() {
