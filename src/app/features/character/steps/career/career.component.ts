@@ -206,14 +206,24 @@ export class CareerComponent implements OnInit, OnDestroy {
 
     // --- MUSTER-OUT STATE (Integrated into Career Step) ---
     musterOutCareerName: string | null = null;
+    wasEjected = signal(false); // Track if this muster-out is due to ejection
     selectedMusterOutCareer = signal<string | null>(null);
     musterOutBenefitsLog = signal<string[]>([]);
     musterOutCashLog = signal<string[]>([]); // Cash-specific log for UI
     musterOutMaterialLog = signal<string[]>([]); // Material-specific log for UI
     musterOutCashRolls = computed(() => this.characterService.character().finances.cashRollsSpent || 0);
     musterOutMaxCashRolls = 3;
+    musterOutRemainingRolls = computed(() => {
+        const career = this.musterOutCareerName;
+        if (!career) return 0;
+        const allocated = this.characterService.character().finances.benefitRollsAllocated || {};
+        return (allocated[career] || 0) + (allocated['General'] || 0);
+    });
     showInheritanceBonus = signal(false); // Show checkbox for using inheritance bonus
     useInheritanceBonus = signal(false); // User selected to use inheritance bonus
+    inheritanceBonusCount = computed(() =>
+        this.inheritanceBonusService.getAvailableCount('Noble')
+    );
     isBenefitChoicePrompt = signal(false);
     benefitChoiceOptions = signal<string[]>([]);
     pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
@@ -341,6 +351,11 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         this.eventEngine.registerCustomHandler('SET_NEURAL_JACK', (payload) => {
             this.characterService.setNeuralJackInstalled(true);
+        });
+
+        this.eventEngine.registerCustomHandler('INHERITANCE_BONUS', () => {
+            this.inheritanceBonusService.addInheritanceBonus('Noble');
+            this.characterService.log('**Inheritance Bonus**: Gain DM+1 to any one future benefit roll.');
         });
 
         this.eventEngine.registerCustomHandler('ANY_SKILL_UP', () => {
@@ -484,7 +499,7 @@ export class CareerComponent implements OnInit, OnDestroy {
             if (forbidden.includes(career.name)) return `Requires Tier 4 nation (Current: Tier ${tier})`;
         }
 
-        if (char.ejectedCareers?.includes(career.name)) return 'Ejected recently (barred for 1 term)';
+        if (char.ejectedCareers?.includes(career.name)) return 'Ejected - barred permanently during career phase';
 
         if (char.forcedCareer && char.forcedCareer !== career.name) {
             return `SERVICE_OBLIGATION: Academy graduate must serve in ${char.forcedCareer}.`;
@@ -2147,6 +2162,9 @@ export class CareerComponent implements OnInit, OnDestroy {
         this.isForeignLegionActive = false; // Ensure FFL is reset
 
         if (destination === 'MUSTER' || isMishap || this.forcedOut) {
+            // Track if this muster-out is due to ejection/mishap (not voluntary)
+            this.wasEjected.set(isMishap || this.forcedOut);
+
             // Apply Rank Bonus Rolls at MUSTER via CareerTermService
             this.careerTermService.applyRankBonusRolls(currentCareerName, currentRank);
 
@@ -2168,8 +2186,7 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.characterService.log(`**Mustered Out** of ${currentCareerName}`);
             this.log('Rolling mustering out benefits for ' + currentCareerName + '...');
         } else {
-            // Continue Logic: Clear ejected bans after serving a full term
-            this.characterService.clearEjectedCareers();
+            // Continue Logic: Don't clear ejected bans — ejection is permanent during career phase
 
             if (this.nextAssignment) {
                 this.characterService.log(`**Assignment Changed** to ${this.nextAssignment.name}`);
@@ -2401,7 +2418,7 @@ export class CareerComponent implements OnInit, OnDestroy {
 
         const updatedAlloc = this.characterService.character().finances.benefitRollsAllocated || {};
         if ((updatedAlloc[careerName] || 0) <= 0) {
-            // All rolls for this career exhausted — go back to CHOOSE_CAREER
+            // All rolls for this career exhausted
             if (Object.values(updatedAlloc).some(v => v > 0)) {
                 // More rolls available from other careers
                 this.currentState.set('CHOOSE_CAREER');
@@ -2409,8 +2426,15 @@ export class CareerComponent implements OnInit, OnDestroy {
                 this.selectedMusterOutCareer.set(null);
             } else {
                 // All rolls exhausted
-                await this.applyFinalBenefits();
-                this.wizardFlow.advance();
+                if (this.wasEjected()) {
+                    // After ejection, go to TERM_END before CHOOSE_CAREER
+                    this.wasEjected.set(false);
+                    this.currentState.set('TERM_END');
+                } else {
+                    // Normal muster-out completion
+                    await this.applyFinalBenefits();
+                    this.wizardFlow.advance();
+                }
             }
         }
     }

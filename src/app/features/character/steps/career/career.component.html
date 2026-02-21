@@ -452,7 +452,7 @@
                     </div>
                     <div class="summary-row">
                         <span class="label">REMAINING</span>
-                        <span class="value">{{ Math.max(0, (currentTerm() - 1 + currentRank()) - musterOutBenefitsLog().length) }}</span>
+                        <span class="value">{{ musterOutRemainingRolls() }}</span>
                     </div>
                     <div class="summary-row cash-row">
                         <span class="label">CASH ROLLS</span>
@@ -473,7 +473,7 @@
                             <input type="checkbox" [checked]="useInheritanceBonus()" 
                                    (change)="useInheritanceBonus.set(!useInheritanceBonus())">
                             <span class="checkbox-label">Apply +1 DM to Next Benefit Roll</span>
-                            <span class="bonus-count">({{ inheritanceBonusService.getAvailableCount('Noble') }} available)</span>
+                            <span class="bonus-count">({{ inheritanceBonusCount() }} available)</span>
                         </label>
                     </div>
                 </div>
@@ -494,9 +494,9 @@
                         </div>
                         <div class="table-body">
                             @if (musterOutCashLog().length > 0) {
-                                @for (entry of musterOutCashLog(); track $index) {
+                                @for (entry of musterOutCashLog(); track $index; let i = $index) {
                                     <div class="table-row cash-entry">
-                                        <div class="col-roll">{{ entry.split(' ')[0] || 'd6+DM' }}</div>
+                                        <div class="col-roll">{{ i + 1 }}</div>
                                         <div class="col-amount">{{ entry }}</div>
                                     </div>
                                 }
@@ -523,10 +523,10 @@
                         </div>
                         <div class="table-body">
                             @if (musterOutMaterialLog().length > 0) {
-                                @for (entry of musterOutMaterialLog(); track $index) {
+                                @for (entry of musterOutMaterialLog(); track $index; let i = $index) {
                                     <div class="table-row material-entry">
-                                        <div class="col-roll">{{ entry.split(' ')[0] || 'd6+DM' }}</div>
-                                        <div class="col-benefit">{{ entry }}</div>
+                                        <div class="col-roll">{{ i + 1 }}</div>
+                                        <div class="col-benefit">{{ entry.replace('Benefit: ', '') }}</div>
                                     </div>
                                 }
                             } @else {

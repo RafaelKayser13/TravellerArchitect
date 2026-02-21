@@ -285,7 +285,7 @@ export class CareerTermService {
   applyEliteSocBonus(): void {
     const char = this.characterService.character();
     if (char.characteristics.soc.value >= 10) {
-      this.characterService.modifyStat('SOC', 1);
+      this.characterService.modifyStat('SOC', 1, true); // bypassCap=true: SOC can exceed 15 via 2300AD elite bonus
       this.characterService.log('**Elite Status**: SOC increased by 1 (SOC 10+ bonus).');
     }
   }

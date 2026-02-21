@@ -99,7 +99,7 @@ export class CharacterService {
     this.patch({ characteristics: chars }, diffs.length > 0 ? diffs.join(', ') : undefined);
   }
 
-  modifyStat(stat: string, amount: number) {
+  modifyStat(stat: string, amount: number, bypassCap = false) {
     const char = this.character();
     const key = stat.toLowerCase() as keyof typeof char.characteristics;
     if (!char.characteristics[key]) {
@@ -107,12 +107,14 @@ export class CharacterService {
       return;
     }
     const current = char.characteristics[key];
-    const newValue = Math.max(1, current.value + amount);
-    const updatedChars = { 
-      ...char.characteristics, 
-      [key]: { ...current, value: newValue } 
+    // Cap characteristics at 15 during career play (except when bypassCap is true for special cases like SOC elitist bonus)
+    const maxValue = bypassCap ? 99 : 15;
+    const newValue = Math.min(maxValue, Math.max(1, current.value + amount));
+    const updatedChars = {
+      ...char.characteristics,
+      [key]: { ...current, value: newValue }
     };
-    
+
     const sign = amount >= 0 ? '+' : '';
     this.patch({ characteristics: updatedChars }, `**Stat Adjusted**: ${stat.toUpperCase()} ${current.value} → ${newValue} (${sign}${amount})`);
   }
