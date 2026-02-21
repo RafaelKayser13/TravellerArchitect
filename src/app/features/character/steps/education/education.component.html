@@ -295,10 +295,25 @@
       </div>
 
       <div class="hud-content event-content">
-        <div class="event-briefing">
-          <p class="briefing-icon">⚡</p>
-          <p class="instruction">Something significant happens during your academic studies.</p>
-          <p class="sub-text">Rolling the Education Events table...</p>
+        <!-- Roll Formula Identity -->
+        <div class="roll-spec-row">
+          <span class="spec-dice">2D6</span>
+          <span class="spec-sep">→</span>
+          <span class="spec-target">EVENT</span>
+        </div>
+
+        <!-- Announcement -->
+        <p class="announcement-text">Roll 2D6 to determine what significant event occurred during your {{ educationType }} studies. Results range from tragedies and pranks to useful skills and academic recognition.</p>
+
+        <!-- Events Table Preview -->
+        <div class="events-table-preview">
+          <span class="table-label">POSSIBLE_OUTCOMES:</span>
+          <div class="events-list">
+            <div class="event-row" *ngFor="let evt of educationEvents">
+              <span class="event-roll">{{ evt.roll }}</span>
+              <span class="event-desc">{{ evt.desc }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
