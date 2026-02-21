@@ -1287,6 +1287,10 @@
   min-height: auto !important;
 }
 
+.roll-phase-screen.event-phase.hud-module {
+  overflow: visible !important;
+}
+
 .event-list-column {
   flex: 0 0 40%;
   min-width: 300px;
