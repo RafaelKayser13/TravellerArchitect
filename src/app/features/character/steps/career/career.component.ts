@@ -194,6 +194,7 @@ export class CareerComponent implements OnInit, OnDestroy {
     benefitChoiceOptions = signal<string[]>([]);
     pendingBenefitChoice: { options: string[], choose: number | 'all' } | null = null;
     selectedBenefitOptions: string[] = [];
+    private lastAutoExecutedEventId: string = '';
 
     constructor() {
         effect(() => {
@@ -322,11 +323,14 @@ export class CareerComponent implements OnInit, OnDestroy {
             this.revealedOptions.clear();
 
             // Auto-execute direct roll checks (skip event modal, go to dice-roller)
-            if (currentEvent && this.isDirectRollCheck()) {
-                // Use microtask to ensure event UI is rendered before execution
-                queueMicrotask(() => {
-                    this.eventEngine.selectOption(0);
-                });
+            if (currentEvent && currentEvent.id !== this.lastAutoExecutedEventId) {
+                if (this.isDirectRollCheck()) {
+                    this.lastAutoExecutedEventId = currentEvent.id;
+                    // Use Promise.resolve().then() for async selectOption since effects can't use async/await
+                    Promise.resolve().then(() => {
+                        this.eventEngine.selectOption(0);
+                    });
+                }
             }
         });
 

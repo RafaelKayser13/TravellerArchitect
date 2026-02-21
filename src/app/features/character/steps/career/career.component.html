@@ -4,9 +4,9 @@
     </app-step-header>
 
     <!-- --- DYNAMIC EVENT OVERLAY (NEW SYSTEM) --- -->
-    <!-- Skip HUD window for direct roll checks (will auto-execute to dice-roller) -->
+    <!-- Direct roll checks are auto-executed by effect, HUD may briefly show then hide -->
     <app-hud-window
-        *ngIf="activeEvent && !isDirectRollCheck()"
+        *ngIf="activeEvent"
         [title]="activeEvent.ui.title"
         [isOpen]="true"
         [hasFooter]="true"
