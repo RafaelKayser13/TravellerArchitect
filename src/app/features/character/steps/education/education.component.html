@@ -184,7 +184,17 @@
       </div>
 
       <div class="hud-content">
-        <p class="instruction">You are about to roll for admission to {{ educationType === 'University' ? 'University' : academyType + ' Academy' }}.</p>
+        <!-- Roll Formula Identity -->
+        <div class="roll-spec-row">
+          <span class="spec-dice">2D6</span>
+          <span class="spec-sep">·</span>
+          <span class="spec-stat">{{ admissionStatName }}</span>
+          <span class="spec-sep">→</span>
+          <span class="spec-target">{{ admissionTarget }}+</span>
+        </div>
+
+        <!-- Announcement -->
+        <p class="announcement-text">{{ admissionAnnouncement }}</p>
 
         <!-- Modifiers Table -->
         <div class="modifiers-table">
@@ -201,6 +211,24 @@
             <span class="mod-value" [class.positive]="mod.value > 0" [class.negative]="mod.value < 0">
               {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
             </span>
+          </div>
+        </div>
+
+        <!-- Outcome Matrix -->
+        <div class="outcome-matrix">
+          <div class="outcome-block success">
+            <div class="outcome-icon">✔</div>
+            <div class="outcome-content">
+              <span class="outcome-label">SUCCESS</span>
+              <span class="outcome-text">Admission granted. You begin your studies immediately.</span>
+            </div>
+          </div>
+          <div class="outcome-block failure">
+            <div class="outcome-icon">✘</div>
+            <div class="outcome-content">
+              <span class="outcome-label">FAILURE</span>
+              <span class="outcome-text">Application rejected. You may proceed directly to your career.</span>
+            </div>
           </div>
         </div>
       </div>
@@ -328,7 +356,17 @@
       </div>
 
       <div class="hud-content">
-        <p class="instruction">Final assessment. Rolling for graduation from your {{ educationType }}...</p>
+        <!-- Roll Formula Identity -->
+        <div class="roll-spec-row">
+          <span class="spec-dice">2D6</span>
+          <span class="spec-sep">·</span>
+          <span class="spec-stat">INT</span>
+          <span class="spec-sep">→</span>
+          <span class="spec-target">{{ graduationTarget }}+</span>
+        </div>
+
+        <!-- Announcement with Honors Threshold -->
+        <p class="announcement-text">{{ graduationAnnouncement }}</p>
 
         <!-- Modifiers Table -->
         <div class="modifiers-table">
@@ -345,6 +383,24 @@
             <span class="mod-value" [class.positive]="mod.value > 0" [class.negative]="mod.value < 0">
               {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
             </span>
+          </div>
+        </div>
+
+        <!-- Outcome Matrix -->
+        <div class="outcome-matrix">
+          <div class="outcome-block success">
+            <div class="outcome-icon">✔</div>
+            <div class="outcome-content">
+              <span class="outcome-label">SUCCESS</span>
+              <span class="outcome-text">You graduate successfully. Benefits are applied to your character sheet.</span>
+            </div>
+          </div>
+          <div class="outcome-block failure">
+            <div class="outcome-icon">✘</div>
+            <div class="outcome-content">
+              <span class="outcome-label">FAILURE</span>
+              <span class="outcome-text">You fail to graduate. {{ educationType === 'Academy' ? 'A roll above 2 still grants automatic career entry (Rule 632).' : 'No education benefits are gained.' }}</span>
+            </div>
           </div>
         </div>
       </div>

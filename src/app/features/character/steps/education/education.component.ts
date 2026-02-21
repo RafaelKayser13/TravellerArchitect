@@ -138,6 +138,8 @@ export class EducationComponent implements OnInit, OnDestroy {
     admissionRollTotal: number = 0;
     admissionTarget: number = 0;
     admissionModifiers: { label: string; value: number }[] = [];
+    admissionStatName: string = '';
+    admissionAnnouncement: string = '';
 
     // Event Phase State
     currentEvent: { roll: number; desc: string; effect?: string } | null = null;
@@ -147,6 +149,8 @@ export class EducationComponent implements OnInit, OnDestroy {
     graduationRollTotal: number = 0;
     graduationTarget: number = 0;
     graduationModifiers: { label: string; value: number }[] = [];
+    graduationHonorsTarget: number = 10;
+    graduationAnnouncement: string = '';
     isGraduationHonors: boolean = false;
 
     // University Selection Vars
@@ -403,6 +407,9 @@ export class EducationComponent implements OnInit, OnDestroy {
         // Save state and move to AdmissionRoll screen
         this.admissionTarget = target;
         this.admissionModifiers = modifiers;
+        this.admissionStatName = statName;
+        const offWorldNote = this.admissionMethod === 'OffWorld' ? ' (Off-World: grants EDU +1 if admitted)' : '';
+        this.admissionAnnouncement = `Roll 2D6 + ${statName} modifier and meet or exceed ${target}+.${offWorldNote}`;
         this.educationStep = 'AdmissionRoll';
         this.scrollToTop();
     }
@@ -437,7 +444,6 @@ export class EducationComponent implements OnInit, OnDestroy {
             undefined,
             {
                 phase: `EDUCATION · ADMISSION · ${eduLabel.toUpperCase()}`,
-                announcement: `**${eduLabel} Admission**${offWorldNote}\n\nYou must roll **2D6 + ${statName} modifier** and meet or exceed **${target}+** to be accepted. Current DM breakdown shown above.`,
                 successContext: `Admission granted. You begin your studies immediately.`,
                 failureContext: `Application rejected. You may proceed directly to your career.`
             }
@@ -577,6 +583,8 @@ export class EducationComponent implements OnInit, OnDestroy {
         // Save state and move to GraduationRoll screen
         this.graduationTarget = target;
         this.graduationModifiers = modifiers;
+        this.graduationHonorsTarget = this.educationType === 'University' ? 10 : 11;
+        this.graduationAnnouncement = `Roll 2D6 + INT modifier and meet or exceed ${target}+ to graduate. Roll ${this.graduationHonorsTarget}+ for Honors.`;
         this.educationStep = 'GraduationRoll';
         this.scrollToTop();
     }
@@ -610,7 +618,6 @@ export class EducationComponent implements OnInit, OnDestroy {
             undefined,
             {
                 phase: `EDUCATION · GRADUATION · ${this.educationType.toUpperCase()}`,
-                announcement: `**Graduation Roll** (${this.educationType})\n\nRoll **2D6 + INT modifier** and meet or exceed **${target}+** to graduate. Roll **${this.educationType === 'University' ? 10 : 11}+** for Honors.`,
                 successContext: `You graduate successfully. Benefits are applied to your character sheet.`,
                 failureContext: `You fail to graduate. ${this.educationType === 'Academy' ? 'A roll above 2 still grants automatic career entry (Rule 632).' : 'No education benefits are gained.'}`
             }
