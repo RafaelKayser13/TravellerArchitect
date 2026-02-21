@@ -7,7 +7,7 @@ import { DiceDisplayService } from '../../../../core/services/dice-display.servi
 import { NATIONALITIES } from '../../../../data/nationalities';
 import { EventEngineService } from '../../../../core/services/event-engine.service';
 import { WizardFlowService } from '../../../../core/services/wizard-flow.service';
-import { createEducationEvent } from '../../../../data/events/shared/education-events';
+import { createEducationEvent, EDUCATION_EVENT_TABLE } from '../../../../data/events/shared/education-events';
 
 // Event Interface
 interface EduEvent {
@@ -141,6 +141,7 @@ export class EducationComponent implements OnInit, OnDestroy {
 
     // Event Phase State
     currentEvent: { roll: number; desc: string; effect?: string } | null = null;
+    educationEvents: EduEvent[] = EDUCATION_EVENT_TABLE;
 
     // Graduation Phase State
     graduationRollTotal: number = 0;
