@@ -262,15 +262,29 @@
 
       <div class="hud-box-header event-header">
         <span class="index">EVT_01</span>
-        <h3>EDUCATION_EVENT_TRIGGER</h3>
+        <h3>EDUCATION · TERM EVENT · UNIVERSITY</h3>
         <div class="status-light pulse"></div>
       </div>
 
-      <div class="hud-content event-content">
-        <div class="event-briefing">
-          <p class="briefing-icon">⚡</p>
-          <p class="instruction">Something significant happens during your academic studies.</p>
-          <p class="sub-text">Rolling the Education Events table...</p>
+      <div class="hud-content event-content two-column">
+        <!-- LEFT COLUMN: Event Table List -->
+        <div class="event-list-column">
+          <div class="event-table-title">[ EDUCATION_EVENT_TABLE ]</div>
+          <div class="event-table">
+            <div *ngFor="let evt of educationEvents" class="event-row">
+              <span class="event-num">{{ evt.roll }}</span>
+              <span class="event-desc" [title]="evt.desc">{{ evt.desc }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Event Briefing -->
+        <div class="event-detail-column">
+          <div class="event-briefing">
+            <p class="briefing-icon">⚡</p>
+            <p class="instruction">Something significant happens during your academic studies.</p>
+            <p class="sub-text">Rolling the Education Events table...</p>
+          </div>
         </div>
       </div>
 
