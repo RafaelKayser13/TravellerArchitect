@@ -24,6 +24,7 @@ export function getBenefitEffects(benefitName: string): EventEffect[] {
     // Ship shares
     if (benefitName.includes('Two Ship Shares')) return [{ type: 'RESOURCE_MOD', target: 'shipShares', value: 2 }];
     if (benefitName.includes('Ship Share')) return [{ type: 'RESOURCE_MOD', target: 'shipShares', value: 1 }];
+    if (benefitName.includes("Ship's Boat")) return [{ type: 'RESOURCE_MOD', target: 'shipShares', value: 2 }];
 
     // Skills (Prisoner and other choice options)
     const skillMappings: Record<string, string> = {
@@ -39,6 +40,20 @@ export function getBenefitEffects(benefitName: string): EventEffect[] {
         if (benefitName === key) {
             return [{ type: 'SKILL_MOD', target: skillName, value: 1 }];
         }
+    }
+
+    // Vehicle and special items (handled via ADD_ITEM)
+    if (benefitName === 'Personal Vehicle') {
+        return [{ type: 'ADD_ITEM', value: 'Personal Vehicle' }];
+    }
+    if (benefitName === 'Yacht') {
+        return [{ type: 'ADD_ITEM', value: 'Yacht' }];
+    }
+    if (benefitName === 'Cybernetic Implant') {
+        return [{ type: 'ADD_ITEM', value: 'Cybernetic Implant' }];
+    }
+    if (benefitName === 'Armour') {
+        return [{ type: 'ADD_ITEM', value: 'Combat Armour' }];
     }
 
     // Default: log and add as item
