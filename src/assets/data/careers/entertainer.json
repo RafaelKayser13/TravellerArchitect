@@ -1005,7 +1005,7 @@
           "type": "skill-choice",
           "skills": [
             "Survival",
-            "Pilot",
+            "Pilot (any)",
             "Persuade",
             "Streetwise"
           ]

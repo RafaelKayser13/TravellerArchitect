@@ -22,12 +22,14 @@ export class SkillService {
         isFirstTermBasicTraining: boolean = false
     ): { skills: Skill[]; message: string; choiceRequired: boolean } {
         const skills = [...currentSkills];
-        const index = skills.findIndex(s => s.name === awardName);
+        // Normalize skill name (remove (any) placeholder for storage and lookup)
+        const normalizedSkillName = awardName.replace(' (any)', '').trim();
+        const index = skills.findIndex(s => s.name === normalizedSkillName);
         const existing = index !== -1 ? skills[index] : null;
 
         // Rule 7: Basic Training doesn't stack if you already have the skill
         if (isFirstTermBasicTraining && awardLevel === 0 && existing) {
-            return { skills, message: `Basic Training: ${awardName} already known.`, choiceRequired: false };
+            return { skills, message: `Basic Training: ${normalizedSkillName} already known.`, choiceRequired: false };
         }
 
         let newLevel = 0;
@@ -37,23 +39,23 @@ export class SkillService {
             // Case: Name Only (e.g. "Pilot") -> Accumulation +1
             if (existing) {
                 newLevel = existing.level + 1;
-                message = `**Skill Increased**: ${awardName} ${existing.level} → ${newLevel}`;
+                message = `**Skill Increased**: ${normalizedSkillName} ${existing.level} → ${newLevel}`;
             } else {
                 newLevel = 1;
-                message = `**Skill Added**: ${awardName} 1`;
+                message = `**Skill Added**: ${normalizedSkillName} 1`;
             }
         } else {
             // Case: Fixed Level (e.g. "Pilot 1" or "Pilot 0")
             if (existing) {
                 if (awardLevel > existing.level) {
                     newLevel = awardLevel;
-                    message = `**Skill Improved**: ${awardName} ${existing.level} → ${newLevel}`;
+                    message = `**Skill Improved**: ${normalizedSkillName} ${existing.level} → ${newLevel}`;
                 } else {
-                    return { skills, message: `${awardName} already at level ${existing.level}.`, choiceRequired: false };
+                    return { skills, message: `${normalizedSkillName} already at level ${existing.level}.`, choiceRequired: false };
                 }
             } else {
                 newLevel = awardLevel;
-                message = `**Skill Added**: ${awardName} ${newLevel}`;
+                message = `**Skill Added**: ${normalizedSkillName} ${newLevel}`;
             }
         }
 
@@ -70,7 +72,7 @@ export class SkillService {
             'Gun Combat', 'Gunner', 'Heavy Weapons', 'Language', 'Melee',
             'Pilot', 'Profession', 'Science', 'Seafarer', 'Animals',
             'Athletics', 'Tactics'
-        ].includes(awardName);
+        ].includes(normalizedSkillName);
 
         // 2300AD Specializations
         const specializations: Record<string, string[]> = {
@@ -90,7 +92,7 @@ export class SkillService {
             if (existing) {
                 skills[index] = { ...existing, level: newLevel };
             } else {
-                skills.push({ name: awardName, level: newLevel });
+                skills.push({ name: normalizedSkillName, level: newLevel });
             }
         }
 

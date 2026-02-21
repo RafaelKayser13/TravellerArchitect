@@ -420,7 +420,7 @@
               "effects": [
                 {
                   "type": "SKILL_MOD",
-                  "target": "Drive",
+                  "target": "Drive (any)",
                   "value": 1
                 }
               ],
@@ -442,7 +442,7 @@
               "effects": [
                 {
                   "type": "SKILL_MOD",
-                  "target": "Flyer",
+                  "target": "Flyer (any)",
                   "value": 1
                 }
               ],
@@ -453,7 +453,7 @@
               "effects": [
                 {
                   "type": "SKILL_MOD",
-                  "target": "Engineer",
+                  "target": "Engineer (any)",
                   "value": 1
                 }
               ],
@@ -467,10 +467,10 @@
           "type": "skill-choice",
           "skills": [
             "Mechanic",
-            "Drive",
-            "Electronics",
-            "Flyer",
-            "Engineer"
+            "Drive (any)",
+            "Electronics (any)",
+            "Flyer (any)",
+            "Engineer (any)"
           ]
         }
       ]
@@ -762,8 +762,8 @@
         {
           "type": "skill-choice",
           "skills": [
-            "Electronics",
-            "Engineer"
+            "Electronics (any)",
+            "Engineer (any)"
           ]
         }
       ]
