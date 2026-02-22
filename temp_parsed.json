@@ -1,0 +1,1562 @@
+[
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "2300AD ORIGINAL WRITERS AND CONTRIBUTORS",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "Author",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "Editor",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "Layout & Graphic Design",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "Proofreading",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "Illustrations",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "Special Thanks",
+    "desc": ""
+  },
+  {
+    "category": "HUMANITY DISCOVERS THE STARS",
+    "section": "CREDITS",
+    "name": "TRAVELLER INNER CIRCLE",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Gravity Type:",
+    "desc": "Travellers from the Frontier can hail from any world with practically any gravity type, from Light gravity worlds to the Extreme gravity of King. Zero-gravity environments are the domain of Spacers who are covered on page 9. Information on world gravity type is available in each world description and the table in The Worlds of 2300AD page 23. Gravity type is used when travelling to different worlds, to find the effect of the differences between homeworld gravity and local gravity on each Traveller. In general, Travellers from low-gravity worlds will be taller and more slender than average, while those from high-gravity worlds will tend to be shorter and stockier."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Survival:",
+    "desc": "Hostile worlds negatively-impact survival rates. Check the Survival DM on the Colonies table in Book 2 page 23, and use it for all Survival rolls until the Traveller leaves their homeworld. This roll may also be modified by DNA Modifications and Symbionts. As well as having a Survival DM for the world, some colonies are particularly primitive or advanced and have further modifiers noted in their description. For example, the Incan colony on Heidelsheimat inflicts DM-1 to Survival rolls due to its primitive nature and lack of support, while the Texan and Bavarian colonies do not have any such modifier. All tailored DNAMs provide DM+1 to Survival rolls."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Background Skills:",
+    "desc": "Colonists on Frontier worlds choose background skills from the following list. Travellers from the Frontier receive a number of skills equal to 3+ EDU DM."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "DNAMs:",
+    "desc": "Travellers from the Frontier may have DNA Modifications and Symbionts to cope with Planetary Adaptation Syndrome but often for other factors as well. These are noted in their colony's description."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Augmentation:",
+    "desc": "Travellers from the Frontier may have prosthetics, including limbs and eyes, due to accident or animal attacks. Each time a Survival roll is equal to the minimum required, the Traveller may elect to gain a prosthetic – either a limb or eyes (one or both). The prosthetic will be a cosmetic replacement and have no special features unless later upgraded."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Pre-Career Education:",
+    "desc": "Travellers can attempt to receive pre-career education, as noted on page 14 of the Traveller Core Rulebook. They can choose between receiving this education on their homeworld or going off-world, perhaps for better opportunities."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Survival:",
+    "desc": "Colonies sometimes have modifiers to Survival rolls, based on its development and support level. These will be noted in the colony description and apply until the Traveller leaves the homeworld."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Careers:",
+    "desc": "All Careers are available to Travellers from the Frontier. The only exceptions are for Travellers from Tier 5 or Tier 6 colonies, who cannot take a space-based career (Scouts, Merchants, Navy) in their first term."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "FRONTIER TRAVELLERS",
+    "name": "Leaving Home:",
+    "desc": "Frontier World Travellers have no modifier to Leaving Home checks."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Gravity Type:",
+    "desc": "Spacers are assumed to live in Low gravity environments, as defined by the Homeworld Gravity table on page 8."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Background Skills:",
+    "desc": "Spacers choose from their list of background skills, below. Spacer Travellers receive a number of skills equal to 4+ EDU DM, one of which must be Vacc Suit."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "DNAMS:",
+    "desc": "Almost all Spacers will have the 0-G DNAM. Those who spend their lives primarily in Light or Zero Gravity may have the 'More Hands' variant, which alters the structure of their feet so that they are more like hands and able to grasp and manipulate objects."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Augmentation:",
+    "desc": "Cybernetic limb augmentation is rare in most spacer societies, although there are exceptions, like the Autumn Collective on the French Arm. Neural jacks, augmented vision with flare compensation and augmented reality implants, however, are very common. Fully 80% of all Spacers have these augmentations and a Traveller may gain them during their career. If chosen, half the cost of these augmentations is subtracted from funds received while Mustering Out."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Pre-Career Education:",
+    "desc": "Higher education is rare in Spacer societies, where most learning is done on the job. Spacer Travellers suffer DM-2 to enter pre-career education."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Survival:",
+    "desc": "Space is a dangerous place and all Spacers suffer DM-1 to Survival rolls until they leave home."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Careers:",
+    "desc": "All Careers except Army are available to Spacers for their first term. Army is only available from the second term onwards and they suffer DM-1 for entry."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SPACER TRAVELLERS",
+    "name": "Leaving Home:",
+    "desc": "Spacers are natural nomads and so have DM+2 on Leaving Home checks."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "MUSTERING OUT BENEFITS",
+    "name": "Ship Shares:",
+    "desc": "Private ownership of a starship in 2300AD is uncommon but not unheard of. Ships Shares in 2300AD work the same as in Traveller."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "MUSTERING OUT BENEFITS",
+    "name": "Weapon:",
+    "desc": "Unless a Traveller musters out of a military career, they are limited to rifles and handguns only. If they have been belters or free traders, they have the option of receiving a laser weapon."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "MUSTERING OUT BENEFITS",
+    "name": "TAS Membership:",
+    "desc": "There is no equivalent to the TAS membership in 2300AD. Count it as another Ship Share."
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SKILL PACKAGES",
+    "name": "Troubleshooter Skill Package",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SKILL PACKAGES",
+    "name": "Colonist Skill Package",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SKILL PACKAGES",
+    "name": "Urbanite Skill Package",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SKILL PACKAGES",
+    "name": "Corporate Skill Package",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "SKILL PACKAGES",
+    "name": "Libertine Trader Skills Package",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Nationality",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Homeworld",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Philosophy",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Background Skills",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Pre-Career Education",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "First Term",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Remaining Terms",
+    "desc": ""
+  },
+  {
+    "category": "TRAVELLER CREATION",
+    "section": "TRAVELLER CREATION EXAMPLE",
+    "name": "Finalising",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Augmented Reality Rig",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Growler",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "PAN Controller",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "RFID Chip",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Skinwatch",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Subdermacomp",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Subdermatalk",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Transdermal Link",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Virtual Input Device",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Combat Implant",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "HyperCharger",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Muscle Implant",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Neural Sheathing",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Neural Jack",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Neural Bridge",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cyberlimb Weapons",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Hand Razors",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Wrist Blades",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Full Cyborgs",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cybernetics and Law Level",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cybernetic Eyes",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cybernetic Ears",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cybernetic Limbs",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Equipment:",
+    "desc": "A cybernetic limb may be constructed with any one-handed item of equipment built into it, including a one-handed firearm. The cost for cybernetic equipment within a limb is five times the value the equipment would normally be."
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cyberlimb Battery:",
+    "desc": "Cybernetic arms and legs require a power source, typically contained within the limb itself. This is usually a compact super-battery, which can supply power to the limb for up to 96 hours (four days) of constant use. These batteries can be recharged from any standard supply, including household current and portable generators, or quickly replaced if needed."
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Cybernetic Limb Armour",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "CYBERNETICS",
+    "name": "Maintenance",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Ariel Dry World Adaptation",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "EPAS/HIF ThinAir Modification",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "FADS/ANGPTL6 Vostok Cold Weather Adaptation",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "King Ultra Modification",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "PAX/DLX Transcribe Free Fall Space Adaptation Modification",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Free Fall (More Hands)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Planetary Environmental Adaptation (PEA)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "SRR-564 Lut Hot Weather Adaptation",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Triton Ultra",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Other DNA Modifications",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Gender Reassignment",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "DNA MODIFICATION",
+    "name": "Retrograde",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "SYMBIONTS",
+    "name": "Arterial Maintenance Symbiont (AMS)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "SYMBIONTS",
+    "name": "Atmospheric Filter Symbiont (AFS)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "SYMBIONTS",
+    "name": "Blood Clotting Agent (BCA)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "SYMBIONTS",
+    "name": "Calcium Fixing Symbiont (CFS)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "SYMBIONTS",
+    "name": "Digestive Enhancing Symbiont (DES)",
+    "desc": ""
+  },
+  {
+    "category": "AUGMENTATIONS",
+    "section": "SYMBIONTS",
+    "name": "Vitamin Synthesising Symbiont (VSS)",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Autograpnel",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Backpack",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Climbing Kit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Cold Weather Clothing",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Compact Rations",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Diving Gear",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Flares",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Goggles",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Inflatable Shelter, Large",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Inflatable Shelter, Small",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Pressure Tent",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Respirator",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Thermal-Visual Camouflage",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "WILDERNESS EXPLORATION AND SURVIVAL GEAR",
+    "name": "Water Purifier",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Basic Tool Kit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Electronic Repair Tools",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Construction Tools",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Excavating Tools",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Locksmith Kit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Power Hand Tools",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Vehicle Maintenance Tools",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "TOOLS",
+    "name": "Electronic Security System Kit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SPECIAL EQUIPMENT",
+    "name": "Spinner",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SPECIAL EQUIPMENT",
+    "name": "Stik-kit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SPECIAL EQUIPMENT",
+    "name": "Tous-Outil",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SENSORS",
+    "name": "Basecamp Security Sensor",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SENSORS",
+    "name": "Binoculars",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SENSORS",
+    "name": "Large Life Form Detector",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SENSORS",
+    "name": "Superconducting Electromagnetic Sensor (SCEMS)",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SCIENTIFIC EQUIPMENT",
+    "name": "Imager",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SCIENTIFIC EQUIPMENT",
+    "name": "Portable Lab",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SCIENTIFIC EQUIPMENT",
+    "name": "Remote Meteorological Station",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SCIENTIFIC EQUIPMENT",
+    "name": "Sampling Kit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "SCIENTIFIC EQUIPMENT",
+    "name": "Stracher 'Jaeger' Autoinjector Gun",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "MEDICAL EQUIPMENT",
+    "name": "Assistive Exoskeletons",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "MEDICAL EQUIPMENT",
+    "name": "Lightweight Autodoc",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "MEDICAL EQUIPMENT",
+    "name": "Medkit",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "MEDICAL EQUIPMENT",
+    "name": "Static Autodoc",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "DRUGS",
+    "name": "Interferon-Gamma",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "DRUGS",
+    "name": "MetabolX",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "DRUGS",
+    "name": "Phiadrenaline-19",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "DRUGS",
+    "name": "Radox",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "DRUGS",
+    "name": "Vasopressin-Y",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMMUNICATIONS",
+    "name": "Backpack/Vehicle Communicator",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMMUNICATIONS",
+    "name": "Hand Communicator",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMMUNICATIONS",
+    "name": "Link Phone",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMMUNICATIONS",
+    "name": "Tight Beam UpLink",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMPUTERS",
+    "name": "Computer Programming",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMPUTERS",
+    "name": "The Link Network",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMPUTERS",
+    "name": "Computer Workstation",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMPUTERS",
+    "name": "Computer Viruses",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMPUTERS",
+    "name": "Portacomp",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "COMPUTERS",
+    "name": "Portacomp Program/Memory Chips",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "PERSONAL POWER",
+    "name": "Fuel Cell",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "PERSONAL POWER",
+    "name": "Fuel Station",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Fabricators",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Light Industrial Fabricator",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Small Fabricator",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Cargo Handling Equipment",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Pichot 4020 Heavy Materials Handler Human Physical Analogue Tool",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Explosives",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Dynamite",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "INDUSTRIAL EQUIPMENT",
+    "name": "Plastique-9",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Biocontacts",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Biosampler",
+    "desc": ""
+  },
+  {
+    "category": "TOOLS OF THE TRADE",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Water Breather",
+    "desc": ""
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Axe",
+    "desc": "A long-handled tool used for chopping and splitting wood."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Ceramic Knife",
+    "desc": "The ceramic knife is a tanto-style long knife made out of high-density ceramic. It is as strong as steel but sharp as glass and remains sharp longer than a steel weapon."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Club",
+    "desc": "Any sort of heavy, blunt object used as an improvised weapon."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Hatchet",
+    "desc": "A small, short-handled axe used for camping. Can be thrown."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Katana",
+    "desc": "This Japanese-style longsword is renowned both for its quality and its connection to the ideal of the samurai."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Knife",
+    "desc": "A basic hunting or utility knife, not typically balanced for throwing."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Longsword",
+    "desc": "Typical of long-bladed slashing weapons, such as the Cold Mountain Demon-sword."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Shock Baton",
+    "desc": "While intended for police and prison work, short versions of these weapons are favoured by muggers and thieves. The power cell is inserted in the base of the baton and is good for 20 shocks."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Shock Glove",
+    "desc": "Shock gloves have much the same effect as the shock baton but are more likely to be used by security guards and the military. To the casual observer, they look like a pair of heavy workgloves but a closer look will reveal all the electrical contacts of the stun system. The power cells are arm-mounted and connected to the gloves by a ribbon cable on the back of the hand."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Shortsword",
+    "desc": "A short-bladed weapon, like a machete."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Sick Stick",
+    "desc": "The sick stick is a prisoner/riot control device. When it touches a target, a modulated electrical pulse is discharged into the victim, making them nauseated and often violently ill. A sick stick is treated in a similar way to a stunner. However, once struck, the target will start vomiting. Once their END reaches 0 they are incapacitated by their retching but will start to recover within five minutes. The power cell is inserted in the base of the stick and is good for 20 shocks."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Wakizashi",
+    "desc": "This Japanese-style shortsword is almost always made as a pair with the longer katana."
+  },
+  {
+    "category": "MELEE WEAPONS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Wire Knife",
+    "desc": "The wire knife was originally designed as a cutting tool for the beanstalk and tether projects. The blade consists of an elliptical loop of single-fibre hyperdiamond, doped with superconducting ceramic. When an electrical charge is passed through the blade, the superconductor holds it rigid. With power turned off, the loop of wire can be retracted into the handle. Although hyperdiamond is very strong, the single-fibre strand, when held rigid by the charge, is relatively fragile and can be snapped by high-density objects."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Conventional Firearms",
+    "desc": "Conventional firearms fire a fixed caseless round, with the bullet embedded in a solid cylinder of propellant. Virtually all civilian guns, and all handguns, are conventional firearms. Most major militaries switched from conventional firearms to either binary or gauss weapons but some still maintain conventional weapons for their simplicity, especially in colonial militias and police forces."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Binary Propellant Firearms",
+    "desc": "Binary propellant ammunition consists of the bullet itself and a separate set of gas propellants. The propellant mixes are separately inert but when injected into the firing chamber combine explosively to propel the round. The main advantage is that compressed gases are much less bulky than conventional rounds and an individual soldier can carry more ammunition."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "PENTAPOD EQUIPMENT",
+    "name": "Gauss Weapons",
+    "desc": "Gauss rifles are linear magnetic accelerators that fire fin-stabilised flechettes. Typically, the magazine for the gauss rifle also contains a battery pack that powers the gun. The long shape of the flechettes makes them unsuitable for spin stabilisation, so gauss weapons are not often used in airless environments."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Current Service Rifles",
+    "name": "Darlan Fabrique FTE-10 (Fusil de Tireur d'Élite-10)",
+    "desc": "Generally, a French squad contains one FTE-10 sniper rifle to use for long-range engagements. The Fusil de Tireur d'Élite-10 is a very low-signature weapon, which makes it excellent for harassment fire from concealment. The round will have hit its target well before the shockwave of its passage will have reached any observers. The FTE-10 can also penetrate light vehicle armour and hardsuits at reasonable ranges. Due to its great physical length, the FTE-10 has been nicknamed the 'Kentucky long rifle' among American soldiers. Although long and bulky, the accurate, long-range firepower makes it a useful weapon for any infantry unit. The FTE-10 comes equipped with a 1,000 metre electronic sight with red-dot, imaging, telescopic, low-light and thermal imaging capabilities."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Current Service Rifles",
+    "name": "Giscard FAM-90 (Fusil Automatique Magnetique 2290)",
+    "desc": "The standard infantry weapon of first-line French infantry, the FAM-90 gauss rifle fires single shots at high velocity, giving good accuracy. It is designed to fire four-round bursts so rapidly that the fourth has fired before the first leaves the barrel, giving improved controllability. It does not have a full-auto function. The optic sights incorporate a red-dot and ranging and programming options. An HR17 30mm grenade launcher is mounted below the barrel and is designed to fire programmable grenades. The tight four-round burst grants DM+1 to attack rolls."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Current Service Rifles",
+    "name": "Rorttman Sk-19",
+    "desc": "Now the standard service weapon of the German Army, the Sk-19 is a progressive development of the Traylor Arms M-2 Assault Rifle. The main improvements over the M-2 consist of the substitution of a reliable binary propellant system for fixed cartridges and inclusion of an integral 30mm grenade launcher in the stock below the barrel. The binary propellant system includes a muzzle velocity governor keyed to the fire select switch, patterned after that on the French FAM-90. When on the burst setting, muzzle velocity is considerably reduced giving an extremely controllable auto-fire weapon."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Current Service Rifles",
+    "name": "Segetov AS-89 (Avtomat Segetov 2289)",
+    "desc": "The standard Russian and Ukrainian service weapon, the AS-89 incorporates a reliable optical sight and integral 30mm G2 grenade launcher. The AS-89 is aggressively exported and finds its way into the armies of many poorer nations, along with mercenaries, criminals and terrorists. This rifle cannot make use of computer-controlled programmable grenades without replacing the grenade launcher and sight."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Current Service Rifles",
+    "name": "Yen Shan State Armory Type-81 Storm Gun",
+    "desc": "Shortly before the Central Asian War, there was a flurry of interest in man-carried heavy calibre 'storm guns', mostly brought on by Manchuria's adoption of the Type-81. The storm gun was intended to provide light anti-vehicle and anti-bunker fire, and the exploding round was expected to give a good area fire capability. In service, however, the weapon proved disappointing. Although out of service with most Core nations, the Type-81 has received a great deal of interest from colonial militias, especially those unable to afford more expensive support weapons like plasma guns. It includes a basic 400 metres optical scope with a red dot."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Surplus Service Rifles",
+    "name": "M-2 Assault Rifle",
+    "desc": "The Traylor Arms M-2 'nine fourty-four' assault rifle was one of the most popular weapons of its day in US service and is still a favourite today among paramilitary organisations of the Frontier. Simple and reliable, the M-2 was the first mass-produced weapon to use a 9mm APHE round."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Surplus Service Rifles",
+    "name": "Stracher SG-77 (Sturmgewehr-2277)",
+    "desc": "The Sturmgewehr-2277 has long been replaced by more modern weapons in Germany's arsenal; however, this rifle was once widely exported and can still be found in private hands, as well as in the armouries of many smaller armed forces and militias."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Surplus Service Rifles",
+    "name": "Wu-Beijing Type-49 Assault Rifle",
+    "desc": "The Wu-Beijing Type-49 is a rarity among modern military arms, with its use of the old-style conventional layout, which uses a trigger-magazine-barrel design rather than the more efficient 'bullpup' layout (a magazine-trigger-barrel design)."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Civilian Weapons",
+    "name": "Giscard FC-68 (Fusil Chasseur 2268)",
+    "desc": "The FC-68 was designed with the Frontier colonist in mind and is widely used by French civilians on a variety of worlds. It combines a militaristic bullpup configuration with full-automatic fire, although the round itself is little more than a varmint round. While it is lighter than the FAM-90, the felt recoil and rate-of-fire is similar."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Civilian Weapons",
+    "name": "Giscard FC-70 (Fusil Chasseur 2270)",
+    "desc": "The FC-70 was designed to make use of the large quantities of 7.5mm surplus ammunition available on the open market and low firing cost has made it, and similar rifles, popular. It is widely used both as a target rifle and for medium-sized game hunting."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Civilian Weapons",
+    "name": "Rockwell 12-81 Magnum",
+    "desc": "Deservedly enjoying a reputation as the most powerful sporting rifle in known space, the 12-81 can only be fired from a rest with the integral bipod extended and even then the provision of an in-stock shock absorber is necessary to avoid injury to the firer. The rifle was originally designed to provide a weapon with a high first-round killing capability against the Beowulf cave dragon and other dracoforms native to that world but has since enjoyed wide use in the armed forces of several nations as a long-ranged sniper rifle."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Civilian Weapons",
+    "name": "Stracher SS-7 (Scharfshutzen Modell 7)",
+    "desc": "The Stracher SS-7 is the only mass-produced air rifle in use as a hunting weapon (although a variety of low-power air rifles are used for recreational target shooting). The weapon is powered by compressed air from a central reservoir, which holds sufficient pressure for 20 shots at high pressure and 30 more at low pressure. The weapon can be recharged by hand but only to the low pressure level. A small, solar-powered compressor is available to accompany the weapon, which enjoys good sales along the French and Manchurian Arms."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Shotguns",
+    "name": "Stracher 'Wolf' Hunting Shotgun",
+    "desc": "The Wolf is a classic over/under double-barrelled shotgun, common throughout Europe and the French Arm as a gentleman's hunting shotgun. The Wolf is a luxury item, with its engraved barrel and custom furniture made from wood imported from Beta Canum."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Shotguns",
+    "name": "Traylor Model 10 Riot Gun",
+    "desc": "This short-barrelled weapon comes with a folding stock, and variants of the design are a favourite with colonists on the Frontier, as well as police services throughout human space."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Shotguns",
+    "name": "DunArmCo Close Assault Gun",
+    "desc": "This fully-automatic shotgun is often used by police and anti-insurgent forces. It is also a common weapon in light attack drones where it is fed from a larger cassette."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Handguns",
+    "name": "Hancock Nine-Twenty-Three Enforcer",
+    "desc": "A common American police and personal defence weapon. A plastic speed-loader allows all six rounds to be inserted with a single Minor Action. Like most modern revolvers, it fires from the lowest cylinder, putting the barrel more in the centre of mass of the gun."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Handguns",
+    "name": "Rockwell 12-39 Magnum",
+    "desc": "Designed and marketed as a companion hunting weapon for the massive Rockwell 12-81 Magnum rifle, the 12-39 revolver is the most powerful production handgun mass-produced in human space."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Handguns",
+    "name": "Stracher Modell 6",
+    "desc": "This compact pistol uses the same high-velocity ammunition as the MP-67 series."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Handguns",
+    "name": "Stracher P11mm (Pistole 11mm Magnum)",
+    "desc": "A conventional 11mm automatic pistol. It is the most powerful production magazine-fed handgun in human space."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Handguns",
+    "name": "Traylor Model 57 (Chip Traylor Special)",
+    "desc": "A common American military and police weapon. It is typical of light semi-automatic pistols common across human space."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Submachine Guns and Assault Pistols",
+    "name": "Stracher MP-67 PDW (Personal Defence Weapon)",
+    "desc": "Using a high-powered 6mm round that is more like a cut-down rifle round than conventional pistol round, the MP-67 is designed to provide compact and controllable firepower for rear-echelon troops and vehicle crews. It has also found use with police SWAT teams and military special forces and is often equipped with a suppressor to minimise hearing damage."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Submachine Guns and Assault Pistols",
+    "name": "Stracher MP-67K Compact Submachinegun",
+    "desc": "The smaller cousin of the MP-67, the MP-67K (K for Kurz or short) is little bigger than a large pistol, with almost the same firepower as its bigger relative."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Submachine Guns and Assault Pistols",
+    "name": "Traylor T-50 Assault Pistol",
+    "desc": "A small, selective fire weapon, favoured by criminals and agents alike. The small size makes it hard to control (DM-2 on attack rolls when using full auto) and so is usually fired in bursts."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Autoguns",
+    "name": "DunArmCo Mini-12",
+    "desc": "Virtually a small cannon, the Mini-12 is found in licensed-built and copied forms in just about all militaries as a heavy infantry support weapon and light vehicle weapon."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Autoguns",
+    "name": "Giscard F-44 Gauss Gun",
+    "desc": "One of the few gauss machineguns in service, the F-44 was developed to ease logistical support for French units carrying the FAM-90 gauss rifle by providing ammunition commonality. The power pack for the weapon is included in the mass and cost of the drum."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Autoguns",
+    "name": "MG-7 (Maschinengewehr Modell 7)",
+    "desc": "The small-calibre MG-7 was designed as a companion weapon to the SG-77 assault rifle, using the same ammunition. While the SG-77 has been dropped from current inventories, the machine gun carries on."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Autoguns",
+    "name": "Rheinmetall M-97",
+    "desc": "This relatively new weapon uses the same ammunition as the Sk-19 assault rifle to simplify support requirements."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Autoguns",
+    "name": "Wu-Beijing Type 381 Machinegun",
+    "desc": "The Type 381 is typical of many medium machineguns found in arsenals all over Earth and charted space."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Lasers",
+    "name": "Gonzalves-Brazilia Luce-7",
+    "desc": "The Luce-7 replaced the Luce-4 in Brazilian service. Although lower-powered than most laser rifles, it has enough punch to deal with most targets, and an integral 30mm GB30B grenade launcher gives it a good area fire capability."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Lasers",
+    "name": "Mueller-Rivera F-19 (Fusile-19)",
+    "desc": "The Mueller-Rivera F-19 is the current service laser with Argentine troops and widely exported too. It is the most effective and efficient man-portable laser weapon in use."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Lasers",
+    "name": "Mueller-Rivera P3 (Pistole-3)",
+    "desc": "The P3 is a very handy lightweight laser, one of the few available in 'pistol' format. The combination of low power output and high discharge rate of the power cell makes for a high cyclic rate of fire and limited burst fire capability. The power cell is worn on the belt and connected to the pistol by means of a heavy cable."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Lasers",
+    "name": "Rorttmann Lk-1 (Laserkarabiner1)",
+    "desc": "A very modern and deadly assault weapon, the LK-1 combines a powerful 35-01 combat laser with a 30mm grenade launcher. Most of these weapons mount an integrated sight that allows programming of the grenades."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Lasers",
+    "name": "SVB (Snayperskaya Vintovka Belnikarpova)",
+    "desc": "Although the Belnikarpova is the highest-energy man-portable laser in service with any army, more modern designs produce the same damage at lower power levels. Nonetheless, the SVB remains effective and is the standard service laser in use by Russia, where it serves as the squad-issue sniper weapon."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Plasma Guns, Human-Portable",
+    "name": "Jaschonek Fabrikant A-9 Sturmgewehr",
+    "desc": "The A-9 is the newest and most compact, man-portable plasma gun issued to any military, intended to be used as an assault rifle rather than as a squad support weapon. While not seriously considered as an Sk-19 replacement, the A-9 is issued on an experimental basis to back up the SK-19."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Plasma Guns, Human-Portable",
+    "name": "Kurita Arms Type 21F",
+    "desc": "The Kurita Type 21F is the classic second-generation man-portable plasma gun, incorporating more punch in a much more efficient design. It is currently the standard squad heavy support weapon with the Japanese Army and will probably continue in that role for the foreseeable future. The Type 21F has been extensively exported and serves in numerous armies and some of the more prosperous mercenary operations. Sumatro-Fabrique recently concluded a license production arrangement with Kurita for the purpose of equipping the Indonesian Army."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Plasma Guns, Human-Portable",
+    "name": "Quinn-Darlan Mk 2-A2 PGHP (Plasma Gun, Human-Portable)",
+    "desc": "The result of a joint venture by Quinn Optronics, Inc. and Darlan Optophysique, the Mk 2-A2 is the heaviest human-portable plasma weapon now in service with American and French armed forces. It is used as a heavy point fire weapon against hard targets at the squad level. The impact of the plasma bolt can cause considerable concussion and fragmentation effects."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Plasma Guns, Human-Portable",
+    "name": "Wu-Beijing Type 1 High Energy Assault Gun",
+    "desc": "The Type 1 was the first human-portable plasma gun to see service. Although outclassed by many newer types, it is still popular with militias and mercenary units that cannot get access to newer weaponry."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Heavy Plasma Guns",
+    "name": "Darlan CLP-1A (Cannon Leger Pyrotechnique-1A) Field-mounted Plasma Gun",
+    "desc": "The first field-mounted plasma gun to enter service, it incorporated a complex cruciform mount to allow more stable, accurate and rapid fire. Because it is virtually immobile on the battlefield, it has been withdrawn from frontline service but can often be found in fixed locations. Many CLP-1As have been exported, often as light vehicle armament upgrades."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Heavy Plasma Guns",
+    "name": "Jaschonek Waffenfabrik A4T Plasmagewehr",
+    "desc": "The A4T is a modification of the A4 plasma gun often found mounted in the Kz7 battlesuit. Specifications for the two weapons are the same but the A4T is a crew-served, tripod-mounted regular infantry version. The A4T proved very effective in the German War of Reunification and has since become standard issue."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Heavy Weapons",
+    "name": "Toho Type 12 Autocannon",
+    "desc": "The Type 12 is typical of most light autocannons, and variations on this weapon can be found everywhere from IFVs to aircraft to anti-missile systems."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Non-Lethal Weapons",
+    "name": "Brandt Audionique AS-3",
+    "desc": "This sonic stunner is often used by police and security guards. Like the P-3 laser pistol, the power pack is separate, carried on the belt beside the weapon's holster."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Non-Lethal Weapons",
+    "name": "Quinn Optronics Restraint Carbine",
+    "desc": "The heavier restraint carbine is used for high-risk situations where its greater power overrides its more cumbersome size."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Grenades and Launchers",
+    "name": "30mm Integral Grenade Launcher",
+    "desc": "This weapon is normally encountered as part of another weapon system, such as the AS-89. The listed mass and cost are for adding a launcher to a rifle. An accessory module is available that will convert the launcher into a standalone weapon for Lv180, with pistol grip, folding stock and rail mount for sights and other accessories."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Grenades and Launchers",
+    "name": "Propelled Grenades",
+    "desc": "These 30x40mm propelled grenades are suitable for use with all 30mm grenade launchers. For double the listed price, the grenades can be equipped with programmable fuses that can receive ranging information from a gun-mounted sight. The usefulness of this is explained on page 82."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Grenades and Launchers",
+    "name": "Hand Grenades",
+    "desc": "The following grenades are representative of the common range of grenade types that are available."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Barrel Extension",
+    "desc": "A barrel extension, or more typically a barrel replacement, can extend a weapon's effective range by 20%."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Bayonet",
+    "desc": "A bayonet is a long combat knife affixed to the front of a rifle. It has long fallen out of use but the TFL on Aurore have started to revive training for it, to help deal with kaefer close-assaults. It turns a combat rifle into a short spear."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Bipod",
+    "desc": "Use of a bipod with a rifle or larger weapon grants an additional DM+1 to attack rolls when aiming (see page 71 of the Traveller Core rulebook)."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Foregrip (with Flashlight)",
+    "desc": "A foregrip allows a weapon to be more quickly brought to bear, granting DM+1 to initiative but DM-1 to attack rolls. The built-in flashlight provides a strong light source."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Laser Designator",
+    "desc": "The laser designator is a small, flashlight-sized accessory for a rifle, allowing it to be used as a laser designator for missiles and artillery. It must be held on-target until the missile or artillery round arrives and a successful attack roll will grant DM+2 to the attack roll of the incoming weapon. The designator has a range increment of 400 metres."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Suppressor",
+    "desc": "The use of a suppressor inflicts DM-1 to all Recon checks made to determine where the sound of the gun shot came from. It reduces noise but does not eliminate it. Gauss weapons cannot use suppressors."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Imaging Sight",
+    "desc": "An imaging sight includes a camera and feeds the image to a HUD or other imaging device. This allows the Traveller to shoot around corners or use the weapon as a periscope while only exposing their hand."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Laser Sight",
+    "desc": "The laser sight is a small laser attached to the weapon allowing rapid and more accurate target acquisition. It grants DM+1 to attack rolls at short range and at all ranges if combined with a telescopic sight. Laser sights can also be quite intimidating. The use of laser sights grants DM+1 to Recon checks made to spot the shooter."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Red-Dot Sight",
+    "desc": "The red-dot sight uses a small, non-magnifying scope on top of the weapon with a large lens area. The sight projects a red dot in the centre of the sight, giving the same benefits as a laser sight without announcing the presence of the Traveller. This grants DM+1 to attack rolls but only at less than long range."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "SCEMS Overlay",
+    "desc": "This add-on places a SCEMS (Super-Conducting Electromagnetic Sensor) sensor on a scope and overlays it with an image of any radio-frequency activity, in particular leakage from electrical devices. This allows the Traveller to see electrical devices and activity through almost any cover."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Smart Grenade Sight",
+    "desc": "The smart grenade sight reads exact distance to the target and feeds range information to propelled grenades, which then explode at the set distance, likely over a target or within a room. This grants DM+2 to attack rolls with compatible propelled grenades."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Weapon Add-ons",
+    "name": "Telescopic Sight",
+    "desc": "These sights are available in a variety of ranges and usually matched to the range of the weapon they are used with. Adding a telescopic sight gives a weapon the Scope trait. The cost of a telescopic sight is equal to the Range of the weapon, in Lv."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Armoured Jacket",
+    "desc": "Although it appears to be a normal three-quarters length jacket, close examination of this armour may reveal its true nature. This would require a Very Difficult (12+) Investigate Check (1D minutes)."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Fluidic G-suit",
+    "desc": "By filling a pilot's lungs with oxygenated fluorocarbons, the fluidic g-suit can compensate for a great deal of the G stresses a pilot can be subjected to. The suit adds DM+2 to all END checks associated with high-G manoeuvres."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Protective Vest",
+    "desc": "This is a standard 'bullet-proof' vest that can be easily concealed under most normal clothing. A Very Difficult (12+) Investigate Check (1D minutes) would be required to spot it."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Full-body Inertial Armour",
+    "desc": "Inertial armour is a thick, yet flexible, armour that includes several layers for thermal and impact protection. It protects equally well against kinetic and energy weapons, and includes reinforcement at critical locations."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Full-body Rigid Armour",
+    "desc": "Full body rigid armour is also known as 'clamshell' armour. While heavy and fatiguing to wear, it provides excellent protection."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Inertial Armour Vest",
+    "desc": "This long vest is not concealable and incorporates additional padding and thicker armour than its civilian counterpart. The vest cannot be worn over top of any other armour."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Rigid Breastplate",
+    "desc": "This heavy front-and-back armour is often combined with full-body inertial armour for maximum protection. Most soldiers dislike the armour as it is heavy and awkward."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Vedette Half Armour",
+    "desc": "The vedette half armour is a rigid ceramic/alloy plate designed to protect the chest and shoulders. Variations on this theme are found throughout human space. This armour can be combined with full-body inertial armour."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Helmet",
+    "desc": "This item is made of moulded composite materials and is standard issue for most forces. These helmets come with a 10 kilometres tactical radio and can add a full-face visor or gas mask."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "High Threat Combat Helmet",
+    "desc": "The high threat combat helmet is the best protection available for the skull. It is normally equipped with a 10 kilometres range radio, tactical camera and a visor that includes a heads up display and low-light imaging. It is usually found only in first-line units of the more advanced militaries."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Helmet Add-Ons",
+    "desc": "All of these helmet add-ons can be combined with one another and can be mounted on any helmet."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Full-Face Visor",
+    "desc": "Constructed from transparent diamondoid material on a clear synthetic back, the faceplate is hardened to stop bullets and shrapnel, and includes an auto-darkening feature to protect the Traveller from flash effects, including blinding lasers. Due to the way it constricts the wearer's field-of-view, all visually-based Recon or Investigate checks suffer DM-1."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "HUD System",
+    "desc": "A HUD (Heads-Up-Display) puts data and images on a reticule right in front of the Traveller's eyes. The HUD can be coupled to electronic sights on a weapon, giving range and windage information, and providing DM+1 to attack rolls. It can also be used with some sights to shoot around corners while only exposing the firing hand to return fire. HUDs can also be linked to body comps and sensor systems through PANs or fibre-optic lines. Wireless data communication is also possible but discouraged, as it creates a significant data security risk."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Low-Light Imaging",
+    "desc": "This option allows the Traveller to negate all penalties related to poor lighting, as long as there is some sort of weak light source (such as star light)."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Tactical Camera",
+    "desc": "The tactical camera is more often found among law enforcement officials than the military, as the need to document their actions is more a function of the former than the latter. The tactical camera is designed to both record internally and narrowcast what it sees back to a command centre. Both recordings have to match in order for the video to be admissible in court. The camera has a narrowcast range of 500 metres, and can store six hours of high-resolution video and audio internally."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Thermal Imaging",
+    "desc": "This option allows the user to see heat sources, which are colour-coded by the microprocessor in the overlay to go from blue (cold) to white (hot). This sight negates cover penalties for spotting, as long as the cover is not more than 30 centimetres thick."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Dragon Tooth Soldiers",
+    "desc": "The Drachentruppen battlesuit is a combination of full-body rigid armour, breastplate and high-threat combat helmet, along with a pair of armoured boots, mated to an undergarment that provides cooling and additional protection for the joints. This undergarment also provides a databus to connect weapons and accessories to the helmet HUD and under-armour power packs. Full life support is provided for six hours through a built-in system, although the battlesuit is not rated for combat in vacuum. The only drawback to the battlesuit is that they are fatiguing to wear and combat effectiveness is only a few hours at best. These suits are not powered and the heavy armour takes its toll after time, even with the cooling layer."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Guderian Protective Systems K-19B Combat Vacuum Suit (CVS)",
+    "desc": "The CVS was developed for use in boarding actions and combat in a vacuum environment. It was developed from a commercial hybrid suit design with a rigid torso and flexible limbs, incorporating a suit-lock for ease of entry. The K-19 is designed with a limited self-sealing system that consists of an inner gel layer that hardens on exposure to air or vacuum. This system can only handle small breaches, such as those made by small-calibre weapons. It includes a radio with a 20 kilometres range and the helmet visor has an anti-dazzle coating, and the armoured backpack is equivalent to a personal life support system. It is treated as a hardsuit."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Ruffin Orbital Science 'Khatar' Hostile Environment Suit",
+    "desc": "The Khatar ('Danger') is a heavy-duty hardsuit designed for use in particularly hostile places, like corrosive atmospheres or radiological and toxic environments. The helmet is solid, with audio and visual sensors linked to in-helmet monitors. The hostile environment suit is good for up to 20 hours total use in a corrosive atmosphere and up to eight hours in an insidious atmosphere. After that it will begin to break down at the rate of one point of Protection per hour. Internal life support is good for six hours and can be extended to 12 hours with the addition of an auxiliary oxygen bottle. Note that there are no external fittings on the suit to allow external bottles to be connected. An additional bottle must be loaded when the operator dons the suit. It cannot be used with a personal life support system. The suit contains a short-ranged (five kilometres) radio in addition to built-in sensors."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Ruffin Orbital Science 'Raffik' P-Suit",
+    "desc": "The Raffik is a close-fitting softsuit with bubble helmet and a battery-powered life support system, including heating, cooling and air recycling. This unit has a duration of four hours on a small internal air bottle but a second can be added to the system to extend the duration by another six hours. The helmet includes a short-ranged (five kilometres) radio and beacon. A personal life support system can be added to greatly extend the suit's endurance."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Personal Armour and Pressure Suits",
+    "name": "Trilon Support Service 'Far Traveller' Personal Life Support System, Type C",
+    "desc": "The PLSS-C extends the capabilities of a pressure suit, adding additional power and life support capabilities. A PLSS is good for 12 hours of use and can be extended up to 24 hours by adding additional bottled oxygen (up to four three-hour bottles in an external rack)."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Giscard Series 'S' Attack Drones",
+    "desc": "While slightly larger than the microdrone, attack drones use the same swarm logic programming to navigate and attack. While they require a human controller, they need merely to be pointed in the right direction and they will figure out how to get there on their own. Attack decisions still must come from a controller, however. It is the controller that provides the requisite logic and programming. Attack drones carry a 6mm SMG with armour-piercing ammunition, along with 0.5kg of plastique-9. They can deploy the explosive with a launcher or be used to crash into a target and explode. For every four drones in a swarm, DM+1 is granted to Electronics (remote ops) and Recon checks, and attack rolls, to a maximum of DM+4."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Quinn Mobile Systems Gz-5 Microdrone",
+    "desc": "The disc-shaped Gz-5 microdrone deploys from racks carried on vehicles and walkers. It is equipped with a ducted fan in the centre of the disk that provides both lift and forward propulsion, and the disk also features six legs that allow it to scurry over the ground. Sensors on a microdrone are minimal, little more than a low-light camera and microphone but they are very quiet. While drones require human operator input, they have swarm-logic programming that enables them to navigate capably on their own and orients the cameras and microphones of all drones to provide the best possible coverage. For every four drones in a swarm, DM+1 is granted to Electronics (remote ops) and Recon checks, and attack rolls, to a maximum of DM+4."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Aquitaine MV-4a Recon Drone",
+    "desc": "This small remotely-operated quad-rotor is generally unarmed, although it can be equipped with a weapon such as a submachinegun. The adaptive rotors render it extremely quiet and it can hover as high as 6,000 metres above a target or as close as two metres. Without a remote operator, it is only capable of either orbiting in place or returning to base."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Benthic II Remote Operated Undersea Vehicle",
+    "desc": "While the ROUV can be operated remotely, it requires either a cable attachment or the drone must remain close enough to surface (20 metres) to receive radio transmissions. It is normally operated in an autonomous mode and used for undersea resource surveys, rescue operations or even sub-hunting. It is equipped with a range of manipulators and a limited sampling rig for collecting mineral or biological samples."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Shell",
+    "desc": "A Shell is a Doll without a robot brain. It is controlled entirely by a neural link through an encrypted channel and is used to conduct remote business and telepresence. It requires a good connection to the controller and a poor signal can cause the sensory input to be erratic and even disorienting, or just to drop entirely. A world or colony must have a UCP Network Code of 8 or higher in order to provide a connection of sufficient speed and capacity to control a Shell. They are often used from a ship or station in orbit, to save on interface costs. Shells otherwise are designed as an android and are equipped with at least a 4D Sensor Suite, if not a 5D suite. Rental Shells are often available on worlds that can support them. On others, like King, the atmospheric composition and deep radiation belts prevent the use of telepresence technologies from orbit."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Aquitaine Node-6 Doll",
+    "desc": "A Doll is a robot that appears fully human, an android. It can walk, talk and interact in such a way that it is difficult to tell it is a machine. Any medical test will instantly discover their true nature, however, and interaction with one over time will reveal limitations. They are by no means any sort of artificial intelligence and a significant amount of their processing power is used to maintain a semblance of humanity."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Sistemas Domesticas Compañera de Cuarto Domestic Robot",
+    "desc": "The Roommate, as it is sometimes called, is an all-purpose wheeled robot, designed to handle any routine domestic duty. They closely resemble an old-style upright vacuum cleaner with arms and a head – which is pretty much exactly what they are. While they cannot cook well, they can microwave prepared food and follow directions to cook simple meals. They are primarily intended to provide cleaning and upkeep services for individuals or small groups. These short (1.1 metre) robots have a good vocabulary and are quite capable of holding a conversation, or even playing some games (chess, backgammon, and others). They come with all cleaning attachments built-in and simply need to recharge from a wall socket every so often. In addition to their cleaning capabilities, they are also equipped with environmental sensors and some basic emergency equipment in case of trouble. They are very popular with spacecraft crews and in space habitats of all sorts. More expensive bipedal versions are also available, although uncommon."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Sortech FE-909 Security Robot",
+    "desc": "The FE-909 is a small four-legged unit designed to provide perimeter patrol for a large compound. Equally suitable for indoor or outdoor work, the FE-909 comes equipped with low-light and infrared vision, along with a powerful spotlight and a set of rotating red flashers and siren. By law, these robots cannot be armed but many facilities on the Frontier arm them with sonic weapons or even lasers. Some mercenary groups (and terrorists) have pressed these units into combat; their lack of significant armour and light-weight construction make them of limited usefulness in this role, however."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Brains",
+    "desc": "Robot brains of all types are only 10% of the cost listed in the Robot Handbook. Likewise, Bandwidth improvement costs are also only 10% of the Robot Handbook value."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Pseudobiological Modifications",
+    "desc": "Pseudobiological modifications in 2300AD do not apply the x3 cost modifier on top of the cost per Slot."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "4D Suite",
+    "desc": "A 4D sensor suite provides a set of additional sensors that do not have conventional tactical value but would be useful for search and rescue, or true telepresence. This includes taste, smell, air pressure and touch sensors. These are commonly found on Dolls and Shells designed for telepresence. A 4D Sensor Suites replaces the standard array of sensors that all robots come with."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "5D Suite",
+    "desc": "The 5D sensor suite includes all the capabilities of the 4D suite but with much finer resolution. They can also be programmed for more unusual sensations, best left to the imagination. These signals are designed to feed into a neural link for true telepresence. These specialized sensors are only used in Dolls and Shells, and due to their expense are rare. A telepresence rig linked through a neural jack to a Shell with this sensor suite is just as good as being there and according to some afficionados, even better. A 5D Sensor Suites replace the standard array of sensors that all robots come with."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Underwater Suite",
+    "desc": "This sensor suite includes everything that basic sensors have, plus sonar imaging, sonar range-finding, (5km range), depth and pressure sensors and a blue-green laser LIDAR with a 500 metre range."
+  },
+  {
+    "category": "FIREARMS",
+    "section": "Robots & Drones",
+    "name": "Seismic and Engineering",
+    "desc": "This suite of tools includes ground sensors for seismic events, ground-penetrating radar with a 50 metre range and EM sensors for buried power or electronics."
+  }
+]

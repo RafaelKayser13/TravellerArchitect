@@ -1,0 +1,265 @@
+<app-tablet-frame 
+  [brandingLabel]="brandingLabel()"
+  [frameLabel]="frameLabel()"
+  frameClass="equipment-frame">
+  
+  <div class="equipment-container" *ngIf="isLoaded()">
+    <!-- Categories Sidebar -->
+    <aside class="hud-panel categories-sidebar">
+      <div class="panel-header">
+        <div class="header-pips">
+          <span class="pip cyan"></span><span class="pip dim"></span>
+        </div>
+        <h3>DATABASE_INDEX</h3>
+      </div>
+      
+      <div class="category-list">
+        <div *ngFor="let group of categoryGroups" class="category-group">
+          <button class="group-header" (click)="toggleGroup(group.code)">
+            <div class="group-title">
+              <span class="group-toggle" [class.expanded]="expandedGroups()[group.code]">▶</span>
+              <span class="group-name">{{ group.name }}</span>
+            </div>
+            <div class="group-line"></div>
+          </button>
+          
+          <div class="group-items" [class.open]="expandedGroups()[group.code]">
+            <button *ngFor="let item of group.items" 
+                    class="category-btn"
+                    [class.active]="selectedCategory() === item.category"
+                    (click)="selectCategory(item.category)">
+              <div class="btn-indicator" *ngIf="selectedCategory() === item.category"></div>
+              <span class="category-code">{{ item.code }}</span>
+              <span class="category-name">{{ item.name }}</span>
+              <span class="item-count">{{ getItemsInCategory(item.category).length }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Equipment Main View -->
+    <main class="hud-panel equipment-main">
+      <header class="main-header">
+        <div class="header-content">
+          <h2>{{ getSelectedCategoryName() }}</h2>
+          <div class="status-bar">
+            <span class="status-label">DATA_NODES:</span>
+            <span class="status-value highlight">{{ viewportItems().length }}</span>
+            <span class="status-label separator">//</span>
+            <span class="status-label">SYS_TOTAL:</span>
+            <span class="status-value">{{ getAllEquipment().length }}</span>
+          </div>
+        </div>
+
+        <div class="equipment-toolbar">
+          <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" placeholder="SEARCH DATABANKS..." (input)="updateSearch($event)" [value]="searchQuery()">
+            <div class="search-line"></div>
+          </div>
+          
+          <div class="sort-controls">
+            <span class="sort-label">SORT:</span>
+            <select class="cyber-select" title="Sort Options" (change)="setSortOption($any($event.target).value)">
+              <option value="name_asc" [selected]="sortOption() === 'name_asc'">NAME (A-Z)</option>
+              <option value="name_desc" [selected]="sortOption() === 'name_desc'">NAME (Z-A)</option>
+              <option value="price_asc" [selected]="sortOption() === 'price_asc'">PRICE (LOW-HIGH)</option>
+              <option value="price_desc" [selected]="sortOption() === 'price_desc'">PRICE (HIGH-LOW)</option>
+              <option value="tl_asc" [selected]="sortOption() === 'tl_asc'">TL (LOW-HIGH)</option>
+              <option value="tl_desc" [selected]="sortOption() === 'tl_desc'">TL (HIGH-LOW)</option>
+            </select>
+          </div>
+
+          <button class="cart-trigger" [class.has-items]="selectedEquipment().length > 0" (click)="toggleCart()">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="btn-text">QUEUE [{{ selectedEquipment().length }}]</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="equipment-grid-wrapper">
+        <div class="equipment-grid list-animation-container">
+          <div *ngFor="let item of viewportItems()" 
+               class="equipment-card hud-card"
+               [class.selected]="isSelected(item)"
+               (click)="openDetail($event, item)">
+            <div class="card-borders">
+              <div class="corner top-left"></div>
+              <div class="corner top-right"></div>
+              <div class="corner bottom-left"></div>
+              <div class="corner bottom-right"></div>
+            </div>
+
+            <button class="cart-add-btn" 
+                    [class.in-cart]="isSelected(item)" 
+                    (click)="toggleEquipmentSelection($event, item)" 
+                    title="Toggle Cart" 
+                    aria-label="Toggle Cart">
+              <div class="cart-triangle"></div>
+              <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            
+            <div class="card-inner">
+              <div class="selection-overlay" *ngIf="isSelected(item)">
+                <div class="overlay-scanline"></div>
+              </div>
+              
+              <div class="card-header">
+                <div class="header-left">
+                  <div class="item-title" [title]="item.name">{{ item.name }}</div>
+                </div>
+              </div>
+              
+              <div class="item-specs">
+                <span class="spec-tag tl-tag">TL{{ item.techLevel }}</span>
+                <span class="spec-tag mass-tag">{{ item.mass }} kg</span>
+              </div>
+              
+              <div class="item-description-container">
+                 <p class="item-description">{{ item.description || 'NO_DATA_AVAILABLE' }}</p>
+              </div>
+              
+              <div class="card-footer">
+                <span class="cost-label">CREDITS_REQ</span>
+                <span class="item-cost">{{ item.cost | number }} Lv</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state-container" *ngIf="viewportItems().length === 0">
+          <div class="glitch-wrapper">
+            <span class="empty-icon warning-glitch">!</span>
+            <div class="empty-text">NO_DATABANKS_FOUND</div>
+            <div class="empty-subtext">AWAITING_UPLOAD_FOR_THIS_SECTOR</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Cart Modal Overlay -->
+  <div class="modal-overlay fade-in" *ngIf="isCartModalOpen()" (click)="toggleCart()">
+    <aside class="hud-panel cart-modal-panel modal-content" (click)="$event.stopPropagation()">
+      <div class="card-borders">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+      </div>
+      <div class="panel-header modal-header-custom">
+        <div class="header-pips">
+           <span class="pip neon-green" [class.pulse]="selectedEquipment().length > 0"></span>
+           <span class="pip dim"></span>
+        </div>
+        <h3>ACQUISITION_QUEUE</h3>
+        <span class="queue-count" *ngIf="selectedEquipment().length > 0">[{{ selectedEquipment().length }}]</span>
+        <button class="btn-close-modal cyber-icon-btn warning" (click)="toggleCart()" title="Close details" aria-label="Close details modal">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-body cart-list scrollable-content">
+        <div *ngIf="selectedEquipment().length === 0" class="empty-selection">
+           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="empty-icon-small">
+              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 4"/>
+           </svg>
+           <span>NO_ITEMS_QUEUED</span>
+        </div>
+        <div *ngFor="let item of selectedEquipment()" class="selected-row pulse-enter">
+          <div class="row-info">
+            <span class="selected-name" [title]="item.name">{{ item.name }}</span>
+            <span class="selected-cost">{{ item.cost | number }} Lv</span>
+          </div>
+          <button class="btn-remove cyber-btn" (click)="removeSelection($event, item)" title="Remove Item">✕</button>
+        </div>
+      </div>
+      
+      <div class="modal-footer detail-modal-footer queue-footer">
+        <div class="total-line">
+          <span class="total-label">TOTAL_FUNDS_REQ</span>
+          <span class="total-cost">{{ totalCost() | number }} Lv</span>
+        </div>
+        <div class="action-row">
+           <button class="cyber-btn warning full-width" (click)="clearSelection()" [disabled]="selectedEquipment().length === 0">
+             <span class="btn-text">PURGE_DATA</span>
+           </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Detail Modal Overlay -->
+  <div class="modal-overlay fade-in" *ngIf="detailItem()" (click)="closeDetail()">
+    <div class="modal-content hud-panel" (click)="$event.stopPropagation()">
+      <div class="card-borders">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+      </div>
+      <div class="panel-header modal-header-custom">
+        <div class="header-pips">
+          <span class="pip cyan"></span><span class="pip dim pulse"></span>
+        </div>
+        <h3>SYS_LOG://{{ getCategoryDisplay(detailItem()!.category) | uppercase }}</h3>
+        <button class="btn-close-modal cyber-icon-btn warning" (click)="closeDetail()" title="Close details" aria-label="Close details modal">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal-body scrollable-content">
+        <div class="detail-hero">
+          <h2 class="detail-name">{{ detailItem()!.name }}</h2>
+          <div class="detail-price-box">
+             <span class="cost-label">CREDITS_REQ</span>
+             <span class="detail-price highlight">{{ detailItem()!.cost | number }} Lv</span>
+          </div>
+        </div>
+        
+        <div class="detail-tags">
+          <span class="spec-tag tl-tag">TL{{ detailItem()!.techLevel }}</span>
+          <span class="spec-tag mass-tag">{{ detailItem()!.mass }} kg</span>
+        </div>
+        
+        <div class="detail-desc">
+          <p>{{ detailItem()!.description }}</p>
+        </div>
+        
+        <div class="detail-specs" *ngIf="getItemSpecs(detailItem()!).length > 0">
+          <h4 class="section-title">// TECHNICAL_SPECS</h4>
+          <div class="specs-grid-inline">
+            <div class="spec-row" *ngFor="let spec of getItemSpecs(detailItem()!)">
+              <span class="spec-label">{{ spec.label }}:</span>
+              <span class="spec-value">{{ spec.value }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-restrictions" *ngIf="detailItem()!.restrictions && detailItem()!.restrictions!.length > 0">
+          <h4 class="section-title warning-text">// ACCESS_RESTRICTIONS</h4>
+          <div class="tags-container">
+            <span class="restriction-tag" *ngFor="let res of detailItem()!.restrictions">{{ res | uppercase }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer detail-modal-footer">
+        <button class="cyber-btn" [class.primary]="!isSelected(detailItem()!)" [class.warning]="isSelected(detailItem()!)" (click)="toggleEquipmentSelection($event, detailItem()!); closeDetail()">
+          <span class="btn-text">
+            {{ isSelected(detailItem()!) ? 'REMOVE_FROM_QUEUE' : 'ADD_TO_QUEUE' }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</app-tablet-frame>

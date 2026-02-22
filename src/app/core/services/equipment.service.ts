@@ -42,6 +42,8 @@ export class EquipmentService {
   private gearCache: Equipment[] = [];
   private drugsCache: Equipment[] = [];
   private computersRobotsCache: Equipment[] = [];
+  private vehiclesCache: Equipment[] = [];
+  private spaceshipsCache: Equipment[] = [];
 
   private allEquipmentLoaded$ = new BehaviorSubject<boolean>(false);
   private equipmentLoadError$ = new BehaviorSubject<string | null>(null);
@@ -69,6 +71,8 @@ export class EquipmentService {
         path: 'assets/data/equipment/computers-robots.json',
         cache: 'computersRobots',
       },
+      { path: 'assets/data/equipment/vehicles.json', cache: 'vehicles' },
+      { path: 'assets/data/equipment/spaceships.json', cache: 'spaceships' },
     ];
 
     let loadedCount = 0;
@@ -128,6 +132,12 @@ export class EquipmentService {
       case 'computersRobots':
         this.computersRobotsCache = data;
         break;
+      case 'vehicles':
+        this.vehiclesCache = data;
+        break;
+      case 'spaceships':
+        this.spaceshipsCache = data;
+        break;
     }
   }
 
@@ -144,6 +154,8 @@ export class EquipmentService {
       ...this.gearCache,
       ...this.drugsCache,
       ...this.computersRobotsCache,
+      ...this.vehiclesCache,
+      ...this.spaceshipsCache,
     ];
   }
 
@@ -201,6 +213,20 @@ export class EquipmentService {
    */
   getComputersAndRobots(filter?: EquipmentFilter): Equipment[] {
     return this.filterEquipment(this.computersRobotsCache, filter);
+  }
+
+  /**
+   * Get vehicles filtering by criteria
+   */
+  getVehicles(filter?: EquipmentFilter): Equipment[] {
+    return this.filterEquipment(this.vehiclesCache, filter);
+  }
+
+  /**
+   * Get spaceships filtered by criteria
+   */
+  getSpaceships(filter?: EquipmentFilter): Equipment[] {
+    return this.filterEquipment(this.spaceshipsCache, filter);
   }
 
   /**
@@ -455,6 +481,7 @@ export class EquipmentService {
       { value: 'gear_industrial', display: 'Industrial Equipment' },
       { value: 'gear_pentapod', display: 'Pentapod Equipment' },
       { value: 'gear_robot', display: 'Robots & Drones' },
+      { value: 'vehicle', display: 'Vehicles & Spaceships' },
     ];
   }
 

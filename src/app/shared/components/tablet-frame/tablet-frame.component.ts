@@ -399,25 +399,7 @@ import { Component, Input } from '@angular/core';
     }
 
     .frame-base,
-    .equipment-frame, 
-    .vessels-frame {
-      background: var(--bg-panel, rgba(16, 16, 16, 0.85));
-      border: 2px solid #000;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      width: 100%;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 
-        inset 0 0 30px rgba(0,0,0,0.9),
-        0 0 0 1px rgba(255,255,255,0.03);
-      border-radius: 4px;
-      z-index: 5;
-    }
-
-    /* Generic frame class for any custom frameClass value */
-    [class*="frame"] {
+    [class$="-frame"] {
       background: var(--bg-panel, rgba(16, 16, 16, 0.85));
       border: 2px solid #000;
       display: flex;
@@ -473,6 +455,7 @@ import { Component, Input } from '@angular/core';
       display: flex;
       flex-direction: column;
       min-height: 0;
+      box-sizing: border-box;
 
       &::-webkit-scrollbar {
         width: 8px;

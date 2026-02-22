@@ -40,83 +40,91 @@ export class CharacterSheetComponent implements OnInit {
     return this.character().skills;
   }
 
-  skillsTree() {
-    // Group skills by parent skill name
+  mergedSkills() {
     const char = this.character();
-    const grouped = new Map<string, any[]>();
-    const parentInfo = new Map<string, { level: number }>();
-    const standalone: any[] = [];
+    const combinedMap = new Map<string, { level: number | null, children: any[] }>();
 
     char.skills.forEach((skill) => {
-      // If skill has a specialization, group it under the parent skill name
-      if (skill.specialization) {
-        const parentName = skill.name;
-        if (!grouped.has(parentName)) {
-          grouped.set(parentName, []);
-        }
-        grouped.get(parentName)!.push({
-          name: skill.name,
-          specialization: skill.specialization,
+      let trueName = skill.name;
+      let spec = skill.specialization;
+
+      // Ensure embedded specializations are extracted if missed by service
+      if (!spec && skill.name.includes('(') && skill.name.includes(')')) {
+          const parts = skill.name.split('(');
+          trueName = parts[0].trim();
+          spec = parts[1].replace(')', '').trim();
+      }
+
+      if (!combinedMap.has(trueName)) {
+        combinedMap.set(trueName, { level: null, children: [] });
+      }
+      
+      const entry = combinedMap.get(trueName)!;
+      
+      if (spec) {
+        entry.children.push({
+          name: trueName,
+          specialization: spec,
           level: skill.level
         });
-        // Track highest level of specializations for this parent
-        const current = parentInfo.get(parentName);
-        if (!current || skill.level > current.level) {
-          parentInfo.set(parentName, { level: skill.level });
-        }
       } else {
-        // Skills without specialization stay standalone
-        standalone.push(skill);
+        // standalone/parent skill
+        if (entry.level === null || skill.level > entry.level) {
+          entry.level = skill.level;
+        }
       }
     });
 
-    // Convert map to array of groups, with parent skill info
-    const groups: SkillGroup[] = Array.from(grouped.entries()).map(([name, children]) => ({
-      name,
-      parentLevel: parentInfo.get(name)?.level || 0,
-      children
-    }));
+    // Convert to one flat array, sorted alphabetically by parent
+    const sortedSkills = Array.from(combinedMap.entries()).map(([name, data]) => {
+      // Sort children alphabetically
+      data.children.sort((a, b) => a.specialization.localeCompare(b.specialization));
+      return {
+        name,
+        level: data.level,
+        children: data.children
+      };
+    }).sort((a, b) => a.name.localeCompare(b.name));
 
-    return { groups, standalone };
+    return sortedSkills;
   }
 
   getSkillsForPdf() {
     // Return flattened skill array for PDF with grouped display
     // Parent skills show first (with level), then children indented
     const result: any[] = [];
-    const { groups, standalone } = this.skillsTree();
+    const skills = this.mergedSkills();
 
-    // Add grouped skills (parent + children)
-    groups.forEach((group) => {
-      // Parent skill line
-      result.push({
-        columns: [
-          { text: group.name, fontSize: 10, bold: true, width: '*' },
-          { text: `LVL ${group.parentLevel}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
-        ],
-        margin: [0, 3, 0, 2]
-      });
-      // Child skills (specializations)
-      group.children.forEach((child) => {
+    skills.forEach((skill) => {
+      if (skill.children.length > 0) {
+        // Parent skill line
         result.push({
           columns: [
-            { text: `  ↳ ${child.specialization}`, fontSize: 9, color: '#999999', width: '*' },
-            { text: `LVL ${child.level}`, fontSize: 9, color: '#666666', width: 'auto' }
+            { text: skill.name, fontSize: 10, bold: true, width: '*' },
+            { text: `LVL ${skill.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
           ],
-          margin: [0, 1, 0, 1]
+          margin: [0, 3, 0, 2]
         });
-      });
-    });
-
-    // Add standalone skills
-    standalone.forEach((skill) => {
-      result.push({
-        columns: [
-          { text: skill.name, fontSize: 10, width: '*' },
-          { text: `LVL ${skill.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
-        ],
-        margin: [0, 2, 0, 2]
-      });
+        // Child skills (specializations)
+        skill.children.forEach((child) => {
+          result.push({
+            columns: [
+              { text: `  ↳ ${child.specialization}`, fontSize: 9, color: '#999999', width: '*' },
+              { text: `LVL ${child.level}`, fontSize: 9, color: '#666666', width: 'auto' }
+            ],
+            margin: [0, 1, 0, 1]
+          });
+        });
+      } else {
+        // Add standalone skills
+        result.push({
+          columns: [
+            { text: skill.name, fontSize: 10, width: '*' },
+            { text: `LVL ${skill.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
+          ],
+          margin: [0, 2, 0, 2]
+        });
+      }
     });
 
     return result;

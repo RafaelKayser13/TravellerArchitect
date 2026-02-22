@@ -1,59 +1,61 @@
 <div class="app-shell">
-  <div class="dice-layer">
+  <div class="dice-layer" [class.active]="diceService.request() || npcService.request()">
     <app-dice-roller *ngIf="diceService.request()"></app-dice-roller>
     <app-npc-interaction *ngIf="npcService.request()"></app-npc-interaction>
   </div>
 
-  <header class="app-header">
-    <div class="logo">
-      <div class="hud-bracket"></div>
-      <h1>TRAVELLER <span class="highlight">ARCHITECT</span></h1>
-      <div class="v-readout">v2.1.0_PROTOTYPE</div>
-    </div>
-    <nav>
-      <div class="header-actions">
-        <button class="system-menu-trigger" (click)="toggleSystemMenu()">
-          <span>SYSTEM_01</span>
-          <i class="icon">▤</i>
-        </button>
-        
-        <div class="system-dropdown" *ngIf="showSystemMenu()">
-          <div class="menu-divider">EQUIPMENT</div>
-          <div class="menu-item" (click)="openEquipmentSelector()">
-            <i class="icon">🎒</i>
-            <span>EQUIPMENT_SELECTOR</span>
-          </div>
-          <div class="menu-item" (click)="openWeaponSelector()">
-            <i class="icon">🔫</i>
-            <span>WEAPON_SELECTOR</span>
-          </div>
-          <div class="menu-item" (click)="openArmorSelector()">
-            <i class="icon">🛡️</i>
-            <span>ARMOR_SELECTOR</span>
-          </div>
+  <app-navigation-sidebar class="sys-sidebar"></app-navigation-sidebar>
 
-          <div class="menu-divider">SYSTEM</div>
-          <div class="menu-item" (click)="toggleDebugMode()" [class.active]="diceService.debugMode()">
-            <i class="icon">{{ diceService.debugMode() ? '✅' : '⬜' }}</i>
-            <span>DEBUG_MODE</span>
-          </div>
-          <div class="menu-item" (click)="openDebug()">
-            <i class="icon">🐞</i>
-            <span>DEBUG_CONSOLE</span>
-          </div>
-          <div class="menu-item" (click)="toggleSystemMenu()">
-            <i class="icon">⚙</i>
-            <span>PREFERENCES</span>
-          </div>
+  <div class="sys-workspace">
+    <header class="sys-topbar">
+      <div class="topbar-left">
+        <div class="connection-status">
+          <span class="status-dot"></span>
+          <span class="status-text">NODE: ALPHA-7 // UPLINK_SECURE</span>
         </div>
       </div>
-    </nav>
-  </header>
+      
+      <nav class="topbar-right">
+        <div class="header-actions">
+          <button class="system-menu-trigger" (click)="toggleSystemMenu()" [class.active]="showSystemMenu()">
+            <span>SYSTEM_01</span>
+            <svg viewBox="0 0 24 24" fill="none" class="icon-svg"><path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="2"/></svg>
+          </button>
+          
+          <div class="system-dropdown" *ngIf="showSystemMenu()">
+            <div class="menu-divider">// SUBSYSTEMS</div>
+            <div class="menu-item" (click)="openEquipmentSelector()">
+              <span class="item-icon">📦</span>
+              <span class="item-label">EQUIPMENT_MATRIX</span>
+            </div>
+            <div class="menu-item" (click)="openWeaponSelector()">
+              <span class="item-icon">🔫</span>
+              <span class="item-label">WEAPON_DB</span>
+            </div>
+            <div class="menu-item" (click)="openArmorSelector()">
+              <span class="item-icon">🛡️</span>
+              <span class="item-label">ARMOR_DB</span>
+            </div>
 
-  <div class="app-container">
-    <app-navigation-sidebar></app-navigation-sidebar>
-    
-    <main class="main-content">
+            <div class="menu-divider">// DEV_TOOLS</div>
+            <div class="menu-item" (click)="toggleDebugMode()" [class.active]="diceService.debugMode()">
+              <span class="item-icon">{{ diceService.debugMode() ? '▣' : '□' }}</span>
+              <span class="item-label">DEBUG_MODE</span>
+            </div>
+            <div class="menu-item" (click)="openDebug()">
+              <span class="item-icon">🐞</span>
+              <span class="item-label">SYS_CONSOLE</span>
+            </div>
+            <div class="menu-item" (click)="toggleSystemMenu()">
+              <span class="item-icon">⚙</span>
+              <span class="item-label">CONFIG</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="sys-content">
       <router-outlet></router-outlet>
     </main>
   </div>

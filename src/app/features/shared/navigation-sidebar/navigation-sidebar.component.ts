@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 
-type NavigationItem = 'dossier' | 'equipment' | 'vehicles';
+type NavigationItem = 'dossier' | 'equipment' | 'vehicles' | 'vessels';
 
 @Component({
   selector: 'app-navigation-sidebar',
@@ -10,80 +11,85 @@ type NavigationItem = 'dossier' | 'equipment' | 'vehicles';
   imports: [CommonModule, RouterLink],
   template: `
     <nav class="nav-sidebar">
-      <!-- Scanlines overlay -->
-      <div class="scanlines"></div>
+      <!-- Decorator lines -->
+      <div class="sidebar-glint"></div>
 
-      <!-- Circuitry top -->
-      <div class="circuit-overlay top"></div>
+      <div class="nav-branding">
+        <div class="logo-box">
+           <div class="bracket"></div>
+           <div class="logo-text">
+             <h1 class="title">TRAVELLER</h1>
+             <h2 class="subtitle">ARCHITECT</h2>
+           </div>
+        </div>
+        <div class="sys-version">OS_VER://3.2.1</div>
+      </div>
 
-      <div class="nav-content">
-        <div class="nav-header">
-          <div class="header-corner-tl"></div>
-          <div class="header-corner-br"></div>
-          <div class="nav-title">NAVIGATION.SYS</div>
-          <div class="header-divider"></div>
+      <div class="nav-sections scrollable">
+        <div class="nav-section">
+          <div class="section-title">
+            <span class="title-text">// CORE_SYSTEM</span>
+          </div>
+          
+          <button 
+            class="nav-item" 
+            [class.active]="currentRoute() === 'dossier'"
+            (click)="selectRoute('dossier')"
+            routerLink="/dossier"
+          >
+            <div class="btn-indicator" *ngIf="currentRoute() === 'dossier'"></div>
+            <span class="nav-code">CHR</span>
+            <span class="nav-name">CHARACTER</span>
+          </button>
         </div>
 
-        <div class="nav-sections">
-          <!-- Main Section: Character -->
-          <div class="nav-section main-section">
-            <button 
-              class="nav-item nav-dossier" 
-              [class.active]="currentRoute() === 'dossier'"
-              (click)="selectRoute('dossier')"
-              routerLink="/dossier"
-            >
-              <span class="item-bracket">▷</span>
-              <span class="label">CHARACTER</span>
-              <span class="item-bracket">◁</span>
-              <div class="item-glow"></div>
-            </button>
+        <div class="nav-section">
+          <div class="section-divider"></div>
+          <div class="section-title">
+            <span class="title-text">// INVENTORY</span>
           </div>
+          
+          <button 
+            class="nav-item" 
+            [class.active]="currentRoute() === 'equipment'"
+            (click)="selectRoute('equipment')"
+            routerLink="/equipment"
+          >
+            <div class="btn-indicator" *ngIf="currentRoute() === 'equipment'"></div>
+            <span class="nav-code">EQP</span>
+            <span class="nav-name">EQUIPMENT</span>
+          </button>
 
-          <!-- Items Section -->
-          <div class="nav-section items-section">
-            <div class="section-divider"></div>
-            <div class="section-title">
-              <span class="title-bracket">[</span>
-              INVENTORY
-              <span class="title-bracket">]</span>
-            </div>
-            
-            <button 
-              class="nav-item" 
-              [class.active]="currentRoute() === 'equipment'"
-              (click)="selectRoute('equipment')"
-              routerLink="/equipment"
-            >
-              <span class="item-bracket">▷</span>
-              <span class="label">EQUIPMENT</span>
-              <span class="item-bracket">◁</span>
-              <div class="item-glow"></div>
-            </button>
+          <button 
+            class="nav-item" 
+            [class.active]="currentRoute() === 'vehicles'"
+            (click)="selectRoute('vehicles')"
+            routerLink="/vehicles"
+          >
+            <div class="btn-indicator" *ngIf="currentRoute() === 'vehicles'"></div>
+            <span class="nav-code">VHC</span>
+            <span class="nav-name">VEHICLES</span>
+          </button>
 
-            <button 
-              class="nav-item" 
-              [class.active]="currentRoute() === 'vehicles'"
-              (click)="selectRoute('vehicles')"
-              routerLink="/vehicles"
-            >
-              <span class="item-bracket">▷</span>
-              <span class="label">VESSELS</span>
-              <span class="item-bracket">◁</span>
-              <div class="item-glow"></div>
-            </button>
-          </div>
-        </div>
-
-        <div class="nav-footer">
-          <div class="footer-divider"></div>
-          <div class="version">v2.1.0</div>
-          <div class="status-indicator">● ONLINE</div>
+          <button 
+            class="nav-item" 
+            [class.active]="currentRoute() === 'vessels'"
+            (click)="selectRoute('vessels')"
+            routerLink="/vessels"
+          >
+            <div class="btn-indicator" *ngIf="currentRoute() === 'vessels'"></div>
+            <span class="nav-code">VSL</span>
+            <span class="nav-name">VESSELS</span>
+          </button>
         </div>
       </div>
 
-      <!-- Circuitry bottom -->
-      <div class="circuit-overlay bottom"></div>
+      <div class="nav-footer">
+        <div class="footer-data">
+          <span class="footer-label">STATUS</span>
+          <span class="status-indicator">ONLINE</span>
+        </div>
+      </div>
     </nav>
   `,
   styles: [`
@@ -93,452 +99,302 @@ type NavigationItem = 'dossier' | 'equipment' | 'vehicles';
     }
 
     .nav-sidebar {
-      position: relative;
-      width: 260px;
-      height: 100%;
-      background: linear-gradient(180deg, #0a0e27 0%, #050505 100%);
-      background-image: 
-        linear-gradient(180deg, #0a0e27 0%, #050505 100%),
-        repeating-linear-gradient(0deg,
-          rgba(0, 0, 0, 0.15),
-          rgba(0, 0, 0, 0.15) 1px,
-          transparent 1px,
-          transparent 2px);
-      border-right: 2px solid #00f3ff;
-      border-right-width: 3px;
-      box-shadow: 
-        inset -1px 0 0 rgba(0, 243, 255, 0.2),
-        -8px 0 24px rgba(0, 0, 0, 0.8),
-        0 0 40px rgba(0, 243, 255, 0.15);
       display: flex;
       flex-direction: column;
-      padding: 0;
-      overflow: hidden;
-      z-index: 50;
-
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, 
-          transparent, 
-          #00f3ff, 
-          #ff8c00,
-          transparent);
-        z-index: 10;
-      }
-
-      &::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: -1px;
-        width: 1px;
-        height: 100%;
-        background: linear-gradient(180deg, 
-          rgba(0, 243, 255, 0.5),
-          rgba(0, 243, 255, 0.1),
-          rgba(255, 140, 0, 0.1),
-          transparent);
-        z-index: 5;
-      }
-    }
-
-    .scanlines {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
-      background-image: repeating-linear-gradient(0deg,
-        rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.1) 1px,
-        transparent 1px,
-        transparent 2px);
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .circuit-overlay {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 120px;
-      background-image: 
-        linear-gradient(90deg, 
-          rgba(0, 243, 255, 0.1) 1px, 
-          transparent 1px),
-        linear-gradient(0deg, 
-          rgba(0, 243, 255, 0.1) 1px, 
-          transparent 1px),
-        radial-gradient(circle at 50% 50%, 
-          rgba(0, 243, 255, 0.15), 
-          transparent 60%);
-      background-size: 25px 25px;
-      -webkit-mask-image: linear-gradient(to bottom, black, transparent);
-      mask-image: linear-gradient(to bottom, black, transparent);
-      pointer-events: none;
-      z-index: 1;
-
-      &.top {
-        top: 0;
-        animation: circuit-pulse-top 8s ease-in-out infinite;
-      }
-
-      &.bottom {
-        bottom: 0;
-        transform: scaleY(-1);
-        animation: circuit-pulse-bottom 8s ease-in-out infinite;
-      }
-    }
-
-    @keyframes circuit-pulse-top {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-    }
-
-    @keyframes circuit-pulse-bottom {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.6; }
-    }
-
-    .nav-content {
+      background: linear-gradient(180deg, rgba(8, 12, 18, 1) 0%, rgba(4, 6, 10, 1) 100%);
       position: relative;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      z-index: 3;
+      font-family: 'Inter', sans-serif;
       overflow: hidden;
     }
 
-    .nav-header {
-      position: relative;
-      padding: 16px 12px;
-      border-bottom: 2px solid #00f3ff;
-      background: linear-gradient(180deg, 
-        rgba(0, 243, 255, 0.08) 0%, 
-        rgba(0, 243, 255, 0.02) 100%);
-      box-shadow: inset 0 1px 0 rgba(0, 243, 255, 0.2);
+    /* Cyberpunk Grid Overlay */
+    .nav-sidebar::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        linear-gradient(rgba(0, 243, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-      &::before {
-        content: "";
+    .sidebar-glint {
+      position: absolute;
+      top: 0;
+      right: -1px;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 243, 255, 0.5) 20%, transparent 100%);
+      z-index: 5;
+    }
+
+    .nav-branding {
+      padding: 1.5rem 1.5rem 1rem;
+      background: linear-gradient(180deg, rgba(0, 243, 255, 0.05) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(0, 243, 255, 0.1);
+      position: relative;
+      z-index: 2;
+
+      &::after {
+        content: '';
         position: absolute;
-        top: 0;
+        bottom: -1px;
         left: 0;
-        width: 100%;
+        width: 40px;
         height: 2px;
-        background: linear-gradient(90deg,
-          transparent,
-          #00f3ff,
-          transparent);
+        background: var(--neon-cyan, #00f3ff);
+        box-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
       }
     }
 
-    .header-corner-tl,
-    .header-corner-br {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      border: 2px solid #ff8c00;
+    .logo-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+
+      .bracket {
+        width: 16px;
+        height: 24px;
+        border-left: 2px solid #00f3ff;
+        border-top: 2px solid #00f3ff;
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -4px;
+          right: -4px;
+          width: 6px;
+          height: 6px;
+          border-right: 2px solid #00f3ff;
+          border-bottom: 2px solid #00f3ff;
+        }
+      }
+
+      .logo-text {
+        display: flex;
+        flex-direction: column;
+
+        .title {
+          font-family: var(--font-accent, 'Rajdhani', sans-serif);
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #fff;
+          letter-spacing: 4px;
+          margin: 0;
+          line-height: 1;
+        }
+
+        .subtitle {
+          font-family: var(--font-accent, 'Rajdhani', sans-serif);
+          font-size: 1.1rem;
+          font-weight: 900;
+          color: #00f3ff;
+          letter-spacing: 5px;
+          margin: 0;
+          line-height: 1;
+          text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+        }
+      }
     }
 
-    .header-corner-tl {
-      top: 0;
-      left: 0;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    .header-corner-br {
-      bottom: 0;
-      right: 0;
-      border-left: none;
-      border-top: none;
-    }
-
-    .nav-title {
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      color: #00f3ff;
-      text-transform: uppercase;
-      font-family: 'Rajdhani', monospace;
-      text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
-      margin-bottom: 4px;
-    }
-
-    .header-divider {
-      height: 1px;
-      background: linear-gradient(90deg,
-        transparent,
-        #00f3ff,
-        #ff8c00,
-        transparent);
-      opacity: 0.5;
+    .sys-version {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 2px;
+      background: rgba(0, 243, 255, 0.1);
+      padding: 0.2rem 0.5rem;
+      border-left: 2px solid #00f3ff;
+      display: inline-block;
     }
 
     .nav-sections {
       flex: 1;
-      padding: 16px 8px;
+      padding: 2rem 1.5rem;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 2rem;
+      position: relative;
+      z-index: 2;
       overflow-y: auto;
     }
 
-    .nav-section {
-      padding: 0;
-    }
-
-    .main-section {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(0, 243, 255, 0.3);
-    }
-
-    .section-divider {
-      height: 2px;
-      background: linear-gradient(90deg,
-        transparent,
-        #ff8c00,
-        rgba(255, 140, 0, 0.3),
-        transparent);
-      margin: 12px 0;
-    }
-
     .section-title {
-      padding: 0 12px;
-      font-size: 10px;
-      font-weight: bold;
+      margin-bottom: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: rgba(0, 243, 255, 0.6);
       letter-spacing: 2px;
-      color: #ff8c00;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-      font-family: 'Rajdhani', monospace;
-      text-shadow: 0 0 8px rgba(255, 140, 0, 0.4);
-    }
-
-    .title-bracket {
-      color: #ff8c00;
-      margin: 0 4px;
     }
 
     .nav-item {
-      position: relative;
-      width: 100%;
-      padding: 12px 12px;
-      margin: 4px 0;
-      background: linear-gradient(135deg,
-        rgba(0, 243, 255, 0.08) 0%,
-        rgba(0, 243, 255, 0.02) 100%);
-      border: 1px solid rgba(0, 243, 255, 0.3);
-      border-left: 3px solid rgba(0, 243, 255, 0.5);
-      color: #00f3ff;
-      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: bold;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: all 0.2s ease;
-      font-family: 'Rajdhani', monospace;
-      overflow: hidden;
-      outline: none;
-
-      &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg,
-          rgba(0, 243, 255, 0),
-          rgba(0, 243, 255, 0.5),
-          rgba(0, 243, 255, 0));
-      }
-
-      &:hover {
-        background: linear-gradient(135deg,
-          rgba(0, 243, 255, 0.15) 0%,
-          rgba(0, 243, 255, 0.08) 100%);
-        border-color: rgba(0, 243, 255, 0.8);
-        border-left-color: #00f3ff;
-        transform: translateX(4px);
-        box-shadow: 0 0 12px rgba(0, 243, 255, 0.2);
-      }
-
-      &.active {
-        background: linear-gradient(135deg,
-          rgba(0, 243, 255, 0.25) 0%,
-          rgba(0, 243, 255, 0.12) 100%);
-        border: 1px solid #00f3ff;
-        border-left: 3px solid #00f3ff;
-        box-shadow: 
-          inset 0 0 12px rgba(0, 243, 255, 0.15),
-          0 0 20px rgba(0, 243, 255, 0.3);
-        color: #00f3ff;
-        text-shadow: 0 0 8px rgba(0, 243, 255, 0.8);
-      }
-
-      &.nav-dossier {
-        border-color: rgba(255, 140, 0, 0.3);
-        border-left-color: rgba(255, 140, 0, 0.5);
-        color: #ff8c00;
-
-        &:hover {
-          border-color: rgba(255, 140, 0, 0.8);
-          border-left-color: #ff8c00;
-          box-shadow: 0 0 12px rgba(255, 140, 0, 0.2);
-        }
-
-        &.active {
-          background: linear-gradient(135deg,
-            rgba(255, 140, 0, 0.25) 0%,
-            rgba(255, 140, 0, 0.12) 100%);
-          border: 1px solid #ff8c00;
-          border-left: 3px solid #ff8c00;
-          box-shadow: 
-            inset 0 0 12px rgba(255, 140, 0, 0.15),
-            0 0 20px rgba(255, 140, 0, 0.3);
-          text-shadow: 0 0 8px rgba(255, 140, 0, 0.8);
-        }
-      }
-    }
-
-    .item-bracket {
-      color: inherit;
-      opacity: 0.6;
-      font-weight: 900;
-    }
-
-    .icon {
-      font-size: 14px;
-      width: 20px;
-      text-align: center;
-      animation: icon-pulse 2s ease-in-out infinite;
-
-      &.active {
-        animation: icon-glow 1.5s ease-in-out infinite;
-      }
-    }
-
-    .nav-item.active .icon {
-      animation: icon-glow 1.5s ease-in-out infinite;
-    }
-
-    @keyframes icon-pulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
-    }
-
-    @keyframes icon-glow {
-      0%, 100% { opacity: 1; filter: drop-shadow(0 0 4px currentColor); }
-      50% { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
-    }
-
-    .label {
-      flex: 1;
-      text-align: left;
-    }
-
-    .item-glow {
-      position: absolute;
-      bottom: -100%;
-      left: 0;
+      gap: 1rem;
       width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(0, 243, 255, 0.3), transparent);
-      pointer-events: none;
-      transition: bottom 0.3s ease;
+      background: rgba(0, 10, 20, 0.6);
+      border: 1px solid rgba(0, 243, 255, 0.15);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 0.9rem 1.25rem;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      text-align: left;
+      margin-bottom: 0.5rem;
+      outline: none;
     }
 
-    .nav-item:hover .item-glow {
-      bottom: 0;
+    .btn-indicator {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: #00f3ff;
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
+    }
+
+    .nav-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(0, 243, 255, 0.5);
+      min-width: 35px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      flex: 1;
+      text-transform: uppercase;
+    }
+
+    .nav-item:hover {
+      background: rgba(0, 243, 255, 0.08);
+      border-color: rgba(0, 243, 255, 0.4);
+      color: #fff;
+      padding-left: 1.5rem;
+    }
+
+    .nav-item:hover .nav-code {
+      color: #00f3ff;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(0, 243, 255, 0.2) 0%, rgba(0, 50, 100, 0.1) 100%);
+      color: #fff;
+      border-color: rgba(0, 243, 255, 0.5);
+      box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
+    }
+
+    .nav-item.active .nav-code {
+      color: #00f3ff;
+      text-shadow: 0 0 8px rgba(0, 243, 255, 0.5);
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0, 243, 255, 0.3) 0%, transparent 100%);
+      margin-bottom: 1.5rem;
     }
 
     .nav-footer {
+      padding: 1.25rem 1.5rem;
+      border-top: 1px solid rgba(0, 243, 255, 0.1);
+      background: rgba(0, 0, 0, 0.4);
       position: relative;
-      padding: 12px;
-      border-top: 2px solid rgba(0, 243, 255, 0.3);
-      background: linear-gradient(180deg,
-        rgba(0, 243, 255, 0.02) 0%,
-        rgba(0, 0, 0, 0.1) 100%);
-      text-align: center;
+      z-index: 2;
     }
 
-    .footer-divider {
-      height: 1px;
-      background: linear-gradient(90deg,
-        transparent,
-        #00f3ff,
-        #ff8c00,
-        transparent);
-      margin-bottom: 8px;
-      opacity: 0.5;
+    .footer-data {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 1px;
     }
 
-    .version {
-      font-size: 9px;
-      color: #00f3ff;
-      letter-spacing: 2px;
-      font-family: 'Rajdhani', monospace;
-      text-shadow: 0 0 4px rgba(0, 243, 255, 0.4);
+    .footer-label {
+      color: rgba(255, 255, 255, 0.4);
     }
 
     .status-indicator {
-      font-size: 8px;
-      color: #39ff14;
-      letter-spacing: 1px;
-      margin-top: 4px;
-      font-family: 'Rajdhani', monospace;
+      color: #00ff44;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 4px;
-
-      &::before {
-        content: "●";
-        font-size: 6px;
-        animation: status-blink 1.5s ease-in-out infinite;
-      }
+      gap: 0.5rem;
     }
 
-    @keyframes status-blink {
+    .status-indicator::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background: #00ff44;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(0, 255, 68, 0.6);
+      animation: status-pulse 2s infinite;
+    }
+
+    @keyframes status-pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
     }
-
-    /* Scrollbar */
-    .nav-sections::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .nav-sections::-webkit-scrollbar-track {
-      background: rgba(0, 243, 255, 0.05);
-    }
-
-    .nav-sections::-webkit-scrollbar-thumb {
-      background: rgba(0, 243, 255, 0.3);
-      border-radius: 3px;
-
-      &:hover {
-        background: rgba(0, 243, 255, 0.5);
-      }
-    }
   `]
 })
-export class NavigationSidebarComponent {
+export class NavigationSidebarComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   currentRoute = signal<NavigationItem>('dossier');
+  private sub?: Subscription;
+
+  ngOnInit() {
+    // Attempt to parse route from URL directly to guarantee accuracy
+    this.updateRouteFromUrl(this.router.url);
+
+    // Subscribe to router to catch all navigation ends
+    this.sub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.updateRouteFromUrl(event.urlAfterRedirects);
+    });
+  }
+
+  ngOnDestroy() {
+    this.sub?.unsubscribe();
+  }
+
+  private updateRouteFromUrl(url: string) {
+    if (url.includes('dossier')) {
+      this.currentRoute.set('dossier');
+    } else if (url.includes('equipment')) {
+      this.currentRoute.set('equipment');
+    } else if (url.includes('vehicles')) {
+      this.currentRoute.set('vehicles');
+    } else if (url.includes('vessels')) {
+      this.currentRoute.set('vessels');
+    } else {
+      // Fallback to localStorage if at root or unspecified
+      const savedRoute = localStorage.getItem('mainNavSelectedRoute') as NavigationItem;
+      if (savedRoute) {
+        this.currentRoute.set(savedRoute);
+      }
+    }
+  }
 
   selectRoute(route: NavigationItem) {
     this.currentRoute.set(route);
+    localStorage.setItem('mainNavSelectedRoute', route);
   }
 }
 

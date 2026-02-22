@@ -172,34 +172,39 @@
                 </div>
                 <div class="card-content full-skills">
                     <div class="skill-tree">
-                        <!-- Grouped Skills -->
-                        <div class="skill-group" *ngFor="let group of skillsTree().groups">
-                            <div class="group-header">
-                                <span class="g-name">{{ group.name }}</span>
-                                <div class="g-dots" *ngIf="group.parentLevel">
-                                    <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < (group.parentLevel || 0)"></div>
-                                </div>
-                                <span class="g-lvl" *ngIf="group.parentLevel">{{ group.parentLevel }}</span>
-                            </div>
-                            <div class="group-children">
-                                <div class="skill-entry" *ngFor="let child of group.children">
-                                    <span class="s-name">{{ child.specialization }}</span>
-                                    <div class="s-dots">
-                                        <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < child.level"></div>
+                        <!-- Combined Skills -->
+                        <ng-container *ngFor="let skill of mergedSkills()">
+                            <!-- Has Children: Render as Group -->
+                            <div class="skill-group" *ngIf="skill.children.length > 0">
+                                <div class="group-header">
+                                    <span class="g-name">{{ skill.name }}</span>
+                                    <div class="g-dots" *ngIf="skill.level !== null">
+                                        <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < skill.level"></div>
                                     </div>
-                                    <span class="s-lvl">{{ child.level }}</span>
+                                    <span class="g-lvl" *ngIf="skill.level !== null">{{ skill.level }}</span>
+                                    <span class="g-lvl-neg" *ngIf="skill.level === null">-3</span>
+                                </div>
+                                <div class="group-children">
+                                    <div class="skill-entry" *ngFor="let child of skill.children">
+                                        <span class="s-name">{{ child.specialization }}</span>
+                                        <div class="s-dots">
+                                            <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < child.level"></div>
+                                        </div>
+                                        <span class="s-lvl">{{ child.level }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Standalone Skills -->
-                        <div class="skill-entry" *ngFor="let skill of skillsTree().standalone">
-                            <span class="s-name">{{ skill.name }} <small *ngIf="skill.specialization">[{{ skill.specialization }}]</small></span>
-                            <div class="s-dots">
-                                <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < skill.level"></div>
+                            
+                            <!-- No Children: Render as Standalone -->
+                            <div class="skill-entry" *ngIf="skill.children.length === 0">
+                                <span class="s-name">{{ skill.name }}</span>
+                                <div class="s-dots" *ngIf="skill.level !== null">
+                                    <div class="dot" *ngFor="let i of [0,1,2,3,4]" [class.fill]="i < skill.level"></div>
+                                </div>
+                                <span class="s-lvl" *ngIf="skill.level !== null">{{ skill.level }}</span>
+                                <span class="s-lvl-neg" *ngIf="skill.level === null">-3</span>
                             </div>
-                            <span class="s-lvl">{{ skill.level }}</span>
-                        </div>
-                        <div class="empty-state" *ngIf="character().skills.length === 0">NO_SKILLS</div>
+                        </ng-container>
                     </div>
                 </div>
             </div>

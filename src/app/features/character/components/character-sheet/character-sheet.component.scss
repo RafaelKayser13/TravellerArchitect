@@ -275,6 +275,7 @@ $text-muted: #6c757d;
         }
         
         .s-lvl { width: 25px; text-align: right; color: $crimson; font-weight: 800; }
+        .s-lvl-neg { width: 25px; text-align: right; color: rgba(220, 53, 69, 0.4); font-weight: 600; font-family: var(--font-mono); }
     }
 
     .skill-group {
@@ -313,13 +314,20 @@ $text-muted: #6c757d;
                 color: $cyber-amber;
                 font-weight: 800;
             }
+            .g-lvl-neg {
+                width: 25px;
+                text-align: right;
+                color: rgba(255, 183, 0, 0.4);
+                font-weight: 600;
+                font-family: var(--font-mono);
+            }
         }
 
         .group-children {
             .skill-entry {
-                padding-left: 3rem;
+                padding-left: 4.5rem;
                 background: rgba(0,0,0,0.1);
-                .s-name { color: #fff; font-weight: 400; opacity: 0.9; }
+                .s-name { color: #ffffff; font-weight: 600; opacity: 1; }
                 .s-lvl { color: #888; }
             }
         }
