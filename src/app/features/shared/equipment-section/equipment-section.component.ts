@@ -5,6 +5,7 @@ import { Equipment, EquipmentCategory } from '../../../core/models/equipment.mod
 import { EquipmentService } from '../../../core/services/equipment.service';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { EquipmentDetailPanelComponent } from '../../character/components/equipment-detail-panel/equipment-detail-panel.component';
 
 interface CategoryItem {
   name: string;
@@ -21,7 +22,7 @@ interface CategoryGroup {
 @Component({
   selector: 'app-equipment-section',
   standalone: true,
-  imports: [CommonModule, TabletFrameComponent],
+  imports: [CommonModule, TabletFrameComponent, EquipmentDetailPanelComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './equipment-section.component.html',
   styleUrls: ['./equipment-section.component.scss']
@@ -261,8 +262,8 @@ export class EquipmentSectionComponent implements OnInit {
     return this.selectedEquipment().some(e => e.id === item.id);
   }
 
-  toggleEquipmentSelection(event: Event, item: Equipment): void {
-    event.stopPropagation();
+  toggleEquipmentSelection(event: Event | null, item: Equipment): void {
+    if (event) event.stopPropagation();
     if (this.isSelected(item)) {
       this.selectedEquipment.update(items => items.filter(e => e.id !== item.id));
     } else {

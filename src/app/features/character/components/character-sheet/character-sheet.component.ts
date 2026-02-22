@@ -96,12 +96,16 @@ export class CharacterSheetComponent implements OnInit {
     const skills = this.mergedSkills();
 
     skills.forEach((skill) => {
+      const levelText = skill.level === null ? '-3' : `LVL ${skill.level}`;
+      const levelColor = skill.level === null ? '#ff3333' : '#00ccff';
+      const nameColor = '#000000'; // Default black
+
       if (skill.children.length > 0) {
         // Parent skill line
         result.push({
           columns: [
-            { text: skill.name, fontSize: 10, bold: true, width: '*' },
-            { text: `LVL ${skill.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
+            { text: skill.name, fontSize: 10, bold: true, color: nameColor, width: '*' },
+            { text: levelText, fontSize: 10, bold: true, color: levelColor, width: 'auto' }
           ],
           margin: [0, 3, 0, 2]
         });
@@ -109,7 +113,7 @@ export class CharacterSheetComponent implements OnInit {
         skill.children.forEach((child) => {
           result.push({
             columns: [
-              { text: `  ↳ ${child.specialization}`, fontSize: 9, color: '#999999', width: '*' },
+              { text: `  ↳ ${child.specialization}`, fontSize: 9, color: '#333333', width: '*' }, // darker gray for readability on PDF
               { text: `LVL ${child.level}`, fontSize: 9, color: '#666666', width: 'auto' }
             ],
             margin: [0, 1, 0, 1]
@@ -119,8 +123,8 @@ export class CharacterSheetComponent implements OnInit {
         // Add standalone skills
         result.push({
           columns: [
-            { text: skill.name, fontSize: 10, width: '*' },
-            { text: `LVL ${skill.level}`, fontSize: 10, bold: true, color: '#00ccff', width: 'auto' }
+            { text: skill.name, fontSize: 10, bold: true, color: nameColor, width: '*' },
+            { text: levelText, fontSize: 10, bold: true, color: levelColor, width: 'auto' }
           ],
           margin: [0, 2, 0, 2]
         });

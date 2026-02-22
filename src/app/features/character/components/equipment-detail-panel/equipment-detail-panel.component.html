@@ -1,0 +1,197 @@
+<div class="equipment-detail-panel modal-content hud-panel" *ngIf="equipment" (click)="$event.stopPropagation()">
+  <div class="card-borders">
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+  </div>
+  
+  <div class="panel-header modal-header-custom">
+    <div class="header-pips">
+      <span class="pip cyan"></span><span class="pip dim pulse"></span>
+    </div>
+    <h3>SYS_LOG://{{ getCategoryDisplay() | uppercase }}</h3>
+    <button class="btn-close-modal cyber-icon-btn warning" (click)="onClose.emit()" title="Close details" aria-label="Close details modal">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="modal-body scrollable-content">
+    <div class="detail-hero">
+      <h2 class="detail-name">{{ equipment.name }}</h2>
+      <div class="detail-price-box">
+         <span class="cost-label">CREDITS_REQ</span>
+         <span class="detail-price highlight">{{ equipment.cost | number }} Lv</span>
+      </div>
+    </div>
+    
+    <div class="detail-tags">
+      <span class="spec-tag tl-tag">TL{{ equipment.techLevel }}</span>
+      <span class="spec-tag mass-tag" *ngIf="equipment.mass !== undefined && equipment.mass !== null">{{ equipment.mass }} kg</span>
+    </div>
+    
+    <div class="detail-desc">
+      <p>{{ equipment.description }}</p>
+    </div>
+
+    <!-- Weapon Specs -->
+    <div class="detail-specs" *ngIf="isWeapon()">
+      <h4 class="section-title">// WEAPON_SPECS</h4>
+      <div class="specs-grid-inline">
+        <div class="spec-row" *ngIf="getProperty('damage')">
+          <span class="spec-label">DAMAGE:</span>
+          <span class="spec-value">{{ getProperty('damage') }}</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('range')">
+          <span class="spec-label">RANGE:</span>
+          <span class="spec-value">{{ getProperty('range') }}</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('magazine')">
+          <span class="spec-label">MAGAZINE:</span>
+          <span class="spec-value">{{ getProperty('magazine') }}</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('rateOfFire')">
+          <span class="spec-label">RATE_OF_FIRE:</span>
+          <span class="spec-value">{{ getProperty('rateOfFire') }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-restrictions" *ngIf="getProperty('traits') && getProperty('traits').length > 0">
+        <h4 class="section-title">// WEAPON_TRAITS</h4>
+        <div class="tags-container">
+          <span *ngFor="let trait of getProperty('traits')" class="spec-tag cyber-tag">{{ trait | uppercase }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Armor Specs -->
+    <div class="armor-specs" *ngIf="isArmor()">
+      <div class="specs-header">
+        <h3>TACTICAL_ARMOR_SCHEMATICS</h3>
+        <span class="tech-watermark">SYS_DEF_{{ equipment.techLevel }}</span>
+      </div>
+      
+      <div class="armor-layout">
+        <div class="main-stats">
+          <div class="tactical-grid">
+            <div class="tactical-box prot" *ngIf="getProperty('protection') !== null">
+              <span class="t-label">PROTECTION</span>
+              <span class="t-value">+{{ getProperty('protection') }}</span>
+            </div>
+            <div class="tactical-box enc" *ngIf="getProperty('encumbrance') !== undefined && getProperty('encumbrance') !== null">
+              <span class="t-label">ENCUMB.</span>
+              <span class="t-value">{{ getProperty('encumbrance') === 0 ? 'NONE' : '-' + getProperty('encumbrance') }}</span>
+            </div>
+            <div class="tactical-box env" *ngIf="getProperty('envRating') !== undefined && getProperty('envRating') !== null">
+              <span class="t-label">ENV RATING</span>
+              <span class="t-value">{{ getProperty('envRating') }}<small>h</small></span>
+            </div>
+          </div>
+          
+          <div class="detail-specs" style="margin-top: 15px;">
+            <div class="specs-grid-inline" style="grid-template-columns: 1fr;">
+              <div class="spec-row" *ngIf="getProperty('armorType')">
+                <span class="spec-label">CHASSIS_CLASS:</span>
+                <span class="spec-value">{{ formatText(getProperty('armorType')) | uppercase }}</span>
+              </div>
+              <div class="spec-row" *ngIf="getProperty('requiredSkill')">
+                <span class="spec-label">REQUIRED_PROTOCOL:</span>
+                <span class="spec-value warning-text">{{ getProperty('requiredSkill') | uppercase }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="side-container">
+          <div class="side-features" *ngIf="getProperty('features') && getProperty('features').length > 0">
+            <div class="side-header">
+              <h4>INTEGRATED SYSTEMS</h4>
+            </div>
+            <ul class="cyber-list">
+              <li *ngFor="let feature of getProperty('features')">
+                <span class="hex-bullet">⬢</span>
+                {{ formatText(feature) | uppercase }}
+              </li>
+            </ul>
+          </div>
+          
+          <div class="side-features" *ngIf="getProperty('enhances')">
+            <div class="side-header compat">
+              <h4>COMPATIBILITY TARGET</h4>
+            </div>
+            <div class="compat-box">
+              <span class="hex-bullet">⬡</span>
+              <span class="compat-val">{{ formatText(getProperty('enhances')) | uppercase }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cybernetic Specs -->
+    <div class="detail-specs" *ngIf="isCybernetic()">
+      <h4 class="section-title">// CYBERNETIC_SPECS</h4>
+      <div class="specs-grid-inline">
+        <div class="spec-row" *ngIf="getProperty('implantType')">
+          <span class="spec-label">IMPLANT_TYPE:</span>
+          <span class="spec-value">{{ formatText(getProperty('implantType')) | uppercase }}</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('surgeryTime')">
+          <span class="spec-label">SURGERY_TIME:</span>
+          <span class="spec-value">{{ getProperty('surgeryTime') }}h</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('maintenanceCostPerMonth')">
+          <span class="spec-label">MAINTENANCE_COST/MO:</span>
+          <span class="spec-value">Lv{{ getProperty('maintenanceCostPerMonth') }}</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('yearlyMaintenanceCost')">
+          <span class="spec-label">YEARLY_COST:</span>
+          <span class="spec-value">Lv{{ getProperty('yearlyMaintenanceCost') | number }}</span>
+        </div>
+        <div class="spec-row" *ngIf="getProperty('batteryLife')">
+          <span class="spec-label">BATTERY_LIFE:</span>
+          <span class="spec-value">{{ getProperty('batteryLife') | uppercase }}</span>
+        </div>
+      </div>
+
+      <div class="detail-restrictions" *ngIf="getProperty('features') && getProperty('features').length > 0">
+        <h4 class="section-title">// CYBERNETIC_FEATURES</h4>
+        <div class="tags-container">
+           <span *ngFor="let feature of getProperty('features')" class="spec-tag cyber-tag">{{ feature | uppercase }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-restrictions" *ngIf="getProperty('effects') && getProperty('effects').length > 0">
+        <h4 class="section-title cyan-text">// EFFECTS</h4>
+        <div class="tags-container">
+           <span *ngFor="let effect of getProperty('effects')" class="spec-tag cyan-tag">{{ effect | uppercase }}</span>
+        </div>
+      </div>
+      
+      <div class="detail-restrictions" *ngIf="getProperty('sideEffects') && getProperty('sideEffects').length > 0">
+        <h4 class="section-title warning-text">// SIDE_EFFECTS</h4>
+        <div class="tags-container">
+           <span *ngFor="let effect of getProperty('sideEffects')" class="spec-tag warning-tag">{{ effect | uppercase }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- General Restrictions -->
+    <div class="detail-restrictions" *ngIf="equipment.restrictions && equipment.restrictions.length > 0">
+      <h4 class="section-title warning-text">// ACCESS_RESTRICTIONS</h4>
+      <div class="tags-container">
+        <span class="spec-tag restriction-tag" *ngFor="let res of equipment.restrictions">{{ formatText(res) | uppercase }}</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal-footer detail-modal-footer">
+    <button class="cyber-btn" [ngClass]="actionClass || 'btn-add'" (click)="onAdd.emit()">
+      <span class="btn-text">
+        {{ (actionLabel || '✓ ADD TO CHARACTER') | uppercase }}
+      </span>
+    </button>
+  </div>
+</div>

@@ -197,69 +197,15 @@
   </div>
 
   <!-- Detail Modal Overlay -->
-  <div class="modal-overlay fade-in" *ngIf="detailItem()" (click)="closeDetail()">
-    <div class="modal-content hud-panel" (click)="$event.stopPropagation()">
-      <div class="card-borders">
-        <div class="corner top-left"></div>
-        <div class="corner top-right"></div>
-        <div class="corner bottom-left"></div>
-        <div class="corner bottom-right"></div>
-      </div>
-      <div class="panel-header modal-header-custom">
-        <div class="header-pips">
-          <span class="pip cyan"></span><span class="pip dim pulse"></span>
-        </div>
-        <h3>SYS_LOG://{{ getCategoryDisplay(detailItem()!.category) | uppercase }}</h3>
-        <button class="btn-close-modal cyber-icon-btn warning" (click)="closeDetail()" title="Close details" aria-label="Close details modal">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-      
-      <div class="modal-body scrollable-content">
-        <div class="detail-hero">
-          <h2 class="detail-name">{{ detailItem()!.name }}</h2>
-          <div class="detail-price-box">
-             <span class="cost-label">CREDITS_REQ</span>
-             <span class="detail-price highlight">{{ detailItem()!.cost | number }} Lv</span>
-          </div>
-        </div>
-        
-        <div class="detail-tags">
-          <span class="spec-tag tl-tag">TL{{ detailItem()!.techLevel }}</span>
-          <span class="spec-tag mass-tag">{{ detailItem()!.mass }} kg</span>
-        </div>
-        
-        <div class="detail-desc">
-          <p>{{ detailItem()!.description }}</p>
-        </div>
-        
-        <div class="detail-specs" *ngIf="getItemSpecs(detailItem()!).length > 0">
-          <h4 class="section-title">// TECHNICAL_SPECS</h4>
-          <div class="specs-grid-inline">
-            <div class="spec-row" *ngFor="let spec of getItemSpecs(detailItem()!)">
-              <span class="spec-label">{{ spec.label }}:</span>
-              <span class="spec-value">{{ spec.value }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="detail-restrictions" *ngIf="detailItem()!.restrictions && detailItem()!.restrictions!.length > 0">
-          <h4 class="section-title warning-text">// ACCESS_RESTRICTIONS</h4>
-          <div class="tags-container">
-            <span class="restriction-tag" *ngFor="let res of detailItem()!.restrictions">{{ res | uppercase }}</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="modal-footer detail-modal-footer">
-        <button class="cyber-btn" [class.primary]="!isSelected(detailItem()!)" [class.warning]="isSelected(detailItem()!)" (click)="toggleEquipmentSelection($event, detailItem()!); closeDetail()">
-          <span class="btn-text">
-            {{ isSelected(detailItem()!) ? 'REMOVE_FROM_QUEUE' : 'ADD_TO_QUEUE' }}
-          </span>
-        </button>
-      </div>
+  <div class="modal-overlay fade-in modal-replacement" *ngIf="detailItem()" (click)="closeDetail()">
+    <div class="detail-wrapper" (click)="$event.stopPropagation()">
+      <app-equipment-detail-panel 
+        [equipment]="detailItem()" 
+        [actionLabel]="isSelected(detailItem()!) ? 'REMOVE FROM QUEUE' : 'ADD TO QUEUE'"
+        [actionClass]="isSelected(detailItem()!) ? 'btn-remove-queue' : 'btn-add'"
+        (onClose)="closeDetail()"
+        (onAdd)="toggleEquipmentSelection(null, detailItem()!); closeDetail()">
+      </app-equipment-detail-panel>
     </div>
   </div>
 </app-tablet-frame>
